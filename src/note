@@ -1,0 +1,87 @@
+- class Invoker:
+    - contains HashMap<String, Command>,
+    - do runCommand(String key), which takes KeyWord and rum appropriate command
+
+- interface Command:
+    -execute(ProgramManager)
+
+- class HelpCommand implements Command:
+    - execute(ProgramManager programManager) -> вывести справку по доступным командам
+
+- class InfoCommand implements Command:
+    - execute(ProgramManager programManager) -> вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)
+
+- class ShowCommand implements Command:
+    - execute(ProgramManager programManager) ->  вывести в стандартный поток вывода все элементы коллекции в строковом представлении -> MainClass must have toString!!!!
+
+- class AddCommand implements Command:
+    - execute(ProgramManager programManager):
+        - InputManager.parseElement()
+
+- class UpdateCommand implements Command:
+    - execute(ProgramManager programManager):
+        - InputManager.parseId()
+        - collectionManager.isContain()
+            - InputManager.parseElement()
+            - if not: Exception?
+
+- class RemoveByIdCommand implements Command:
+    - execute(ProgramManager programManager):
+        - InputManager.parseId()
+        - collectionManager.isContain()
+            - remove()
+            - if not: Exception?
+
+- class ClearCommand implements Command:
+    - execute(ProgramManager programManager) -> очистить коллекцию
+
+- class SaveCommand implements Command:
+    - execute(ProgramManager programManager):
+        - use FilleManager to get a file,
+        - save() -> collection to text
+
+- class ExecuteScriptCommand implements Command:
+    - execute(ProgramManager programManager):
+        - use FileManager to check Script
+    - when file ends, change Reader to stdIn
+
+- class ExitCommand implements Command:
+    - execute(ProgramManager programManager) -> завершить программу (без сохранения в файл)
+
+
+- class CollectionManager:
+    - contains creationData
+    - sort();
+    - isContain(Long id): int index -> -1 if not  OR boolean if not ArrayList
+
+- class ProgramManager:
+    - contains
+        - Reader reader
+        - InputManager inputManager
+        - CollectionManager
+    - setReader():
+        - inputManager.setReader()
+
+- class Parser:
+    - parse() -> parse string
+    - parseCommand()
+
+- class InputManager: -> maybe could be static so we can use each function in Command. NOO we need dynamic Reader, so we should creat an instance of InputManager.
+    - InputManager(Reader reader) //перенести все парсы в парсер
+    - parseCommandKey(String string) : String key -> parse every String in file, except ElementStrings
+    - parseElement(): Element element -> parse every (number of necessary parameters) Strings
+    - parseParameter(String parameter): Parameter par -> for each not String parameter new function -> use isValid(String)
+    - parseId()
+
+- class Validation:
+    - isValid(String)
+
+- class SaverCollection to the file:
+    - save(elementsSet) -> create or rewrite file
+
+- class FileUploader:
+    - executeFile(String fileName)
+
+- class FileManager:
+    - checkPermissions
+    - executeFile(String fileName)
