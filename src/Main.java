@@ -11,33 +11,8 @@ import java.util.Scanner;
 public class Main {
     private Map hystory = new HashMap<>();
     public static void main(String[] args) {
-        //input
-        // how to read rom console?
-        Main main = new Main();
-        Scanner sc = new Scanner(System.in);
-        // symbol and string reader
-        //
-        while (true){
-            String input = sc.nextLine();
-            invoker.runCommand(input);
-            //System.out.println(input);
-            // choosing of command should not be in main
-            // to the file we should write data of command, not null
-            if (input.equals("show")) {
-                Command t = new HelpCommand("name");
-                Objects[] command = main.hystory.values().stream().toArray();
-                for (i =0, i<command.length; i++){
-                    System.out.println(command[i]);
-                }
-
-            }
 
 
-            if (input.equals("help")){
-                main.hystory.put("help", new HelpCommand());
-                System.out.println("list of commands");
-            }
-        }
     }
 }
 
