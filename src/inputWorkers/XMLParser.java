@@ -8,6 +8,7 @@ import manager.SpaceMarine;
 import manager.Coordinates;
 
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.BufferedReader;
@@ -38,24 +39,17 @@ public class XMLParser {
             if (xmlReader.isStartElement()) {
                 currentTag = xmlReader.getLocalName();
                 if ("spacemarine".equalsIgnoreCase(currentTag)) {
-                    SpaceMarine spaceMarine = parseSpaseMarine();
-                }
-                // Подсказка для логики: Как вы обрабатываете вложенные поля, такие как coordinates?
-            } else if (xmlReader.isEndElement()) {
-                // Подсказка для логики: Когда вы добавляете объект в список?
-                if ("spaceMarine".equals(xmlReader.getLocalName()) && currentMarine != null) {
+                    currentMarine = parseSpaceMarine();
                     marines.add(currentMarine);
                     currentMarine = null;
                 }
-            } else if (xmlReader.isCharacters()) {
-                // Подсказка для логики: Как вы присваиваете текст правильному полю currentMarine?
             }
         }
         xmlReader.close();
         return marines;
     }
 
-    public SpaceMarine parseSpaseMarine() throws XMLStreamException {
+    public SpaceMarine parseSpaceMarine() throws XMLStreamException {
         String currentFieldName;
         SpaceMarine spaceMarine = new SpaceMarine();
         while (xmlReader.hasNext()) {
@@ -110,7 +104,9 @@ public class XMLParser {
                             chapter.setWorld(parseName());
                     }
                 }//TODO empty fields
-            }}}
+            }
+        }return chapter;
+    }
 
     public Weapon parseWeapon() throws XMLStreamException {
         while (xmlReader.hasNext()) {
@@ -144,12 +140,39 @@ public class XMLParser {
         return null;
     }
 
-    public Double parseHealth() {
-        return Double.parseDouble(xmlReader.getText());
+    public Double parseHealth() throws XMLStreamException {
+        xmlReader.next();
+        return xmlReader.getText().isEmpty() ? null : Double.parseDouble(xmlReader.getText());
     }
 
-    public String parseName() {
-        return xmlReader.getText();
+    public String parseName() throws XMLStreamException {
+
+        while (xmlReader.hasNext()) {
+            int eventType = xmlReader.next();
+            if (eventType == XMLStreamConstants.CHARACTERS) {
+                String text = xmlReader.getText().trim();
+                if (!text.isEmpty()) {
+                    return text;
+                }
+            }
+            if (eventType == XMLStreamConstants.END_ELEMENT) {
+                break;
+            }
+        }
+        return null;
+//        while (xmlReader.hasNext()) {
+//            int eventType = xmlReader.next();
+//            if (eventType == XMLStreamConstants.CHARACTERS) {
+//                String text = xmlReader.getText().trim();
+//                if (!text.isEmpty()) {
+//                    return text;
+//                }
+//            }
+//            if (eventType == XMLStreamConstants.END_ELEMENT) {
+//                break;
+//            }
+//        }
+//        return null;
     }
 
     public MeleeWeapon parseMeleeWeapon() throws XMLStreamException {
@@ -195,11 +218,13 @@ public class XMLParser {
         }
         return coordinates;
     }
-    public long parseYCoordinate (){//TODO NumberFormatExceotion
+    public long parseYCoordinate () throws XMLStreamException {//TODO NumberFormatExceotion
+        //xmlReader.next();
         return  Long.parseLong(xmlReader.getText());
     }
 
-    public long parseXCoordinate () {//TODO NumberFormatExceotion
+    public long parseXCoordinate () throws XMLStreamException {//TODO NumberFormatExceotion
+       // xmlReader.next();
         return Long.parseLong(xmlReader.getText());
     }
 }
