@@ -16,4 +16,17 @@ public class Chapter {
     public void setWorld(String world) {
         this.world = world;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getParentLegion() {
+        return parentLegion;
+    }
+
+    public String getWorld() {
+        return world;
+    }
+
 }

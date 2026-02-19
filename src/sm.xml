@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spaceMarines>
+    <spaceMarine>
+        <id>1</id>
+        <name>Ultramarine Sergeant</name>
+        <coordinates>
+            <x>150</x>
+            <y>-300</y>
+        </coordinates>
+        <health>85.5</health>
+        <AstartesCategory>AGGRESSOR</AstartesCategory>
+        <Weapon>BOLT_RIFLE</Weapon>
+        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
+        <Chapter>
+            <name>Ultramarines</name>
+            <parentLegion>Ultramar</parentLegion>
+            <world>Macragge</world>
+        </Chapter>
+    </spaceMarine>
+
+    <spaceMarine>
+        <id>2</id>
+        <name>Blood Angel</name>
+        <coordinates>
+            <x>-200</x>
+            <y>450</y>
+        </coordinates>
+        <health>92.3</health>
+        <AstartesCategory>SUPPRESSOR</AstartesCategory>
+        <Weapon>COMBI_PLASMA_GUN</Weapon>
+        <meleeWeapon>POWER_SWORD</meleeWeapon>
+        <Chapter>
+            <name>Blood Angels</name>
+            <parentLegion>Baalam</parentLegion>
+            <world>Baal</world>
+        </Chapter>
+    </spaceMarine>
+</spaceMarines>
