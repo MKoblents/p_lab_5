@@ -14,9 +14,13 @@ public class SpaceMarine {
     private Weapon weaponType; //Поле может быть null
     private MeleeWeapon meleeWeapon; //Поле не может быть null
     private Chapter chapter; //Поле может быть null
-    public SpaceMarine(String name, MeleeWeapon meleeWeapon){
+    public SpaceMarine(){
+        //TODO id, creation data,...
+    }
+    public SpaceMarine(String name, Coordinates coordinates, MeleeWeapon meleeWeapon){
         this.name = name;
-        this.meleeWeapon = meleeWeapon;
+
+        this.coordinates = coordinates;
     }
 
     @Override
@@ -26,5 +30,37 @@ public class SpaceMarine {
 
     public long getId() {
         return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCategory(AstartesCategory category) {
+        this.category = category;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setChapter(Chapter chapter) {
+        this.chapter = chapter;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setHealth(Double health) {
+        this.health = health;
+    }
+
+    public void setMeleeWeapon(MeleeWeapon meleeWeapon) {
+        this.meleeWeapon = meleeWeapon;
+    }
+
+    public void setWeaponType(Weapon weaponType) {
+        this.weaponType = weaponType;
     }
 }

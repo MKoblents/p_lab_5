@@ -11,4 +11,12 @@ public class Coordinates {
     public long getY() {
         return y;
     }
+
+    public void setX(long x) {
+        this.x = x;
+    }
+
+    public void setY(long y) {
+        this.y = y;
+    }
 }

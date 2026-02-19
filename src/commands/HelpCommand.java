@@ -1,9 +1,7 @@
-package Commands;
+package commands;
 
 import manager.Invoker;
 import manager.ProgramManager;
-
-import java.util.Map;
 
 public class HelpCommand implements Command {
     private String helpInformation = "вывести справку по доступным командам";

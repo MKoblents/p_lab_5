@@ -1,9 +1,7 @@
-package Commands;
+package commands;
 
-import inputWorkers.InputManager;
 import manager.CollectionManager;
 import manager.ProgramManager;
-import outputWorkers.CollectionSaver;
 
 public class InfoCommand implements Command{
     private ProgramManager programManager;

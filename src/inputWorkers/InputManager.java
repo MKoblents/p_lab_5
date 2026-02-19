@@ -22,7 +22,7 @@ public class InputManager {
             String element = reader.nextLine();
 //            parser.parse(element); parse an element ->
             if (validator.isValid(element)){
-                return new SpaceMarine(element, MeleeWeapon.CHAIN_AXE);
+                return new SpaceMarine();
             }else {  // #TODO throw exception
                 System.out.println("your data is incorrect, please, try again"); // How to quit this method???
                 return getElement();
