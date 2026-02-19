@@ -1,13 +1,58 @@
-import java.util.HashMap;
-import java.util.Map;
+import inputWorkers.*;
+import manager.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.List;
+
 public class Main {
-    private Map hystory = new HashMap<>();
     public static void main(String[] args) {
-        XM
+        try {
+            String xmlFilePath = "/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml";
 
+            XMLParser parser = new XMLParser(xmlFilePath);
+
+            List<SpaceMarine> marines = parser.parseSpaceMarines(xmlFilePath);
+
+            System.out.println("=== Parsed Space Marines ===");
+            System.out.println("Total count: " + marines.size() + "\n");
+
+            for (int i = 0; i < marines.size(); i++) {
+                SpaceMarine marine = marines.get(i);
+                System.out.println("Marine #" + (i + 1) + ":");
+                System.out.println("  Name: " + marine.getName());
+                System.out.println("  ID: " + marine.getId());
+                System.out.println("  Health: " + marine.getHealth());
+                System.out.println("  Category: " + marine.getCategory());
+                System.out.println("  Weapon: " + marine.getWeaponType());
+                System.out.println("  Melee Weapon: " + marine.getMeleeWeapon());
+
+                if (marine.getCoordinates() != null) {
+                    System.out.println("  Coordinates: (" +
+                            marine.getCoordinates().getX() + ", " +
+                            marine.getCoordinates().getY() + ")");
+                }
+
+                if (marine.getChapter() != null) {
+                    System.out.println("  Chapter: " + marine.getChapter().getName());
+                    System.out.println("  World: " + marine.getChapter().getWorld());
+                }
+
+                System.out.println();
+            }
+
+            System.out.println("=== Validation Tests ===");
+            System.out.println("✓ Parsing completed successfully!");
+            System.out.println("✓ Expected: 2 marines, Got: " + marines.size());
+
+            if (marines.size() == 2) {
+                System.out.println("✓ Test PASSED!");
+            } else {
+                System.out.println("✗ Test FAILED!");
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error during parsing:");
+            e.printStackTrace();
+        }
     }
 }
 
