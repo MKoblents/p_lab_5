@@ -1,6 +1,9 @@
 package inputWorkers;
 
+import enums.AstartesCategory;
 import enums.MeleeWeapon;
+import enums.Weapon;
+import manager.Chapter;
 import manager.SpaceMarine;
 import manager.Coordinates;
 
@@ -71,11 +74,74 @@ public class XMLParser {
                 }else if ("health".equalsIgnoreCase(currentFieldName)){
                     spaceMarine.setHealth(parseHealth());
                 } else if ("AstartesCategory".equalsIgnoreCase(currentFieldName)) {
-
+                    spaceMarine.setCategory(parseAstartesCategory());
+                } else if ("Weapon".equalsIgnoreCase(currentFieldName)) {
+                    spaceMarine.setWeaponType(parseWeapon());
+                } else if ("Chapter".equalsIgnoreCase(currentFieldName)){
+                    spaceMarine.setChapter(parseChapter());
                 }
             }
         }
         return spaceMarine;
+    }
+
+    public Chapter parseChapter() throws XMLStreamException {
+        Chapter chapter = new Chapter();
+        String currentField = "";
+        while (xmlReader.hasNext()) {
+            xmlReader.next();
+            if (xmlReader.isEndElement() && "Chapter".equalsIgnoreCase(xmlReader.getLocalName())) {
+                break;
+            }
+            if (xmlReader.isStartElement()) {
+                currentField = xmlReader.getLocalName().toLowerCase();
+            }
+            if (xmlReader.isCharacters() && !currentField.isEmpty()) {
+                String value = xmlReader.getText().trim();
+                if (!value.isEmpty()) {
+                    switch (currentField) {
+                        case "name":
+                            chapter.setName(parseName());
+                            break;
+                        case "parentlegion":
+                            chapter.setParentLegion(parseName());
+                            break;
+                        case "world":
+                            chapter.setWorld(parseName());
+                    }
+                }//TODO empty fields
+            }}}
+
+    public Weapon parseWeapon() throws XMLStreamException {
+        while (xmlReader.hasNext()) {
+            xmlReader.next();
+            if (xmlReader.isEndElement() && "weapon".equalsIgnoreCase(xmlReader.getLocalName())) {
+                break;
+            }
+            if (xmlReader.isCharacters()) {
+                String value = xmlReader.getText().trim();
+                if (!value.isEmpty()) {
+                    return Weapon.valueOf(value.toUpperCase());
+                }
+            }
+        }
+        return null;
+    }
+
+    public AstartesCategory parseAstartesCategory() throws XMLStreamException {
+        while (xmlReader.hasNext()) {
+            xmlReader.next();
+            if (xmlReader.isEndElement() && "AstartesCategory".equalsIgnoreCase(xmlReader.getLocalName())) {
+                break;
+            }
+            if (xmlReader.isCharacters()) {
+                String value = xmlReader.getText().trim();
+                if (!value.isEmpty()) {
+                    return AstartesCategory.valueOf(value.toUpperCase());
+                }
+            }
+        }
+        return null;
     }
 
     public Double parseHealth() {
