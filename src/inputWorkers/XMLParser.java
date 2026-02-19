@@ -91,17 +91,17 @@ public class XMLParser {
                 currentField = xmlReader.getLocalName().toLowerCase();
             }
             if (xmlReader.isCharacters() && !currentField.isEmpty()) {
-                String value = xmlReader.getText().trim();
+                String value = getTrimmedText();
                 if (!value.isEmpty()) {
                     switch (currentField) {
                         case "name":
-                            chapter.setName(parseName());
+                            chapter.setName(value);
                             break;
                         case "parentlegion":
-                            chapter.setParentLegion(parseName());
+                            chapter.setParentLegion(value);
                             break;
                         case "world":
-                            chapter.setWorld(parseName());
+                            chapter.setWorld(value);
                     }
                 }//TODO empty fields
             }
@@ -115,7 +115,7 @@ public class XMLParser {
                 break;
             }
             if (xmlReader.isCharacters()) {
-                String value = xmlReader.getText().trim();
+                String value = getTrimmedText();
                 if (!value.isEmpty()) {
                     return Weapon.valueOf(value.toUpperCase());
                 }
@@ -131,7 +131,7 @@ public class XMLParser {
                 break;
             }
             if (xmlReader.isCharacters()) {
-                String value = xmlReader.getText().trim();
+                String value = getTrimmedText();
                 if (!value.isEmpty()) {
                     return AstartesCategory.valueOf(value.toUpperCase());
                 }
@@ -150,7 +150,7 @@ public class XMLParser {
         while (xmlReader.hasNext()) {
             int eventType = xmlReader.next();
             if (eventType == XMLStreamConstants.CHARACTERS) {
-                String text = xmlReader.getText().trim();
+                String text = getTrimmedText();
                 if (!text.isEmpty()) {
                     return text;
                 }
@@ -160,19 +160,6 @@ public class XMLParser {
             }
         }
         return null;
-//        while (xmlReader.hasNext()) {
-//            int eventType = xmlReader.next();
-//            if (eventType == XMLStreamConstants.CHARACTERS) {
-//                String text = xmlReader.getText().trim();
-//                if (!text.isEmpty()) {
-//                    return text;
-//                }
-//            }
-//            if (eventType == XMLStreamConstants.END_ELEMENT) {
-//                break;
-//            }
-//        }
-//        return null;
     }
 
     public MeleeWeapon parseMeleeWeapon() throws XMLStreamException {
@@ -182,7 +169,7 @@ public class XMLParser {
                 break;
             }
             if (xmlReader.isCharacters()) {
-                String value = xmlReader.getText().trim();
+                String value = getTrimmedText();
                 if (!value.isEmpty()) {
                     return MeleeWeapon.valueOf(value.toUpperCase());
                 }
@@ -203,14 +190,14 @@ public class XMLParser {
                 currentField = xmlReader.getLocalName().toLowerCase().trim();
             }
             if (xmlReader.isCharacters() && !currentField.isEmpty()) {
-                String value = xmlReader.getText().trim();
+                String value = getTrimmedText();
                 if (!value.isEmpty()) {
                     switch (currentField) {
                         case "x":
-                            coordinates.setX(parseXCoordinate());
+                            coordinates.setX(parseLongField());
                             break;
                         case "y":
-                            coordinates.setY(parseYCoordinate());
+                            coordinates.setY(parseLongField());
                             break;
                     }
                 }//TODO empty fields
@@ -218,13 +205,15 @@ public class XMLParser {
         }
         return coordinates;
     }
-    public long parseYCoordinate () throws XMLStreamException {//TODO NumberFormatExceotion
-        //xmlReader.next();
-        return  Long.parseLong(xmlReader.getText());
+    public long parseLongField(){//TODO NumberFormatExceotion
+        try {
+            return Long.parseLong(getTrimmedText());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+    private String getTrimmedText(){
+        return xmlReader.getText().trim();
     }
 
-    public long parseXCoordinate () throws XMLStreamException {//TODO NumberFormatExceotion
-       // xmlReader.next();
-        return Long.parseLong(xmlReader.getText());
-    }
 }
