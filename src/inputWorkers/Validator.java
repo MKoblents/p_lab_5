@@ -54,20 +54,22 @@ public class Validator {
             spaceMarine.setName("SpaceMarine"+spaceMarine.getId());
             throw new NullPointerException("Name can't be null or empty!. Replaced with 'SpaceMarine'"+spaceMarine.getId());
         }return true;
+    }
 
+    public static boolean isCoordinatesValid(SpaceMarine spaceMarine) throws UnavailableCoordinateException {
+        Coordinates coordinates = spaceMarine.getCoordinates();
+        return isXCoordinateValid(coordinates) && isYCoordinateValid(coordinates);
     }
-    public static boolean isCoordinatesValid(Coordinates coordinates) throws UnavailableCoordinateException {
-        return isXCoordinateValid(coordinates.getX()) && isYCoordinateValid(coordinates.getY());
-    }
-    public static boolean isXCoordinateValid(long x) throws UnavailableCoordinateException {
-        if (x<-617){//TODO diapason
-            throw new UnavailableCoordinateException("X must be bigger than -617");
+    public static boolean isXCoordinateValid(Coordinates coordinates) throws UnavailableCoordinateException {
+        if (coordinates.getX()<-617){//TODO diapason
+            coordinates.setX(0);
+            throw new UnavailableCoordinateException("X must be bigger than -617, replaced with 0");
         }return true;
     }
-    public static boolean isYCoordinateValid(long y) throws UnavailableCoordinateException {
+    public static boolean isYCoordinateValid(Coordinates coordinates) throws UnavailableCoordinateException {
         //#TODO diapason
         if (y<-842){//TODO diapason
-            throw new UnavailableCoordinateException("X must be bigger than -617");
+            throw new UnavailableCoordinateException("Y must be bigger than -842, replaced with 0");
         }return true;
     }
     public static boolean isHealthValid(double health) throws UnavailableHealthException{
