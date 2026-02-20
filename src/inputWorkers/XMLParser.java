@@ -58,25 +58,28 @@ public class XMLParser {
                 break;
             }
             if (xmlReader.isStartElement()) {
-                currentFieldName = xmlReader.getLocalName();
-                if ("coordinates".equalsIgnoreCase(currentFieldName)) {
-                    spaceMarine.setCoordinates(parseCoordinates());
-                } else if ("meleeWeapon".equalsIgnoreCase(currentFieldName)) {
-                    spaceMarine.setMeleeWeapon(parseMeleeWeapon());
-                } else if ("name".equalsIgnoreCase(currentFieldName)) {
-                    spaceMarine.setName(parseStringField());
-                }else if ("health".equalsIgnoreCase(currentFieldName)){
-                    spaceMarine.setHealth(parseDoubleField());
-                } else if ("AstartesCategory".equalsIgnoreCase(currentFieldName)) {
-                    spaceMarine.setCategory(parseAstartesCategory());
-                } else if ("Weapon".equalsIgnoreCase(currentFieldName)) {
-                    spaceMarine.setWeaponType(parseWeapon());
-                } else if ("Chapter".equalsIgnoreCase(currentFieldName)){
-                    spaceMarine.setChapter(parseChapter());
-                }
+                currentFieldName = xmlReader.getLocalName().toLowerCase();
+                parseSpaseNarineField(spaceMarine, currentFieldName);
             }
         }
         return spaceMarine;
+    }
+    private void parseSpaseNarineField(SpaceMarine marine, String fieldName){
+        try {
+            switch (fieldName) {
+                case "name" -> marine.setName(parseStringField());
+                case "id" -> marine.setId(parseLongField());
+                case "health" -> marine.setHealth(parseDoubleField());
+                case "coordinates" -> marine.setCoordinates(parseCoordinates());
+                case "astartescategory" -> marine.setCategory(parseAstartesCategory());
+                case "weapon" -> marine.setWeaponType(parseWeapon());
+                case "meleeweapon" -> marine.setMeleeWeapon(parseMeleeWeapon());
+                case "chapter" -> marine.setChapter(parseChapter());
+                default -> {}
+            }
+        } catch (XMLStreamException e) {
+            System.err.println("Warning: Failed to parse field '" + fieldName + "': " + e.getMessage());
+        }
     }
 
     public Chapter parseChapter() throws XMLStreamException {
@@ -192,24 +195,42 @@ public class XMLParser {
         }
         return coordinates;
     }
-    private void parseCoordinateField(Coordinates coordinates, String fieldName) {
+    private void parseCoordinateField(Coordinates coordinates, String fieldName) throws XMLStreamException {
         String value = getTrimmedText();
         if (value == null || value.isEmpty()) {
             return;
         }
-        long coordinateValue = parseLongField();
-        switch (fieldName) {
-            case "x" -> coordinates.setX(coordinateValue);
-            case "y" -> coordinates.setY(coordinateValue);
+        try {
+            long coordinateValue = Long.parseLong(value);
+            switch (fieldName) {
+                case "x" -> coordinates.setX(coordinateValue);
+                case "y" -> coordinates.setY(coordinateValue);
+            }
         }
+        catch (NumberFormatException e){
+            return;
+        }
+
     }
 
-    public long parseLongField(){
-        try {
-            return Long.parseLong(getTrimmedText());
-        } catch (NumberFormatException e) {
-            return 0;
+    public long parseLongField() throws XMLStreamException {
+        while (xmlReader.hasNext()) {
+            int eventType = xmlReader.next();
+            if (eventType == XMLStreamConstants.CHARACTERS) {
+                String text = getTrimmedText();
+                if (text != null && !text.isEmpty()) {
+                    try {
+                        return Long.parseLong(text);
+                    } catch (NumberFormatException e) {
+                        return 0;
+                    }
+                }
+            }
+            if (eventType == XMLStreamConstants.END_ELEMENT) {
+                return 0;
+            }
         }
+        return 0;
     }
     private String getTrimmedText(){
         return xmlReader.getText().trim();
