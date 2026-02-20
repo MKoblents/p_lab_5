@@ -16,7 +16,7 @@ public class UpdateCommand implements Command{
 
     @Override
     public void execute() {
-        int id = programManager.getInputManager().getLastInt();
+       // int id = programManager.getInputManager().getLastInt();
         //#TODO something like addCommand but with choosing change or not
     }
 }
