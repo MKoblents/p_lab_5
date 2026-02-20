@@ -107,37 +107,32 @@ public class XMLParser {
             }
         }return chapter;
     }
-
-    public Weapon parseWeapon() throws XMLStreamException {
+    private <T extends Enum<T>> T parseEnum(String tagName, Class<T> enumType) throws XMLStreamException {
         while (xmlReader.hasNext()) {
             xmlReader.next();
-            if (xmlReader.isEndElement() && "weapon".equalsIgnoreCase(xmlReader.getLocalName())) {
+            if (xmlReader.isEndElement() && tagName.equalsIgnoreCase(xmlReader.getLocalName())) {
                 break;
             }
             if (xmlReader.isCharacters()) {
                 String value = getTrimmedText();
-                if (!value.isEmpty()) {
-                    return Weapon.valueOf(value.toUpperCase());
+                if (value != null && !value.isEmpty()) {
+                    try {
+                        return Enum.valueOf(enumType, value.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
                 }
             }
         }
         return null;
     }
 
+    public Weapon parseWeapon() throws XMLStreamException {
+        return parseEnum("weapon", Weapon.class);
+    }
+
     public AstartesCategory parseAstartesCategory() throws XMLStreamException {
-        while (xmlReader.hasNext()) {
-            xmlReader.next();
-            if (xmlReader.isEndElement() && "AstartesCategory".equalsIgnoreCase(xmlReader.getLocalName())) {
-                break;
-            }
-            if (xmlReader.isCharacters()) {
-                String value = getTrimmedText();
-                if (!value.isEmpty()) {
-                    return AstartesCategory.valueOf(value.toUpperCase());
-                }
-            }
-        }
-        return null;
+        return parseEnum("AstartesCategory", AstartesCategory.class);
     }
 
     public Double parseHealth() throws XMLStreamException {
@@ -163,19 +158,7 @@ public class XMLParser {
     }
 
     public MeleeWeapon parseMeleeWeapon() throws XMLStreamException {
-        while (xmlReader.hasNext()) {
-            xmlReader.next();
-            if (xmlReader.isEndElement() && "meleeWeapon".equalsIgnoreCase(xmlReader.getLocalName())) {
-                break;
-            }
-            if (xmlReader.isCharacters()) {
-                String value = getTrimmedText();
-                if (!value.isEmpty()) {
-                    return MeleeWeapon.valueOf(value.toUpperCase());
-                }
-            }
-        }
-        return null;
+        return parseEnum("MeleeWeapon", MeleeWeapon.class);
     }
 
     public Coordinates parseCoordinates() throws XMLStreamException {
@@ -205,7 +188,7 @@ public class XMLParser {
         }
         return coordinates;
     }
-    public long parseLongField(){//TODO NumberFormatExceotion
+    public long parseLongField(){
         try {
             return Long.parseLong(getTrimmedText());
         } catch (NumberFormatException e) {
