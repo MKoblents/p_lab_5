@@ -66,7 +66,7 @@ public class XMLParser {
                 } else if ("name".equalsIgnoreCase(currentFieldName)) {
                     spaceMarine.setName(parseStringField());
                 }else if ("health".equalsIgnoreCase(currentFieldName)){
-                    spaceMarine.setHealth(parseHealth());
+                    spaceMarine.setHealth(parseDoubleField());
                 } else if ("AstartesCategory".equalsIgnoreCase(currentFieldName)) {
                     spaceMarine.setCategory(parseAstartesCategory());
                 } else if ("Weapon".equalsIgnoreCase(currentFieldName)) {
@@ -135,9 +135,25 @@ public class XMLParser {
         return parseEnum("AstartesCategory", AstartesCategory.class);
     }
 
-    public Double parseHealth() throws XMLStreamException {
-        xmlReader.next();
-        return xmlReader.getText().isEmpty() ? null : Double.parseDouble(xmlReader.getText());
+    public double parseDoubleField() throws XMLStreamException {
+        while (xmlReader.hasNext()) {
+            int eventType = xmlReader.next();
+            if (eventType == XMLStreamConstants.CHARACTERS) {
+                String text = getTrimmedText();
+                if (text != null && !text.isEmpty()) {
+                    try {
+                        return Double.parseDouble(text);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Warning: Invalid health value: '" + text + "'");
+                        return 0;
+                    }
+                }
+            }
+            if (eventType == XMLStreamConstants.END_ELEMENT) {
+                return 0;
+            }
+        }
+        return 0;
     }
 
     public String parseStringField() throws XMLStreamException {
@@ -179,15 +195,10 @@ public class XMLParser {
         if (value == null || value.isEmpty()) {
             return;
         }
-        try {
-            long coordinateValue = Long.parseLong(value);
-
-            switch (fieldName) {
-                case "x" -> coordinates.setX(coordinateValue);
-                case "y" -> coordinates.setY(coordinateValue);
-            }
-        } catch (NumberFormatException e) {
-            System.err.println("Warning: Invalid coordinate value for '" + fieldName + "': '" + value + "'");
+        long coordinateValue = parseLongField();
+        switch (fieldName) {
+            case "x" -> coordinates.setX(coordinateValue);
+            case "y" -> coordinates.setY(coordinateValue);
         }
     }
 
