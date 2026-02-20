@@ -5,7 +5,9 @@ import java.util.ArrayList;
 public class CollectionManager {
     private ArrayList<SpaceMarine> spaceMarines;
     private Data creationData;
+    private long nextId =1;
     public boolean addItem(SpaceMarine spaceMarine){
+        spaceMarine.setId(generateId());
         return this.spaceMarines.add(spaceMarine);
     }
 
@@ -21,5 +23,11 @@ public class CollectionManager {
     }
     public void clear(){
         spaceMarines.clear();
+    }
+    public long getCorrectId(SpaceMarine spaceMarine){
+        return (long) spaceMarines.indexOf(spaceMarine)+1;
+    }
+    public long generateId() {
+        return nextId++;
     }
 }

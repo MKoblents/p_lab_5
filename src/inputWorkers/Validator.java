@@ -3,32 +3,56 @@ package inputWorkers;
 import exceptions.AlreadyExistedIdException;
 import exceptions.UnavailableCoordinateException;
 import exceptions.UnavailableHealthException;
+import exceptions.WrongIdException;
+import manager.CollectionManager;
 import manager.Coordinates;
 import manager.ProgramManager;
 import manager.SpaceMarine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Validator {
-//    private final ProgramManager programManager;
-//    public Validator(ProgramManager programManager){
-//        this.programManager = programManager;
-//    }
-    public static boolean isValid(String data){
-//        #TODO
-        return true;
+    private CollectionManager manager;
+    private List<SpaceMarine> spaceMarines;
+    public Validator(CollectionManager manager){
+        this.spaceMarines = manager.getSpaceMarines();
+        this.manager =manager;
     }
-    public static boolean isIdValid(List<SpaceMarine> spaseMarines, long id) throws AlreadyExistedIdException{
-        for (SpaceMarine spaceMarine: spaseMarines){
-            if (spaceMarine.getId() == id){//#TODO diapason
-                throw new AlreadyExistedIdException();
+    public boolean isSpaceMarinesValid(){
+        ArrayList<SpaceMarine> badSpaceMarines = new ArrayList<>();
+        for (SpaceMarine spaceMarine: spaceMarines){
+            if (!isSpaceMarineValid()){
+                badSpaceMarines.add(spaceMarine);//TODO
             }
         }
         return true;
     }
-    public static boolean isNameValid(String name) throws NullPointerException{
+
+    public boolean isSpaceMarineValid(SpaceMarine spaceMarine){
+        try {
+            return isIdValid(spaceMarine) && isNameValid(spaceMarine) && isCoordinatesValid(spaceMarine)&&isCreationDateValid(spaceMarine) && isHealthValid(spaceMarine) && isMeleeWeaponValid(spaceMarine) && isChapterValid(spaceMarine);
+        }catch (AlreadyExistedIdException e){
+
+        }
+    }
+
+    public boolean isIdValid(SpaceMarine spaceMarine) throws WrongIdException{
+        long correctId = manager.getCorrectId(spaceMarine);
+        long realId = spaceMarine.getId();
+        if ( correctId== realId){
+            return true;
+        }else {
+            spaceMarine.setId(correctId);
+            throw new WrongIdException(spaceMarine.getName(), realId, correctId);
+        }
+
+    }
+    public boolean isNameValid(SpaceMarine spaceMarine) throws NullPointerException{
+        String name = spaceMarine.getName();
         if (name == null || name.isEmpty()){
-            throw new NullPointerException("Name can't be null or empty!");
+            spaceMarine.setName("SpaceMarine"+spaceMarine.getId());
+            throw new NullPointerException("Name can't be null or empty!. Replaced with 'SpaceMarine'"+spaceMarine.getId());
         }return true;
 
     }
