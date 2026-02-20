@@ -4,6 +4,8 @@ import enums.AstartesCategory;
 import enums.MeleeWeapon;
 import enums.Weapon;
 
+import java.time.ZonedDateTime;
+
 public class SpaceMarine {
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -63,4 +65,37 @@ public class SpaceMarine {
     public void setWeaponType(Weapon weaponType) {
         this.weaponType = weaponType;
     }
+
+    public AstartesCategory getCategory() {
+        return category;
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    public Chapter getChapter() {
+        return chapter;
+    }
+
+    public Double getHealth() {
+        return health;
+    }
+
+    public MeleeWeapon getMeleeWeapon() {
+        return meleeWeapon;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Weapon getWeaponType() {
+        return weaponType;
+    }
+
+    public ZonedDateTime getCreationDate() {
+        return creationDate;
+    }
+
 }

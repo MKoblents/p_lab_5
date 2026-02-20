@@ -11,7 +11,7 @@ public class Invoker {
     public void registerCommand(String name, Command command){
         commandMap.put(name, command);
     }
-    public boolean runCommand(String key){
+    public void runCommand(String key){
         commandMap.get(key).execute();
     }
 
