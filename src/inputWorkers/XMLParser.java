@@ -64,7 +64,7 @@ public class XMLParser {
                 } else if ("meleeWeapon".equalsIgnoreCase(currentFieldName)) {
                     spaceMarine.setMeleeWeapon(parseMeleeWeapon());
                 } else if ("name".equalsIgnoreCase(currentFieldName)) {
-                    spaceMarine.setName(parseName());
+                    spaceMarine.setName(parseStringField());
                 }else if ("health".equalsIgnoreCase(currentFieldName)){
                     spaceMarine.setHealth(parseHealth());
                 } else if ("AstartesCategory".equalsIgnoreCase(currentFieldName)) {
@@ -140,18 +140,14 @@ public class XMLParser {
         return xmlReader.getText().isEmpty() ? null : Double.parseDouble(xmlReader.getText());
     }
 
-    public String parseName() throws XMLStreamException {
-
+    public String parseStringField() throws XMLStreamException {
         while (xmlReader.hasNext()) {
             int eventType = xmlReader.next();
             if (eventType == XMLStreamConstants.CHARACTERS) {
-                String text = getTrimmedText();
-                if (!text.isEmpty()) {
-                    return text;
-                }
+                return getTrimmedText();
             }
             if (eventType == XMLStreamConstants.END_ELEMENT) {
-                break;
+                return null;
             }
         }
         return null;
