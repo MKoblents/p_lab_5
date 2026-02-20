@@ -81,7 +81,7 @@ public class XMLParser {
 
     public Chapter parseChapter() throws XMLStreamException {
         Chapter chapter = new Chapter();
-        String currentField = "";
+        String currentField = null;
         while (xmlReader.hasNext()) {
             xmlReader.next();
             if (xmlReader.isEndElement() && "Chapter".equalsIgnoreCase(xmlReader.getLocalName())) {
@@ -90,22 +90,24 @@ public class XMLParser {
             if (xmlReader.isStartElement()) {
                 currentField = xmlReader.getLocalName().toLowerCase();
             }
-            if (xmlReader.isCharacters() && !currentField.isEmpty()) {
-                String value = getTrimmedText();
-                if (!value.isEmpty()) {
-                    switch (currentField) {
-                        case "name":
-                            chapter.setName(value);
-                            break;
-                        case "parentlegion":
-                            chapter.setParentLegion(value);
-                            break;
-                        case "world":
-                            chapter.setWorld(value);
-                    }
-                }//TODO empty fields
+            if (xmlReader.isCharacters() && currentField != null) {
+                processChapterField(chapter, currentField);
             }
-        }return chapter;
+        }
+        return chapter;
+    }
+
+    private void processChapterField(Chapter chapter, String fieldName) {
+        String value = getTrimmedText();
+        if (value == null || value.isEmpty()) {
+            return;
+        }
+        switch (fieldName) {
+            case "name" -> chapter.setName(value);
+            case "parentlegion" -> chapter.setParentLegion(value);
+            case "world" -> chapter.setWorld(value);
+            default -> {}
+        }
     }
     private <T extends Enum<T>> T parseEnum(String tagName, Class<T> enumType) throws XMLStreamException {
         while (xmlReader.hasNext()) {
