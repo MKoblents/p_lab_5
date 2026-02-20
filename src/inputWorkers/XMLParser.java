@@ -163,7 +163,7 @@ public class XMLParser {
 
     public Coordinates parseCoordinates() throws XMLStreamException {
         Coordinates coordinates = new Coordinates();
-        String currentField = "";
+        String currentField = null;
         while (xmlReader.hasNext()) {
             xmlReader.next();
             if (xmlReader.isEndElement() && "coordinates".equalsIgnoreCase(xmlReader.getLocalName())) {
@@ -172,22 +172,29 @@ public class XMLParser {
             if (xmlReader.isStartElement()) {
                 currentField = xmlReader.getLocalName().toLowerCase().trim();
             }
-            if (xmlReader.isCharacters() && !currentField.isEmpty()) {
-                String value = getTrimmedText();
-                if (!value.isEmpty()) {
-                    switch (currentField) {
-                        case "x":
-                            coordinates.setX(parseLongField());
-                            break;
-                        case "y":
-                            coordinates.setY(parseLongField());
-                            break;
-                    }
-                }//TODO empty fields
+            if (xmlReader.isCharacters() && currentField != null) {
+                parseCoordinateField(coordinates, currentField);
             }
         }
         return coordinates;
     }
+    private void parseCoordinateField(Coordinates coordinates, String fieldName) {
+        String value = getTrimmedText();
+        if (value == null || value.isEmpty()) {
+            return;
+        }
+        try {
+            long coordinateValue = Long.parseLong(value);
+
+            switch (fieldName) {
+                case "x" -> coordinates.setX(coordinateValue);
+                case "y" -> coordinates.setY(coordinateValue);
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Warning: Invalid coordinate value for '" + fieldName + "': '" + value + "'");
+        }
+    }
+
     public long parseLongField(){
         try {
             return Long.parseLong(getTrimmedText());
