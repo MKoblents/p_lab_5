@@ -50,4 +50,9 @@ public class CollectionManager {
     public void shuffle(){
         Collections.shuffle(spaceMarines);
     }
+    public double getSumOfHealth() {
+        return spaceMarines.stream()
+                .mapToDouble(SpaceMarine::getHealth)
+                .sum();
+    }
 }
