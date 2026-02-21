@@ -1,3 +1,5 @@
+import commands.HelpCommand;
+import commands.InfoCommand;
 import inputWorkers.*;
 import manager.*;
 
@@ -8,9 +10,14 @@ public class Main {
     public static void main(String[] args) {
         try {
             CollectionManager collectionManager = new CollectionManager();
+            ProgramManager programManager = new ProgramManager();
             String filePath = System.getenv("PLAB5");
             System.out.println(filePath);
             collectionManager.loadFromFile(filePath);
+            Invoker invoker = new Invoker();
+            invoker.registerCommand("help", new HelpCommand(programManager, invoker));
+            invoker.registerCommand("info", new InfoCommand(programManager));
+            invoker.runCommand("help");
 //            String xmlFilePath = "/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml";
 //
 //            XMLParser parser = new XMLParser(xmlFilePath);
