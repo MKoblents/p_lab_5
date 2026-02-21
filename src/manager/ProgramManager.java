@@ -13,9 +13,9 @@ public class ProgramManager {
     private CollectionSaver collectionSaver;
     private Validator validator;
 
-    public SpaceMarine getElement(){
-        return inputManager.getElement();
-    }
+//    public SpaceMarine getElement(){
+//        return inputManager.getElement();
+//    }
 
     public CollectionManager getCollectionManager() {
         return collectionManager;
