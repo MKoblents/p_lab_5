@@ -3,14 +3,19 @@ import inputWorkers.Validator;
 import inputWorkers.XMLParser;
 
 import javax.xml.crypto.Data;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class CollectionManager {
     private ArrayList<SpaceMarine> spaceMarines;
-    private Data creationData;
+    private ZonedDateTime creationData;
     private long nextId =1;
     private Validator validator = new Validator(this);
+    public CollectionManager(){
+        this.creationData = ZonedDateTime.now();
+    }
     public boolean addItem(SpaceMarine spaceMarine){
         spaceMarine.setId(generateId());
         return this.spaceMarines.add(spaceMarine);
@@ -28,7 +33,7 @@ public class CollectionManager {
         return spaceMarines;
     }
 
-    public Data getCreationData() {
+    public ZonedDateTime getCreationData() {
         return creationData;
     }
     public void remove(SpaceMarine spaceMarine){
@@ -42,5 +47,21 @@ public class CollectionManager {
     }
     public long generateId() {
         return nextId++;
+    }
+    public void shuffle(){
+        Collections.shuffle(spaceMarines);
+    }
+    public double getSumOfHealth() {
+        return spaceMarines.stream()
+                .mapToDouble(SpaceMarine::getHealth)
+                .sum();
+    }
+    public SpaceMarine getMinByMeleeWeapon() {
+        if (spaceMarines.isEmpty()) {
+            return null;
+        }
+        return spaceMarines.stream()
+                .min(Comparator.comparing(SpaceMarine::getMeleeWeapon))
+                .orElse(null);
     }
 }

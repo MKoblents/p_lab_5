@@ -3,6 +3,9 @@ package manager;
 public class Coordinates {
     private long x; //Значение поля должно быть больше -617
     private long y; //Значение поля должно быть больше -842
+    public String toString(){
+        return "("+this.x+"; "+this.y+")";
+    }
 
     public long getX() {
         return x;

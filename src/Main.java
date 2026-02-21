@@ -1,5 +1,4 @@
-import commands.HelpCommand;
-import commands.InfoCommand;
+import commands.*;
 import inputWorkers.*;
 import manager.*;
 
@@ -7,67 +6,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        CollectionManager collectionManager = new CollectionManager();
+        ProgramManager programManager = new ProgramManager();
+        String filePath = System.getenv("PLAB5");
+        System.out.println(filePath);
+        collectionManager.loadFromFile(filePath);
+        Invoker invoker = new Invoker();
+        invoker.registerCommand("help", new HelpCommand(invoker));
+        invoker.registerCommand("info", new InfoCommand(collectionManager));
+        invoker.registerCommand("show", new ShowCommand(collectionManager));
+        invoker.registerCommand("clear", new ClearCommand(collectionManager));
+        invoker.registerCommand("exit", new ExitCommand());
+        invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
+        invoker.registerCommand("sum of health", new SumOfHealthCommand(collectionManager));
+        invoker.registerCommand("min by meleeWeapon value", new MinByMeleeWeaponCommand(collectionManager));
+        while (true){
         try {
-            CollectionManager collectionManager = new CollectionManager();
-            ProgramManager programManager = new ProgramManager();
-            String filePath = System.getenv("PLAB5");
-            System.out.println(filePath);
-            collectionManager.loadFromFile(filePath);
-            Invoker invoker = new Invoker();
-            invoker.registerCommand("help", new HelpCommand(programManager, invoker));
-            invoker.registerCommand("info", new InfoCommand(programManager));
+//            invoker.runCommand("clear");
             invoker.runCommand("help");
-//            String xmlFilePath = "/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml";
-//
-//            XMLParser parser = new XMLParser(xmlFilePath);
-//
-//            List<SpaceMarine> marines = parser.parseSpaceMarines(xmlFilePath);
-//
-//            System.out.println("=== Parsed Space Marines ===");
-//            System.out.println("Total count: " + marines.size() + "\n");
-            ArrayList<SpaceMarine> marines = collectionManager.getSpaceMarines();
+            invoker.runCommand("info");
+            invoker.runCommand("show");
+            System.out.println("-------------------------------------------------------------------------------------");
+            invoker.runCommand("shuffle");
+            invoker.runCommand("show");
+            invoker.runCommand("sum of health");
+            invoker.runCommand("min by meleeWeapon value");
 
-            for (int i = 0; i < marines.size(); i++) {
-                SpaceMarine marine = marines.get(i);
-                System.out.println("Marine #" + (i + 1) + ":");
-                System.out.println("  Name: " + marine.getName());
-                System.out.println("  ID: " + marine.getId());
-                System.out.println("  Health: " + marine.getHealth());
-                System.out.println("  Category: " + marine.getCategory());
-                System.out.println("  Weapon: " + marine.getWeaponType());
-                System.out.println("  Melee Weapon: " + marine.getMeleeWeapon());
+            invoker.runCommand("exit");
 
-                if (marine.getCoordinates() != null) {
-                    System.out.println("  Coordinates: (" +
-                            marine.getCoordinates().getX() + ", " +
-                            marine.getCoordinates().getY() + ")");
-                }
-
-                if (marine.getChapter() != null) {
-                    System.out.println("  Chapter: " + marine.getChapter().getName());
-                    System.out.println("  World: " + marine.getChapter().getWorld());
-                }
-
-                System.out.println();
-            }
-
-            System.out.println("=== Validation Tests ===");
-            System.out.println("✓ Parsing completed successfully!");
-            System.out.println("✓ Expected: 2 marines, Got: " + marines.size());
-
-            if (marines.size() == 2) {
-                System.out.println("✓ Test PASSED!");
-            } else {
-                System.out.println("✗ Test FAILED!");
-            }
 
         } catch (Exception e) {
             System.err.println("Error during parsing:");
             e.printStackTrace();
         }
     }
-}
+}}
 
 
 // main
