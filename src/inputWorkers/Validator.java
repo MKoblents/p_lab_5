@@ -104,7 +104,7 @@ public class Validator {
     }
     public void healthValidate(SpaceMarine spaceMarine) throws UnavailableHealthException{
         double health = spaceMarine.getHealth();
-        if (health <= 0.0){
+        if (health < 0.0){
             spaceMarine.setHealth(0.0);
             throw new UnavailableHealthException(spaceMarine.getName(),health,0.0);
         }

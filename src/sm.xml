@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spaceMarines>
     <spaceMarine>
-        <id>1</id>
+        <id>555</id>
         <name>Ultramarine Sergeant</name>
         <coordinates>
             <x>150</x>
             <y>-300</y>
         </coordinates>
-        <health>hh</health>
+        <health>-5</health>
         <AstartesCategory>AGGRESSOR</AstartesCategory>
         <Weapon>BOLT_RIFLE</Weapon>
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
