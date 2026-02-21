@@ -8,7 +8,6 @@ import manager.Coordinates;
 import manager.SpaceMarine;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Validator {
@@ -18,21 +17,14 @@ public class Validator {
         this.spaceMarines = manager.getSpaceMarines();
         this.manager =manager;
     }
-    public boolean isSpaceMarinesValid(){
-        ArrayList<SpaceMarine> badSpaceMarines = new ArrayList<>();
-        for (SpaceMarine spaceMarine: spaceMarines){
-            if (!isSpaceMarineValid()){
-                badSpaceMarines.add(spaceMarine);//TODO
-            }
-        }
-        return true;
-    }
 
     public boolean isSpaceMarineValid(SpaceMarine spaceMarine){
         try {
             return isIdValid(spaceMarine) && isNameValid(spaceMarine) && isCoordinatesValid(spaceMarine)&&isCreationDateValid(spaceMarine) && isHealthValid(spaceMarine) && isMeleeWeaponValid(spaceMarine) && isChapterValid(spaceMarine);
-        }catch ( e){
-
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            isSpaceMarineValid(spaceMarine);
+            return true;
         }
     }
 
