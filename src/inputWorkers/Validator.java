@@ -23,6 +23,7 @@ public class Validator {
     }
 
     public void spaceMarineValidate(SpaceMarine spaceMarine){
+        if (spaceMarine == null){return;}
         try {
             idValidate(spaceMarine);
             nameValidate(spaceMarine);
@@ -30,14 +31,14 @@ public class Validator {
             creationDateValidate(spaceMarine);
             healthValidate(spaceMarine);
             meleeWeaponValidate(spaceMarine);
-            chaterValidate(spaceMarine);
+            chapterValidate(spaceMarine);
         }catch (Exception e){
             System.err.println(e.getMessage());
             spaceMarineValidate(spaceMarine);
         }
     }
 
-    public void chaterValidate(SpaceMarine spaceMarine) throws NullPointerException {
+    public void chapterValidate(SpaceMarine spaceMarine) throws NullPointerException {
          chapterNameValidate(spaceMarine);
          chapterWorldValidate(spaceMarine);
     }
