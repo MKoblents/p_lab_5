@@ -2,7 +2,7 @@
 <spaceMarines>
     <spaceMarine>
         <id>555</id>
-        <name>Ultramarine Sergeant</name>
+        <name>1</name>
         <coordinates>
             <x>150</x>
             <y>-300</y>
@@ -20,7 +20,59 @@
 
     <spaceMarine>
         <id>2</id>
-        <name>Blood Angel</name>
+        <name>2</name>
+        <coordinates>
+            <x>5566 </x>
+            <y>goj</y>
+        </coordinates>
+        <health>92.3</health>
+        <AstartesCategory>SUPPRESSOR</AstartesCategory>
+        <Weapon>COMBI_PLASMA_GUN</Weapon>
+        <meleeWeapon>POWER_SWORD</meleeWeapon>
+        <Chapter>
+            <name>Blood Angels</name>
+            <parentLegion>Baalam</parentLegion>
+            <world>Baal</world>
+        </Chapter>
+    </spaceMarine>
+    <spaceMarine>
+        <id>555</id>
+        <name>3</name>
+        <coordinates>
+            <x>150</x>
+            <y>-300</y>
+        </coordinates>
+        <health>-5</health>
+        <AstartesCategory>AGGRESSOR</AstartesCategory>
+        <Weapon>BOLT_RIFLE</Weapon>
+        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
+        <Chapter>
+            <name>Ultramarines</name>
+            <parentLegion>Ultramar</parentLegion>
+            <world>Macragge</world>
+        </Chapter>
+    </spaceMarine>
+    <spaceMarine>
+        <id>555</id>
+        <name>4</name>
+        <coordinates>
+            <x>150</x>
+            <y>-300</y>
+        </coordinates>
+        <health>-5</health>
+        <AstartesCategory>AGGRESSOR</AstartesCategory>
+        <Weapon>BOLT_RIFLE</Weapon>
+        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
+        <Chapter>
+            <name>Ultramarines</name>
+            <parentLegion>Ultramar</parentLegion>
+            <world>Macragge</world>
+        </Chapter>
+    </spaceMarine>
+
+    <spaceMarine>
+        <id>2</id>
+        <name>5</name>
         <coordinates>
             <x>5566 </x>
             <y>goj</y>

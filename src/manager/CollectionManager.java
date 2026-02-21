@@ -47,4 +47,7 @@ public class CollectionManager {
     public long generateId() {
         return nextId++;
     }
+    public void shuffle(){
+        Collections.shuffle(spaceMarines);
+    }
 }
