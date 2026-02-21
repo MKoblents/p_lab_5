@@ -4,6 +4,7 @@ import inputWorkers.XMLParser;
 
 import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CollectionManager {
     private ArrayList<SpaceMarine> spaceMarines;
@@ -18,6 +19,9 @@ public class CollectionManager {
         XMLParser parser = new XMLParser(filePath);
         this.spaceMarines = parser.parseSpaceMarines();
         validator.spaceMarinesValidate(this.spaceMarines);
+    }
+    public void sort(){
+        Collections.sort(spaceMarines);
     }
 
     public ArrayList<SpaceMarine> getSpaceMarines() {

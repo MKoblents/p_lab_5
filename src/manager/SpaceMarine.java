@@ -6,7 +6,7 @@ import enums.Weapon;
 
 import java.time.ZonedDateTime;
 
-public class SpaceMarine {
+public class SpaceMarine implements Comparable<SpaceMarine> {
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -19,6 +19,12 @@ public class SpaceMarine {
     public SpaceMarine(){
         //TODO id, creation data,...
     }
+
+    @Override
+    public int compareTo(SpaceMarine other) {
+        return Long.compare(this.id, other.id);
+    }
+
     public SpaceMarine(String name, Coordinates coordinates, MeleeWeapon meleeWeapon){
         this.name = name;
 
