@@ -30,7 +30,7 @@ public class Validator {
     public boolean isSpaceMarineValid(SpaceMarine spaceMarine){
         try {
             return isIdValid(spaceMarine) && isNameValid(spaceMarine) && isCoordinatesValid(spaceMarine)&&isCreationDateValid(spaceMarine) && isHealthValid(spaceMarine) && isMeleeWeaponValid(spaceMarine) && isChapterValid(spaceMarine);
-        }catch (AlreadyExistedIdException e){
+        }catch ( e){
 
         }
     }
@@ -53,7 +53,6 @@ public class Validator {
             spaceMarine.setId(correctId);
             throw new WrongIdException(spaceMarine.getName(), realId, correctId);
         }
-
     }
     public boolean isNameValid(SpaceMarine spaceMarine) throws NullPointerException{
         String name = spaceMarine.getName();
@@ -62,7 +61,6 @@ public class Validator {
             throw new NullPointerException("Name can't be null or empty!. Replaced with 'SpaceMarine'"+spaceMarine.getId());
         }return true;
     }
-
     public static boolean isCoordinatesValid(SpaceMarine spaceMarine) throws UnavailableCoordinateException {
         Coordinates coordinates = spaceMarine.getCoordinates();
         return isXCoordinateValid(coordinates) && isYCoordinateValid(coordinates);
@@ -78,9 +76,11 @@ public class Validator {
             throw new UnavailableCoordinateException("Y must be bigger than -842, replaced with 0");
         }return true;
     }
-    public static boolean isHealthValid(double health) throws UnavailableHealthException{
-        if (health == 0){
-            throw new UnavailableHealthException("Health must be bigger than 0");
+    public static boolean isHealthValid(SpaceMarine spaceMarine) throws UnavailableHealthException{
+        double health = spaceMarine.getHealth();
+        if (health <= 0.0){
+            spaceMarine.setHealth(0.0);
+            throw new UnavailableHealthException(spaceMarine.getName(),health,0.0);
         }return true;
     }
 
