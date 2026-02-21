@@ -1,13 +1,14 @@
 package commands;
 
+import manager.CollectionManager;
 import manager.ProgramManager;
 import manager.SpaceMarine;
 
 public class ShowCommand implements Command{
     private String helpInformation = "вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
-    private ProgramManager programManager;
-    public ShowCommand(ProgramManager programManager){
-        this.programManager = programManager;
+    private CollectionManager collectionManager;
+    public ShowCommand(CollectionManager collectionManager){
+        this.collectionManager=collectionManager;
     }
 
     @Override
@@ -17,7 +18,7 @@ public class ShowCommand implements Command{
 
     @Override
     public void execute() {
-        for (SpaceMarine spaceMarine: programManager.getCollectionManager().getSpaceMarines()){
+        for (SpaceMarine spaceMarine:collectionManager.getSpaceMarines()){
             System.out.println(spaceMarine);
         }
     }

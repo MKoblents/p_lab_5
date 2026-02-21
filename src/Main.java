@@ -1,5 +1,6 @@
 import commands.HelpCommand;
 import commands.InfoCommand;
+import commands.ShowCommand;
 import inputWorkers.*;
 import manager.*;
 
@@ -17,8 +18,10 @@ public class Main {
             Invoker invoker = new Invoker();
             invoker.registerCommand("help", new HelpCommand(invoker));
             invoker.registerCommand("info", new InfoCommand(collectionManager));
+            invoker.registerCommand("show", new ShowCommand(collectionManager));
             invoker.runCommand("help");
             invoker.runCommand("info");
+            invoker.runCommand("show");
 //            String xmlFilePath = "/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml";
 //
 //            XMLParser parser = new XMLParser(xmlFilePath);
@@ -29,29 +32,29 @@ public class Main {
 //            System.out.println("Total count: " + marines.size() + "\n");
             ArrayList<SpaceMarine> marines = collectionManager.getSpaceMarines();
 
-            for (int i = 0; i < marines.size(); i++) {
-                SpaceMarine marine = marines.get(i);
-                System.out.println("Marine #" + (i + 1) + ":");
-                System.out.println("  Name: " + marine.getName());
-                System.out.println("  ID: " + marine.getId());
-                System.out.println("  Health: " + marine.getHealth());
-                System.out.println("  Category: " + marine.getCategory());
-                System.out.println("  Weapon: " + marine.getWeaponType());
-                System.out.println("  Melee Weapon: " + marine.getMeleeWeapon());
-
-                if (marine.getCoordinates() != null) {
-                    System.out.println("  Coordinates: (" +
-                            marine.getCoordinates().getX() + ", " +
-                            marine.getCoordinates().getY() + ")");
-                }
-
-                if (marine.getChapter() != null) {
-                    System.out.println("  Chapter: " + marine.getChapter().getName());
-                    System.out.println("  World: " + marine.getChapter().getWorld());
-                }
-
-                System.out.println();
-            }
+//            for (int i = 0; i < marines.size(); i++) {
+//                SpaceMarine marine = marines.get(i);
+//                System.out.println("Marine #" + (i + 1) + ":");
+//                System.out.println("  Name: " + marine.getName());
+//                System.out.println("  ID: " + marine.getId());
+//                System.out.println("  Health: " + marine.getHealth());
+//                System.out.println("  Category: " + marine.getCategory());
+//                System.out.println("  Weapon: " + marine.getWeaponType());
+//                System.out.println("  Melee Weapon: " + marine.getMeleeWeapon());
+//
+//                if (marine.getCoordinates() != null) {
+//                    System.out.println("  Coordinates: (" +
+//                            marine.getCoordinates().getX() + ", " +
+//                            marine.getCoordinates().getY() + ")");
+//                }
+//
+//                if (marine.getChapter() != null) {
+//                    System.out.println("  Chapter: " + marine.getChapter().getName());
+//                    System.out.println("  World: " + marine.getChapter().getWorld());
+//                }
+//
+//                System.out.println();
+//            }
 
             System.out.println("=== Validation Tests ===");
             System.out.println("✓ Parsing completed successfully!");
