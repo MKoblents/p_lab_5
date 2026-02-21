@@ -16,8 +16,9 @@ public class Main {
             collectionManager.loadFromFile(filePath);
             Invoker invoker = new Invoker();
             invoker.registerCommand("help", new HelpCommand(invoker));
-            invoker.registerCommand("info", new InfoCommand(programManager));
+            invoker.registerCommand("info", new InfoCommand(collectionManager));
             invoker.runCommand("help");
+            invoker.runCommand("info");
 //            String xmlFilePath = "/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml";
 //
 //            XMLParser parser = new XMLParser(xmlFilePath);
