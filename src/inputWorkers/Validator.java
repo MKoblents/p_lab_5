@@ -1,14 +1,12 @@
 package inputWorkers;
 
-import exceptions.AlreadyExistedIdException;
-import exceptions.UnavailableCoordinateException;
-import exceptions.UnavailableHealthException;
-import exceptions.WrongIdException;
+import exceptions.*;
 import manager.CollectionManager;
 import manager.Coordinates;
 import manager.ProgramManager;
 import manager.SpaceMarine;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +33,15 @@ public class Validator {
         }catch (AlreadyExistedIdException e){
 
         }
+    }
+
+    public boolean isCreationDateValid(SpaceMarine spaceMarine) throws CreationDataException{
+        ZonedDateTime originalTime = spaceMarine.getCreationDate();
+        if (originalTime == null || originalTime.toInstant().toEpochMilli() <=0){
+            ZonedDateTime correctTime = ZonedDateTime.now();
+            spaceMarine.setCreationDate(correctTime);
+            throw new CreationDataException(spaceMarine.getName(),originalTime, correctTime);
+        }return true;
     }
 
     public boolean isIdValid(SpaceMarine spaceMarine) throws WrongIdException{
@@ -67,8 +74,7 @@ public class Validator {
         }return true;
     }
     public static boolean isYCoordinateValid(Coordinates coordinates) throws UnavailableCoordinateException {
-        //#TODO diapason
-        if (y<-842){//TODO diapason
+        if (coordinates.getY()<-842){
             throw new UnavailableCoordinateException("Y must be bigger than -842, replaced with 0");
         }return true;
     }

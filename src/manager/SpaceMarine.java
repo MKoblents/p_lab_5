@@ -25,6 +25,10 @@ public class SpaceMarine {
         this.coordinates = coordinates;
     }
 
+    public void setCreationDate(ZonedDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     @Override
     public String toString() {//#TODO do normally
         return super.toString();
