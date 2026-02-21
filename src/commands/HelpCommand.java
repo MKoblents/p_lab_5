@@ -5,10 +5,8 @@ import manager.ProgramManager;
 
 public class HelpCommand implements Command {
     private String helpInformation = "вывести справку по доступным командам";
-    private final ProgramManager programManager;
     private final Invoker invoker;
-    public HelpCommand(ProgramManager programManager, Invoker invoker){
-        this.programManager = programManager;
+    public HelpCommand(Invoker invoker){
         this.invoker = invoker;
     }
     @Override
