@@ -1,19 +1,25 @@
 import inputWorkers.*;
 import manager.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            String xmlFilePath = "/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml";
-
-            XMLParser parser = new XMLParser(xmlFilePath);
-
-            List<SpaceMarine> marines = parser.parseSpaceMarines(xmlFilePath);
-
-            System.out.println("=== Parsed Space Marines ===");
-            System.out.println("Total count: " + marines.size() + "\n");
+            CollectionManager collectionManager = new CollectionManager();
+            String filePath = System.getenv("PLAB5");
+            System.out.println(filePath);
+            collectionManager.loadFromFile(filePath);
+//            String xmlFilePath = "/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml";
+//
+//            XMLParser parser = new XMLParser(xmlFilePath);
+//
+//            List<SpaceMarine> marines = parser.parseSpaceMarines(xmlFilePath);
+//
+//            System.out.println("=== Parsed Space Marines ===");
+//            System.out.println("Total count: " + marines.size() + "\n");
+            ArrayList<SpaceMarine> marines = collectionManager.getSpaceMarines();
 
             for (int i = 0; i < marines.size(); i++) {
                 SpaceMarine marine = marines.get(i);

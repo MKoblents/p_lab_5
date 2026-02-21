@@ -17,7 +17,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 public class XMLParser {
     private XMLInputFactory factory;
@@ -30,7 +29,7 @@ public class XMLParser {
         this.xmlReader = factory.createXMLStreamReader(reader);
     }
 
-    public List<SpaceMarine> parseSpaceMarines(String filePath) throws Exception {
+    public ArrayList<SpaceMarine> parseSpaceMarines() throws Exception {
         ArrayList<SpaceMarine> marines = new ArrayList<>();
         SpaceMarine currentMarine = null;
         String currentTag = "";
