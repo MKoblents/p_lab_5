@@ -18,12 +18,16 @@ public class Main {
         invoker.registerCommand("show", new ShowCommand(collectionManager));
         invoker.registerCommand("clear", new ClearCommand(collectionManager));
         invoker.registerCommand("exit", new ExitCommand());
+        invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
         while (true){
         try {
 
             invoker.runCommand("help");
             invoker.runCommand("info");
 //            invoker.runCommand("clear");
+            invoker.runCommand("show");
+            System.out.println("-------------------------------------------------------------------------------------");
+            invoker.runCommand("shuffle");
             invoker.runCommand("show");
             invoker.runCommand("exit");
 
