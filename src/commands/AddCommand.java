@@ -29,8 +29,8 @@ public class AddCommand implements Command {
 
     @Override
     public void execute() {
-        SpaceMarine spaceMarine = programManager.getElement();
-        programManager.getCollectionManager().addItem(spaceMarine);
+//        SpaceMarine spaceMarine = programManager.getElement();
+//        programManager.getCollectionManager().addItem(spaceMarine);
     }
 //    public String toString(){
 //        return

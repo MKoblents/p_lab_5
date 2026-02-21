@@ -17,6 +17,11 @@ public class Validator {
         this.spaceMarines = manager.getSpaceMarines();
         this.manager =manager;
     }
+    public boolean isSpaceMarinesValid(List<SpaceMarine> spaceMarines){
+        for (SpaceMarine spaceMarine: spaceMarines){
+            isSpaceMarineValid(spaceMarine);
+        }return true;
+    }
 
     public boolean isSpaceMarineValid(SpaceMarine spaceMarine){
         try {
