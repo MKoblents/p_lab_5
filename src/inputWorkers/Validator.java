@@ -1,9 +1,9 @@
 package inputWorkers;
 
+import enums.MeleeWeapon;
 import exceptions.*;
 import manager.CollectionManager;
 import manager.Coordinates;
-import manager.ProgramManager;
 import manager.SpaceMarine;
 
 import java.time.ZonedDateTime;
@@ -33,6 +33,13 @@ public class Validator {
         }catch ( e){
 
         }
+    }
+
+    public boolean isMeleeWeaponValid(SpaceMarine spaceMarine) {
+        if (spaceMarine.getMeleeWeapon() == null){
+            spaceMarine.setMeleeWeapon(MeleeWeapon.CHAIN_AXE);
+            throw new UnavailableMeleeWeaponException(spaceMarine.getName(),MeleeWeapon.CHAIN_AXE);
+        }return true;
     }
 
     public boolean isCreationDateValid(SpaceMarine spaceMarine) throws CreationDataException{
