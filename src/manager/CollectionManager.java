@@ -6,6 +6,7 @@ import javax.xml.crypto.Data;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class CollectionManager {
     private ArrayList<SpaceMarine> spaceMarines;
@@ -54,5 +55,13 @@ public class CollectionManager {
         return spaceMarines.stream()
                 .mapToDouble(SpaceMarine::getHealth)
                 .sum();
+    }
+    public SpaceMarine getMinByMeleeWeapon() {
+        if (spaceMarines.isEmpty()) {
+            return null;
+        }
+        return spaceMarines.stream()
+                .min(Comparator.comparing(SpaceMarine::getMeleeWeapon))
+                .orElse(null);
     }
 }
