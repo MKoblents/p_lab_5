@@ -32,7 +32,7 @@ public class Validator {
             meleeWeaponValidate(spaceMarine);
             chaterValidate(spaceMarine);
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             spaceMarineValidate(spaceMarine);
         }
     }
@@ -97,6 +97,7 @@ public class Validator {
     }
     public void yCoordinateValidate(Coordinates coordinates) throws UnavailableCoordinateException {
         if (coordinates.getY()<-842){
+            coordinates.setY(0);
             throw new UnavailableCoordinateException("Y must be bigger than -842, replaced with 0");
         }
     }
