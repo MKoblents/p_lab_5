@@ -1,5 +1,6 @@
 import commands.*;
 import inputWorkers.*;
+import io.ConsoleScanner;
 import manager.*;
 
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ public class Main {
         CollectionManager collectionManager = new CollectionManager();
         ProgramManager programManager = new ProgramManager();
         String filePath = System.getenv("PLAB5");
+        ConsoleScanner consoleScanner = new ConsoleScanner();
+        InputManager inputManager= new InputManager(consoleScanner);
         System.out.println(filePath);
         collectionManager.loadFromFile(filePath);
         Invoker invoker = new Invoker();
@@ -19,21 +22,24 @@ public class Main {
         invoker.registerCommand("clear", new ClearCommand(collectionManager));
         invoker.registerCommand("exit", new ExitCommand());
         invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
-        invoker.registerCommand("sum of health", new SumOfHealthCommand(collectionManager));
-        invoker.registerCommand("min by meleeWeapon value", new MinByMeleeWeaponCommand(collectionManager));
+        invoker.registerCommand("sumofhealth", new SumOfHealthCommand(collectionManager));
+        invoker.registerCommand("minbymeleeweaponvalue", new MinByMeleeWeaponCommand(collectionManager));
         while (true){
         try {
-//            invoker.runCommand("clear");
-            invoker.runCommand("help");
-            invoker.runCommand("info");
-            invoker.runCommand("show");
-            System.out.println("-------------------------------------------------------------------------------------");
-            invoker.runCommand("shuffle");
-            invoker.runCommand("show");
-            invoker.runCommand("sum of health");
-            invoker.runCommand("min by meleeWeapon value");
 
-            invoker.runCommand("exit");
+            String commandLine = inputManager.parseCommand();
+            invoker.runCommand(commandLine);
+//            invoker.runCommand("clear");
+//            invoker.runCommand("help");
+//            invoker.runCommand("info");
+//            invoker.runCommand("show");
+//            System.out.println("-------------------------------------------------------------------------------------");
+//            invoker.runCommand("shuffle");
+//            invoker.runCommand("show");
+//            invoker.runCommand("sum of health");
+//            invoker.runCommand("min by meleeWeapon value");
+//
+//            invoker.runCommand("exit");
 
 
         } catch (Exception e) {
