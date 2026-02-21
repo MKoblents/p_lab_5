@@ -19,6 +19,7 @@ public class Main {
         invoker.registerCommand("clear", new ClearCommand(collectionManager));
         invoker.registerCommand("exit", new ExitCommand());
         invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
+        invoker.registerCommand("sum of health", new SumOfHealthCommand(collectionManager));
         while (true){
         try {
 
@@ -29,6 +30,7 @@ public class Main {
             System.out.println("-------------------------------------------------------------------------------------");
             invoker.runCommand("shuffle");
             invoker.runCommand("show");
+            invoker.runCommand("sum of health");
             invoker.runCommand("exit");
 
 //            String xmlFilePath = "/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml";
