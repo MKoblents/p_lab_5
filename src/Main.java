@@ -1,7 +1,4 @@
-import commands.ClearCommand;
-import commands.HelpCommand;
-import commands.InfoCommand;
-import commands.ShowCommand;
+import commands.*;
 import inputWorkers.*;
 import manager.*;
 
@@ -9,22 +6,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        CollectionManager collectionManager = new CollectionManager();
+        ProgramManager programManager = new ProgramManager();
+        String filePath = System.getenv("PLAB5");
+        System.out.println(filePath);
+        collectionManager.loadFromFile(filePath);
+        Invoker invoker = new Invoker();
+        invoker.registerCommand("help", new HelpCommand(invoker));
+        invoker.registerCommand("info", new InfoCommand(collectionManager));
+        invoker.registerCommand("show", new ShowCommand(collectionManager));
+        invoker.registerCommand("clear", new ClearCommand(collectionManager));
+        invoker.registerCommand("exit", new ExitCommand());
+        while (true){
         try {
-            CollectionManager collectionManager = new CollectionManager();
-            ProgramManager programManager = new ProgramManager();
-            String filePath = System.getenv("PLAB5");
-            System.out.println(filePath);
-            collectionManager.loadFromFile(filePath);
-            Invoker invoker = new Invoker();
-            invoker.registerCommand("help", new HelpCommand(invoker));
-            invoker.registerCommand("info", new InfoCommand(collectionManager));
-            invoker.registerCommand("show", new ShowCommand(collectionManager));
-            invoker.registerCommand("clear", new ClearCommand(collectionManager));
+
             invoker.runCommand("help");
             invoker.runCommand("info");
-            //invoker.runCommand("clear");
+//            invoker.runCommand("clear");
             invoker.runCommand("show");
+            invoker.runCommand("exit");
+
 //            String xmlFilePath = "/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml";
 //
 //            XMLParser parser = new XMLParser(xmlFilePath);
@@ -74,7 +76,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-}
+}}
 
 
 // main
