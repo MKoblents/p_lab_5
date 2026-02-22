@@ -8,6 +8,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CollectionManager {
     private ArrayList<SpaceMarine> spaceMarines;
@@ -52,16 +54,17 @@ public class CollectionManager {
     public void remove(long id){
         spaceMarines.removeIf(spaceMarine -> spaceMarine.getId() == id);
     }
+    public List<SpaceMarine> filterLessThanMeleeWeapon(MeleeWeapon weapon) {
+        return spaceMarines.stream()
+                .filter(marine -> marine.getMeleeWeapon().compareTo(weapon) < 0)
+                .collect(Collectors.toList());
+    }
     public void remove(SpaceMarine spaceMarine){
     spaceMarines.remove(spaceMarine);
     }
     public void clear(){
         spaceMarines.clear();
     }
-//    public long getCorrectId(SpaceMarine spaceMarine){
-//        System.out.println(spaceMarines.indexOf(spaceMarine)+1 +"in collection manager");
-//        return (long) spaceMarines.indexOf(spaceMarine)+1;
-//    }
     public long generateId() {
         return nextId++;
     }

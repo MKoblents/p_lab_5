@@ -6,7 +6,7 @@ import manager.SpaceMarine;
 
 public class InsertAtCommand implements Command{
     private CollectionManager collectionManager;
-    private String helpInformation;
+    private String helpInformation = "insert_at index {element} : добавить новый элемент в заданную позицию";
     private InputManager inputManager;
     public InsertAtCommand(CollectionManager collectionManager, InputManager inputManager){
         this.collectionManager = collectionManager;
@@ -23,5 +23,6 @@ public class InsertAtCommand implements Command{
         SpaceMarine spaceMarine = inputManager.getInputSpaceMarine();
         inputManager.getValidator().spaceMarineValidate(spaceMarine);
         collectionManager.addItem(inputManager.getLastInt(), spaceMarine);
+
     }
 }
