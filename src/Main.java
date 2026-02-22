@@ -24,10 +24,13 @@ public class Main {
         invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
         invoker.registerCommand("sumofhealth", new SumOfHealthCommand(collectionManager));
         invoker.registerCommand("minbymeleeweaponvalue", new MinByMeleeWeaponCommand(collectionManager));
+        invoker.registerCommand("removebyid", new removeByIdCommand(collectionManager,inputManager));
         while (true){
         try {
 
             String commandLine = inputManager.parseCommand();
+            System.out.println(commandLine);
+            System.out.println(inputManager.getLastLong());
             invoker.runCommand(commandLine);
 //            invoker.runCommand("clear");
 //            invoker.runCommand("help");

@@ -36,6 +36,9 @@ public class CollectionManager {
     public ZonedDateTime getCreationData() {
         return creationData;
     }
+    public void remove(long id){
+        spaceMarines.removeIf(spaceMarine -> spaceMarine.getId() == id);
+    }
     public void remove(SpaceMarine spaceMarine){
     spaceMarines.remove(spaceMarine);
     }
