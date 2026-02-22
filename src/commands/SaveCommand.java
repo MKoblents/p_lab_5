@@ -1,21 +1,30 @@
 package commands;
 
+import manager.CollectionManager;
 import manager.ProgramManager;
+import outputWorkers.CollectionSaver;
 
 public class SaveCommand implements Command{
-    private final ProgramManager programManager;
+    private final CollectionSaver collectionSaver;
+    private CollectionManager collectionManager;
     private String helpInformation;
     @Override
     public String getHelpInformation() {
         return helpInformation;
     }
 
-    public SaveCommand(ProgramManager programManager){
-        this.programManager = programManager;
+    public SaveCommand(CollectionManager collectionManager, CollectionSaver collectionSaver){
+        this.collectionManager = collectionManager;
+        this.collectionSaver = collectionSaver;
     }
     @Override
-    public void execute() {//#TODO IOException
-        programManager.getCollectionSaver().save();
+    public void execute() {
+        try {
+            collectionSaver.save(collectionManager, "new.xml");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 }

@@ -3,6 +3,7 @@ import enums.MeleeWeapon;
 import inputWorkers.Validator;
 import inputWorkers.XMLParser;
 
+import javax.xml.bind.annotation.*;
 import javax.xml.crypto.Data;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -11,10 +12,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@XmlRootElement(name = "spaceMarines")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class CollectionManager {
+    @XmlElement(name = "spaceMarine")
     private ArrayList<SpaceMarine> spaceMarines;
+    @XmlTransient
     private ZonedDateTime creationData;
+    @XmlTransient
     private long nextId =1;
+    @XmlTransient
     private Validator validator = new Validator(this);
     public CollectionManager(){
         this.creationData = ZonedDateTime.now();
