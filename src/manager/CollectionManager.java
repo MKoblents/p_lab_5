@@ -19,6 +19,12 @@ public class CollectionManager {
     public CollectionManager(){
         this.creationData = ZonedDateTime.now();
     }
+    public SpaceMarine getSpaceMarineById(long id) {
+        return spaceMarines.stream()
+                .filter(marine -> marine.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
     public SpaceMarine getNewSpaceMarine(){
        SpaceMarine spaceMarine = new SpaceMarine();
        spaceMarine.setId(generateId());
@@ -83,5 +89,9 @@ public class CollectionManager {
         return spaceMarines.stream()
                 .min(Comparator.comparing(SpaceMarine::getMeleeWeapon))
                 .orElse(null);
+    }
+    public void replace(SpaceMarine spaceMarineOld, SpaceMarine spaceMarineNew){
+        int index = spaceMarines.indexOf(spaceMarineOld);
+        spaceMarines.set(index, spaceMarineNew);
     }
 }
