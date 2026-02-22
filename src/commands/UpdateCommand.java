@@ -1,12 +1,17 @@
 package commands;
 
+import inputWorkers.InputManager;
+import manager.CollectionManager;
 import manager.ProgramManager;
+import manager.SpaceMarine;
 
 public class UpdateCommand implements Command{
     private String helpInformation = "обновить значение элемента коллекции, id которого равен заданному";
-    private ProgramManager programManager;
-    public UpdateCommand(ProgramManager programManager){
-        this.programManager=programManager;
+    private CollectionManager collectionManager;
+    private InputManager inputManager;
+    public UpdateCommand(CollectionManager collectionManager, InputManager inputManager){
+        this.collectionManager = collectionManager;
+        this.inputManager = inputManager;
     }
 
     @Override
@@ -16,7 +21,11 @@ public class UpdateCommand implements Command{
 
     @Override
     public void execute() {
-       // int id = programManager.getInputManager().getLastInt();
-        //#TODO something like addCommand but with choosing change or not
+        long id = inputManager.getLastLong();
+        SpaceMarine spaceMarine = collectionManager.getSpaceMarineById(id);
+        SpaceMarine spaceMarineInput = inputManager.getInputSpaceMarine();
+        inputManager.getValidator().spaceMarineValidate(spaceMarineInput);
+        spaceMarineInput.setId(id);
+        collectionManager.replace(spaceMarine, spaceMarineInput);
     }
 }

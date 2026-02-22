@@ -29,6 +29,7 @@ public class Main {
         invoker.registerCommand("add", new AddCommand(collectionManager,inputManager));
         invoker.registerCommand("insertat", new InsertAtCommand(collectionManager, inputManager));
         invoker.registerCommand("filterlessthanmeleeweapon", new FilterLessThanMeleeWeaponCommand(collectionManager, inputManager));
+        invoker.registerCommand("update", new UpdateCommand(collectionManager, inputManager));
         while (true){
         try {
 
