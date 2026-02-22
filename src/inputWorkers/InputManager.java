@@ -1,6 +1,7 @@
 package inputWorkers;
 
 import enums.MeleeWeapon;
+import io.ConsoleScanner;
 import io.Reader;
 import manager.CollectionManager;
 import manager.Coordinates;
@@ -48,11 +49,11 @@ public class InputManager {
     public SpaceMarine getInputSpaceMarine(){
         try {
             System.out.print("Enter name: ");
-            String name = reader.nextLine();
+            String name = getInputString();
             System.out.print("Enter x coordinate: ");
-            long x = Long.parseLong(reader.nextLine());
+            long x = getInputLong();
             System.out.print("Enter y coordinate: ");
-            long y = Long.parseLong(reader.nextLine());
+            long y = getInputLong();
             Coordinates coordinates = new Coordinates();
             coordinates.setX(x);
             coordinates.setY(y);
@@ -64,6 +65,30 @@ public class InputManager {
             throw new RuntimeException(e);
         }
     }
+    private String getInputString() throws IOException {
+        System.out.print("(you should enter String type) ");
+        return reader.nextLine().trim();
+    }
+    private long getInputLong() throws IOException{
+        System.out.print("(you should enter long type) ");
+        try {
+            return Long.parseLong(reader.nextLine().trim());
+        }catch (NumberFormatException e){
+            System.err.println("You had to enter long.");
+            if (reader instanceof ConsoleScanner){
+                System.out.println("Do you want to correct yor data? (Enter 'y' or 'yes'): ");
+                String answer = reader.nextLine().trim();
+                if (answer.equalsIgnoreCase("y")|| answer.equalsIgnoreCase("yes")){
+                    return getInputLong();
+                }else {
+                    return 0;
+                }
+            }else {
+                return 0;
+            }
+        }
+    }
+
 
     public Validator getValidator() {
         return validator;
