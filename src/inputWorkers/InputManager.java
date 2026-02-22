@@ -1,14 +1,15 @@
 package inputWorkers;
 
+import enums.AstartesCategory;
 import enums.MeleeWeapon;
+import enums.Weapon;
 import io.ConsoleScanner;
 import io.Reader;
+import manager.Chapter;
 import manager.CollectionManager;
 import manager.Coordinates;
 import manager.SpaceMarine;
 
-import javax.swing.text.html.parser.Parser;
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -62,11 +63,53 @@ public class InputManager {
             System.out.print("Enter meleeWeapon: ");
             MeleeWeapon meleeWeapon = getInputEnum(MeleeWeapon.class);
             SpaceMarine spaceMarine = collectionManager.getNewSpaceMarine(name, coordinates, meleeWeapon);
+            System.out.print("Enter health: ");
+            double health = getInputDouble();
+            spaceMarine.setHealth(health);
+            System.out.print("Enter weapon: ");
+            Weapon weapon = getInputEnum(Weapon.class);
+            spaceMarine.setWeaponType(weapon);
+            System.out.print("Enter AstartesCategory: ");
+            AstartesCategory astartesCategory = getInputEnum(AstartesCategory.class);
+            spaceMarine.setCategory(astartesCategory);
+            System.out.println("Enter Chapter:");
+            Chapter chapter = getInputChapter();
+            spaceMarine.setChapter(chapter);
             return spaceMarine;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
+    private Chapter getInputChapter() throws IOException {
+        System.out.print("Enter name: ");
+        String name = getInputString();
+        System.out.print("Enter parentLegion: ");
+        String parentLegion = getInputString();
+        System.out.print("Enter world: ");
+        String world = getInputString();
+        if (name.isEmpty() && parentLegion.isEmpty() && world.isEmpty()){
+            return null;
+        }
+        Chapter chapter = new Chapter();
+        chapter.setName(name);
+        chapter.setWorld(world);
+        chapter.setParentLegion(parentLegion);
+        return chapter;
+    }
+
+    private double getInputDouble() throws IOException {
+        System.out.print("(you should enter double type) ");
+        try {
+            return Double.parseDouble(getTrimmedText());
+        }catch (NumberFormatException e){
+            System.err.println("You had to enter long.");
+            if (shouldRetryInput()){
+                return getInputDouble();
+            }return 0.0;
+        }
+    }
+
     private <T extends Enum<T>> T getInputEnum(Class<T> enumType) throws IOException {
         System.out.println("(you should chose one option) ");
         System.out.println(Arrays.toString(enumType.getEnumConstants()));
@@ -75,20 +118,24 @@ public class InputManager {
             try {
                 return Enum.valueOf(enumType, value.toUpperCase());
             } catch (IllegalArgumentException e) {
-                if (reader instanceof ConsoleScanner){
-                    System.out.println("Do you want to correct yor data? (Enter 'y' or 'yes'): ");
-                    String answer = getTrimmedText();
-                    if (answer.equalsIgnoreCase("y")|| answer.equalsIgnoreCase("yes")){
-                        return getInputEnum(enumType);
-                    }
-                return null;
+                if (shouldRetryInput()){
+                    return getInputEnum(enumType);
                 }
+                return null;
             }
         }return null;
     }
 
     private String getTrimmedText() throws IOException {
         return reader.nextLine().trim();
+    }
+    private boolean shouldRetryInput() throws IOException {
+        if (!(reader instanceof ConsoleScanner)) {
+            return false;
+        }
+        System.out.println("Do you want to correct your data? (Enter 'y' or 'yes'): ");
+        String answer = getTrimmedText();
+        return answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes");
     }
 
     private String getInputString() throws IOException {
@@ -101,17 +148,9 @@ public class InputManager {
             return Long.parseLong(getTrimmedText());
         }catch (NumberFormatException e){
             System.err.println("You had to enter long.");
-            if (reader instanceof ConsoleScanner){
-                System.out.println("Do you want to correct yor data? (Enter 'y' or 'yes'): ");
-                String answer = getTrimmedText();
-                if (answer.equalsIgnoreCase("y")|| answer.equalsIgnoreCase("yes")){
-                    return getInputLong();
-                }else {
-                    return 0;
-                }
-            }else {
-                return 0;
-            }
+            if (shouldRetryInput()){
+                return getInputLong();
+            }return 0;
         }
     }
 

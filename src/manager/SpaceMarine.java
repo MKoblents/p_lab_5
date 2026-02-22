@@ -41,7 +41,8 @@ public class SpaceMarine implements Comparable<SpaceMarine> {
                 "   Name: "+this.name+
                 "\n   Health: "+this.health+
                 "\n   Coordinates: " + this.coordinates +
-                "\n   MeleeWeapon: "+this.meleeWeapon;
+                "\n   MeleeWeapon: "+this.meleeWeapon+
+                "\n   Chapter: "+ this.chapter                ;
     }
 
     public long getId() {

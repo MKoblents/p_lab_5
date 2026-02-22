@@ -29,4 +29,10 @@ public class Chapter {
         return world;
     }
 
+    @Override
+    public String toString() {
+        return "\n      Name: "+ this.name+
+                "\n     ParenLegion: "+ this.name+
+                "\n     World: "+this.world;
+    }
 }
