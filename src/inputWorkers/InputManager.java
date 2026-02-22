@@ -172,4 +172,19 @@ public class InputManager {
     public int getLastInt() {
         return lastInt;
     }
+
+    public MeleeWeapon getInputMeleeWeapon(){
+        try {
+            MeleeWeapon meleeWeapon = getInputEnum(MeleeWeapon.class);
+            if (meleeWeapon == null){
+                System.out.println("You have to chose one option. If you want chose default version, press enter.");
+                if (shouldRetryInput()) {
+                    return getInputMeleeWeapon();
+                }return MeleeWeapon.CHAIN_AXE;
+            }
+            return meleeWeapon;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

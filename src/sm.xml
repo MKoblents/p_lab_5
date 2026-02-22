@@ -45,7 +45,7 @@
         <health>-5</health>
         <AstartesCategory>AGGRESSOR</AstartesCategory>
         <Weapon>BOLT_RIFLE</Weapon>
-        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
         <Chapter>
             <name>Ultramarines</name>
             <parentLegion>Ultramar</parentLegion>
@@ -62,7 +62,7 @@
         <health>-5</health>
         <AstartesCategory>AGGRESSOR</AstartesCategory>
         <Weapon>BOLT_RIFLE</Weapon>
-        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
+        <meleeWeapon>MANREAPER</meleeWeapon>
         <Chapter>
             <name>Ultramarines</name>
             <parentLegion>Ultramar</parentLegion>
@@ -80,7 +80,7 @@
         <health>92.3</health>
         <AstartesCategory>SUPPRESSOR</AstartesCategory>
         <Weapon>COMBI_PLASMA_GUN</Weapon>
-        <meleeWeapon>POWER_SWORD</meleeWeapon>
+        <meleeWeapon>POWER_BLADE</meleeWeapon>
         <Chapter>
             <name>Blood Angels</name>
             <parentLegion>Baalam</parentLegion>
