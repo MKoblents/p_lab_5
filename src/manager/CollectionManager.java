@@ -1,4 +1,5 @@
 package manager;
+import enums.MeleeWeapon;
 import inputWorkers.Validator;
 import inputWorkers.XMLParser;
 
@@ -16,12 +17,21 @@ public class CollectionManager {
     public CollectionManager(){
         this.creationData = ZonedDateTime.now();
     }
-    public boolean addItem(SpaceMarine spaceMarine){
+    public SpaceMarine getNewSpaceMarine(){
+       SpaceMarine spaceMarine = new SpaceMarine();
+       spaceMarine.setId(generateId());
+       return spaceMarine;
+    }
+    public SpaceMarine getNewSpaceMarine(String name, Coordinates coordinates, MeleeWeapon meleeWeapon){
+        SpaceMarine spaceMarine = new SpaceMarine(name, coordinates, meleeWeapon);
         spaceMarine.setId(generateId());
+        return spaceMarine;
+    }
+    public boolean addItem(SpaceMarine spaceMarine){
         return this.spaceMarines.add(spaceMarine);
     }
     public void loadFromFile(String filePath) throws Exception {
-        XMLParser parser = new XMLParser(filePath);
+        XMLParser parser = new XMLParser(filePath, this);
         this.spaceMarines = parser.parseSpaceMarines();
         validator.spaceMarinesValidate(this.spaceMarines);
     }
@@ -45,9 +55,10 @@ public class CollectionManager {
     public void clear(){
         spaceMarines.clear();
     }
-    public long getCorrectId(SpaceMarine spaceMarine){
-        return (long) spaceMarines.indexOf(spaceMarine)+1;
-    }
+//    public long getCorrectId(SpaceMarine spaceMarine){
+//        System.out.println(spaceMarines.indexOf(spaceMarine)+1 +"in collection manager");
+//        return (long) spaceMarines.indexOf(spaceMarine)+1;
+//    }
     public long generateId() {
         return nextId++;
     }
