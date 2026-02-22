@@ -30,6 +30,9 @@ public class CollectionManager {
     public boolean addItem(SpaceMarine spaceMarine){
         return this.spaceMarines.add(spaceMarine);
     }
+    public void addItem(int index, SpaceMarine spaceMarine){
+        this.spaceMarines.add(index, spaceMarine);
+    }
     public void loadFromFile(String filePath) throws Exception {
         XMLParser parser = new XMLParser(filePath, this);
         this.spaceMarines = parser.parseSpaceMarines();
