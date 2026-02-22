@@ -8,10 +8,15 @@ public class CommandParser {
     private double lastDouble;
     private int lastInt;
     private String lastXmlString;
+    private String lastPath;
     public String parseCommand(Reader reader) throws IOException {
         String line = reader.nextLine();
         String[] parts = line.trim().split("\\s+");
         String lastPart = parts[parts.length - 1].trim();
+        if (listToString(parts).toLowerCase().contains("executescript")){
+            lastPath = lastPart;
+            return "executescript";
+        }
         try {
             lastLong = Long.parseLong(lastPart);
             return listToString(parts);
@@ -55,5 +60,9 @@ public class CommandParser {
 
     public int getLastInt() {
         return lastInt;
+    }
+
+    public String getLastPath() {
+        return lastPath;
     }
 }

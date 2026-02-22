@@ -24,8 +24,11 @@ public class InputManager {
         this.collectionManager = collectionManager;
         this.commandParser = commandParser;
     }
-    public long getLastLong(){//#TODO
+    public long getLastLong(){
         return commandParser.getLastLong();
+    }
+    public String getLastPath(){
+        return commandParser.getLastPath();
     }
     public double getLastDouble(){
         return commandParser.getLastDouble();
