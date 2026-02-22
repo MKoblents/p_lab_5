@@ -19,6 +19,7 @@ public class InputManager {
     private String lastString; //#TODO do normal logic
     private long lastLong;
     private double lastDouble;
+    private int lastInt;
     private CollectionManager collectionManager;
     public InputManager(Reader reader, Validator validator, CollectionManager collectionManager){
         this.reader= reader;
@@ -39,12 +40,21 @@ public class InputManager {
             }return key.toString();
         } catch (NumberFormatException e) {
             try {
-                lastDouble = Double.parseDouble(parts[parts.length-1]);
-                for (int i = 0; i< parts.length-1; i++){
+                lastDouble = Double.parseDouble(parts[parts.length - 1]);
+                for (int i = 0; i < parts.length - 1; i++) {
                     key.append(parts[i]);
-                }return key.toString();
-            }catch (NumberFormatException e2){
-                return line.replaceAll("\\s+","").toLowerCase();
+                }
+                return key.toString();
+            } catch (NumberFormatException e2) {
+                try {
+                    lastInt = Integer.parseInt(parts[parts.length - 1]);
+                    for (int i = 0; i < parts.length - 1; i++) {
+                        key.append(parts[i]);
+                    }
+                    return key.toString();
+                } catch (NumberFormatException e3) {
+                    return line.replaceAll("\\s+", "").toLowerCase();
+                }
             }
         }
     }
@@ -157,5 +167,9 @@ public class InputManager {
 
     public Validator getValidator() {
         return validator;
+    }
+
+    public int getLastInt() {
+        return lastInt;
     }
 }

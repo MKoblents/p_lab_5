@@ -27,6 +27,7 @@ public class Main {
         invoker.registerCommand("minbymeleeweaponvalue", new MinByMeleeWeaponCommand(collectionManager));
         invoker.registerCommand("removebyid", new removeByIdCommand(collectionManager,inputManager));
         invoker.registerCommand("add", new AddCommand(collectionManager,inputManager));
+        invoker.registerCommand("insertat", new InsertAtCommand(collectionManager, inputManager));
         while (true){
         try {
 
