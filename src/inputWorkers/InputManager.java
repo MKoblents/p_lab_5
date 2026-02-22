@@ -16,47 +16,25 @@ import java.util.Arrays;
 public class InputManager {
     private Validator validator;
     private Reader reader;
-    private String lastString; //#TODO do normal logic
-    private long lastLong;
-    private double lastDouble;
-    private int lastInt;
+    private CommandParser commandParser;
     private CollectionManager collectionManager;
-    public InputManager(Reader reader, Validator validator, CollectionManager collectionManager){
+    public InputManager(Reader reader, Validator validator, CollectionManager collectionManager, CommandParser commandParser){
         this.reader= reader;
         this.validator =validator;
         this.collectionManager = collectionManager;
+        this.commandParser = commandParser;
     }
     public long getLastLong(){//#TODO
-        return lastLong;
+        return commandParser.getLastLong();
+    }
+    public double getLastDouble(){
+        return commandParser.getLastDouble();
+    }
+    public String getLastXmlString(){
+        return commandParser.getLastXmlString();
     }
     public String parseCommand() throws IOException {
-        String line = reader.nextLine();
-        String[] parts = line.trim().split("\\s+");
-        StringBuilder key = new StringBuilder();
-        try {
-            lastLong = Long.parseLong(parts[parts.length-1]);
-            for (int i = 0; i< parts.length-1; i++){
-                key.append(parts[i]);
-            }return key.toString();
-        } catch (NumberFormatException e) {
-            try {
-                lastDouble = Double.parseDouble(parts[parts.length - 1]);
-                for (int i = 0; i < parts.length - 1; i++) {
-                    key.append(parts[i]);
-                }
-                return key.toString();
-            } catch (NumberFormatException e2) {
-                try {
-                    lastInt = Integer.parseInt(parts[parts.length - 1]);
-                    for (int i = 0; i < parts.length - 1; i++) {
-                        key.append(parts[i]);
-                    }
-                    return key.toString();
-                } catch (NumberFormatException e3) {
-                    return line.replaceAll("\\s+", "").toLowerCase();
-                }
-            }
-        }
+        return commandParser.parseCommand(reader);
     }
 
     public SpaceMarine getInputSpaceMarine(){
@@ -79,14 +57,6 @@ public class InputManager {
     private String getTrimmedText() throws IOException {
         return reader.getTrimmedText();
     }
-//    private boolean shouldRetryInput() throws IOException {
-//        if (!(reader instanceof ConsoleScanner)) {
-//            return false;
-//        }
-//        System.out.println("Do you want to correct your data? (Enter 'y' or 'yes'): ");
-//        String answer = getTrimmedText();
-//        return answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes");
-//    }
 
     private String getInputString() throws IOException {
         return reader.getInputString();
@@ -101,7 +71,7 @@ public class InputManager {
     }
 
     public int getLastInt() {
-        return lastInt;
+        return commandParser.getLastInt();
     }
 
     public MeleeWeapon getInputMeleeWeapon() {

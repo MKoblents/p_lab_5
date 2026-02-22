@@ -14,7 +14,8 @@ public class Main {
         String filePath = System.getenv("PLAB5");
         ConsoleScanner consoleScanner = new ConsoleScanner();
         Validator validator = new Validator(collectionManager);
-        InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager);
+        CommandParser commandParser = new CommandParser();
+        InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager, commandParser);
         System.out.println(filePath);
         collectionManager.loadFromFile(filePath);
         CollectionSaver collectionSaver = new CollectionSaver();
