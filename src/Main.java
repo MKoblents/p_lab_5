@@ -2,6 +2,7 @@ import commands.*;
 import inputWorkers.*;
 import io.ConsoleScanner;
 import manager.*;
+import outputWorkers.CollectionSaver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +13,11 @@ public class Main {
         ProgramManager programManager = new ProgramManager();
         String filePath = System.getenv("PLAB5");
         ConsoleScanner consoleScanner = new ConsoleScanner();
-        InputManager inputManager= new InputManager(consoleScanner);
+        Validator validator = new Validator(collectionManager);
+        InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager);
         System.out.println(filePath);
         collectionManager.loadFromFile(filePath);
+        CollectionSaver collectionSaver = new CollectionSaver();
         Invoker invoker = new Invoker();
         invoker.registerCommand("help", new HelpCommand(invoker));
         invoker.registerCommand("info", new InfoCommand(collectionManager));
@@ -24,10 +27,18 @@ public class Main {
         invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
         invoker.registerCommand("sumofhealth", new SumOfHealthCommand(collectionManager));
         invoker.registerCommand("minbymeleeweaponvalue", new MinByMeleeWeaponCommand(collectionManager));
+        invoker.registerCommand("removebyid", new removeByIdCommand(collectionManager,inputManager));
+        invoker.registerCommand("add", new AddCommand(collectionManager,inputManager));
+        invoker.registerCommand("insertat", new InsertAtCommand(collectionManager, inputManager));
+        invoker.registerCommand("filterlessthanmeleeweapon", new FilterLessThanMeleeWeaponCommand(collectionManager, inputManager));
+        invoker.registerCommand("update", new UpdateCommand(collectionManager, inputManager));
+        invoker.registerCommand("save", new SaveCommand(collectionManager, collectionSaver));
         while (true){
         try {
 
             String commandLine = inputManager.parseCommand();
+            System.out.println(commandLine);
+            System.out.println(inputManager.getLastLong());
             invoker.runCommand(commandLine);
 //            invoker.runCommand("clear");
 //            invoker.runCommand("help");

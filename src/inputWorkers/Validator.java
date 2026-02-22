@@ -25,7 +25,6 @@ public class Validator {
     public void spaceMarineValidate(SpaceMarine spaceMarine){
         if (spaceMarine == null){return;}
         try {
-            idValidate(spaceMarine);
             nameValidate(spaceMarine);
             coordinatesValidate(spaceMarine);
             creationDateValidate(spaceMarine);
@@ -39,6 +38,9 @@ public class Validator {
     }
 
     public void chapterValidate(SpaceMarine spaceMarine) throws NullPointerException {
+        if (spaceMarine.getChapter() == null){
+            return;
+        }
          chapterNameValidate(spaceMarine);
          chapterWorldValidate(spaceMarine);
     }
@@ -70,14 +72,14 @@ public class Validator {
             throw new CreationDataException(spaceMarine.getName(),originalTime, correctTime);
         }
     }
-    public void idValidate(SpaceMarine spaceMarine) throws WrongIdException{
-        long correctId = manager.getCorrectId(spaceMarine);
-        long realId = spaceMarine.getId();
-        if ( correctId != realId){
-            spaceMarine.setId(correctId);
-            throw new WrongIdException(spaceMarine.getName(), realId, correctId);
-        }
-    }
+//    public void idValidate(SpaceMarine spaceMarine) throws WrongIdException{
+//        long correctId = manager.getCorrectId(spaceMarine);
+//        long realId = spaceMarine.getId();
+//        if ( correctId != realId){
+//            spaceMarine.setId(correctId);
+//            throw new WrongIdException(spaceMarine.getName(), realId, correctId);
+//        }
+//    }
     public void nameValidate(SpaceMarine spaceMarine) throws NullPointerException{
         String name = spaceMarine.getName();
         if (name == null || name.isEmpty()){

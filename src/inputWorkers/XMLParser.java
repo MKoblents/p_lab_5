@@ -4,6 +4,7 @@ import enums.AstartesCategory;
 import enums.MeleeWeapon;
 import enums.Weapon;
 import manager.Chapter;
+import manager.CollectionManager;
 import manager.SpaceMarine;
 import manager.Coordinates;
 
@@ -21,12 +22,14 @@ import java.util.ArrayList;
 public class XMLParser {
     private XMLInputFactory factory;
     private XMLStreamReader xmlReader;
-    public XMLParser(String filePath) throws FileNotFoundException, XMLStreamException {
+    private CollectionManager collectionManager;
+    public XMLParser(String filePath, CollectionManager collectionManager) throws FileNotFoundException, XMLStreamException {
         FileInputStream fis = new FileInputStream(filePath);
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(isr);
         this.factory = XMLInputFactory.newInstance();
         this.xmlReader = factory.createXMLStreamReader(reader);
+        this.collectionManager = collectionManager;
     }
 
     public ArrayList<SpaceMarine> parseSpaceMarines() throws Exception {
@@ -50,7 +53,7 @@ public class XMLParser {
 
     public SpaceMarine parseSpaceMarine() throws XMLStreamException {
         String currentFieldName;
-        SpaceMarine spaceMarine = new SpaceMarine();
+        SpaceMarine spaceMarine = collectionManager.getNewSpaceMarine();
         while (xmlReader.hasNext()) {
             xmlReader.next();
             if (xmlReader.isEndElement() && "spaceMarine".equalsIgnoreCase(xmlReader.getLocalName())) {
@@ -67,7 +70,6 @@ public class XMLParser {
         try {
             switch (fieldName) {
                 case "name" -> marine.setName(parseStringField());
-                case "id" -> marine.setId(parseLongField());
                 case "health" -> marine.setHealth(parseDoubleField());
                 case "coordinates" -> marine.setCoordinates(parseCoordinates());
                 case "astartescategory" -> marine.setCategory(parseAstartesCategory());
