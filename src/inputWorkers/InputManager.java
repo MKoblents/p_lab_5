@@ -8,7 +8,9 @@ import manager.Coordinates;
 import manager.SpaceMarine;
 
 import javax.swing.text.html.parser.Parser;
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class InputManager {
     private Validator validator;
@@ -58,26 +60,50 @@ public class InputManager {
             coordinates.setX(x);
             coordinates.setY(y);
             System.out.print("Enter meleeWeapon: ");
-            MeleeWeapon meleeWeapon = MeleeWeapon.valueOf(reader.nextLine());
+            MeleeWeapon meleeWeapon = getInputEnum(MeleeWeapon.class);
             SpaceMarine spaceMarine = collectionManager.getNewSpaceMarine(name, coordinates, meleeWeapon);
             return spaceMarine;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+    private <T extends Enum<T>> T getInputEnum(Class<T> enumType) throws IOException {
+        System.out.println("(you should chose one option) ");
+        System.out.println(Arrays.toString(enumType.getEnumConstants()));
+        String value = getTrimmedText();
+        if (value != null && !value.isEmpty()) {
+            try {
+                return Enum.valueOf(enumType, value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                if (reader instanceof ConsoleScanner){
+                    System.out.println("Do you want to correct yor data? (Enter 'y' or 'yes'): ");
+                    String answer = getTrimmedText();
+                    if (answer.equalsIgnoreCase("y")|| answer.equalsIgnoreCase("yes")){
+                        return getInputEnum(enumType);
+                    }
+                return null;
+                }
+            }
+        }return null;
+    }
+
+    private String getTrimmedText() throws IOException {
+        return reader.nextLine().trim();
+    }
+
     private String getInputString() throws IOException {
         System.out.print("(you should enter String type) ");
-        return reader.nextLine().trim();
+        return getTrimmedText();
     }
     private long getInputLong() throws IOException{
         System.out.print("(you should enter long type) ");
         try {
-            return Long.parseLong(reader.nextLine().trim());
+            return Long.parseLong(getTrimmedText());
         }catch (NumberFormatException e){
             System.err.println("You had to enter long.");
             if (reader instanceof ConsoleScanner){
                 System.out.println("Do you want to correct yor data? (Enter 'y' or 'yes'): ");
-                String answer = reader.nextLine().trim();
+                String answer = getTrimmedText();
                 if (answer.equalsIgnoreCase("y")|| answer.equalsIgnoreCase("yes")){
                     return getInputLong();
                 }else {
