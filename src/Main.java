@@ -12,7 +12,8 @@ public class Main {
         ProgramManager programManager = new ProgramManager();
         String filePath = System.getenv("PLAB5");
         ConsoleScanner consoleScanner = new ConsoleScanner();
-        InputManager inputManager= new InputManager(consoleScanner);
+        Validator validator = new Validator(collectionManager);
+        InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager);
         System.out.println(filePath);
         collectionManager.loadFromFile(filePath);
         Invoker invoker = new Invoker();
@@ -25,6 +26,7 @@ public class Main {
         invoker.registerCommand("sumofhealth", new SumOfHealthCommand(collectionManager));
         invoker.registerCommand("minbymeleeweaponvalue", new MinByMeleeWeaponCommand(collectionManager));
         invoker.registerCommand("removebyid", new removeByIdCommand(collectionManager,inputManager));
+        invoker.registerCommand("add", new AddCommand(collectionManager,inputManager));
         while (true){
         try {
 
