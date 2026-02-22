@@ -17,7 +17,7 @@ public class InputManager {
         this.reader= reader;
     }
     public long getLastLong(){//#TODO
-        return 0;
+        return lastLong;
     }
     public String parseCommand() throws IOException {
         String line = reader.nextLine();
@@ -25,13 +25,13 @@ public class InputManager {
         StringBuilder key = new StringBuilder();
         try {
             lastLong = Long.parseLong(parts[parts.length-1]);
-            for (int i = 0; i< parts.length-2; i++){
+            for (int i = 0; i< parts.length-1; i++){
                 key.append(parts[i]);
             }return key.toString();
         } catch (NumberFormatException e) {
             try {
                 lastDouble = Double.parseDouble(parts[parts.length-1]);
-                for (int i = 0; i< parts.length-2; i++){
+                for (int i = 0; i< parts.length-1; i++){
                     key.append(parts[i]);
                 }return key.toString();
             }catch (NumberFormatException e2){
