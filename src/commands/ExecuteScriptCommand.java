@@ -2,6 +2,7 @@ package commands;
 
 import inputWorkers.InputManager;
 import inputWorkers.XMLParser;
+import io.ConsoleBufferedScanner;
 import io.FileBufferedReader;
 import io.Reader;
 import manager.CollectionManager;
@@ -71,7 +72,9 @@ public class ExecuteScriptCommand implements Command{
             scriptReader.close();
         }
         finally{
-            reader.clearBuffer();
+            if (reader instanceof ConsoleBufferedScanner){
+                reader.clearBuffer();
+            }
             inputManager.setReader(reader);
 
             }

@@ -32,8 +32,6 @@ public class InputManager {
     }
     public String parseCommand() throws IOException {
         commandParser.parse(reader);
-        System.out.println("---------------------------------------------------");
-        System.out.println(commandParser.getCommandName());
         return commandParser.getCommandName();
     }
 
