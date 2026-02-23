@@ -1,7 +1,6 @@
 package commands;
 
 import manager.CollectionManager;
-import manager.ProgramManager;
 import manager.SpaceMarine;
 
 public class ShowCommand implements Command{

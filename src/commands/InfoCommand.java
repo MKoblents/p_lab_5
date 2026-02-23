@@ -1,7 +1,6 @@
 package commands;
 
 import manager.CollectionManager;
-import manager.ProgramManager;
 
 public class InfoCommand implements Command{
     private CollectionManager collectionManager;

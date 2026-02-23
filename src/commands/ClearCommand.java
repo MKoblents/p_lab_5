@@ -1,7 +1,6 @@
 package commands;
 
 import manager.CollectionManager;
-import manager.ProgramManager;
 
 public class ClearCommand implements Command{
     private final CollectionManager collectionManager;

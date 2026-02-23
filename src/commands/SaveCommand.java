@@ -1,7 +1,6 @@
 package commands;
 
 import manager.CollectionManager;
-import manager.ProgramManager;
 import outputWorkers.CollectionSaver;
 
 public class SaveCommand implements Command{
