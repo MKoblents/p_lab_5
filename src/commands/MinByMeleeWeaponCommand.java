@@ -10,7 +10,7 @@ public class MinByMeleeWeaponCommand implements Command{
     }
     @Override
     public String getHelpInformation() {
-        return "";
+        return helpinformation;
     }
 
     @Override

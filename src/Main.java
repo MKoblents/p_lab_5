@@ -34,14 +34,9 @@ public class Main {
         invoker.registerCommand("remove_greater", new RemoveGreaterCommand(collectionManager, inputManager));
         while (true){
         try {
-            System.out.println("do input");
-
             String commandLine = inputManager.parseCommand();
-            System.out.println("afterasd         System.out.println(\"do input\");\n input");
-            System.out.println(commandLine);
             System.out.println(commandLine);
             invoker.runCommand(commandLine);
-            System.out.println("qweqweqweqw");
 
 
         } catch (Exception e) {

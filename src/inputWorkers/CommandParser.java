@@ -28,7 +28,6 @@ public class CommandParser {
     }
     public void parse(Reader reader) throws IOException {
         String line = reader.nextLine();
-        System.out.println(line);
         if (line == null || line.trim().isEmpty()) {
             return;
         }

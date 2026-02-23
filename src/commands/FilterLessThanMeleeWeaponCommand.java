@@ -17,7 +17,7 @@ public class FilterLessThanMeleeWeaponCommand implements Command{
     }
     @Override
     public String getHelpInformation() {
-        return "";
+        return helpInfprmation;
     }
 
     @Override
