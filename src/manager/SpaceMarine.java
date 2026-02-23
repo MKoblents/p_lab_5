@@ -31,12 +31,11 @@ public class SpaceMarine implements Comparable<SpaceMarine> {
     @XmlElement
     private Chapter chapter; //Поле может быть null
     protected SpaceMarine(){
-        //TODO id, creation data,...
     }
 
     @Override
     public int compareTo(SpaceMarine other) {
-        return Long.compare(this.id, other.id);
+        return Double.compare(this.health, other.health);
     }
 
     protected SpaceMarine(String name, Coordinates coordinates, MeleeWeapon meleeWeapon){

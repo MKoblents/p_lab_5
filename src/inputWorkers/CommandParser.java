@@ -22,8 +22,6 @@ public class CommandParser {
     }
     public void parse(Reader reader) throws IOException {
         String line = reader.nextLine();
-        System.out.println(line);
-//        clearState();
         if (line == null || line.trim().isEmpty()) {
             return;
         }
@@ -31,6 +29,10 @@ public class CommandParser {
         commandName = listToString(parts);
         System.out.println(commandName);
         rawArgument = parts[parts.length - 1].trim();
+        if (line.trim().startsWith("#")) {
+            commandName = null;
+            return;
+        }
         if (rawArgument.startsWith("<") && rawArgument.endsWith(">")) {
             xmlArg = rawArgument;
             reader.setLastXmlString(xmlArg);
@@ -62,15 +64,6 @@ public class CommandParser {
             return null;
         }
     }
-//    private void clearState() {
-//        commandName = null;
-//        rawArgument = null;
-//        longArg = null;
-//        doubleArg = null;
-//        intArg = null;
-//        xmlArg = null;
-//        pathArg = null;
-//    }
     public String getCommandName() { return commandName; }
     public String getRawArgument() { return rawArgument; }
     public long getLongArg() { return longArg; }

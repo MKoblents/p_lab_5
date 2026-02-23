@@ -5,7 +5,7 @@ import manager.ProgramManager;
 import manager.SpaceMarine;
 
 public class AddCommand implements Command {
-    private String helpInformation = "добавить новый элемент в коллекцию";
+    private String helpInformation = "add {element} : добавить новый элемент в коллекцию";
     private final InputManager inputManager;
     private final CollectionManager collectionManager;
     public AddCommand(CollectionManager collectionManager,InputManager inputManager){

@@ -4,7 +4,7 @@ import manager.Invoker;
 import manager.ProgramManager;
 
 public class HelpCommand implements Command {
-    private String helpInformation = "вывести справку по доступным командам";
+    private String helpInformation = "help : вывести справку по доступным командам";
     private final Invoker invoker;
     public HelpCommand(Invoker invoker){
         this.invoker = invoker;

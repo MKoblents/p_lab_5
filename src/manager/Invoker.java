@@ -12,6 +12,11 @@ public class Invoker {
         commandMap.put(name, command);
     }
     public void runCommand(String key){
+        if (key == null) {
+            System.err.println("Unknown command: " + key);
+            System.err.println("Available commands: " + commandMap.keySet());
+            return;
+        }
         commandMap.get(key).execute();
     }
 

@@ -59,4 +59,16 @@ public class InputManager {
     public MeleeWeapon getInputMeleeWeapon() {
         return commandParser.getEnumValue(MeleeWeapon.class);
     }
+
+    public void setReader(Reader reader) {
+        this.reader = reader;
+    }
+
+    public Reader getReader() {
+        return reader;
+    }
+
+    public String getRawArgument() {
+        return commandParser.getRawArgument();
+    }
 }

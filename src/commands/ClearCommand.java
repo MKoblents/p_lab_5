@@ -5,7 +5,7 @@ import manager.ProgramManager;
 
 public class ClearCommand implements Command{
     private final CollectionManager collectionManager;
-    private String helpInformation = "очистить коллекцию";
+    private String helpInformation = "clear : очистить коллекцию";
     public ClearCommand(CollectionManager collectionManager){
         this.collectionManager = collectionManager;
     }
