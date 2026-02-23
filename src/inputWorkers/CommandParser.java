@@ -15,6 +15,9 @@ public class CommandParser {
 
     private String listToString(String[] strings, int start, int finish){
         try {
+            if (start == finish){
+                return strings[start];
+            }
             StringBuilder key = new StringBuilder();
             for (int i = start; i < finish; i++) {
                 key.append(strings[i]);
@@ -41,6 +44,7 @@ public class CommandParser {
         commandName = parts[0];
         if (commandName.equals("add") || commandName.equals("remove_greater")){
             xmlArg = listToString(parts, 1, parts.length);
+            reader.setLastXmlString(xmlArg);
             return;
         }
         if (commandName.equals("update")|| commandName.equals("remove_by_id")){
@@ -68,6 +72,7 @@ public class CommandParser {
             return;
         }
         xmlArg = listToString(parts, 2, parts.length);
+        reader.setLastXmlString(xmlArg);
 
     }
     public <T extends Enum<T>> T getEnumValue(Class<T> enumType) {

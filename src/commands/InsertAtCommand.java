@@ -19,9 +19,13 @@ public class InsertAtCommand implements Command{
     }
 
     @Override
-    public void execute() {//TODO index out of range
+    public void execute() {
         SpaceMarine spaceMarine = inputManager.getInputSpaceMarine();
         inputManager.getValidator().spaceMarineValidate(spaceMarine);
+        if (inputManager.getLastInt()>collectionManager.size()){
+            collectionManager.addItem(spaceMarine);
+            System.err.println("Your index was out of range, so element added to the end of collection.");
+        }
         collectionManager.addItem(inputManager.getLastInt(), spaceMarine);
 
     }
