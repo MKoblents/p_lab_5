@@ -2,11 +2,10 @@ package commands;
 
 import inputWorkers.InputManager;
 import manager.CollectionManager;
-import manager.ProgramManager;
 import manager.SpaceMarine;
 
 public class UpdateCommand implements Command{
-    private String helpInformation = "обновить значение элемента коллекции, id которого равен заданному";
+    private String helpInformation = "update : обновить значение элемента коллекции, id которого равен заданному";
     private CollectionManager collectionManager;
     private InputManager inputManager;
     public UpdateCommand(CollectionManager collectionManager, InputManager inputManager){

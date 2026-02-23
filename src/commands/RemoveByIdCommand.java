@@ -1,15 +1,17 @@
 package commands;
 
-import manager.ProgramManager;
-import manager.SpaceMarine;
+import inputWorkers.InputManager;
+import manager.CollectionManager;
 
-public class RemoveByIdCommand implements Command{
-    private final ProgramManager programManager;
-    private String helpInformation = "удалить элемент из коллекции по его id";
-
-    public RemoveByIdCommand(ProgramManager programManager){
-        this.programManager = programManager;
+public class RemoveByIdCommand implements  Command{
+    private String helpInformation = "remove_by_id id : удалить элемент из коллекции по его id";
+    private InputManager inputManager;
+    private CollectionManager collectionManager;
+    public RemoveByIdCommand(CollectionManager collectionManager, InputManager inputManager){
+        this.inputManager = inputManager;
+        this.collectionManager = collectionManager;
     }
+
     @Override
     public String getHelpInformation() {
         return helpInformation;
@@ -17,12 +19,7 @@ public class RemoveByIdCommand implements Command{
 
     @Override
     public void execute() {
-        long id = programManager.getInputManager().getLastLong();//#TODO do normal getting id
-        for (SpaceMarine spaceMarine: programManager.getCollectionManager().getSpaceMarines()){
-            if (spaceMarine.getId() == id){
-                programManager.getCollectionManager().remove(spaceMarine);
-                return;
-            }
-        }
+        long id = inputManager.getLastLong();
+        collectionManager.remove(id);
     }
 }

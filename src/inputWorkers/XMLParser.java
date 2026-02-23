@@ -12,10 +12,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -64,6 +61,16 @@ public class XMLParser {
                 parseSpaseNarineField(spaceMarine, currentFieldName);
             }
         }
+        return spaceMarine;
+    }
+    public SpaceMarine parseSpaceMarineFromString(String xmlString) throws XMLStreamException, IOException {
+        byte[] bytes = xmlString.getBytes(StandardCharsets.UTF_8);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        factory = XMLInputFactory.newInstance();
+        xmlReader = factory.createXMLStreamReader(inputStream);
+        SpaceMarine spaceMarine = parseSpaceMarine();
+        xmlReader.close();
+        inputStream.close();
         return spaceMarine;
     }
     private void parseSpaseNarineField(SpaceMarine marine, String fieldName){
