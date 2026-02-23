@@ -25,19 +25,20 @@ public class InputManager {
         this.commandParser = commandParser;
     }
     public long getLastLong(){
-        return commandParser.getLastLong();
+        return commandParser.getLongArg();
     }
     public String getLastPath(){
-        return commandParser.getLastPath();
+        return commandParser.getPathArg();
     }
     public double getLastDouble(){
-        return commandParser.getLastDouble();
+        return commandParser.getDoubleArg();
     }
     public String getLastXmlString(){
-        return commandParser.getLastXmlString();
+        return commandParser.getXmlArg();
     }
     public String parseCommand() throws IOException {
-        return commandParser.parseCommand(reader);
+        commandParser.parse(reader);
+        return commandParser.getCommandName();
     }
 
     public SpaceMarine getInputSpaceMarine(){
@@ -45,28 +46,6 @@ public class InputManager {
         return reader.getInputSpaceMarine(spaceMarine);
     }
 
-    private Chapter getInputChapter() throws IOException {
-        return reader.getInputChapter();
-    }
-
-    private double getInputDouble() throws IOException {
-        return reader.getInputDouble();
-    }
-
-    private <T extends Enum<T>> T getInputEnum(Class<T> enumType) throws IOException {
-        return reader.getInputEnum(enumType);
-    }
-
-    private String getTrimmedText() throws IOException {
-        return reader.getTrimmedText();
-    }
-
-    private String getInputString() throws IOException {
-        return reader.getInputString();
-    }
-    private long getInputLong() throws IOException{
-        return reader.getInputLong();
-    }
 
 
     public Validator getValidator() {
@@ -74,10 +53,10 @@ public class InputManager {
     }
 
     public int getLastInt() {
-        return commandParser.getLastInt();
+        return commandParser.getIntArg();
     }
 
     public MeleeWeapon getInputMeleeWeapon() {
-        return reader.getInputMeleeWeapon();
+        return commandParser.getEnumValue(MeleeWeapon.class);
     }
 }

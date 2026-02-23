@@ -63,7 +63,7 @@ public class XMLParser {
         }
         return spaceMarine;
     }
-    public SpaceMarine parseSpaceMarineFromString(String xmlString) throws Exception {
+    public SpaceMarine parseSpaceMarineFromString(String xmlString) throws XMLStreamException, IOException {
         byte[] bytes = xmlString.getBytes(StandardCharsets.UTF_8);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         factory = XMLInputFactory.newInstance();
