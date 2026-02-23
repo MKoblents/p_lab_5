@@ -18,4 +18,6 @@ public interface Reader {
 //    long getInputLong() throws IOException;
 //    MeleeWeapon getInputMeleeWeapon();
     void setLastXmlString(String lastXmlString);
+
+    void clearBuffer() throws IOException;
 }

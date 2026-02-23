@@ -5,7 +5,6 @@ import io.Reader;
 
 public class CommandParser {
     private String commandName;
-    private String rawArgument;
     private long longArg;
     private double doubleArg;
     private int intArg;
@@ -29,6 +28,7 @@ public class CommandParser {
     }
     public void parse(Reader reader) throws IOException {
         String line = reader.nextLine();
+        System.out.println(line);
         if (line == null || line.trim().isEmpty()) {
             return;
         }
@@ -84,7 +84,6 @@ public class CommandParser {
         }
     }
     public String getCommandName() { return commandName; }
-    public String getRawArgument() { return rawArgument; }
     public long getLongArg() { return longArg; }
     public double getDoubleArg() { return doubleArg; }
     public int getIntArg() { return intArg; }
