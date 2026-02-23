@@ -4,7 +4,7 @@ import manager.CollectionManager;
 
 public class ShuffleCommand implements Command{
     private CollectionManager collectionManager;
-    private String helpInformation = "перемешать элементы коллекции в случайном порядке";
+    private String helpInformation = "shuffle : перемешать элементы коллекции в случайном порядке";
 
     @Override
     public String getHelpInformation() {

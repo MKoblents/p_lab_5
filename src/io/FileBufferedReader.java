@@ -1,5 +1,10 @@
 package io;
 
+import inputWorkers.XMLParser;
+import manager.Chapter;
+import manager.SpaceMarine;
+
+import javax.xml.stream.XMLStreamException;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -11,25 +16,57 @@ public class FileBufferedReader implements Reader{
     private final BufferedInputStream bufferedInputStream;
     private String currentLine;
     private String nextLine;
-    public FileBufferedReader(String filePath) throws IOException {
+    private XMLParser xmlParser;
+    private String lastXmlString;
+    private boolean eof = false;
+    public FileBufferedReader(String filePath, XMLParser xmlParser) throws IOException {
         this.filePath = filePath;
         this.bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
+        preloadNextLine();
+        this.xmlParser = xmlParser;
     }
+    private void preloadNextLine() throws IOException {
+        if (eof) {
+            nextLine = null;
+            return;
+        }
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        int currentByte;
+        boolean readSomething = false;
+        while ((currentByte = bufferedInputStream.read()) != -1) {
+            readSomething = true;
+            if (currentByte == '\n') {
+                break;
+            } else if (currentByte == '\r') {
+                if (bufferedInputStream.available() > 0) {
+                    bufferedInputStream.mark(1);
+                    int next = bufferedInputStream.read();
+                    if (next != '\n') {
+                        bufferedInputStream.reset();
+                    }
+                }
+                break;
+            }
 
+            output.write(currentByte);
+        }
+        if (!readSomething && currentByte == -1) {
+            eof = true;
+            nextLine = null;
+        } else {
+            nextLine = output.toString(StandardCharsets.UTF_8);
+        }
+    }
     @Override
     public boolean hasNextLine() throws IOException {
-        return false;
+        return nextLine != null;
     }
-
     @Override
     public String nextLine() throws IOException {
-        this.currentLine = nextLine;
-        if (nextLine != null) {
-            getNextLine();
-        }
-        return currentLine;
+        String result = nextLine;
+        preloadNextLine();
+        return result;
     }
-
     public String getNextLine() throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         int currentByte;
@@ -45,5 +82,23 @@ public class FileBufferedReader implements Reader{
             return null;
         }
         return this.nextLine = output.toString(StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public SpaceMarine getInputSpaceMarine(SpaceMarine spaceMarine){
+        try {
+            return xmlParser.parseSpaceMarineFromString(lastXmlString);
+        } catch (Exception e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setLastXmlString(String lastXmlString) {
+        this.lastXmlString = lastXmlString;
+    }
+
+
+    public void close() throws IOException {
+        bufferedInputStream.close();
     }
 }

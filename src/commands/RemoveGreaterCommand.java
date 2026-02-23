@@ -1,16 +1,18 @@
 package commands;
+
 import inputWorkers.InputManager;
 import manager.CollectionManager;
 import manager.SpaceMarine;
 
-public class AddCommand implements Command {
-    private String helpInformation = "add {element} : добавить новый элемент в коллекцию";
+public class RemoveGreaterCommand implements Command{
     private final InputManager inputManager;
     private final CollectionManager collectionManager;
-    public AddCommand(CollectionManager collectionManager,InputManager inputManager){
+    private String helpInformation = "remove_greater {element} : удалить из коллекции все элементы, превышающие заданный";
+    public RemoveGreaterCommand(CollectionManager collectionManager,InputManager inputManager){
         this.inputManager = inputManager;
         this.collectionManager = collectionManager;
     }
+
     @Override
     public String getHelpInformation() {
         return helpInformation;
@@ -21,5 +23,5 @@ public class AddCommand implements Command {
         SpaceMarine spaceMarine = inputManager.getInputSpaceMarine();
         inputManager.getValidator().spaceMarineValidate(spaceMarine);
         collectionManager.addItem(spaceMarine);
-    }
+        collectionManager.removeGreater(spaceMarine);    }
 }

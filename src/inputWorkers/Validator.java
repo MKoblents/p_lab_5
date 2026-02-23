@@ -72,14 +72,6 @@ public class Validator {
             throw new CreationDataException(spaceMarine.getName(),originalTime, correctTime);
         }
     }
-//    public void idValidate(SpaceMarine spaceMarine) throws WrongIdException{
-//        long correctId = manager.getCorrectId(spaceMarine);
-//        long realId = spaceMarine.getId();
-//        if ( correctId != realId){
-//            spaceMarine.setId(correctId);
-//            throw new WrongIdException(spaceMarine.getName(), realId, correctId);
-//        }
-//    }
     public void nameValidate(SpaceMarine spaceMarine) throws NullPointerException{
         String name = spaceMarine.getName();
         if (name == null || name.isEmpty()){
@@ -89,6 +81,10 @@ public class Validator {
     }
     public void coordinatesValidate(SpaceMarine spaceMarine) throws UnavailableCoordinateException {
         Coordinates coordinates = spaceMarine.getCoordinates();
+        if (coordinates == null){
+            spaceMarine.setCoordinates(new Coordinates());
+            return;
+        }
         xCoordinateValidate(coordinates);
         yCoordinateValidate(coordinates);
     }

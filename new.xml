@@ -8,7 +8,7 @@
             <y>-300</y>
         </coordinates>
         <creationDate/>
-        <health>0.0</health>
+        <health>10.0</health>
         <category>AGGRESSOR</category>
         <weaponType>BOLT_RIFLE</weaponType>
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
@@ -44,7 +44,7 @@
             <y>-300</y>
         </coordinates>
         <creationDate/>
-        <health>0.0</health>
+        <health>80.0</health>
         <category>AGGRESSOR</category>
         <weaponType>BOLT_RIFLE</weaponType>
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
@@ -55,8 +55,19 @@
         </chapter>
     </spaceMarine>
     <spaceMarine>
+        <id>6</id>
+        <name>sgw</name>
+        <coordinates>
+            <x>4</x>
+            <y>5</y>
+        </coordinates>
+        <creationDate/>
+        <health>453.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
         <id>4</id>
-        <name>4</name>
+        <name>100</name>
         <coordinates>
             <x>150</x>
             <y>-300</y>
@@ -80,7 +91,7 @@
             <y>0</y>
         </coordinates>
         <creationDate/>
-        <health>92.3</health>
+        <health>65.0</health>
         <category>SUPPRESSOR</category>
         <weaponType>COMBI_PLASMA_GUN</weaponType>
         <meleeWeapon>POWER_BLADE</meleeWeapon>

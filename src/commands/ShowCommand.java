@@ -1,11 +1,10 @@
 package commands;
 
 import manager.CollectionManager;
-import manager.ProgramManager;
 import manager.SpaceMarine;
 
 public class ShowCommand implements Command{
-    private String helpInformation = "вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
+    private String helpInformation = "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
     private CollectionManager collectionManager;
     public ShowCommand(CollectionManager collectionManager){
         this.collectionManager=collectionManager;

@@ -4,7 +4,6 @@ import inputWorkers.Validator;
 import inputWorkers.XMLParser;
 
 import javax.xml.bind.annotation.*;
-import javax.xml.crypto.Data;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,5 +99,20 @@ public class CollectionManager {
     public void replace(SpaceMarine spaceMarineOld, SpaceMarine spaceMarineNew){
         int index = spaceMarines.indexOf(spaceMarineOld);
         spaceMarines.set(index, spaceMarineNew);
+    }
+
+    public void removeGreater(SpaceMarine spaceMarine) {
+        ArrayList<SpaceMarine> haveToBeRemoved = new ArrayList<>();
+        for (SpaceMarine spaceMarineR:spaceMarines){
+            if (spaceMarine.compareTo(spaceMarineR)>0){
+                haveToBeRemoved.add(spaceMarineR);
+            }
+        }for (SpaceMarine spaceMarineR: haveToBeRemoved){
+            spaceMarines.remove(spaceMarineR);
+        }
+    }
+
+    public int size() {
+        return spaceMarines.size();
     }
 }

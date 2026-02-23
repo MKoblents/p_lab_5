@@ -4,17 +4,14 @@ import io.ConsoleScanner;
 import manager.*;
 import outputWorkers.CollectionSaver;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) throws Exception {
         CollectionManager collectionManager = new CollectionManager();
-        ProgramManager programManager = new ProgramManager();
         String filePath = System.getenv("PLAB5");
         ConsoleScanner consoleScanner = new ConsoleScanner();
         Validator validator = new Validator(collectionManager);
-        InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager);
+        CommandParser commandParser = new CommandParser();
+        InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager, commandParser);
         System.out.println(filePath);
         collectionManager.loadFromFile(filePath);
         CollectionSaver collectionSaver = new CollectionSaver();
@@ -25,20 +22,22 @@ public class Main {
         invoker.registerCommand("clear", new ClearCommand(collectionManager));
         invoker.registerCommand("exit", new ExitCommand());
         invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
-        invoker.registerCommand("sumofhealth", new SumOfHealthCommand(collectionManager));
-        invoker.registerCommand("minbymeleeweaponvalue", new MinByMeleeWeaponCommand(collectionManager));
-        invoker.registerCommand("removebyid", new removeByIdCommand(collectionManager,inputManager));
+        invoker.registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
+        invoker.registerCommand("min_by_melee_weapon", new MinByMeleeWeaponCommand(collectionManager));
+        invoker.registerCommand("remove_by_id", new RemoveByIdCommand(collectionManager,inputManager));
         invoker.registerCommand("add", new AddCommand(collectionManager,inputManager));
-        invoker.registerCommand("insertat", new InsertAtCommand(collectionManager, inputManager));
-        invoker.registerCommand("filterlessthanmeleeweapon", new FilterLessThanMeleeWeaponCommand(collectionManager, inputManager));
+        invoker.registerCommand("insert_at", new InsertAtCommand(collectionManager, inputManager));
+        invoker.registerCommand("filter_less_than_meleeweapon", new FilterLessThanMeleeWeaponCommand(collectionManager, inputManager));
         invoker.registerCommand("update", new UpdateCommand(collectionManager, inputManager));
         invoker.registerCommand("save", new SaveCommand(collectionManager, collectionSaver));
+        invoker.registerCommand("execute_script", new ExecuteScriptCommand(collectionManager, inputManager, new FileManager(),invoker));
+        invoker.registerCommand("remove_greater", new RemoveGreaterCommand(collectionManager, inputManager));
         while (true){
         try {
 
             String commandLine = inputManager.parseCommand();
             System.out.println(commandLine);
-            System.out.println(inputManager.getLastLong());
+//            System.out.println(inputManager.getLastLong());
             invoker.runCommand(commandLine);
 //            invoker.runCommand("clear");
 //            invoker.runCommand("help");
