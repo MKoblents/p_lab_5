@@ -10,7 +10,10 @@ public class Coordinates {
     public long getX() {
         return x;
     }
-
+    public Coordinates(){
+        this.x = 0;
+        this.y =0;
+    }
     public long getY() {
         return y;
     }

@@ -101,4 +101,5 @@ public class CollectionManager {
         int index = spaceMarines.indexOf(spaceMarineOld);
         spaceMarines.set(index, spaceMarineNew);
     }
+
 }

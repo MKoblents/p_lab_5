@@ -1,0 +1,8 @@
+# test_script.txt
+info
+show
+add <spaceMarine><name>Test</name><health>100</health><meleeWeapon>CHAIN_SWORD</meleeWeapon></spaceMarine>
+show
+sumofhealth
+help
+exit

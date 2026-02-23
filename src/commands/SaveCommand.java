@@ -7,7 +7,7 @@ import outputWorkers.CollectionSaver;
 public class SaveCommand implements Command{
     private final CollectionSaver collectionSaver;
     private CollectionManager collectionManager;
-    private String helpInformation;
+    private String helpInformation ="save : сохранить коллекцию в файл";
     @Override
     public String getHelpInformation() {
         return helpInformation;

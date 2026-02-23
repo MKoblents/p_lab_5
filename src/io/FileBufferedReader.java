@@ -18,29 +18,55 @@ public class FileBufferedReader implements Reader{
     private String nextLine;
     private XMLParser xmlParser;
     private String lastXmlString;
+    private boolean eof = false;
     public FileBufferedReader(String filePath, XMLParser xmlParser) throws IOException {
         this.filePath = filePath;
         this.bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
+        preloadNextLine();
+        this.xmlParser = xmlParser;
     }
+    private void preloadNextLine() throws IOException {
+        if (eof) {
+            nextLine = null;
+            return;
+        }
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        int currentByte;
+        boolean readSomething = false;
+        while ((currentByte = bufferedInputStream.read()) != -1) {
+            readSomething = true;
+            if (currentByte == '\n') {
+                break;
+            } else if (currentByte == '\r') {
+                if (bufferedInputStream.available() > 0) {
+                    bufferedInputStream.mark(1);
+                    int next = bufferedInputStream.read();
+                    if (next != '\n') {
+                        bufferedInputStream.reset();
+                    }
+                }
+                break;
+            }
 
+            output.write(currentByte);
+        }
+        if (!readSomething && currentByte == -1) {
+            eof = true;
+            nextLine = null;
+        } else {
+            nextLine = output.toString(StandardCharsets.UTF_8);
+        }
+    }
     @Override
     public boolean hasNextLine() throws IOException {
-        if (nextLine != null) return true;
-        bufferedInputStream.mark(1);
-        int next = bufferedInputStream.read();
-        bufferedInputStream.reset();
-        return next != -1;
+        return nextLine != null;
     }
-
     @Override
     public String nextLine() throws IOException {
-        this.currentLine = nextLine;
-        if (nextLine != null) {
-            getNextLine();
-        }
-        return currentLine;
+        String result = nextLine;
+        preloadNextLine();
+        return result;
     }
-
     public String getNextLine() throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         int currentByte;
@@ -72,5 +98,7 @@ public class FileBufferedReader implements Reader{
     }
 
 
-
+    public void close() throws IOException {
+        bufferedInputStream.close();
+    }
 }
