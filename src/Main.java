@@ -32,6 +32,7 @@ public class Main {
         invoker.registerCommand("update", new UpdateCommand(collectionManager, inputManager));
         invoker.registerCommand("save", new SaveCommand(collectionManager, collectionSaver));
         invoker.registerCommand("executescript", new ExecuteScriptCommand(collectionManager, inputManager, new FileManager(),invoker));
+        invoker.registerCommand("removegreater", new RemoveGreaterCommand(collectionManager, inputManager));
         while (true){
         try {
 
