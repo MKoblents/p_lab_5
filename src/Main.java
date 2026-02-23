@@ -23,7 +23,7 @@ public class Main {
         invoker.registerCommand("exit", new ExitCommand());
         invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
         invoker.registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
-        invoker.registerCommand("min_by_meleeweapon_value", new MinByMeleeWeaponCommand(collectionManager));
+        invoker.registerCommand("min_by_melee_weapon", new MinByMeleeWeaponCommand(collectionManager));
         invoker.registerCommand("remove_by_id", new RemoveByIdCommand(collectionManager,inputManager));
         invoker.registerCommand("add", new AddCommand(collectionManager,inputManager));
         invoker.registerCommand("insert_at", new InsertAtCommand(collectionManager, inputManager));

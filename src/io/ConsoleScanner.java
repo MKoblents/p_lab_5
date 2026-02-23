@@ -13,7 +13,6 @@ import java.util.Scanner;
 
 public class ConsoleScanner implements Reader{
     private final Scanner scanner;
-    //#TODO currentLine field
     public ConsoleScanner(){
         this.scanner = new Scanner(System.in);
     }

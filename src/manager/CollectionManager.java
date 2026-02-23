@@ -4,7 +4,6 @@ import inputWorkers.Validator;
 import inputWorkers.XMLParser;
 
 import javax.xml.bind.annotation.*;
-import javax.xml.crypto.Data;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,5 +110,9 @@ public class CollectionManager {
         }for (SpaceMarine spaceMarineR: haveToBeRemoved){
             spaceMarines.remove(spaceMarineR);
         }
+    }
+
+    public int size() {
+        return spaceMarines.size();
     }
 }
