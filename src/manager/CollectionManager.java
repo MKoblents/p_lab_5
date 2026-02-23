@@ -102,4 +102,14 @@ public class CollectionManager {
         spaceMarines.set(index, spaceMarineNew);
     }
 
+    public void removeGreater(SpaceMarine spaceMarine) {
+        ArrayList<SpaceMarine> haveToBeRemoved = new ArrayList<>();
+        for (SpaceMarine spaceMarineR:spaceMarines){
+            if (spaceMarine.compareTo(spaceMarineR)>0){
+                haveToBeRemoved.add(spaceMarineR);
+            }
+        }for (SpaceMarine spaceMarineR: haveToBeRemoved){
+            spaceMarines.remove(spaceMarineR);
+        }
+    }
 }

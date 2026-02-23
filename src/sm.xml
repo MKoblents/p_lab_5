@@ -7,7 +7,7 @@
             <x>150</x>
             <y>-300</y>
         </coordinates>
-        <health>-5</health>
+        <health>10</health>
         <AstartesCategory>AGGRESSOR</AstartesCategory>
         <Weapon>BOLT_RIFLE</Weapon>
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
@@ -42,7 +42,7 @@
             <x>150</x>
             <y>-300</y>
         </coordinates>
-        <health>-5</health>
+        <health>80</health>
         <AstartesCategory>AGGRESSOR</AstartesCategory>
         <Weapon>BOLT_RIFLE</Weapon>
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
@@ -54,7 +54,7 @@
     </spaceMarine>
     <spaceMarine>
         <id>555</id>
-        <name>4</name>
+        <name>100</name>
         <coordinates>
             <x>150</x>
             <y>-300</y>
@@ -77,7 +77,7 @@
             <x>5566 </x>
             <y>goj</y>
         </coordinates>
-        <health>92.3</health>
+        <health>65</health>
         <AstartesCategory>SUPPRESSOR</AstartesCategory>
         <Weapon>COMBI_PLASMA_GUN</Weapon>
         <meleeWeapon>POWER_BLADE</meleeWeapon>
