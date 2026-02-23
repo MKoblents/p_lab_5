@@ -2,7 +2,6 @@ package commands;
 
 import inputWorkers.InputManager;
 import manager.CollectionManager;
-import manager.ProgramManager;
 import manager.SpaceMarine;
 
 public class UpdateCommand implements Command{

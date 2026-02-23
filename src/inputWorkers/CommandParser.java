@@ -13,48 +13,62 @@ public class CommandParser {
     private String pathArg;
     private String enumArg;
 
-    private String listToString(String[] strings){
-        StringBuilder key = new StringBuilder();
-        for (int i = 0; i < strings.length - 1; i++) {
-            key.append(strings[i]);
+    private String listToString(String[] strings, int start, int finish){
+        try {
+            StringBuilder key = new StringBuilder();
+            for (int i = start; i < finish; i++) {
+                key.append(strings[i]);
+            }
+            return key.toString().toLowerCase();
+        }catch (IndexOutOfBoundsException e){
+            return null;
         }
-        return key.toString().toLowerCase();
     }
     public void parse(Reader reader) throws IOException {
         String line = reader.nextLine();
         if (line == null || line.trim().isEmpty()) {
             return;
         }
-        String[] parts = line.trim().split("\\s+");
-        commandName = listToString(parts);
-        System.out.println(commandName);
-        rawArgument = parts[parts.length - 1].trim();
         if (line.trim().startsWith("#")) {
             commandName = null;
             return;
         }
-        if (rawArgument.startsWith("<") && rawArgument.endsWith(">")) {
-            xmlArg = rawArgument;
-            reader.setLastXmlString(xmlArg);
+        String[] parts = line.trim().split("\\s+");
+        if (parts.length == 1){
+            commandName = line.trim().toLowerCase();
             return;
         }
-        if (commandName.equals("executescript")) {
-            pathArg = rawArgument;
+        commandName = parts[0];
+        if (commandName.equals("add") || commandName.equals("remove_greater")){
+            xmlArg = listToString(parts, 1, parts.length);
             return;
         }
-        try {
-            longArg = Long.parseLong(rawArgument);
-        } catch (NumberFormatException e) {
+        if (commandName.equals("update")|| commandName.equals("remove_by_id")){
             try {
-                doubleArg = Double.parseDouble(rawArgument);
-            } catch (NumberFormatException e2) {
-                try {
-                    intArg = Integer.parseInt(rawArgument);
-                } catch (NumberFormatException e3) {
-                    commandName = line.replaceAll("\\s+", "").toLowerCase();
-                }
+                longArg = Long.parseLong(parts[1]);
+                return;
+            } catch (NumberFormatException e) {
+                longArg = 0;
             }
         }
+        if (commandName.equals("insert_at")){
+            try {
+                intArg = Integer.parseInt(parts[1]);
+                return;
+            } catch (NumberFormatException e) {
+                intArg = 0;
+            }
+        }
+        if (commandName.equals("execute_script")) {
+            pathArg = parts[1];
+            return;
+        }
+        if (commandName.equals("filter_less_than_melee_weapon")){
+            enumArg = parts[1];
+            return;
+        }
+        xmlArg = listToString(parts, 2, parts.length);
+
     }
     public <T extends Enum<T>> T getEnumValue(Class<T> enumType) {
         if (enumArg == null) return null;

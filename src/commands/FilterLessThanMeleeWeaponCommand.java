@@ -8,7 +8,7 @@ import manager.SpaceMarine;
 import java.util.List;
 
 public class FilterLessThanMeleeWeaponCommand implements Command{
-    private String helpInfprmation = "filter less than melee weapon meleeWeapon : вывести элементы, значение поля meleeWeapon которых меньше заданного";
+    private String helpInfprmation = "filter_less_than_melee_weapon meleeWeapon : вывести элементы, значение поля meleeWeapon которых меньше заданного";
     private CollectionManager collectionManager;
     private InputManager inputManager;
     public FilterLessThanMeleeWeaponCommand(CollectionManager collectionManager, InputManager inputManager){
