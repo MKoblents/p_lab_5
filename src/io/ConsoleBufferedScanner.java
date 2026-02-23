@@ -7,26 +7,30 @@ import manager.Chapter;
 import manager.Coordinates;
 import manager.SpaceMarine;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
 
-public class ConsoleScanner implements Reader{
-    private final Scanner scanner;
-    public ConsoleScanner(){
-        this.scanner = new Scanner(System.in);
+public class ConsoleBufferedScanner implements Reader {
+    private BufferedReader reader;
+
+    public ConsoleBufferedScanner() {
+        this.reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     @Override
     public String nextLine() throws IOException {
-        return scanner.nextLine();
+        return reader.readLine();  // Нет сложного буфера
     }
 
     @Override
-    public boolean hasNextLine()throws IOException{
-        return scanner.hasNextLine();
+    public boolean hasNextLine() throws IOException {
+        return reader.ready();
     }
-
+    public void clearBuffer() throws IOException {
+        this.reader = new BufferedReader(new InputStreamReader(System.in));
+    }
     @Override
     public SpaceMarine getInputSpaceMarine(SpaceMarine spaceMarine) {
         try {
@@ -87,7 +91,7 @@ public class ConsoleScanner implements Reader{
     public String getTrimmedText() throws IOException {
         return nextLine().trim();
     }
-//    @Override
+    //    @Override
     public <T extends Enum<T>> T getInputEnum(Class<T> enumType) throws IOException {
         System.out.println("(you should chose one option) ");
         System.out.println(Arrays.toString(enumType.getEnumConstants()));
