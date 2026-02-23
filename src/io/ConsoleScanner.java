@@ -88,8 +88,7 @@ public class ConsoleScanner implements Reader{
     public String getTrimmedText() throws IOException {
         return nextLine().trim();
     }
-
-    @Override
+//    @Override
     public <T extends Enum<T>> T getInputEnum(Class<T> enumType) throws IOException {
         System.out.println("(you should chose one option) ");
         System.out.println(Arrays.toString(enumType.getEnumConstants()));
@@ -144,5 +143,10 @@ public class ConsoleScanner implements Reader{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void setLastXmlString(String lastXmlString) {
+
     }
 }

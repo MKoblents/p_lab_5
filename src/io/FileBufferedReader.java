@@ -1,5 +1,10 @@
 package io;
 
+import inputWorkers.XMLParser;
+import manager.Chapter;
+import manager.SpaceMarine;
+
+import javax.xml.stream.XMLStreamException;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -11,14 +16,20 @@ public class FileBufferedReader implements Reader{
     private final BufferedInputStream bufferedInputStream;
     private String currentLine;
     private String nextLine;
-    public FileBufferedReader(String filePath) throws IOException {
+    private XMLParser xmlParser;
+    private String lastXmlString;
+    public FileBufferedReader(String filePath, XMLParser xmlParser) throws IOException {
         this.filePath = filePath;
         this.bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
     }
 
     @Override
     public boolean hasNextLine() throws IOException {
-        return false;
+        if (nextLine != null) return true;
+        bufferedInputStream.mark(1);
+        int next = bufferedInputStream.read();
+        bufferedInputStream.reset();
+        return next != -1;
     }
 
     @Override
@@ -46,4 +57,20 @@ public class FileBufferedReader implements Reader{
         }
         return this.nextLine = output.toString(StandardCharsets.UTF_8);
     }
+
+    @Override
+    public SpaceMarine getInputSpaceMarine(SpaceMarine spaceMarine){
+        try {
+            return xmlParser.parseSpaceMarineFromString(lastXmlString);
+        } catch (Exception e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setLastXmlString(String lastXmlString) {
+        this.lastXmlString = lastXmlString;
+    }
+
+
+
 }
