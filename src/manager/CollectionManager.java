@@ -24,6 +24,7 @@ public class CollectionManager {
     private Validator validator = new Validator(this);
     public CollectionManager(){
         this.creationData = ZonedDateTime.now();
+        spaceMarines = new ArrayList<>();
     }
     public SpaceMarine getSpaceMarineById(long id) {
         return spaceMarines.stream()
@@ -47,10 +48,14 @@ public class CollectionManager {
     public void addItem(int index, SpaceMarine spaceMarine){
         this.spaceMarines.add(index, spaceMarine);
     }
-    public void loadFromFile(String filePath) throws Exception {
-        XMLParser parser = new XMLParser(filePath, this);
-        this.spaceMarines = parser.parseSpaceMarines();
-        validator.spaceMarinesValidate(this.spaceMarines);
+    public void loadFromFile(String filePath){
+        try {
+            XMLParser parser = new XMLParser(filePath, this);
+            this.spaceMarines = parser.parseSpaceMarines();
+            validator.spaceMarinesValidate(this.spaceMarines);
+        }catch (Exception e){
+            System.err.println("Can't read from file: "+filePath);
+        }
     }
     public void sort(){
         Collections.sort(spaceMarines);

@@ -1,8 +1,5 @@
-# test_script.txt
+add <spaceMarine><name>Test</name></spaceMarine>
 info
 show
-add <spaceMarine><name>Test</name><health>100</health><meleeWeapon>CHAIN_SWORD</meleeWeapon></spaceMarine>
+execute_script /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/script2
 show
-sum_of_health
-help
-exit

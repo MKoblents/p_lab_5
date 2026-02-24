@@ -2,6 +2,7 @@ package commands;
 
 import inputWorkers.InputManager;
 import inputWorkers.XMLParser;
+import io.ConsoleBufferedScanner;
 import io.FileBufferedReader;
 import io.Reader;
 import manager.CollectionManager;
@@ -56,7 +57,6 @@ public class ExecuteScriptCommand implements Command{
     }
     private void executeScript(String scriptPath) throws IOException, XMLStreamException {
         Reader reader = inputManager.getReader();
-        int lineCount = 0;
         try {
             FileBufferedReader scriptReader = new FileBufferedReader(scriptPath, new XMLParser(scriptPath, collectionManager));
             inputManager.setReader(scriptReader);
@@ -65,17 +65,19 @@ public class ExecuteScriptCommand implements Command{
                     String commandName = inputManager.parseCommand();
                     if (commandName == null || commandName.isEmpty()) continue;
                     invoker.runCommand(commandName);
-
                 } catch (Exception e) {
-
                     System.err.println("  " + e.getMessage());
                 }
             }
             scriptReader.close();
         }
         finally{
+            if (reader instanceof ConsoleBufferedScanner){
+                reader.clearBuffer();
+            }
             inputManager.setReader(reader);
-                }
+
+            }
         }
 
 }
