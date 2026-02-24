@@ -141,9 +141,9 @@ public class ConsoleBufferedScanner implements Reader {
     public double getInputDouble() throws IOException {
         System.out.print("(you should enter double type) ");
         try {
-            return Double.parseDouble(getTrimmedText());
+            return Double.parseDouble(getTrimmedText().replace(',','.'));
         }catch (NumberFormatException e){
-            System.err.println("You had to enter long.");
+            System.err.println("You had to enter double.");
             if (shouldRetryInput()){
                 return getInputDouble();
             }return 0.0;
