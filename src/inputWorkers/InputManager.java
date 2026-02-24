@@ -1,17 +1,11 @@
 package inputWorkers;
 
-import enums.AstartesCategory;
 import enums.MeleeWeapon;
-import enums.Weapon;
-import io.ConsoleScanner;
 import io.Reader;
-import manager.Chapter;
 import manager.CollectionManager;
-import manager.Coordinates;
 import manager.SpaceMarine;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class InputManager {
     private Validator validator;
@@ -60,7 +54,7 @@ public class InputManager {
         return commandParser.getEnumValue(MeleeWeapon.class);
     }
 
-    public void setReader(Reader reader) {
+    public void setReader(Reader reader) throws IOException {
         this.reader = reader;
     }
 
@@ -68,7 +62,4 @@ public class InputManager {
         return reader;
     }
 
-    public String getRawArgument() {
-        return commandParser.getRawArgument();
-    }
 }

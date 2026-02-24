@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 public class FileBufferedReader implements Reader{
     private String filePath;
-    private final BufferedInputStream bufferedInputStream;
+    private BufferedInputStream bufferedInputStream;
     private String currentLine;
     private String nextLine;
     private XMLParser xmlParser;
@@ -25,6 +25,11 @@ public class FileBufferedReader implements Reader{
         preloadNextLine();
         this.xmlParser = xmlParser;
     }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
     private void preloadNextLine() throws IOException {
         if (eof) {
             nextLine = null;
@@ -50,7 +55,7 @@ public class FileBufferedReader implements Reader{
 
             output.write(currentByte);
         }
-        if (!readSomething && currentByte == -1) {
+        if (!readSomething) {
             eof = true;
             nextLine = null;
         } else {
@@ -100,5 +105,19 @@ public class FileBufferedReader implements Reader{
 
     public void close() throws IOException {
         bufferedInputStream.close();
+    }
+    public void clearBuffer() throws IOException {
+        this.nextLine = null;
+        this.eof = false;
+        reset();
+    }
+    public void reset() throws IOException {
+        bufferedInputStream.close();
+        this.bufferedInputStream = new BufferedInputStream(
+                new FileInputStream(filePath)
+        );
+        this.nextLine = null;
+        this.eof = false;
+        preloadNextLine();
     }
 }
