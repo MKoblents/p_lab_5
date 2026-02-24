@@ -28,7 +28,7 @@ public class Main {
         invoker.registerCommand("remove_by_id", new RemoveByIdCommand(collectionManager,inputManager));
         invoker.registerCommand("add", new AddCommand(collectionManager,inputManager));
         invoker.registerCommand("insert_at", new InsertAtCommand(collectionManager, inputManager));
-        invoker.registerCommand("filter_less_than_meleeweapon", new FilterLessThanMeleeWeaponCommand(collectionManager, inputManager));
+        invoker.registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager, inputManager));
         invoker.registerCommand("update", new UpdateCommand(collectionManager, inputManager));
         invoker.registerCommand("save", new SaveCommand(collectionManager, collectionSaver));
         invoker.registerCommand("execute_script", new ExecuteScriptCommand(collectionManager, inputManager, new FileManager(),invoker));

@@ -22,6 +22,6 @@ public class RemoveGreaterCommand implements Command{
     public void execute() {
         SpaceMarine spaceMarine = inputManager.getInputSpaceMarine();
         inputManager.getValidator().spaceMarineValidate(spaceMarine);
-        collectionManager.addItem(spaceMarine);
+//        collectionManager.addItem(spaceMarine);
         collectionManager.removeGreater(spaceMarine);    }
 }

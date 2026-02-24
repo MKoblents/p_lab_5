@@ -204,7 +204,7 @@ public class CollectionManager {
     public void removeGreater(SpaceMarine spaceMarine) {
         ArrayList<SpaceMarine> haveToBeRemoved = new ArrayList<>();
         for (SpaceMarine spaceMarineR:spaceMarines){
-            if (spaceMarine.compareTo(spaceMarineR)>0){
+            if (spaceMarine.compareTo(spaceMarineR)<0){
                 haveToBeRemoved.add(spaceMarineR);
             }
         }for (SpaceMarine spaceMarineR: haveToBeRemoved){

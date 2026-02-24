@@ -29,6 +29,11 @@ public class Invoker {
             System.err.println("Available commands: " + commandMap.keySet());
             return;
         }
+        if (!commandMap.containsKey(key)){
+            System.err.println("You entered wrong command key");
+            System.err.println("Available commands: " + commandMap.keySet());
+            return;
+        }
         commandMap.get(key).execute();
     }
     /**
