@@ -12,7 +12,7 @@ public class Main {
         Validator validator = new Validator(collectionManager);
         CommandParser commandParser = new CommandParser();
         InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager, commandParser);
-        if (!filePath.isEmpty()) {
+        if (filePath != null ) {
             collectionManager.loadFromFile(filePath);
         }
         CollectionSaver collectionSaver = new CollectionSaver();
@@ -35,6 +35,7 @@ public class Main {
         invoker.registerCommand("remove_greater", new RemoveGreaterCommand(collectionManager, inputManager));
         while (true){
         try {
+//            System.out.print("Enter your command: ");
             String commandLine = inputManager.parseCommand();
             System.out.println(commandLine);
             invoker.runCommand(commandLine);
