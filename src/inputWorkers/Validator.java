@@ -103,14 +103,12 @@ public class Validator {
     /**
      * Ensures creation date is valid (non-null, positive epoch); auto-sets to now if invalid.
      * @param spaceMarine object to validate
-     * @throws CreationDataException if date was corrected
      */
-    public void creationDateValidate(SpaceMarine spaceMarine) throws CreationDataException{
+    public void creationDateValidate(SpaceMarine spaceMarine){
         ZonedDateTime originalTime = spaceMarine.getCreationDate();
         if (originalTime == null || originalTime.toInstant().toEpochMilli() <=0){
             ZonedDateTime correctTime = ZonedDateTime.now();
             spaceMarine.setCreationDate(correctTime);
-            throw new CreationDataException(spaceMarine.getName(),originalTime, correctTime);
         }
     }
     /**

@@ -52,6 +52,7 @@ public class CommandParser {
     public void parse(Reader reader) throws IOException {
         String line = reader.nextLine();
         if (line == null || line.trim().isEmpty()) {
+            commandName = null;
             return;
         }
         if (line.trim().startsWith("#")) {
