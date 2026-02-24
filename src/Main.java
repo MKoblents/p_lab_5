@@ -5,15 +5,16 @@ import manager.*;
 import outputWorkers.CollectionSaver;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         CollectionManager collectionManager = new CollectionManager();
         String filePath = System.getenv("PLAB5");
         ConsoleBufferedScanner consoleScanner = new ConsoleBufferedScanner();
         Validator validator = new Validator(collectionManager);
         CommandParser commandParser = new CommandParser();
         InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager, commandParser);
-        System.out.println(filePath);
-        collectionManager.loadFromFile(filePath);
+        if (!filePath.isEmpty()) {
+            collectionManager.loadFromFile(filePath);
+        }
         CollectionSaver collectionSaver = new CollectionSaver();
         Invoker invoker = new Invoker();
         invoker.registerCommand("help", new HelpCommand(invoker));
@@ -40,7 +41,7 @@ public class Main {
 
 
         } catch (Exception e) {
-            System.err.println("Error during parsing:");
+            System.err.println("Error during program:");
             e.printStackTrace();
         }
     }

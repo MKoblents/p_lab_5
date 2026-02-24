@@ -25,6 +25,11 @@ public class FileBufferedReader implements Reader{
         preloadNextLine();
         this.xmlParser = xmlParser;
     }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
     private void preloadNextLine() throws IOException {
         if (eof) {
             nextLine = null;
