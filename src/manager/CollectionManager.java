@@ -218,4 +218,11 @@ public class CollectionManager {
     public int size() {
         return spaceMarines.size();
     }
+    public boolean isIdInCollection(long id){
+        for (SpaceMarine spaceMarine: spaceMarines){
+            if (spaceMarine.getId() == id){
+                return true;
+            }
+        }return false;
+    }
 }

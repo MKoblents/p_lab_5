@@ -21,6 +21,10 @@ public class UpdateCommand implements Command{
     @Override
     public void execute() {
         long id = inputManager.getLastLong();
+        if (!collectionManager.isIdInCollection(id)){
+            System.err.println("Your id is missing in collection.");
+            return;
+        }
         SpaceMarine spaceMarine = collectionManager.getSpaceMarineById(id);
         SpaceMarine spaceMarineInput = inputManager.getInputSpaceMarine();
         inputManager.getValidator().spaceMarineValidate(spaceMarineInput);
