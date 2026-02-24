@@ -12,7 +12,7 @@ public class Main {
         Validator validator = new Validator(collectionManager);
         CommandParser commandParser = new CommandParser();
         InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager, commandParser);
-        if (!filePath.isEmpty()) {
+        if (filePath != null ) {
             collectionManager.loadFromFile(filePath);
         }
         CollectionSaver collectionSaver = new CollectionSaver();
@@ -28,13 +28,14 @@ public class Main {
         invoker.registerCommand("remove_by_id", new RemoveByIdCommand(collectionManager,inputManager));
         invoker.registerCommand("add", new AddCommand(collectionManager,inputManager));
         invoker.registerCommand("insert_at", new InsertAtCommand(collectionManager, inputManager));
-        invoker.registerCommand("filter_less_than_meleeweapon", new FilterLessThanMeleeWeaponCommand(collectionManager, inputManager));
+        invoker.registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager, inputManager));
         invoker.registerCommand("update", new UpdateCommand(collectionManager, inputManager));
         invoker.registerCommand("save", new SaveCommand(collectionManager, collectionSaver));
         invoker.registerCommand("execute_script", new ExecuteScriptCommand(collectionManager, inputManager, new FileManager(),invoker));
         invoker.registerCommand("remove_greater", new RemoveGreaterCommand(collectionManager, inputManager));
         while (true){
         try {
+//            System.out.print("Enter your command: ");
             String commandLine = inputManager.parseCommand();
             System.out.println(commandLine);
             invoker.runCommand(commandLine);
