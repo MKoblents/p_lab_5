@@ -4,16 +4,31 @@ import io.ConsoleBufferedScanner;
 import manager.*;
 import outputWorkers.CollectionSaver;
 
+import java.io.*;
+import java.util.*;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         CollectionManager collectionManager = new CollectionManager();
         String filePath = System.getenv("PLAB5");
         ConsoleBufferedScanner consoleScanner = new ConsoleBufferedScanner();
         Validator validator = new Validator(collectionManager);
         CommandParser commandParser = new CommandParser();
+        ArrayList<Long> results = new ArrayList<>();
         InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager, commandParser);
+        File res = new File("/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/res");
+        BufferedWriter writer = new BufferedWriter(new FileWriter("/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/res"));
         if (filePath != null ) {
-            collectionManager.loadFromFile(filePath);
+            for(int i=0; i<5; i++){
+                results.add(collectionManager.loadFromFile(filePath, new ArrayList<>()));
+                results.add(collectionManager.loadFromFile(filePath, new ArrayDeque<>()));
+                results.add(collectionManager.loadFromFile(filePath, new HashSet<>()));
+                results.add(collectionManager.loadFromFile(filePath, new LinkedHashSet<>()));
+                results.add(collectionManager.loadFromFile(filePath, new PriorityQueue<>()));
+                writer.write(results.toString());
+                results.clear();
+            }
+            writer.close();
         }
         CollectionSaver collectionSaver = new CollectionSaver();
         Invoker invoker = new Invoker();

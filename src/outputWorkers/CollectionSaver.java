@@ -20,6 +20,9 @@ public class CollectionSaver {
      * @implNote Requires {@code @XmlRootElement} on CollectionManager and nested classes
      */
     public void save(CollectionManager collectionManager, String filePath) throws Exception {
+        if (filePath == null){
+            filePath = "new.xml";
+        }
         JAXBContext context = JAXBContext.newInstance(CollectionManager.class);
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);

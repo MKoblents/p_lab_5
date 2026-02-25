@@ -116,4 +116,7 @@ public class InputManager {
         return reader;
     }
 
+    public void setLastPath(String scriptPath) {
+        commandParser.setLastPath(scriptPath);
+    }
 }

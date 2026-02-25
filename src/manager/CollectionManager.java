@@ -5,10 +5,7 @@ import inputWorkers.XMLParser;
 
 import javax.xml.bind.annotation.*;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 /**
  * Manages a collection of SpaceMarine entities.
@@ -25,9 +22,6 @@ public class CollectionManager {
     @XmlTransient
     private ZonedDateTime creationData;
     /** Counter for auto-generating unique IDs. */
-    @XmlTransient
-    private long nextId =1;
-    /** Validator instance for data integrity checks. */
     @XmlTransient
     private Validator validator = new Validator(this);
     /**
@@ -54,7 +48,7 @@ public class CollectionManager {
      */
     public SpaceMarine getNewSpaceMarine(){
        SpaceMarine spaceMarine = new SpaceMarine();
-       spaceMarine.setId(generateId());
+       generateId(spaceMarine);
        return spaceMarine;
     }
     /**
@@ -66,7 +60,7 @@ public class CollectionManager {
      */
     public SpaceMarine getNewSpaceMarine(String name, Coordinates coordinates, MeleeWeapon meleeWeapon){
         SpaceMarine spaceMarine = new SpaceMarine(name, coordinates, meleeWeapon);
-        spaceMarine.setId(generateId());
+        generateId(spaceMarine);
         return spaceMarine;
     }
     /**
@@ -94,14 +88,18 @@ public class CollectionManager {
      * Loads collection from XML file with validation.
      * @param filePath path to the XML file
      */
-    public void loadFromFile(String filePath){
+    public long loadFromFile(String filePath, Collection<String> executedFields){
         try {
             XMLParser parser = new XMLParser(filePath, this);
-            this.spaceMarines = parser.parseSpaceMarines();
+            this.spaceMarines = parser.parseSpaceMarines(executedFields);
             validator.spaceMarinesValidate(this.spaceMarines);
+            long s = parser.summ;
+            parser.summ = 0;
+            return s;
         }catch (Exception e){
             System.err.println("Can't read from file: "+filePath);
         }
+        return 0;
     }
     /**
      * Sorts the collection by natural order (health).
@@ -155,11 +153,12 @@ public class CollectionManager {
         spaceMarines.clear();
     }
     /**
-     * Generates next unique ID for new elements.
-     * @return auto-incremented ID
+     * Generates unique ID for new elements.
+     * @return identityHashCode
      */
-    public long generateId() {
-        return nextId++;
+    public long generateId(SpaceMarine spaceMarine) {
+        spaceMarine.setId(System.identityHashCode(spaceMarine));
+        return System.identityHashCode(spaceMarine);
     }
     /**
      * Randomly shuffles the collection order.

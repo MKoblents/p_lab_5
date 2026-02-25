@@ -14,12 +14,14 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.*;
+
 /**
  * StAX-based XML parser for SpaceMarine collection deserialization.
  * Reads XML files or strings and converts them to managed SpaceMarine objects.
  */
 public class XMLParser {
+    public static long summ;
     /** Factory for creating XML stream readers (reused for efficiency). */
     private XMLInputFactory factory;
     /** Active XML stream reader for parsing operations. */
@@ -46,7 +48,7 @@ public class XMLParser {
      * @return list of parsed marines (may be empty)
      * @throws Exception if parsing fails at any point
      */
-    public ArrayList<SpaceMarine> parseSpaceMarines() throws Exception {
+    public ArrayList<SpaceMarine> parseSpaceMarines(Collection<String> executedFields) throws Exception {
         ArrayList<SpaceMarine> marines = new ArrayList<>();
         SpaceMarine currentMarine = null;
         String currentTag = "";
@@ -55,13 +57,14 @@ public class XMLParser {
             if (xmlReader.isStartElement()) {
                 currentTag = xmlReader.getLocalName();
                 if ("spacemarine".equalsIgnoreCase(currentTag)) {
-                    currentMarine = parseSpaceMarine();
+                    currentMarine = parseSpaceMarine(executedFields);
                     marines.add(currentMarine);
                     currentMarine = null;
                 }
             }
         }
         xmlReader.close();
+        System.out.println("Summ of time"+ summ);
         return marines;
     }
     /**
@@ -69,7 +72,8 @@ public class XMLParser {
      * @return fully populated SpaceMarine instance
      * @throws XMLStreamException if XML structure is invalid
      */
-    public SpaceMarine parseSpaceMarine() throws XMLStreamException {
+    public SpaceMarine parseSpaceMarine(Collection<String> executedFields) throws XMLStreamException {
+        long startTime = System.nanoTime();
         String currentFieldName;
         SpaceMarine spaceMarine = collectionManager.getNewSpaceMarine();
         while (xmlReader.hasNext()) {
@@ -79,9 +83,15 @@ public class XMLParser {
             }
             if (xmlReader.isStartElement()) {
                 currentFieldName = xmlReader.getLocalName().toLowerCase();
+                if (executedFields.contains(currentFieldName)){
+                    continue;
+                }
                 parseSpaseNarineField(spaceMarine, currentFieldName);
+                executedFields.add(currentFieldName);
             }
         }
+        long endTime = System.nanoTime();
+        summ+=(endTime-startTime);
         return spaceMarine;
     }
     /**
@@ -96,8 +106,7 @@ public class XMLParser {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         factory = XMLInputFactory.newInstance();
         xmlReader = factory.createXMLStreamReader(inputStream);
-        SpaceMarine spaceMarine = parseSpaceMarine();
-        xmlReader.close();
+        SpaceMarine spaceMarine = parseSpaceMarine(new ArrayList<>());
         inputStream.close();
         return spaceMarine;
     }

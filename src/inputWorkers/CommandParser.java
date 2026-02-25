@@ -73,7 +73,6 @@ public class CommandParser {
         if (commandName.equals("update")|| commandName.equals("remove_by_id")){
             try {
                 longArg = Long.parseLong(parts[1]);
-                return;
             } catch (NumberFormatException e) {
                 longArg = 0;
             }
@@ -126,4 +125,8 @@ public class CommandParser {
     public String getPathArg() { return pathArg; }
     /** @return raw enum string for deferred parsing */
     public String getEnumArg() { return enumArg; }
+
+    public void setLastPath(String scriptPath) {
+        this.pathArg = scriptPath;
+    }
 }

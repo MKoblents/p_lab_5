@@ -10,6 +10,7 @@ import manager.FileManager;
 import manager.Invoker;
 
 import javax.xml.stream.XMLStreamException;
+import java.io.Console;
 import java.io.IOException;
 
 public class ExecuteScriptCommand implements Command{
@@ -37,47 +38,52 @@ public class ExecuteScriptCommand implements Command{
     @Override
     public void execute() {
         String scriptPath = inputManager.getLastPath();
-        if (scriptPath == null || scriptPath.trim().isEmpty()) {
-            System.err.println("ERROR: Script path is null or empty");
-            return;
-        }
-        if (!fileManager.validate(scriptPath, FileManager.Operation.READ)) {
+        if (scriptPath == null || scriptPath.trim().isEmpty() || !fileManager.validate(scriptPath, FileManager.Operation.READ)) {
             System.err.println("Error: Cannot read script file: " + scriptPath);
+            ConsoleBufferedScanner consoleBufferedScanner = new ConsoleBufferedScanner();
+            try {
+                scriptPath = consoleBufferedScanner.getInputString();
+                inputManager.setLastPath(scriptPath);
+                executeScript(scriptPath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
+        executeScript(scriptPath);
+
+    }
+    private void executeScript(String scriptPath){
         try {
-            executeScript(scriptPath);
-            System.out.println("Script executed successfully: " + scriptPath);
-        } catch (IOException e) {
+            Reader reader = inputManager.getReader();
+            try {
+                FileBufferedReader scriptReader = new FileBufferedReader(scriptPath, new XMLParser(scriptPath, collectionManager));
+                inputManager.setReader(scriptReader);
+                while (scriptReader.hasNextLine()) {
+                    try {
+                        String commandName = inputManager.parseCommand();
+                        if (commandName == null || commandName.isEmpty()) continue;
+                        invoker.runCommand(commandName);
+                    } catch (Exception e) {
+                        System.err.println("  " + e.getMessage());
+                    }
+                }
+                scriptReader.close();
+            }
+            finally{
+                if (reader instanceof ConsoleBufferedScanner){
+                    reader.clearBuffer();
+                }
+                inputManager.setReader(reader);
+
+            }
+        }catch (IOException e) {
             System.err.println("Error reading script: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("Error executing script: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-    private void executeScript(String scriptPath) throws IOException, XMLStreamException {
-        Reader reader = inputManager.getReader();
-        try {
-            FileBufferedReader scriptReader = new FileBufferedReader(scriptPath, new XMLParser(scriptPath, collectionManager));
-            inputManager.setReader(scriptReader);
-            while (scriptReader.hasNextLine()) {
-                try {
-                    String commandName = inputManager.parseCommand();
-                    if (commandName == null || commandName.isEmpty()) continue;
-                    invoker.runCommand(commandName);
-                } catch (Exception e) {
-                    System.err.println("  " + e.getMessage());
-                }
-            }
-            scriptReader.close();
         }
-        finally{
-            if (reader instanceof ConsoleBufferedScanner){
-                reader.clearBuffer();
-            }
-            inputManager.setReader(reader);
 
-            }
-        }
 
 }

@@ -19,7 +19,7 @@ public class SaveCommand implements Command{
     @Override
     public void execute() {
         try {
-            collectionSaver.save(collectionManager, "new.xml");
+            collectionSaver.save(collectionManager, System.getenv("PLAB5"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
