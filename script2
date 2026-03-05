@@ -2,4 +2,5 @@
 info
 add <spaceMarine><name>A</name><coordinates><x>0</x><y>0</y></coordinates><health>100.0</health><meleeWeapon>CHAIN_SWORD</meleeWeapon></spaceMarine>
 add <spaceMarine><name>B</name><coordinates><x>0</x><y>0</y></coordinates><health>200.0</health><meleeWeapon>POWER_SWORD</meleeWeapon></spaceMarine>
+execute_script /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/sctipt3
 

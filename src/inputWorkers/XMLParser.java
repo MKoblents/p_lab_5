@@ -48,7 +48,7 @@ public class XMLParser {
      * @return list of parsed marines (may be empty)
      * @throws Exception if parsing fails at any point
      */
-    public ArrayList<SpaceMarine> parseSpaceMarines(Collection<String> executedFields) throws Exception {
+    public ArrayList<SpaceMarine> parseSpaceMarines() throws Exception {
         ArrayList<SpaceMarine> marines = new ArrayList<>();
         SpaceMarine currentMarine = null;
         String currentTag = "";
@@ -57,7 +57,7 @@ public class XMLParser {
             if (xmlReader.isStartElement()) {
                 currentTag = xmlReader.getLocalName();
                 if ("spacemarine".equalsIgnoreCase(currentTag)) {
-                    currentMarine = parseSpaceMarine(executedFields);
+                    currentMarine = parseSpaceMarine();
                     marines.add(currentMarine);
                     currentMarine = null;
                 }
@@ -72,8 +72,8 @@ public class XMLParser {
      * @return fully populated SpaceMarine instance
      * @throws XMLStreamException if XML structure is invalid
      */
-    public SpaceMarine parseSpaceMarine(Collection<String> executedFields) throws XMLStreamException {
-        long startTime = System.nanoTime();
+    public SpaceMarine parseSpaceMarine() throws XMLStreamException {
+        Set<String> executedFields = new HashSet<>();
         String currentFieldName;
         SpaceMarine spaceMarine = collectionManager.getNewSpaceMarine();
         while (xmlReader.hasNext()) {
@@ -90,8 +90,6 @@ public class XMLParser {
                 executedFields.add(currentFieldName);
             }
         }
-        long endTime = System.nanoTime();
-        summ+=(endTime-startTime);
         return spaceMarine;
     }
     /**
@@ -106,7 +104,7 @@ public class XMLParser {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         factory = XMLInputFactory.newInstance();
         xmlReader = factory.createXMLStreamReader(inputStream);
-        SpaceMarine spaceMarine = parseSpaceMarine(new ArrayList<>());
+        SpaceMarine spaceMarine = parseSpaceMarine();
         inputStream.close();
         return spaceMarine;
     }

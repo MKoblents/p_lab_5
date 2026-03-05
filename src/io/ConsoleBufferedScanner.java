@@ -11,31 +11,40 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Scanner;
+
 /**
  * Console-based implementation of {@link Reader} for interactive input.
  * Wraps System.in with BufferedReader and provides typed input helpers.
  */
 public class ConsoleBufferedScanner implements Reader {
     /** Buffered reader for System.in input stream. */
-    private BufferedReader reader;
+    private Scanner reader;
     /**
      * Initializes console reader with standard input stream.
      */
     public ConsoleBufferedScanner() {
-        this.reader = new BufferedReader(new InputStreamReader(System.in));
+        this.reader = new Scanner(System.in);
     }
 
     @Override
     public String nextLine() throws IOException {
-        return reader.readLine();  // Нет сложного буфера
+        String line = "";
+        try {
+            line = reader.nextLine();
+        }
+        catch (Exception e) {
+            reader = new Scanner(System.in);
+        }
+        return line;
     }
 
     @Override
     public boolean hasNextLine() throws IOException {
-        return reader.ready();
+        return reader.hasNextLine();
     }
     public void clearBuffer() throws IOException {
-        this.reader = new BufferedReader(new InputStreamReader(System.in));
+        this.reader = new Scanner(System.in);
     }
     @Override
     public SpaceMarine getInputSpaceMarine(SpaceMarine spaceMarine) {

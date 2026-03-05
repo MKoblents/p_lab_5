@@ -88,18 +88,14 @@ public class CollectionManager {
      * Loads collection from XML file with validation.
      * @param filePath path to the XML file
      */
-    public long loadFromFile(String filePath, Collection<String> executedFields){
+    public void loadFromFile(String filePath){
         try {
             XMLParser parser = new XMLParser(filePath, this);
-            this.spaceMarines = parser.parseSpaceMarines(executedFields);
+            this.spaceMarines = parser.parseSpaceMarines();
             validator.spaceMarinesValidate(this.spaceMarines);
-            long s = parser.summ;
-            parser.summ = 0;
-            return s;
         }catch (Exception e){
             System.err.println("Can't read from file: "+filePath);
         }
-        return 0;
     }
     /**
      * Sorts the collection by natural order (health).
