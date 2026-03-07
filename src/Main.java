@@ -18,7 +18,7 @@ public class Main {
         InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager, commandParser);
         File res = new File("/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/res");
         BufferedWriter writer = new BufferedWriter(new FileWriter("/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/res"));
-//        if (filePath != null ) {
+        if (filePath != null ) {
 //            for(int i=0; i<5; i++){
 //                results.add(collectionManager.loadFromFile(filePath, new ArrayList<>()));
 //                results.add(collectionManager.loadFromFile(filePath, new ArrayDeque<>()));
@@ -29,8 +29,8 @@ public class Main {
 //                results.clear();
 //            }
 //            writer.close();
-//        }
-        collectionManager.loadFromFile(filePath);
+            collectionManager.loadFromFile(filePath);
+        }
         CollectionSaver collectionSaver = new CollectionSaver();
         Invoker invoker = new Invoker();
         invoker.registerCommand("help", new HelpCommand(invoker));
@@ -60,7 +60,11 @@ public class Main {
             invoker.runCommand(commandLine);
 
 
-        } catch (Exception e) {
+        }catch (IOException e){
+            System.out.println("===============================");
+            inputManager.setReader(new ConsoleBufferedScanner());
+        }
+        catch (Exception e) {
             System.err.println("Error during program:");
             e.printStackTrace();
         }
