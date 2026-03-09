@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <spaceMarines>
     <spaceMarine>
-        <id>661672156</id>
+        <id>1066516207</id>
         <name>wef</name>
         <coordinates>
             <x>0</x>
@@ -12,11 +12,22 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1530388690</id>
+        <id>396180261</id>
         <name>sadfq</name>
         <coordinates>
             <x>2</x>
             <y>2</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>128893786</id>
+        <name>wef</name>
+        <coordinates>
+            <x>3</x>
+            <y>0</y>
         </coordinates>
         <creationDate/>
         <health>0.0</health>

@@ -16,19 +16,7 @@ public class Main {
         CommandParser commandParser = new CommandParser();
         ArrayList<Long> results = new ArrayList<>();
         InputManager inputManager= new InputManager(consoleScanner, validator, collectionManager, commandParser);
-        File res = new File("/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/res");
-        BufferedWriter writer = new BufferedWriter(new FileWriter("/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/res"));
         if (filePath != null ) {
-//            for(int i=0; i<5; i++){
-//                results.add(collectionManager.loadFromFile(filePath, new ArrayList<>()));
-//                results.add(collectionManager.loadFromFile(filePath, new ArrayDeque<>()));
-//                results.add(collectionManager.loadFromFile(filePath, new HashSet<>()));
-//                results.add(collectionManager.loadFromFile(filePath, new LinkedHashSet<>()));
-//                results.add(collectionManager.loadFromFile(filePath, new PriorityQueue<>()));
-//                writer.write(results.toString());
-//                results.clear();
-//            }
-//            writer.close();
             collectionManager.loadFromFile(filePath);
         }
         CollectionSaver collectionSaver = new CollectionSaver();

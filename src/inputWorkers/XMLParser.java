@@ -21,7 +21,6 @@ import java.util.*;
  * Reads XML files or strings and converts them to managed SpaceMarine objects.
  */
 public class XMLParser {
-    public static long summ;
     /** Factory for creating XML stream readers (reused for efficiency). */
     private XMLInputFactory factory;
     /** Active XML stream reader for parsing operations. */
@@ -64,7 +63,6 @@ public class XMLParser {
             }
         }
         xmlReader.close();
-        System.out.println("Summ of time"+ summ);
         return marines;
     }
     /**

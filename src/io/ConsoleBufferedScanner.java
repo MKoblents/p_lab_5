@@ -34,6 +34,7 @@ public class ConsoleBufferedScanner implements Reader {
             line = reader.nextLine();
         }
         catch (Exception e) {
+            System.out.println("-----------");
             reader = new Scanner(System.in);
         }
         return line;
