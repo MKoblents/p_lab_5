@@ -20,6 +20,8 @@ public class RemoveByIdCommand implements  Command{
     @Override
     public void execute() {
         long id = inputManager.getLastLong();
-        collectionManager.remove(id);
+        if (!collectionManager.isIdInCollection(id)) {
+            System.err.println("Your id is missing.");
+        }collectionManager.remove(id);
     }
 }

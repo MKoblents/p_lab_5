@@ -11,25 +11,41 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Scanner;
 
+/**
+ * Console-based implementation of {@link Reader} for interactive input.
+ * Wraps System.in with BufferedReader and provides typed input helpers.
+ */
 public class ConsoleBufferedScanner implements Reader {
-    private BufferedReader reader;
-
+    /** Buffered reader for System.in input stream. */
+    private Scanner reader;
+    /**
+     * Initializes console reader with standard input stream.
+     */
     public ConsoleBufferedScanner() {
-        this.reader = new BufferedReader(new InputStreamReader(System.in));
+        this.reader = new Scanner(System.in);
     }
 
     @Override
     public String nextLine() throws IOException {
-        return reader.readLine();  // Нет сложного буфера
+        String line = "";
+        try {
+            line = reader.nextLine();
+        }
+        catch (Exception e) {
+            System.out.println("-----------");
+            reader = new Scanner(System.in);
+        }
+        return line;
     }
 
     @Override
     public boolean hasNextLine() throws IOException {
-        return reader.ready();
+        return reader.hasNextLine();
     }
     public void clearBuffer() throws IOException {
-        this.reader = new BufferedReader(new InputStreamReader(System.in));
+        this.reader = new Scanner(System.in);
     }
     @Override
     public SpaceMarine getInputSpaceMarine(SpaceMarine spaceMarine) {
@@ -65,7 +81,11 @@ public class ConsoleBufferedScanner implements Reader {
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     * Prompts and reads a validated long value with retry on error.
+     * @return parsed long, or 0 if user declines retry
+     * @throws IOException if read fails
+     */
     public long getInputLong() throws IOException{
         System.out.print("(you should enter long type) ");
         try {
@@ -77,21 +97,39 @@ public class ConsoleBufferedScanner implements Reader {
             }return 0;
         }
     }
-
+    /**
+        * Prompts and reads a string value (trimmed).
+            * @return trimmed input string
+     * @throws IOException if read fails
+     */
     public String getInputString() throws IOException {
         System.out.print("(you should enter String type) ");
         return getTrimmedText();
     }
+    /**
+     * Prompts user to retry input after error.
+     * @return true if user enters 'y' or 'yes'
+     * @throws IOException if read fails
+     */
     private boolean shouldRetryInput() throws IOException {
         System.out.println("Do you want to correct your data? (Enter 'y' or 'yes'): ");
         String answer = getTrimmedText();
         return answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes");
     }
-
+    /**
+     * Reads and trims the next line of input.
+     * @return trimmed line content
+     * @throws IOException if read fails
+     */
     public String getTrimmedText() throws IOException {
         return nextLine().trim();
     }
-    //    @Override
+    /**
+     * Prompts and reads a validated enum value with retry on error.
+     * @param enumType the enum class to parse
+     * @return parsed enum constant, or null if user declines retry
+     * @throws IOException if read fails
+     */
     public <T extends Enum<T>> T getInputEnum(Class<T> enumType) throws IOException {
         System.out.println("(you should chose one option) ");
         System.out.println(Arrays.toString(enumType.getEnumConstants()));
@@ -105,17 +143,27 @@ public class ConsoleBufferedScanner implements Reader {
             return null;
         }
     }
+    /**
+     * Prompts and reads a validated double value with retry on error.
+     * @return parsed double, or 0.0 if user declines retry
+     * @throws IOException if read fails
+     */
     public double getInputDouble() throws IOException {
         System.out.print("(you should enter double type) ");
         try {
-            return Double.parseDouble(getTrimmedText());
+            return Double.parseDouble(getTrimmedText().replace(',','.'));
         }catch (NumberFormatException e){
-            System.err.println("You had to enter long.");
+            System.err.println("You had to enter double.");
             if (shouldRetryInput()){
                 return getInputDouble();
             }return 0.0;
         }
     }
+    /**
+     * Prompts and reads Chapter fields interactively.
+     * @return new Chapter instance, or null if all fields empty
+     * @throws IOException if read fails
+     */
     public Chapter getInputChapter() throws IOException {
         System.out.print("Enter name: ");
         String name = getInputString();
@@ -132,6 +180,10 @@ public class ConsoleBufferedScanner implements Reader {
         chapter.setParentLegion(parentLegion);
         return chapter;
     }
+    /**
+     * Prompts and reads MeleeWeapon with fallback to default.
+     * @return selected MeleeWeapon or CHAIN_AXE as default
+     */
     public MeleeWeapon getInputMeleeWeapon() {
         try {
             MeleeWeapon meleeWeapon = getInputEnum(MeleeWeapon.class);
