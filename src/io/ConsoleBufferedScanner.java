@@ -134,6 +134,18 @@ public class ConsoleBufferedScanner implements Reader {
         System.out.println("(you should chose one option) ");
         System.out.println(Arrays.toString(enumType.getEnumConstants()));
         String value = getTrimmedText();
+        T[] constants = enumType.getEnumConstants();
+        try {
+            int index = Integer.parseInt(value);
+            if (index >= 1 && index <= constants.length) {
+                return constants[index - 1];
+            }
+        } catch (NumberFormatException e) {
+            if (shouldRetryInput()){
+                return getInputEnum(enumType);
+            }
+            return null;
+        }
         try {
             return Enum.valueOf(enumType, value.toUpperCase());
         } catch (IllegalArgumentException e) {
