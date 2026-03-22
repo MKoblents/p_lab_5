@@ -123,7 +123,11 @@ public class CommandParser {
     /** @return last int argument (0 if unset) */
     public int getIntArg() { return intArg; }
     /** @return cached XML string or null */
-    public String getXmlArg() { return xmlArg; }
+    public String getXmlArg() {
+        String str = xmlArg;
+        xmlArg = null;
+//        TODO везде сделать стирание
+        return str; }
     /** @return script path argument or null */
     public String getPathArg() { return pathArg; }
     /** @return raw enum string for deferred parsing */

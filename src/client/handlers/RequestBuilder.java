@@ -36,7 +36,6 @@ public class RequestBuilder {
                         System.err.println("Error: ID and XML data required for " + commandName);
                         yield null;
                     }
-
                     SpaceMarine marine = XMLParser.parseSpaceMarineFromString(xml);
                     if (marine == null) {
                         System.err.println("Error: Failed to parse SpaceMarine from XML");
@@ -50,7 +49,6 @@ public class RequestBuilder {
                         System.err.println("Error: XML data required for " + commandName);
                         yield null;
                     }
-
                     SpaceMarine marine = XMLParser.parseSpaceMarineFromString(xml);
                     if (marine == null) {
                         System.err.println("Error: Failed to parse SpaceMarine from XML");
