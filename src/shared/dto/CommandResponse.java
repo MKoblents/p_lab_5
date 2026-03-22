@@ -1,4 +1,4 @@
-package shared;
+package shared.dto;
 
 import java.io.Serializable;
 
