@@ -2,7 +2,7 @@ package shared.utils;
 
 import java.io.*;
 
-public class SerialisationUtil {
+public class SerializationUtil {
     public static byte[] serialize(Object object) throws IOException{
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)){

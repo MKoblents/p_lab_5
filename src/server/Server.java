@@ -2,7 +2,7 @@ package server;
 
 import server.manager.CollectionManager;
 import shared.dto.CommandRequest;
-import shared.utils.SerialisationUtil;
+import shared.utils.SerializationUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -59,7 +59,7 @@ public class Server {
             buffer.flip();
             byte[] data = new byte[buffer.remaining()];
             buffer.get(data);
-            try (CommandRequest commandRequest = SerialisationUtil.deserialize(data)){
+            try (CommandRequest commandRequest = SerializationUtil.deserialize(data)){
                 
             }
 
