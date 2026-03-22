@@ -22,11 +22,9 @@ import java.util.*;
  */
 public class XMLParser {
     /** Factory for creating XML stream readers (reused for efficiency). */
-    private XMLInputFactory factory;
+    private static XMLInputFactory factory;
     /** Active XML stream reader for parsing operations. */
-    private XMLStreamReader xmlReader;
-    /** Manager delegate for creating new SpaceMarine instances with auto-ID. */
-    private CollectionManager collectionManager;
+    private static XMLStreamReader xmlReader;
     /**
      * Initializes parser with file source and collection manager.
      * @param filePath path to XML file to parse
@@ -34,14 +32,14 @@ public class XMLParser {
      * @throws FileNotFoundException if file doesn't exist
      * @throws XMLStreamException if XML is malformed
      */
-    public XMLParser(String filePath, CollectionManager collectionManager) throws FileNotFoundException, XMLStreamException {
-        FileInputStream fis = new FileInputStream(filePath);
-        InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-        BufferedReader reader = new BufferedReader(isr);
-        this.factory = XMLInputFactory.newInstance();
-        this.xmlReader = factory.createXMLStreamReader(reader);
-        this.collectionManager = collectionManager;
-    }
+//    public XMLParser(String filePath, CollectionManager collectionManager) throws FileNotFoundException, XMLStreamException {
+//        FileInputStream fis = new FileInputStream(filePath);
+//        InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+//        BufferedReader reader = new BufferedReader(isr);
+//        this.factory = XMLInputFactory.newInstance();
+//        this.xmlReader = factory.createXMLStreamReader(reader);
+//        this.collectionManager = collectionManager;
+//    }
     /**
      * Parses entire XML file and returns list of SpaceMarine objects.
      * @return list of parsed marines (may be empty)
@@ -70,10 +68,10 @@ public class XMLParser {
      * @return fully populated SpaceMarine instance
      * @throws XMLStreamException if XML structure is invalid
      */
-    public SpaceMarine parseSpaceMarine() throws XMLStreamException {
+    public static SpaceMarine parseSpaceMarine() throws XMLStreamException {
         Set<String> executedFields = new HashSet<>();
         String currentFieldName;
-        SpaceMarine spaceMarine = collectionManager.getNewSpaceMarine();
+        SpaceMarine spaceMarine = new SpaceMarine();
         while (xmlReader.hasNext()) {
             xmlReader.next();
             if (xmlReader.isEndElement() && "spaceMarine".equalsIgnoreCase(xmlReader.getLocalName())) {
@@ -97,7 +95,7 @@ public class XMLParser {
      * @throws XMLStreamException if XML is malformed
      * @throws IOException if UTF-8 encoding fails
      */
-    public SpaceMarine parseSpaceMarineFromString(String xmlString) throws XMLStreamException, IOException {
+    public static SpaceMarine parseSpaceMarineFromString(String xmlString) throws XMLStreamException, IOException {
         byte[] bytes = xmlString.getBytes(StandardCharsets.UTF_8);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         factory = XMLInputFactory.newInstance();
@@ -112,7 +110,7 @@ public class XMLParser {
      * @param fieldName lowercase XML tag name
      * @implNote Catches XMLStreamException internally to avoid aborting entire parse
      */
-    private void parseSpaseNarineField(SpaceMarine marine, String fieldName){
+    private static void parseSpaseNarineField(SpaceMarine marine, String fieldName){
         try {
             switch (fieldName) {
                 case "name" -> marine.setName(parseStringField());
@@ -133,7 +131,7 @@ public class XMLParser {
      * @return populated Chapter instance (fields may be null if missing)
      * @throws XMLStreamException if XML structure is invalid
      */
-    public Chapter parseChapter() throws XMLStreamException {
+    public static Chapter parseChapter() throws XMLStreamException {
         Chapter chapter = new Chapter();
         String currentField = null;
         while (xmlReader.hasNext()) {
@@ -155,7 +153,7 @@ public class XMLParser {
      * @param chapter target object
      * @param fieldName lowercase tag name (name/parentLegion/world)
      */
-    private void processChapterField(Chapter chapter, String fieldName) {
+    private static void processChapterField(Chapter chapter, String fieldName) {
         String value = getTrimmedText();
         if (value == null || value.isEmpty()) {
             return;
@@ -175,7 +173,7 @@ public class XMLParser {
      * @param <T> enum type parameter
      * @throws XMLStreamException if stream read fails
      */
-    private <T extends Enum<T>> T parseEnum(String tagName, Class<T> enumType) throws XMLStreamException {
+    private static <T extends Enum<T>> T parseEnum(String tagName, Class<T> enumType) throws XMLStreamException {
         while (xmlReader.hasNext()) {
             xmlReader.next();
             if (xmlReader.isEndElement() && tagName.equalsIgnoreCase(xmlReader.getLocalName())) {
@@ -195,11 +193,11 @@ public class XMLParser {
         return null;
     }
     /** @return parsed Weapon enum or null */
-    public Weapon parseWeapon() throws XMLStreamException {
+    public static Weapon parseWeapon() throws XMLStreamException {
         return parseEnum("weapon", Weapon.class);
     }
     /** @return parsed AstartesCategory enum or null */
-    public AstartesCategory parseAstartesCategory() throws XMLStreamException {
+    public static AstartesCategory parseAstartesCategory() throws XMLStreamException {
         return parseEnum("AstartesCategory", AstartesCategory.class);
     }
     /**
@@ -207,7 +205,7 @@ public class XMLParser {
      * @return parsed double, or 0.0 if invalid/missing
      * @throws XMLStreamException if stream read fails
      */
-    public double parseDoubleField() throws XMLStreamException {
+    public static double parseDoubleField() throws XMLStreamException {
         while (xmlReader.hasNext()) {
             int eventType = xmlReader.next();
             if (eventType == XMLStreamConstants.CHARACTERS) {
@@ -232,7 +230,7 @@ public class XMLParser {
      * @return trimmed text content, or null if empty/missing
      * @throws XMLStreamException if stream read fails
      */
-    public String parseStringField() throws XMLStreamException {
+    public static String parseStringField() throws XMLStreamException {
         while (xmlReader.hasNext()) {
             int eventType = xmlReader.next();
             if (eventType == XMLStreamConstants.CHARACTERS) {
@@ -245,7 +243,7 @@ public class XMLParser {
         return null;
     }
     /** @return parsed MeleeWeapon enum or null */
-    public MeleeWeapon parseMeleeWeapon() throws XMLStreamException {
+    public static MeleeWeapon parseMeleeWeapon() throws XMLStreamException {
         return parseEnum("MeleeWeapon", MeleeWeapon.class);
     }
     /**
@@ -253,7 +251,7 @@ public class XMLParser {
      * @return Coordinates object (defaults to 0,0 if missing)
      * @throws XMLStreamException if XML structure is invalid
      */
-    public Coordinates parseCoordinates() throws XMLStreamException {
+    public static Coordinates parseCoordinates() throws XMLStreamException {
         Coordinates coordinates = new Coordinates();
         String currentField = null;
         while (xmlReader.hasNext()) {
@@ -276,7 +274,7 @@ public class XMLParser {
      * @param fieldName "x" or "y"
      * @throws XMLStreamException if stream read fails (unused but declared)
      */
-    private void parseCoordinateField(Coordinates coordinates, String fieldName) throws XMLStreamException {
+    private static void parseCoordinateField(Coordinates coordinates, String fieldName) throws XMLStreamException {
         String value = getTrimmedText();
         if (value == null || value.isEmpty()) {
             return;
@@ -297,7 +295,7 @@ public class XMLParser {
      * Helper: gets current XML text content trimmed.
      * @return trimmed text string
      */
-    private String getTrimmedText(){
+    private static String getTrimmedText(){
         return xmlReader.getText().trim();
     }
 

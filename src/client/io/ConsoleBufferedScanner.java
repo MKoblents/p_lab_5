@@ -46,8 +46,9 @@ public class ConsoleBufferedScanner implements Reader {
         this.reader = new Scanner(System.in);
     }
     @Override
-    public SpaceMarine getInputSpaceMarine(SpaceMarine spaceMarine) {
+    public SpaceMarine getInputSpaceMarine() {
         try {
+            SpaceMarine spaceMarine = new SpaceMarine();
             System.out.print("Enter name: ");
             String name = getInputString();
             spaceMarine.setName(name);

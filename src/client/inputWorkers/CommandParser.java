@@ -114,7 +114,10 @@ public class CommandParser {
     /** @return parsed command name or null */
     public String getCommandName() { return commandName; }
     /** @return last long argument (0 if unset) */
-    public long getLongArg() { return longArg; }
+    public long getLongArg() {
+        long l = longArg;
+        longArg = 0;
+        return l; }
     /** @return last double argument (0.0 if unset) */
     public double getDoubleArg() { return doubleArg; }
     /** @return last int argument (0 if unset) */

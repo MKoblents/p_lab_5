@@ -25,7 +25,7 @@ public interface Reader {
      * @param spaceMarine the object to populate (may be partially filled)
      * @return the same instance with updated fields
      */
-    SpaceMarine getInputSpaceMarine(SpaceMarine spaceMarine);
+    SpaceMarine getInputSpaceMarine();
     /**
      * Stores XML string for deferred parsing (used by add/update commands).
      * @param lastXmlString the XML data to cache

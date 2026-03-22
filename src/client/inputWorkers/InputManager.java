@@ -12,25 +12,17 @@ import java.io.IOException;
  * Provides unified access to parsed command arguments and SpaceMarine input.
  */
 public class InputManager {
-    /** Validator delegate for data integrity checks. */
-    private Validator validator;
     /** Reader delegate for abstracted input source (console/file). */
     private Reader reader;
     /** CommandParser delegate for tokenizing and extracting arguments. */
     private CommandParser commandParser;
-    /** CollectionManager delegate for SpaceMarine factory methods. */
-    private CollectionManager collectionManager;
     /**
      * Initializes manager with required dependencies via constructor injection.
      * @param reader input source abstraction
-     * @param validator validation logic handler
-     * @param collectionManager factory for SpaceMarine creation
      * @param commandParser argument extraction helper
      */
-    public InputManager(Reader reader, Validator validator, CollectionManager collectionManager, CommandParser commandParser){
+    public InputManager(Reader reader, CommandParser commandParser){
         this.reader= reader;
-        this.validator =validator;
-        this.collectionManager = collectionManager;
         this.commandParser = commandParser;
     }
     /**
@@ -77,15 +69,7 @@ public class InputManager {
      * @return fully populated SpaceMarine instance
      */
     public SpaceMarine getInputSpaceMarine(){
-        SpaceMarine spaceMarine = collectionManager.getNewSpaceMarine();
-        return reader.getInputSpaceMarine(spaceMarine);
-    }
-    /**
-     * Returns the validator instance for external validation calls.
-     * @return validator delegate
-     */
-    public Validator getValidator() {
-        return validator;
+        return reader.getInputSpaceMarine();
     }
     /**
      * Returns the last parsed int argument.

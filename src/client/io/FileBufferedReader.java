@@ -111,11 +111,11 @@ public class FileBufferedReader implements Reader{
     }
 
     @Override
-    public SpaceMarine getInputSpaceMarine(SpaceMarine spaceMarine){
+    public SpaceMarine getInputSpaceMarine(){
         try {
-            SpaceMarine spaceMarine1 = xmlParser.parseSpaceMarineFromString(lastXmlString);
+            SpaceMarine spaceMarine = xmlParser.parseSpaceMarineFromString(lastXmlString);
             lastXmlString = "";
-            return spaceMarine1;
+            return spaceMarine;
         } catch (Exception e ) {
             throw new RuntimeException(e);
         }

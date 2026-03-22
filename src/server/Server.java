@@ -2,7 +2,7 @@ package server;
 
 import server.manager.CollectionManager;
 import shared.dto.CommandRequest;
-import shared.util.SerialisationUtil;
+import shared.utils.SerialisationUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
