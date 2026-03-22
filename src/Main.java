@@ -1,8 +1,8 @@
-import commands.*;
-import inputWorkers.*;
-import io.ConsoleBufferedScanner;
-import manager.*;
-import outputWorkers.CollectionSaver;
+import server.commands.*;
+import client.inputWorkers.*;
+import client.io.ConsoleBufferedScanner;
+import server.manager.*;
+import server.outputWorkers.CollectionSaver;
 
 import java.io.*;
 import java.util.*;

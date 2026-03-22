@@ -1,6 +1,6 @@
 package server;
 
-import manager.CollectionManager;
+import server.manager.CollectionManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

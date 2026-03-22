@@ -1,9 +1,6 @@
 package server;
 
-import manager.CollectionManager;
-import manager.FileManager;
-import shared.dto.CommandRequest;
-import shared.dto.CommandResponse;
+import server.manager.CollectionManager;
 
 import java.io.IOException;
 
