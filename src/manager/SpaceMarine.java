@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 /**
  * Represents a Space Marine entity in the collection management system.
@@ -34,7 +35,8 @@ import java.time.ZonedDateTime;
  */
 @XmlRootElement(name = "spaceMarine")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SpaceMarine implements Comparable<SpaceMarine> {
+public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
+    private static final long serialVersionUID = 1L;
     @XmlElement
     private long id =1; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     @XmlElement

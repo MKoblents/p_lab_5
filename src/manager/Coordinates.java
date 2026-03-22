@@ -1,6 +1,9 @@
 package manager;
 
-public class Coordinates {
+import java.io.Serializable;
+
+public class Coordinates implements Serializable {
+    private static final long serialVersionUID = 1L;
     private long x; //Значение поля должно быть больше -617
     private long y; //Значение поля должно быть больше -842
     public String toString(){

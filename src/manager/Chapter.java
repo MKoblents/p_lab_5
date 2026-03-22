@@ -1,6 +1,9 @@
 package manager;
 
-public class Chapter {
+import java.io.Serializable;
+
+public class Chapter implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String name; //Поле не может быть null, Строка не может быть пустой
     private String parentLegion;
     private String world; //Поле не может быть null
