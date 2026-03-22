@@ -1,6 +1,8 @@
 package server.commands;
 
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 public class SumOfHealthCommand implements Command{
     private CollectionManager collectionManager;
@@ -15,7 +17,7 @@ public class SumOfHealthCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         System.out.println(collectionManager.getSumOfHealth());
     }
 }

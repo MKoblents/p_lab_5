@@ -8,6 +8,8 @@ import client.io.Reader;
 import server.manager.CollectionManager;
 import server.manager.FileManager;
 import server.manager.Invoker;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 import java.io.IOException;
 
@@ -34,7 +36,7 @@ public class ExecuteScriptCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         String scriptPath = inputManager.getLastPath();
         if (scriptPath == null || scriptPath.trim().isEmpty() || !fileManager.validate(scriptPath, FileManager.Operation.READ)) {
             System.err.println("Error: Cannot read script file: " + scriptPath);
@@ -46,9 +48,10 @@ public class ExecuteScriptCommand implements Command{
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return;
+            return  new CommandResponse(true, "Executed successfully", null);
         }
         executeScript(scriptPath);
+        return  new CommandResponse(true, "Executed successfully", null);
 
     }
     private void executeScript(String scriptPath){

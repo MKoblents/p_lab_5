@@ -1,6 +1,8 @@
 package server.commands;
 
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 public class MinByMeleeWeaponCommand implements Command{
     private CollectionManager collectionManager;
@@ -14,7 +16,7 @@ public class MinByMeleeWeaponCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         System.out.println(collectionManager.getMinByMeleeWeapon());
     }
 }

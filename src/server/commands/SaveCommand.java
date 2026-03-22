@@ -2,6 +2,8 @@ package server.commands;
 
 import server.manager.CollectionManager;
 import server.outputWorkers.CollectionSaver;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 public class SaveCommand implements Command{
     private final CollectionSaver collectionSaver;
@@ -17,7 +19,7 @@ public class SaveCommand implements Command{
         this.collectionSaver = collectionSaver;
     }
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         try {
             collectionSaver.save(collectionManager, System.getenv("PLAB5"));
         } catch (Exception e) {

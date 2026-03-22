@@ -2,6 +2,8 @@ package server.commands;
 
 import client.inputWorkers.InputManager;
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
 
 public class InsertAtCommand implements Command{
@@ -19,7 +21,7 @@ public class InsertAtCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         SpaceMarine spaceMarine = inputManager.getInputSpaceMarine();
         inputManager.getValidator().spaceMarineValidate(spaceMarine);
         collectionManager.addItem(inputManager.getLastInt(), spaceMarine);

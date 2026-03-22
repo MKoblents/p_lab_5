@@ -1,6 +1,8 @@
 package server.commands;
 
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
 
 public class ShowCommand implements Command{
@@ -16,7 +18,7 @@ public class ShowCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         for (SpaceMarine spaceMarine:collectionManager.getSpaceMarines()){
             System.out.println(spaceMarine);
         }

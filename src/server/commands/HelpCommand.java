@@ -1,6 +1,8 @@
 package server.commands;
 
 import server.manager.Invoker;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 public class HelpCommand implements Command {
     private String helpInformation = "help : вывести справку по доступным командам";
@@ -14,7 +16,7 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         for (Command command: invoker.getCommandMap().values()){
             System.out.println(command.getHelpInformation());
         }

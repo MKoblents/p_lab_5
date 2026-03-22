@@ -1,6 +1,8 @@
 package server.commands;
 
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 public class ClearCommand implements Command{
     private final CollectionManager collectionManager;
@@ -15,7 +17,8 @@ public class ClearCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         collectionManager.clear();
+        return  new CommandResponse(true, "Cleared successfully", null);
     }
 }

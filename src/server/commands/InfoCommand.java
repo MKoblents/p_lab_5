@@ -1,6 +1,8 @@
 package server.commands;
 
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 public class InfoCommand implements Command{
     private CollectionManager collectionManager;
@@ -10,7 +12,7 @@ public class InfoCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         System.out.println(collectionManager.getSpaceMarines().getClass());
         System.out.println(collectionManager.getCreationData());
         System.out.println(collectionManager.getSpaceMarines().size());

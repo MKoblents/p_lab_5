@@ -1,14 +1,14 @@
 package server.commands;
 import client.inputWorkers.InputManager;
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
 
 public class AddCommand implements Command {
     private String helpInformation = "add {element} : добавить новый элемент в коллекцию";
-    private final InputManager inputManager;
     private final CollectionManager collectionManager;
-    public AddCommand(CollectionManager collectionManager,InputManager inputManager){
-        this.inputManager = inputManager;
+    public AddCommand(CollectionManager collectionManager{
         this.collectionManager = collectionManager;
     }
     @Override
@@ -17,9 +17,11 @@ public class AddCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        SpaceMarine spaceMarine = inputManager.getInputSpaceMarine();
-        inputManager.getValidator().spaceMarineValidate(spaceMarine);
+    public CommandResponse execute(CommandRequest commandRequest) {
+        SpaceMarine spaceMarine = (SpaceMarine) commandRequest.getData();
+//        inputManager.getValidator().spaceMarineValidate(spaceMarine);
+//        TODO
         collectionManager.addItem(spaceMarine);
+        return  new CommandResponse(true, "Added successfully", null);
     }
 }

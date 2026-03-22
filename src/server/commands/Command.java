@@ -1,9 +1,12 @@
 package server.commands;
+
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
+
 /**
  * Base contract for all executable commands in the application.
  * Implements the Command pattern: encapsulates request as an object.
  *
- * @see manger.Invoker
  */
 public interface Command {
     /**
@@ -11,8 +14,10 @@ public interface Command {
      *
      * <p>May modify application state, interact with I/O, or throw runtime exceptions
      * on validation failure. Implementations should be idempotent where possible.
+     *
+     * @return
      */
-    void execute();
+    CommandResponse execute(CommandRequest commandRequest);
     /**
      * Returns human-readable help text for this command.
      *

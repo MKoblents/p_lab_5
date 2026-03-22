@@ -1,6 +1,8 @@
 package server.commands;
 
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 public class ShuffleCommand implements Command{
     private CollectionManager collectionManager;
@@ -12,7 +14,7 @@ public class ShuffleCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         collectionManager.shuffle();
     }
     public ShuffleCommand(CollectionManager collectionManager){

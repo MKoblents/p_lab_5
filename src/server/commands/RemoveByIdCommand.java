@@ -2,6 +2,8 @@ package server.commands;
 
 import client.inputWorkers.InputManager;
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 public class RemoveByIdCommand implements  Command{
     private String helpInformation = "remove_by_id id : удалить элемент из коллекции по его id";
@@ -18,7 +20,7 @@ public class RemoveByIdCommand implements  Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         long id = inputManager.getLastLong();
         if (!collectionManager.isIdInCollection(id)) {
             System.err.println("Your id is missing.");

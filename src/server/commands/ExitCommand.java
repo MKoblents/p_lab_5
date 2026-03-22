@@ -1,5 +1,8 @@
 package server.commands;
 
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
+
 public class ExitCommand implements Command{
     public String helpInformation = "exit : завершить программу (без сохранения в файл)";
 
@@ -9,7 +12,8 @@ public class ExitCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         System.exit(0);
+        return new CommandResponse(true, "Exited successfully", null);
     }
 }

@@ -2,6 +2,8 @@ package server.commands;
 
 import client.inputWorkers.InputManager;
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
 
 public class UpdateCommand implements Command{
@@ -19,7 +21,7 @@ public class UpdateCommand implements Command{
     }
 
     @Override
-    public void execute() {
+    public CommandResponse execute(CommandRequest commandRequest) {
         long id = inputManager.getLastLong();
         if (!collectionManager.isIdInCollection(id)){
             System.err.println("Your id is missing in collection.");

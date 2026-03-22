@@ -1,5 +1,7 @@
 package server.commands;
 
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 import shared.enums.MeleeWeapon;
 import client.inputWorkers.InputManager;
 import server.manager.CollectionManager;
@@ -21,7 +23,7 @@ public class FilterLessThanMeleeWeaponCommand implements Command{
     }
 
     @Override
-    public void execute(){
+    public CommandResponse execute(CommandRequest commandRequest){
         MeleeWeapon meleeWeapon = inputManager.getInputMeleeWeapon();
         System.out.println(meleeWeapon);
         List<SpaceMarine> spaceMarinesList = collectionManager.filterLessThanMeleeWeapon(meleeWeapon);

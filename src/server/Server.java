@@ -1,6 +1,8 @@
 package server;
 
 import server.manager.CollectionManager;
+import shared.dto.CommandRequest;
+import shared.util.SerialisationUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -57,6 +59,9 @@ public class Server {
             buffer.flip();
             byte[] data = new byte[buffer.remaining()];
             buffer.get(data);
+            try (CommandRequest commandRequest = SerialisationUtil.deserialize(data)){
+                
+            }
 
             // TODO: Deserialize and process command
         }
