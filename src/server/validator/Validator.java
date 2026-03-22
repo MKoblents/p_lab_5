@@ -1,4 +1,4 @@
-package client.inputWorkers;
+package server.validator;
 
 import shared.enums.MeleeWeapon;
 import shared.exceptions.*;
@@ -13,18 +13,6 @@ import java.util.List;
  * Applies auto-fixes for minor issues and throws custom exceptions for critical failures.
  */
 public class Validator {
-    /** Manager delegate for collection operations. */
-    private CollectionManager manager;
-    /** Reference to collection list (note: mutable reference). */
-    private List<SpaceMarine> spaceMarines;
-    /**
-     * Initializes validator with manager reference.
-     * @param manager the CollectionManager to associate with
-     */
-    public Validator(CollectionManager manager){
-        this.spaceMarines = manager.getSpaceMarines();
-        this.manager =manager;
-    }
     /**
      * Validates each SpaceMarine in the provided list.
      * @param spaceMarines list of objects to validate

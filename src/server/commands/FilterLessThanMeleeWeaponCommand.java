@@ -12,10 +12,8 @@ import java.util.List;
 public class FilterLessThanMeleeWeaponCommand implements Command{
     private String helpInfprmation = "filter_less_than_melee_weapon meleeWeapon : вывести элементы, значение поля meleeWeapon которых меньше заданного";
     private CollectionManager collectionManager;
-    private InputManager inputManager;
-    public FilterLessThanMeleeWeaponCommand(CollectionManager collectionManager, InputManager inputManager){
+    public FilterLessThanMeleeWeaponCommand(CollectionManager collectionManager){
         this.collectionManager = collectionManager;
-        this.inputManager = inputManager;
     }
     @Override
     public String getHelpInformation() {
@@ -24,12 +22,13 @@ public class FilterLessThanMeleeWeaponCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest){
-        MeleeWeapon meleeWeapon = inputManager.getInputMeleeWeapon();
+        MeleeWeapon meleeWeapon = (MeleeWeapon) commandRequest.getData();
         System.out.println(meleeWeapon);
         List<SpaceMarine> spaceMarinesList = collectionManager.filterLessThanMeleeWeapon(meleeWeapon);
         for (SpaceMarine spaceMarine : spaceMarinesList) {
             System.out.println(spaceMarine);
         }
+        return new CommandResponse(true, "Filterred success", null);
 
 
     }

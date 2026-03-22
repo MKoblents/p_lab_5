@@ -1,3 +1,4 @@
+import server.validator.Validator;
 import server.commands.*;
 import client.inputWorkers.*;
 import client.io.ConsoleBufferedScanner;

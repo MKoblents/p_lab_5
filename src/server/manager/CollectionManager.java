@@ -1,6 +1,6 @@
 package server.manager;
 import shared.enums.MeleeWeapon;
-import client.inputWorkers.Validator;
+import server.validator.Validator;
 import client.inputWorkers.XMLParser;
 import shared.models.Coordinates;
 import shared.models.SpaceMarine;

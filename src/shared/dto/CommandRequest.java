@@ -6,11 +6,11 @@ public class CommandRequest implements Serializable {
     private static final long serialVersionUID = 1L;
     private String commandKey;
     private Object data;
-    private String xmlString;
-    public CommandRequest(String commandKey,Object data, String xmlString){
+    private String stringArg;
+    public CommandRequest(String commandKey,Object data, String stringArg){
         this.commandKey = commandKey;
         this.data = data;
-        this.xmlString = xmlString;
+        this.stringArg = stringArg;
     }
 
     public String getCommandKey() {
@@ -21,7 +21,7 @@ public class CommandRequest implements Serializable {
         return data;
     }
 
-    public String getXmlString() {
-        return xmlString;
+    public String getStringArg() {
+        return stringArg;
     }
 }

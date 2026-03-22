@@ -19,7 +19,6 @@ public class ServerApp {
             CollectionManager collectionManager = new CollectionManager();
             collectionManager.loadFromFile(System.getenv("PLAB5"));
             System.out.println("Collection loaded. Size: " + collectionManager.size());
-            InputManager inputManager = new InputManager()
             Invoker invoker = new Invoker();
             invoker.registerCommand("help", new HelpCommand(invoker));
             invoker.registerCommand("info", new InfoCommand(collectionManager));
@@ -30,7 +29,7 @@ public class ServerApp {
             invoker.registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
             invoker.registerCommand("min_by_melee_weapon", new MinByMeleeWeaponCommand(collectionManager));
             invoker.registerCommand("remove_by_id", new RemoveByIdCommand(collectionManager,inputManager));
-            invoker.registerCommand("add", new AddCommand(collectionManager,inputManager));
+            invoker.registerCommand("add", new AddCommand(collectionManager));
             invoker.registerCommand("insert_at", new InsertAtCommand(collectionManager, inputManager));
             invoker.registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager, inputManager));
             invoker.registerCommand("update", new UpdateCommand(collectionManager, inputManager));

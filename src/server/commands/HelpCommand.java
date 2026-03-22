@@ -20,6 +20,7 @@ public class HelpCommand implements Command {
         for (Command command: invoker.getCommandMap().values()){
             System.out.println(command.getHelpInformation());
         }
+        return  new CommandResponse(true, "Helped successfully", null);
 
     }
 }
