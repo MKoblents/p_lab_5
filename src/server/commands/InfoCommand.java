@@ -13,10 +13,9 @@ public class InfoCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        System.out.println(collectionManager.getSpaceMarines().getClass());
-        System.out.println(collectionManager.getCreationData());
-        System.out.println(collectionManager.getSpaceMarines().size());
-        return  new CommandResponse(true, "Info showed successfully", null);
+        return  new CommandResponse(true, collectionManager.getSpaceMarines().getClass()+"\n"
+                + collectionManager.getCreationData()+ "\n"
+                + collectionManager.getSpaceMarines().size(), null);
     }
 
     @Override
