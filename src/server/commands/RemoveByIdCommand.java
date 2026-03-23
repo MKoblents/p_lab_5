@@ -1,16 +1,15 @@
 package server.commands;
-
-import client.inputWorkers.InputManager;
 import server.manager.CollectionManager;
+import server.validator.Validator;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 
 public class RemoveByIdCommand implements  Command{
     private String helpInformation = "remove_by_id id : удалить элемент из коллекции по его id";
-    private InputManager inputManager;
     private CollectionManager collectionManager;
-    public RemoveByIdCommand(CollectionManager collectionManager, InputManager inputManager){
-        this.inputManager = inputManager;
+    private Validator validator;
+    public RemoveByIdCommand(CollectionManager collectionManager, Validator validator){
+        this.validator = validator;
         this.collectionManager = collectionManager;
     }
 
@@ -21,9 +20,21 @@ public class RemoveByIdCommand implements  Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        long id = inputManager.getLastLong();
+        Long id = (Long) commandRequest.getData();
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Valid ID required for remove_by_id, got: " + id);
+        }
+
         if (!collectionManager.isIdInCollection(id)) {
-            System.err.println("Your id is missing.");
-        }collectionManager.remove(id);
+            return new CommandResponse(
+                    false,id,
+                    "Element with ID " + id + " does not exist");
+        }
+        collectionManager.remove(id);
+        return new CommandResponse(
+                true,id,
+                "Element with ID " + id + " removed successfully"
+
+        );
     }
 }
