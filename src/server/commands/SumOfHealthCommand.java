@@ -21,7 +21,7 @@ public class SumOfHealthCommand implements Command{
         double sum = collectionManager.getSumOfHealth();
         System.out.println(sum);
         return new CommandResponse(true,
-                "Sum of health: " + sum,
-                Double.toString(sum));
+                sum,
+                "Sum of health: " + sum);
     }
 }

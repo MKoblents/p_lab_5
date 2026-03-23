@@ -1,11 +1,12 @@
 package server.commands;
 
-import client.inputWorkers.InputManager;
 import server.manager.CollectionManager;
 import server.validator.Validator;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
+
+import java.util.Map;
 
 public class InsertAtCommand implements Command{
     private CollectionManager collectionManager;
@@ -23,9 +24,37 @@ public class InsertAtCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        SpaceMarine spaceMarine = (SpaceMarine) commandRequest.getData();
-        validator.spaceMarineValidate(spaceMarine);
-        collectionManager.addItem(inputManager.getLastInt(), spaceMarine);
+        Object data = commandRequest.getData();
+        if (!(data instanceof Map)) {
+            return new CommandResponse(false,
+                    "Error: Invalid data format for insert at command", null);
+        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> args = (Map<String, Object>) data;
+        if (!args.containsKey("id") || !args.containsKey("marine")) {
+            return new CommandResponse(false,
+                    "Error: Insert at requires both 'id' and 'marine' arguments", null);
+        }
+        Integer id = (Integer) args.get("id");
+        if (id == null || id <= 0) {
+            return new CommandResponse(false,
+                    "Error: Valid ID required for insert at", null);
+        }
+        if (!collectionManager.isIdInCollection(id)) {
+            return new CommandResponse(false,
+                    "Error: No element found with ID " + id, null);
+        }
+        SpaceMarine spaceMarineInput = (SpaceMarine) args.get("marine");
+        if (spaceMarineInput == null) {
+            return new CommandResponse(false,
+                    "Error: Invalid SpaceMarine data", null);
+        }
+        validator.spaceMarineValidate(spaceMarineInput);
+        collectionManager.addItem(id, spaceMarineInput);
+        return new CommandResponse(true,
+                spaceMarineInput.toString(),
+                "SpaceMarine with ID " + id + " inserted successfully"
+                );
 
     }
 }
