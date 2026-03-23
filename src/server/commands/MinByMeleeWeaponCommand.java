@@ -17,6 +17,6 @@ public class MinByMeleeWeaponCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        System.out.println(collectionManager.getMinByMeleeWeapon());
+        return new CommandResponse(true, collectionManager.getMinByMeleeWeapon(), "Min element found");
     }
 }

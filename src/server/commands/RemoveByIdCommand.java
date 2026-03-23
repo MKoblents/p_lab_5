@@ -24,7 +24,6 @@ public class RemoveByIdCommand implements  Command{
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Valid ID required for remove_by_id, got: " + id);
         }
-
         if (!collectionManager.isIdInCollection(id)) {
             return new CommandResponse(
                     false,id,
