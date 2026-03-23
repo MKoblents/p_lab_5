@@ -5,6 +5,10 @@ import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ShowCommand implements Command{
     private String helpInformation = "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
     private CollectionManager collectionManager;
@@ -19,8 +23,11 @@ public class ShowCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        for (SpaceMarine spaceMarine:collectionManager.getSpaceMarines()){
-            System.out.println(spaceMarine);
-        }
+        List<SpaceMarine> sortedMarines = collectionManager.getSpaceMarines().stream()
+                .sorted(Comparator.comparing(SpaceMarine::getName))
+                .collect(Collectors.toList());
+        return new CommandResponse(
+                true,sortedMarines,
+                "Showing " + sortedMarines.size() + " SpaceMarine(s)");
     }
 }
