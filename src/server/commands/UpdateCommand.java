@@ -27,44 +27,37 @@ public class UpdateCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        try {
-            Object data = commandRequest.getData();
-            if (!(data instanceof Map)) {
-                return new CommandResponse(false,
-                        "Error: Invalid data format for update command", null);
-            }
-            @SuppressWarnings("unchecked")
-            Map<String, Object> args = (Map<String, Object>) data;
-            if (!args.containsKey("id") || !args.containsKey("marine")) {
-                return new CommandResponse(false,
-                        "Error: Update requires both 'id' and 'marine' arguments", null);
-            }
-            Long id = (Long) args.get("id");
-            if (id == null || id <= 0) {
-                return new CommandResponse(false,
-                        "Error: Valid ID required for update", null);
-            }
-            if (!collectionManager.isIdInCollection(id)) {
-                return new CommandResponse(false,
-                        "Error: No element found with ID " + id, null);
-            }
-            SpaceMarine spaceMarineInput = (SpaceMarine) args.get("marine");
-            if (spaceMarineInput == null) {
-                return new CommandResponse(false,
-                        "Error: Invalid SpaceMarine data", null);
-            }
-            validator.spaceMarineValidate(spaceMarineInput);
-            spaceMarineInput.setId(id);
-            collectionManager.update(id, spaceMarineInput);
-            return new CommandResponse(true,
-                    "SpaceMarine with ID " + id + " updated successfully",
-                    spaceMarineInput.toString());
-        } catch (ClassCastException e) {
+        Object data = commandRequest.getData();
+        if (!(data instanceof Map)) {
             return new CommandResponse(false,
-                    "Error: Invalid argument types for update command", null);
-        } catch (Exception e) {
-            return new CommandResponse(false,
-                    "Error updating SpaceMarine: " + e.getMessage(), null);
+                    "Error: Invalid data format for update command", null);
         }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> args = (Map<String, Object>) data;
+        if (!args.containsKey("id") || !args.containsKey("marine")) {
+            return new CommandResponse(false,
+                    "Error: Update requires both 'id' and 'marine' arguments", null);
+        }
+        Long id = (Long) args.get("id");
+        if (id == null || id <= 0) {
+            return new CommandResponse(false,
+                    "Error: Valid ID required for update", null);
+        }
+        if (!collectionManager.isIdInCollection(id)) {
+            return new CommandResponse(false,
+                    "Error: No element found with ID " + id, null);
+        }
+        SpaceMarine spaceMarineInput = (SpaceMarine) args.get("marine");
+        if (spaceMarineInput == null) {
+            return new CommandResponse(false,
+                    "Error: Invalid SpaceMarine data", null);
+        }
+        validator.spaceMarineValidate(spaceMarineInput);
+        spaceMarineInput.setId(id);
+        collectionManager.update(id, spaceMarineInput);
+        return new CommandResponse(true,
+                "SpaceMarine with ID " + id + " updated successfully",
+                spaceMarineInput.toString());
+
     }
 }

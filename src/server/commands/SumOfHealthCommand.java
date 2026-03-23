@@ -18,6 +18,10 @@ public class SumOfHealthCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        System.out.println(collectionManager.getSumOfHealth());
+        double sum = collectionManager.getSumOfHealth();
+        System.out.println(sum);
+        return new CommandResponse(true,
+                "Sum of health: " + sum,
+                Double.toString(sum));
     }
 }
