@@ -24,7 +24,6 @@ public class Client {
         Reader reader = new ConsoleBufferedScanner();
         CommandParser parser = new CommandParser();
         this.inputManager = new InputManager(reader, parser);
-//TODO
         this.connectionManager = new ConnectionManager();
         this.requestBuilder = new RequestBuilder(inputManager);
         this.responseHandler = new ResponseHandler();

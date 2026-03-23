@@ -25,7 +25,7 @@ public class CollectionManager {
     private ZonedDateTime creationData;
     /** Counter for auto-generating unique IDs. */
     @XmlTransient
-    private Validator validator = new Validator(this);
+    private Validator validator = new Validator();
     /**
      * Initializes empty collection with current timestamp.
      */
@@ -192,6 +192,9 @@ public class CollectionManager {
      */
     public void replace(SpaceMarine spaceMarineOld, SpaceMarine spaceMarineNew){
         int index = spaceMarines.indexOf(spaceMarineOld);
+        if (index==-1){
+            return;
+        }
         spaceMarines.set(index, spaceMarineNew);
     }
     /**
@@ -221,5 +224,12 @@ public class CollectionManager {
                 return true;
             }
         }return false;
+    }
+
+    public void update(Long id, SpaceMarine spaceMarineInput) {
+        spaceMarineInput.setId(id);
+        SpaceMarine spaceMarine = getSpaceMarineById(id);
+        replace(spaceMarine, spaceMarineInput);
+//        TODO normal update
     }
 }
