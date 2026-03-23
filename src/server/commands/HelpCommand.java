@@ -19,7 +19,7 @@ public class HelpCommand implements Command {
     public CommandResponse execute(CommandRequest commandRequest) {
         String result ="";
         for (Command command: invoker.getCommandMap().values()){
-            result = result + command.getHelpInformation();
+            result = result + command.getHelpInformation()+"\n";
         }
         return  new CommandResponse(true, result, null);
 
