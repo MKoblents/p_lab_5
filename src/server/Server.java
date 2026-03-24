@@ -1,5 +1,6 @@
 package server;
 
+import server.commands.*;
 import server.manager.CollectionManager;
 import server.manager.FileManager;
 import server.manager.Invoker;
@@ -7,6 +8,7 @@ import server.network.ServerConnectionHandler;
 import server.outputWorkers.CollectionSaver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import server.validator.Validator;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -40,38 +42,41 @@ public class Server {
                     dataFile = args[++i];
                 }
             }
-
-            // Initialize managers
-            FileManager fileManager = new FileManager(dataFile);
-            CollectionManager collectionManager = new CollectionManager(fileManager);
+            FileManager fileManager = new FileManager();
+            CollectionManager collectionManager = new CollectionManager();
             CollectionSaver collectionSaver = new CollectionSaver();
-
-            // Load collection at startup
-            collectionManager.loadFromFile();
+            collectionManager.loadFromFile(dataFile);
             logger.info("Loaded {} elements from {}",
                     collectionManager.getSpaceMarines().size(), dataFile);
-
-            // Setup NIO
             ServerSocketChannel serverChannel = ServerSocketChannel.open();
-            serverChannel.configureBlocking(false);  // NON-BLOCKING!
+            serverChannel.configureBlocking(false);
             serverChannel.bind(new InetSocketAddress(port));
 
             Selector selector = Selector.open();
             serverChannel.register(selector, java.nio.channels.SelectionKey.OP_ACCEPT);
-
-            // Initialize command invoker (registers all commands including help)
-            Invoker invoker = new Invoker(collectionManager, fileManager, collectionSaver);
-
-            // Initialize connection handler
+            Invoker invoker = new Invoker();
+            // TODO validation in client
+            Validator validator = new Validator();
+            invoker.registerCommand("add", new AddCommand(collectionManager,validator));
+            invoker.registerCommand("clear", new ClearCommand(collectionManager));
+            invoker.registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager));
+            invoker.registerCommand("info", new InfoCommand(collectionManager));
+            invoker.registerCommand("insert_at", new InsertAtCommand(collectionManager, validator));
+            invoker.registerCommand("min_by_melee_weapon", new MinByMeleeWeaponCommand(collectionManager));
+            invoker.registerCommand("remove_by_id", new RemoveByIdCommand(collectionManager, validator));
+            invoker.registerCommand("remove_greater", new RemoveGreaterCommand(collectionManager, validator));
+            invoker.registerCommand("show", new ShowCommand(collectionManager));
+            invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
+            invoker.registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
+            invoker.registerCommand("update", new UpdateCommand(collectionManager, validator));
             ServerConnectionHandler connectionHandler =
-                    new ServerConnectionHandler(selector, invoker, collectionManager);
-
-            // Register shutdown hook for auto-save
+                    new ServerConnectionHandler(selector, invoker);
+            final String finalDataFile = dataFile;
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 logger.info("Shutdown hook: saving collection...");
                 try {
-                    collectionSaver.save(collectionManager, dataFile);
-                    logger.info("Collection saved to {}", dataFile);
+                    collectionSaver.save(collectionManager, finalDataFile);
+                    logger.info("Collection saved to {}", finalDataFile);
                 } catch (Exception e) {
                     logger.error("Error saving on shutdown: {}", e.getMessage(), e);
                 }
@@ -79,10 +84,8 @@ public class Server {
 
             logger.info("Server started on port {}", port);
             System.out.println("Server running. Press Ctrl+C to stop.");
-
-            // Main event loop (SINGLE-THREADED)
             while (!Thread.currentThread().isInterrupted()) {
-                selector.select();  // Blocks until event occurs
+                selector.select();
 
                 for (var key : selector.selectedKeys()) {
                     if (key.isAcceptable()) {
