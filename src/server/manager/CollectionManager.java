@@ -1,10 +1,9 @@
 package server.manager;
 import shared.enums.MeleeWeapon;
 import server.validator.Validator;
-import client.inputWorkers.XMLParser;
 import shared.models.Coordinates;
 import shared.models.SpaceMarine;
-
+import shared.utils.XMLParser;
 import javax.xml.bind.annotation.*;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -92,7 +91,7 @@ public class CollectionManager {
      */
     public void loadFromFile(String filePath){
         try {
-            XMLParser parser = new XMLParser(filePath, this);
+            XMLParser parser = new XMLParser();
             this.spaceMarines = parser.parseSpaceMarines();
             validator.spaceMarinesValidate(this.spaceMarines);
         }catch (Exception e){

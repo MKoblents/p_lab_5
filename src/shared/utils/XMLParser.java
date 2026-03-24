@@ -1,10 +1,9 @@
-package client.inputWorkers;
+package shared.utils;
 
 import shared.enums.AstartesCategory;
 import shared.enums.MeleeWeapon;
 import shared.enums.Weapon;
 import shared.models.Chapter;
-import server.manager.CollectionManager;
 import shared.models.SpaceMarine;
 import shared.models.Coordinates;
 

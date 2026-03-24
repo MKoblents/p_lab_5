@@ -5,7 +5,7 @@ import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
 import client.io.FileBufferedReader;
 import client.io.Reader;
-import client.inputWorkers.XMLParser;
+import shared.utils.XMLParser;
 import client.network.ConnectionManager;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -18,7 +18,7 @@ public class ScriptRunner {
     private final RequestBuilder requestBuilder;
     private final ConnectionManager connectionManager;
     private final ResponseHandler responseHandler;
-    private final XMLParser xmlParser;
+//    private final XMLParser xmlParser;
     private static final ThreadLocal<Deque<String>> executingScripts =
             ThreadLocal.withInitial(ArrayDeque::new);
     private static final int MAX_SCRIPT_DEPTH = 5;
@@ -26,13 +26,11 @@ public class ScriptRunner {
     public ScriptRunner(InputManager inputManager,
                         RequestBuilder requestBuilder,
                         ConnectionManager connectionManager,
-                        ResponseHandler responseHandler,
-                        XMLParser xmlParser) {
+                        ResponseHandler responseHandler) {
         this.inputManager = inputManager;
         this.requestBuilder = requestBuilder;
         this.connectionManager = connectionManager;
         this.responseHandler = responseHandler;
-        this.xmlParser = xmlParser;
     }
 
     /**
@@ -54,7 +52,7 @@ public class ScriptRunner {
         System.out.println("📜 Entering script: " + scriptPath + " (depth: " + executingScripts.get().size() + ")");
         Reader originalReader = inputManager.getReader();
         try {
-            FileBufferedReader scriptReader = new FileBufferedReader(scriptPath, xmlParser);
+            FileBufferedReader scriptReader = new FileBufferedReader(scriptPath);
             inputManager.setReader(scriptReader);
             ExecutionResult result = executeScriptInternal(scriptPath);
             printExecutionSummary(result);
@@ -87,8 +85,6 @@ public class ScriptRunner {
         System.out.println("\n📊 Script completed: " +
                 result.successCount() + " succeeded, " +
                 result.errorCount() + " failed");
-
-        // Показываем детали, если их немного
         if (!result.details().isEmpty() && result.details().size() <= 10) {
             System.out.println("  Details:");
             for (String detail : result.details()) {
@@ -117,7 +113,7 @@ public class ScriptRunner {
                 if (commandName.equals("execute_script")) {
                     String nestedPath = inputManager.getLastPath();
                     if (nestedPath != null && !nestedPath.isEmpty()) {
-                        ExecutionResult nestedResult = executeScriptInternal(nestedPath);  // ← Рекурсия!
+                        ExecutionResult nestedResult = executeScriptInternal(nestedPath);
                         if (nestedResult.success()) {
                             successCount += nestedResult.successCount();
                             details.addAll(nestedResult.details());
@@ -142,7 +138,7 @@ public class ScriptRunner {
                     continue;
                 }
                 connectionManager.sendRequest(request);
-                CommandResponse response = connectionManager.waitForResponse(10000);
+                CommandResponse response = connectionManager.readResponse();
                 if (response != null && response.isSuccess()) {
                     successCount++;
                     details.add("✓ " + commandName + " - " + response.getMessage());

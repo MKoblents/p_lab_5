@@ -1,7 +1,7 @@
 package client.handlers;
 
 import client.inputWorkers.InputManager;
-import client.inputWorkers.XMLParser;
+import shared.utils.XMLParser;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.enums.MeleeWeapon;
@@ -31,12 +31,12 @@ public class RequestBuilder {
                 }
                 case "update", "insert_at" -> {
                     long id = inputManager.getLastLong();
-                    String xml = inputManager.getLastXmlString();
-                    if (id <= 0 || xml == null || xml.isEmpty()) {
-                        System.err.println("Error: ID and XML data required for " + commandName);
-                        yield null;
-                    }
-                    SpaceMarine marine = XMLParser.parseSpaceMarineFromString(xml);
+//                    String xml = inputManager.getLastXmlString();
+//                    if (id <= 0 || xml == null || xml.isEmpty()) {
+//                        System.err.println("Error: ID and XML data required for " + commandName);
+//                        yield null;
+//                    }
+                    SpaceMarine marine = inputManager.getInputSpaceMarine();
                     if (marine == null) {
                         System.err.println("Error: Failed to parse SpaceMarine from XML");
                         yield null;
@@ -44,12 +44,12 @@ public class RequestBuilder {
                     yield RequestsFactory.createTwoArgs(commandName, id, marine);
                 }
                 case "add", "remove_greater" -> {
-                    String xml = inputManager.getLastXmlString();
-                    if (xml == null || xml.isEmpty()) {
-                        System.err.println("Error: XML data required for " + commandName);
-                        yield null;
-                    }
-                    SpaceMarine marine = XMLParser.parseSpaceMarineFromString(xml);
+//                    String xml = inputManager.getLastXmlString();
+//                    if (xml == null || xml.isEmpty()) {
+//                        System.err.println("Error: XML data required for " + commandName);
+//                        yield null;
+//                    }
+                    SpaceMarine marine = inputManager.getInputSpaceMarine();
                     if (marine == null) {
                         System.err.println("Error: Failed to parse SpaceMarine from XML");
                         yield null;
@@ -77,7 +77,7 @@ public class RequestBuilder {
                     yield null;
                 }
             };
-        } catch (XMLStreamException | IOException e) {
+        } catch (Exception e) {
             System.err.println("Error building request: " + e.getMessage());
             return null;
         }

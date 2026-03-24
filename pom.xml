@@ -41,6 +41,7 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
+
         <resources>
             <resource>
                 <directory>src</directory>
@@ -63,13 +64,34 @@
                 </configuration>
             </plugin>
 
-            <!-- ✅ Client JAR -->
+            <!-- ✅ Assembly Plugin для создания JAR с зависимостями -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
                 <executions>
-                    <!-- Client executable JAR -->
+                    <!-- Server JAR with dependencies -->
+                    <execution>
+                        <id>server-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>server.Server</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>${project.artifactId}-server</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+
+                    <!-- Client JAR with dependencies -->
                     <execution>
                         <id>client-jar</id>
                         <phase>package</phase>
@@ -87,50 +109,6 @@
                             </descriptorRefs>
                             <finalName>${project.artifactId}-client</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- ✅ Server JAR (отдельная сборка) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <!-- Server JAR -->
-                    <execution>
-                        <id>server-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>server.Server</mainClass>
-                                </manifest>
-                            </archive>
-                            <classifier>server</classifier>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- ✅ Copy dependencies for server -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
