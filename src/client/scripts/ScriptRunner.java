@@ -52,7 +52,7 @@ public class ScriptRunner {
         System.out.println("📜 Entering script: " + scriptPath + " (depth: " + executingScripts.get().size() + ")");
         Reader originalReader = inputManager.getReader();
         try {
-            FileBufferedReader scriptReader = new FileBufferedReader(scriptPath);
+            FileBufferedReader scriptReader = new FileBufferedReader(scriptPath, new XMLParser(scriptPath));
             inputManager.setReader(scriptReader);
             ExecutionResult result = executeScriptInternal(scriptPath);
             printExecutionSummary(result);

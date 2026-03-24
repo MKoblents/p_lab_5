@@ -27,7 +27,6 @@ public class Client {
             ConnectionManager connection = new ConnectionManager();
             RequestBuilder requestBuilder = new RequestBuilder(inputManager);
             ResponseHandler responseHandler = new ResponseHandler();
-            XMLParser xmlParser = new XMLParser();
             ScriptRunner scriptRunner = new ScriptRunner(inputManager, requestBuilder, connection, responseHandler
             );
             System.out.println("Connecting to " + host + ":" + port + "...");

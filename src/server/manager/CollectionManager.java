@@ -70,7 +70,7 @@ public class CollectionManager {
      */
     public void loadFromFile(String filePath){
         try {
-            XMLParser parser = new XMLParser();
+            XMLParser parser = new XMLParser(filePath);
             this.spaceMarines = parser.parseSpaceMarines();
             validator.spaceMarinesValidate(this.spaceMarines);
         }catch (Exception e){

@@ -22,7 +22,7 @@ public class FileBufferedReader implements Reader{
     /** Preloaded next line for hasNextLine/nextLine logic. */
     private String nextLine;
     /** XML parser delegate for SpaceMarine deserialization. */
-   // private XMLParser xmlParser;
+    private XMLParser xmlParser;
     /** Cached XML string for deferred parsing. */
     private String lastXmlString;
     /** Flag indicating end-of-file reached. */
@@ -31,9 +31,10 @@ public class FileBufferedReader implements Reader{
      * Initializes reader with file path and XML parser.
      * Preloads first line for immediate availability.
      * @param filePath path to the input file
+     * @param xmlParser parser for SpaceMarine XML blocks
      * @throws IOException if file cannot be opened
      */
-    public FileBufferedReader(String filePath) throws IOException {
+    public FileBufferedReader(String filePath, XMLParser xmlParser) throws IOException {
         this.filePath = filePath;
         this.bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
         preloadNextLine();
@@ -112,7 +113,7 @@ public class FileBufferedReader implements Reader{
     @Override
     public SpaceMarine getInputSpaceMarine(){
         try {
-            SpaceMarine spaceMarine = XMLParser.parseSpaceMarineFromString(lastXmlString);
+            SpaceMarine spaceMarine = xmlParser.parseSpaceMarineFromString(lastXmlString);
             lastXmlString = "";
             return spaceMarine;
         } catch (Exception e ) {

@@ -81,7 +81,6 @@ public class Server {
                     logger.error("Error saving on shutdown: {}", e.getMessage(), e);
                 }
             }));
-
             logger.info("Server started on port {}", port);
             System.out.println("Server running. Press Ctrl+C to stop.");
             while (!Thread.currentThread().isInterrupted()) {
