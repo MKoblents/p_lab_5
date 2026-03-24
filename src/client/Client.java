@@ -152,6 +152,7 @@ public class Client {
     }
 
     private static void printHelp() {
+        //TODO normal help
         System.out.println("""
             SpaceMarine Client Usage:
               java -cp <classpath> client.Client [options]

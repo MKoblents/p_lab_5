@@ -1,78 +1,102 @@
 package server;
 
 import server.manager.CollectionManager;
-import shared.dto.CommandRequest;
-import shared.utils.SerializationUtil;
+import server.manager.FileManager;
+import server.manager.Invoker;
+import server.network.ServerConnectionHandler;
+import server.outputWorkers.CollectionSaver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.util.Set;
+import java.nio.channels.Selector;
 
+/**
+ * Server application entry point.
+ * Single-threaded NIO server with graceful shutdown.
+ */
 public class Server {
-    private final int port;
-    private final CollectionManager collectionManager;
-    private final String filePath;
+    private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
-    public Server(int port, CollectionManager collectionManager, String filePath) {
-        this.port = port;
-        this.collectionManager = collectionManager;
-        this.filePath = filePath;
-    }
+    private static final int DEFAULT_PORT = 12345;
+    private static final String DEFAULT_DATA_FILE = "collection.xml";
 
-    public void start() throws IOException {
-        System.out.println("Server started (stub)");
-        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.configureBlocking(false);
-        serverSocketChannel.bind(new InetSocketAddress(port));
-        Selector selector = Selector.open();
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-        while (true){
-            selector.select();
-            Set<SelectionKey> selectionKeys = selector.selectedKeys();
-            for (SelectionKey selectionKey: selectionKeys){
-                if (selectionKey.isAcceptable()){
-                    handleAccept(selectionKey);
-                } else if (selectionKey.isReadable()) {
-                    handleRead(selectionKey);
+    public static void main(String[] args) {
+        logger.info("=== SpaceMarine Server ===");
 
+        try {
+            // Parse arguments: --port <p> --file <path>
+            int port = DEFAULT_PORT;
+            String dataFile = System.getenv("PLAB5") != null
+                    ? System.getenv("PLAB5")
+                    : DEFAULT_DATA_FILE;
+
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equals("--port") && i + 1 < args.length) {
+                    port = Integer.parseInt(args[++i]);
+                } else if (args[i].equals("--file") && i + 1 < args.length) {
+                    dataFile = args[++i];
                 }
-            }selectionKeys.clear();
-        }
-    }
-
-    private void handleRead(SelectionKey selectionKey) throws IOException {
-        SocketChannel client = (SocketChannel) selectionKey.channel();
-        ByteBuffer buffer = ByteBuffer.allocate(4096);
-        int bytesRead = client.read(buffer);
-        if (bytesRead == -1) {
-            client.close();
-            selectionKey.cancel();
-            System.out.println("✗ Disconnected: " + client.getRemoteAddress());
-            return;
-        }
-        if (bytesRead > 0) {
-            buffer.flip();
-            byte[] data = new byte[buffer.remaining()];
-            buffer.get(data);
-            try (CommandRequest commandRequest = SerializationUtil.deserialize(data)){
-                
             }
 
-            // TODO: Deserialize and process command
-        }
-    }
+            // Initialize managers
+            FileManager fileManager = new FileManager(dataFile);
+            CollectionManager collectionManager = new CollectionManager(fileManager);
+            CollectionSaver collectionSaver = new CollectionSaver();
 
-    private void handleAccept(SelectionKey selectionKey) throws IOException {
-        ServerSocketChannel server = (ServerSocketChannel) selectionKey.channel();
-        SocketChannel client = server.accept();
-        if (client != null){
-            client.configureBlocking( false);
-            client.register(selectionKey.selector(), SelectionKey.OP_READ);
+            // Load collection at startup
+            collectionManager.loadFromFile();
+            logger.info("Loaded {} elements from {}",
+                    collectionManager.getSpaceMarines().size(), dataFile);
+
+            // Setup NIO
+            ServerSocketChannel serverChannel = ServerSocketChannel.open();
+            serverChannel.configureBlocking(false);  // NON-BLOCKING!
+            serverChannel.bind(new InetSocketAddress(port));
+
+            Selector selector = Selector.open();
+            serverChannel.register(selector, java.nio.channels.SelectionKey.OP_ACCEPT);
+
+            // Initialize command invoker (registers all commands including help)
+            Invoker invoker = new Invoker(collectionManager, fileManager, collectionSaver);
+
+            // Initialize connection handler
+            ServerConnectionHandler connectionHandler =
+                    new ServerConnectionHandler(selector, invoker, collectionManager);
+
+            // Register shutdown hook for auto-save
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                logger.info("Shutdown hook: saving collection...");
+                try {
+                    collectionSaver.save(collectionManager, dataFile);
+                    logger.info("Collection saved to {}", dataFile);
+                } catch (Exception e) {
+                    logger.error("Error saving on shutdown: {}", e.getMessage(), e);
+                }
+            }));
+
+            logger.info("Server started on port {}", port);
+            System.out.println("Server running. Press Ctrl+C to stop.");
+
+            // Main event loop (SINGLE-THREADED)
+            while (!Thread.currentThread().isInterrupted()) {
+                selector.select();  // Blocks until event occurs
+
+                for (var key : selector.selectedKeys()) {
+                    if (key.isAcceptable()) {
+                        connectionHandler.handleAccept(key);
+                    } else if (key.isReadable()) {
+                        connectionHandler.handleRead(key);
+                    }
+                }
+                selector.selectedKeys().clear();
+            }
+
+        } catch (IOException e) {
+            logger.error("Server error: {}", e.getMessage(), e);
+            System.exit(1);
         }
     }
 }

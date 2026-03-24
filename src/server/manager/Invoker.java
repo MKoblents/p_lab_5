@@ -1,6 +1,8 @@
 package server.manager;
 
 import server.commands.Command;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,20 +23,20 @@ public class Invoker {
     }
     /**
      * Executes the command registered under the given key.
-     * @param key the command name to execute
      */
-    public void runCommand(String key){
+    public CommandResponse runCommand(CommandRequest commandRequest){
+        String key = commandRequest.getCommandKey();
         if (key == null) {
             System.err.println("Unknown command: " + key);
             System.err.println("Available commands: " + commandMap.keySet());
-            return;
+            return new CommandResponse(false, null,null);
         }
         if (!commandMap.containsKey(key)){
             System.err.println("You entered wrong command key");
             System.err.println("Available commands: " + commandMap.keySet());
-            return;
+            return new CommandResponse(false, null,null);
         }
-        commandMap.get(key).execute();
+        return commandMap.get(key).execute(commandRequest);
     }
     /**
      * Returns the command registry.
