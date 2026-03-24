@@ -20,13 +20,13 @@ public class RemoveGreaterCommand implements Command {
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        Object data = commandRequest.getData();
+        Object data = commandRequest.args();
         if (!(data instanceof SpaceMarine spaceMarine)) {
             throw new IllegalArgumentException("Expected SpaceMarine argument for remove_greater");
         }
         collectionManager.removeGreater(spaceMarine);
         return new CommandResponse(
                 true,
-                spaceMarine, null);
+                spaceMarine, "Removed succsessfully", commandRequest.requestId());
     }
 }

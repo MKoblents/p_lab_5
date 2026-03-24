@@ -23,11 +23,11 @@ public class FilterLessThanMeleeWeaponCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest){
-        MeleeWeapon meleeWeapon = (MeleeWeapon) commandRequest.getData();
+        MeleeWeapon meleeWeapon = (MeleeWeapon) commandRequest.args();
 //        System.out.println(meleeWeapon);
         List<SpaceMarine> spaceMarinesList = collectionManager.filterLessThanMeleeWeapon(meleeWeapon);
         spaceMarinesList.sort(Comparator.comparing(SpaceMarine::getName));
-        return new CommandResponse(true, spaceMarinesList, null);
+        return new CommandResponse(true, spaceMarinesList, "Filter succsess", commandRequest.requestId());
 
 
     }

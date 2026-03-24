@@ -6,6 +6,7 @@ import shared.dto.CommandResponse;
 import shared.utils.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -87,26 +88,34 @@ public class ServerConnectionHandler {
             dataBuffer.get(data);
 
             // 3. Десериализуем запрос
-            CommandRequest request = (CommandRequest) SerializationUtil.deserialize(data);
-            logger.debug("Received command: {}", request.getCommandKey());
+            // ✅ СТАЛО (с MDC для трассировки):
+            try {
+                // 3. Десериализуем запрос
+                CommandRequest request = (CommandRequest) SerializationUtil.deserialize(data);
 
-            // 4. Выполняем команду
-            CommandResponse response = invoker.runCommand(request);
-            logger.debug("Command executed: success={}", response.isSuccess());
+                // 🔑 Устанавливаем requestId в MDC (для привязки всех логов к этому запросу)
+                String requestId = request.requestId();
+                if (requestId != null && !requestId.isEmpty()) {
+                    MDC.put("requestId", requestId);
+                }
 
-            // 5. Сериализуем и отправляем ответ
-            byte[] responseData = SerializationUtil.serialize(response);
-            ByteBuffer responseBuffer = ByteBuffer.allocate(4 + responseData.length);
-            responseBuffer.putInt(responseData.length);
-            responseBuffer.put(responseData);
-            responseBuffer.flip();
+                logger.debug("Received command: {}", request.commandType());
+                CommandResponse response = invoker.runCommand(request);
+                logger.debug("Command executed: success={}", response.success());
+                byte[] responseData = SerializationUtil.serialize(response);
+                ByteBuffer responseBuffer = ByteBuffer.allocate(4 + responseData.length);
+                responseBuffer.putInt(responseData.length);
+                responseBuffer.put(responseData);
+                responseBuffer.flip();
+                while (responseBuffer.hasRemaining()) {
+                    clientChannel.write(responseBuffer);
+                }
+                logger.trace("Response sent for requestId {} - connection KEPT OPEN", requestId);
 
-            while (responseBuffer.hasRemaining()) {
-                clientChannel.write(responseBuffer);
+            } finally {
+                // 🔑 Обязательно очищаем MDC после обработки запроса!
+                MDC.clear();
             }
-
-            logger.trace("Response sent - connection KEPT OPEN for next request");
-
             // ✅ ВАЖНО: НЕ закрываем соединение! Клиент может отправить ещё запросы.
 
         } catch (IOException e) {

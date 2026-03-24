@@ -17,13 +17,13 @@ public class ResponseHandler {
             System.err.println("Error: Null response from server");
             return;
         }
-        if (response.isSuccess()) {
-            System.out.println(response.getMessage());
+        if (response.success()) {
+            System.out.println(response.message());
         } else {
-            System.err.println("Error: " + response.getMessage());
+            System.err.println("Error: " + response.message());
         }
-        if (response.getResult() != null) {
-            handleResult(response.getResult());
+        if (response.result() != null) {
+            handleResult(response.result());
         }
     }
 

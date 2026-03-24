@@ -25,16 +25,16 @@ public class Invoker {
      * Executes the command registered under the given key.
      */
     public CommandResponse runCommand(CommandRequest commandRequest){
-        String key = commandRequest.getCommandKey();
+        String key = commandRequest.commandType();
         if (key == null) {
             System.err.println("Unknown command: " + key);
             System.err.println("Available commands: " + commandMap.keySet());
-            return new CommandResponse(false, null,null);
+            return new CommandResponse(false, null,null, null);//TODO
         }
         if (!commandMap.containsKey(key)){
             System.err.println("You entered wrong command key");
             System.err.println("Available commands: " + commandMap.keySet());
-            return new CommandResponse(false, null,null);
+            return new CommandResponse(false, null,null, null);//TODO
         }
         return commandMap.get(key).execute(commandRequest);
     }

@@ -22,6 +22,7 @@ public class SumOfHealthCommand implements Command{
         System.out.println(sum);
         return new CommandResponse(true,
                 sum,
-                "Sum of health: " + sum);
+                "Sum of health: " + sum,
+                commandRequest.requestId());
     }
 }

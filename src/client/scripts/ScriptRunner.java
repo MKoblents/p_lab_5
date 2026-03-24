@@ -139,13 +139,13 @@ public class ScriptRunner {
                 }
                 connectionManager.sendRequest(request);
                 CommandResponse response = connectionManager.readResponse();
-                if (response != null && response.isSuccess()) {
+                if (response != null && response.success()) {
                     successCount++;
-                    details.add("✓ " + commandName + " - " + response.getMessage());
-                    System.out.println("    ✓ " + response.getMessage());
+                    details.add("✓ " + commandName + " - " + response.message());
+                    System.out.println("    ✓ " + response.message());
                 } else {
                     errorCount++;
-                    String msg = response != null ? response.getMessage() : "No response";
+                    String msg = response != null ? response.message() : "No response";
                     details.add("✗ " + commandName + " - " + msg);
                     System.err.println("    ✗ Error: " + msg);
                 }

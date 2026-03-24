@@ -24,14 +24,16 @@ public class SaveCommand implements Command{
             return new CommandResponse(
                     true,
                     null,
-                    "Collection saved to " + System.getenv("PLAB5")
+                    "Collection saved to " + System.getenv("PLAB5"),
+                    commandRequest.requestId()
             );
 
         } catch (Exception e) {
             return new CommandResponse(
                     false,
                     null,
-                    "Error saving collection: " + e.getMessage()
+                    "Error saving collection: " + e.getMessage(),
+                    commandRequest.requestId()
             );
         }
 
