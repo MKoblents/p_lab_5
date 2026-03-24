@@ -2,7 +2,6 @@ package server;
 
 import server.commands.*;
 import server.manager.CollectionManager;
-import server.manager.FileManager;
 import server.manager.Invoker;
 import server.outputWorkers.CollectionSaver;
 import org.slf4j.Logger;
@@ -13,8 +12,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.utils.SerializationUtil;
@@ -109,66 +106,59 @@ public class Server {
                 java.io.OutputStream out = clientSocket.getOutputStream()
         ) {
             logger.debug("Streams opened for client: {}", clientSocket.getRemoteSocketAddress());
+
             while (!clientSocket.isClosed()) {
                 try {
-                    byte[] lengthBytes = new byte[4];
-                    int bytesRead = 0;
-                    while (bytesRead < 4) {
-                        int read = in.read(lengthBytes, bytesRead, 4 - bytesRead);
-                        if (read == -1) {
-                            return;
-                        }
-                        bytesRead += read;
+                    byte[] requestData = readAllBytes(in);
+                    if (requestData.length == 0) {
+                        logger.info("Client disconnected (empty read)");
+                        break;
                     }
-                    int length = java.nio.ByteBuffer.wrap(lengthBytes).getInt();
-                    logger.trace("Request length: {} bytes", length);
-                    byte[] data = new byte[length];
-                    int dataRead = 0;
-                    while (dataRead < length) {
-                        int read = in.read(data, dataRead, length - dataRead);
-                        if (read == -1) {
-                            logger.warn("Unexpected disconnect while reading request");
-                            return;
-                        }
-                        dataRead += read;
-                    }
-                    CommandRequest request = (CommandRequest) SerializationUtil.deserialize(data);
-                    logger.debug("Received request: command={}, requestId={}",
-                            request.commandType(), request.requestId());
+                    CommandRequest request = (CommandRequest) SerializationUtil.deserialize(requestData);
+                    logger.debug("Received command: {}", request.commandType());
                     CommandResponse response = invoker.runCommand(request);
                     logger.debug("Command executed: success={}", response.success());
                     byte[] responseData = SerializationUtil.serialize(response);
-                    ByteBuffer responseBuffer = ByteBuffer.allocate(4 + responseData.length);
-                    responseBuffer.putInt(responseData.length);
-                    responseBuffer.put(responseData);
-                    out.write(responseBuffer.array());
+                    out.write(responseData);
                     out.flush();
-                    logger.info("Response sent for requestId: {}", response.requestId());
+                    logger.info("Response sent ({} bytes)", responseData.length);
                 } catch (java.io.EOFException e) {
-                    logger.info("Client disconnected normally: {}", clientSocket.getRemoteSocketAddress());
+                    logger.info("Client disconnected normally");
                     break;
                 } catch (IOException e) {
-                    logger.error("IO error reading from client: {}", e.getMessage());
+                    logger.error("IO error: {}", e.getMessage());
                     break;
                 } catch (ClassNotFoundException e) {
-                    logger.error("Deserialization error: {}", e.getMessage(), e);
-                } catch (Exception e) {
-                    logger.error("Unexpected error processing request: {}", e.getMessage(), e);
+                    throw new RuntimeException(e);
                 }
             }
-
         } catch (IOException e) {
-            logger.error("IO error with client {}: {}",
-                    clientSocket.getRemoteSocketAddress(), e.getMessage(), e);
+            logger.error("IO error with client: {}", e.getMessage(), e);
         } finally {
             try {
-                logger.debug("Closing connection to client: {}", clientSocket.getRemoteSocketAddress());
                 clientSocket.close();
-                logger.info("Client disconnected: {}", clientSocket.getRemoteSocketAddress());
+                logger.info("Client disconnected");
             } catch (IOException e) {
-                logger.error("Error closing client socket: {}", e.getMessage());
+                logger.error("Error closing socket: {}", e.getMessage());
             }
         }
+    }
+    private static byte[] readAllBytes(java.io.InputStream in) throws IOException {
+        java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int read;
+        read = in.read(buffer);
+        if (read == -1) {
+            return new byte[0];
+        }
+        baos.write(buffer, 0, read);
+        while (in.available() > 0) {
+            read = in.read(buffer);
+            if (read == -1) break;
+            baos.write(buffer, 0, read);
+        }
+        logger.debug("Read {} bytes from client", baos.size());
+        return baos.toByteArray();
     }
     private static void setLogLevel(String level) {
         try {

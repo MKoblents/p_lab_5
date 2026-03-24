@@ -59,43 +59,64 @@ public class ConnectionManager {
         if (!connected || socketChannel == null) {
             return null;
         }
+
         logger.debug("Waiting for response...");
+
         try {
             ByteBuffer buffer = ByteBuffer.allocate(8192);
             int totalRead = 0;
+
             while (true) {
                 int read = socketChannel.read(buffer);
+                logger.debug("socketChannel.read() returned: {}", read);  // ✅ ДОБАВЬ ЭТО
+
                 if (read == -1) {
                     logger.error("Server disconnected");
                     connected = false;
                     return null;
                 }
+
                 if (read == 0) {
+                    logger.trace("No data available, sleeping...");  // ✅ И ЭТО
+                    if (totalRead > 0) {
+                        // Пробуем десериализовать то, что есть
+                        buffer.flip();
+                        byte[] data = new byte[buffer.remaining()];
+                        buffer.get(data);
+                        try {
+                            CommandResponse response = (CommandResponse) SerializationUtil.deserialize(data);
+                            logger.debug("Response received from partial data");
+                            return response;
+                        } catch (IOException | ClassNotFoundException e) {
+                            buffer.clear();
+                        }
+                    }
                     Thread.sleep(50);
                     continue;
                 }
+
                 totalRead += read;
+                logger.info("Read {} bytes (total: {})", read, totalRead);  // ✅ И ЭТО
+
                 buffer.flip();
                 byte[] data = new byte[buffer.remaining()];
                 buffer.get(data);
+
                 try {
                     CommandResponse response = (CommandResponse) SerializationUtil.deserialize(data);
                     logger.debug("Response received");
                     return response;
-                } catch (IOException e) {
-                    buffer.compact();
+                } catch (IOException | ClassNotFoundException e) {
+                    logger.warn("Cannot deserialize yet ({} bytes), waiting for more...", totalRead);
+                    buffer.clear();
                 }
             }
 
-        } catch (IOException | ClassNotFoundException e) {
-            logger.error("Error reading response: {}", e.getMessage());
-            return null;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            logger.error("Error reading response: {}", e.getMessage(), e);
             return null;
         }
     }
-
     public void disconnect() {
         logger.info("Disconnecting");
         try {
@@ -109,6 +130,7 @@ public class ConnectionManager {
             socketChannel = null;
         }
     }
+
     public boolean isConnected() {
         return connected;
     }

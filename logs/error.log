@@ -12,3 +12,84 @@ java.io.StreamCorruptedException: invalid stream header: 00000091
 	at server.Server.handleClient(Server.java:105)
 	at server.Server.main(Server.java:89)
 2026-03-24 19:25:29.757 [main] ERROR [] client.network.ConnectionManager - Server disconnected while reading response length
+2026-03-25 00:53:28.485 [main] ERROR server.Server - Fatal IO error in server: Address already in use
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:567)
+	at java.base/sun.nio.ch.Net.bind(Net.java:556)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:648)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:274)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:167)
+	at server.Server.main(Server.java:83)
+2026-03-25 00:57:52.879 [main] ERROR client.network.ConnectionManager - Server disconnected
+2026-03-25 00:58:24.346 [main] ERROR client.Client - Fatal error in client
+java.nio.channels.IllegalBlockingModeException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.blockingWriteFully(SocketChannelImpl.java:1356)
+	at java.base/sun.nio.ch.SocketAdaptor$2.write(SocketAdaptor.java:224)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.drain(ObjectOutputStream.java:1886)
+	at java.base/java.io.ObjectOutputStream$BlockDataOutputStream.setBlockDataMode(ObjectOutputStream.java:1795)
+	at java.base/java.io.ObjectOutputStream.<init>(ObjectOutputStream.java:248)
+	at client.network.ConnectionManager.connect(ConnectionManager.java:37)
+	at client.Client.main(Client.java:48)
+2026-03-25 00:58:24.370 [main] ERROR server.Server - IO error with client /127.0.0.1:53224: null
+java.io.EOFException: null
+	at java.base/java.io.ObjectInputStream$PeekInputStream.readFully(ObjectInputStream.java:2915)
+	at java.base/java.io.ObjectInputStream$BlockDataInputStream.readShort(ObjectInputStream.java:3410)
+	at java.base/java.io.ObjectInputStream.readStreamHeader(ObjectInputStream.java:954)
+	at java.base/java.io.ObjectInputStream.<init>(ObjectInputStream.java:392)
+	at server.Server.handleClient(Server.java:105)
+	at server.Server.main(Server.java:89)
+2026-03-25 01:07:44.012 [main] ERROR client.network.ConnectionManager - Server disconnected
+2026-03-25 01:15:12.445 [main] ERROR client.network.ConnectionManager - Server disconnected
+2026-03-25 01:15:30.555 [main] ERROR client.network.ConnectionManager - Server disconnected
+2026-03-25 01:17:17.765 [Thread-0] ERROR s.outputWorkers.CollectionSaver - Failed to save collection to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml: Can't find bundle for base name javax.xml.bind.Messages, locale en_US
+java.util.MissingResourceException: Can't find bundle for base name javax.xml.bind.Messages, locale en_US
+	at java.base/java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:2045)
+	at java.base/java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1683)
+	at java.base/java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1586)
+	at java.base/java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1549)
+	at java.base/java.util.ResourceBundle.getBundle(ResourceBundle.java:858)
+	at javax.xml.bind.Messages.format(Messages.java:71)
+	at javax.xml.bind.Messages.format(Messages.java:52)
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:278)
+	at javax.xml.bind.ContextFinder.find(ContextFinder.java:421)
+	at javax.xml.bind.JAXBContext.newInstance(JAXBContext.java:721)
+	at javax.xml.bind.JAXBContext.newInstance(JAXBContext.java:662)
+	at server.outputWorkers.CollectionSaver.save(CollectionSaver.java:31)
+	at server.Server.lambda$main$0(Server.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.lang.ClassCastException: javax.xml.bind.Messages cannot be cast to ResourceBundle
+	at java.base/java.util.ResourceBundle$Control.newBundle0(ResourceBundle.java:3211)
+	at java.base/java.util.ResourceBundle$Control.newBundle(ResourceBundle.java:3151)
+	at java.base/java.util.ResourceBundle.loadBundle(ResourceBundle.java:1984)
+	at java.base/java.util.ResourceBundle.findBundle(ResourceBundle.java:1770)
+	at java.base/java.util.ResourceBundle.findBundle(ResourceBundle.java:1722)
+	at java.base/java.util.ResourceBundle.findBundle(ResourceBundle.java:1722)
+	at java.base/java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1656)
+	... 12 common frames omitted
+2026-03-25 01:17:17.768 [Thread-0] ERROR server.Server - Error saving collection on shutdown: Can't find bundle for base name javax.xml.bind.Messages, locale en_US
+java.util.MissingResourceException: Can't find bundle for base name javax.xml.bind.Messages, locale en_US
+	at java.base/java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:2045)
+	at java.base/java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1683)
+	at java.base/java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1586)
+	at java.base/java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1549)
+	at java.base/java.util.ResourceBundle.getBundle(ResourceBundle.java:858)
+	at javax.xml.bind.Messages.format(Messages.java:71)
+	at javax.xml.bind.Messages.format(Messages.java:52)
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:278)
+	at javax.xml.bind.ContextFinder.find(ContextFinder.java:421)
+	at javax.xml.bind.JAXBContext.newInstance(JAXBContext.java:721)
+	at javax.xml.bind.JAXBContext.newInstance(JAXBContext.java:662)
+	at server.outputWorkers.CollectionSaver.save(CollectionSaver.java:31)
+	at server.Server.lambda$main$0(Server.java:74)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.lang.ClassCastException: javax.xml.bind.Messages cannot be cast to ResourceBundle
+	at java.base/java.util.ResourceBundle$Control.newBundle0(ResourceBundle.java:3211)
+	at java.base/java.util.ResourceBundle$Control.newBundle(ResourceBundle.java:3151)
+	at java.base/java.util.ResourceBundle.loadBundle(ResourceBundle.java:1984)
+	at java.base/java.util.ResourceBundle.findBundle(ResourceBundle.java:1770)
+	at java.base/java.util.ResourceBundle.findBundle(ResourceBundle.java:1722)
+	at java.base/java.util.ResourceBundle.findBundle(ResourceBundle.java:1722)
+	at java.base/java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1656)
+	... 12 common frames omitted
