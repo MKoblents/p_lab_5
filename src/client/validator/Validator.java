@@ -1,8 +1,7 @@
-package server.validator;
+package client.validator;
 
 import shared.enums.MeleeWeapon;
 import shared.exceptions.*;
-import server.manager.CollectionManager;
 import shared.models.Coordinates;
 import shared.models.SpaceMarine;
 
@@ -17,7 +16,7 @@ public class Validator {
      * Validates each SpaceMarine in the provided list.
      * @param spaceMarines list of objects to validate
      */
-    public void spaceMarinesValidate(List<SpaceMarine> spaceMarines){
+    public static void spaceMarinesValidate(List<SpaceMarine> spaceMarines){
         for (SpaceMarine spaceMarine: spaceMarines){
             spaceMarineValidate(spaceMarine);
         }
@@ -27,7 +26,7 @@ public class Validator {
      * Auto-fixes minor issues; logs errors for critical failures.
      * @param spaceMarine object to validate (skipped if null)
      */
-    public void spaceMarineValidate(SpaceMarine spaceMarine){
+    public static void spaceMarineValidate(SpaceMarine spaceMarine){
         if (spaceMarine == null){return;}
         try {
             nameValidate(spaceMarine);
@@ -46,7 +45,7 @@ public class Validator {
      * @param spaceMarine parent object containing Chapter
      * @throws NullPointerException if Chapter name/world is invalid
      */
-    public void chapterValidate(SpaceMarine spaceMarine) throws NullPointerException {
+    public static void chapterValidate(SpaceMarine spaceMarine) throws NullPointerException {
         if (spaceMarine.getChapter() == null){
             return;
         }
@@ -58,7 +57,7 @@ public class Validator {
      * @param spaceMarine parent object
      * @throws NullPointerException with message if name was fixed
      */
-    public void chapterNameValidate(SpaceMarine spaceMarine) throws NullPointerException{
+    public static void chapterNameValidate(SpaceMarine spaceMarine) throws NullPointerException{
         String name = spaceMarine.getChapter().getName();
         if (name == null || name.isEmpty()) {
             spaceMarine.getChapter().setName("Chapter"+ spaceMarine.getId());
@@ -70,7 +69,7 @@ public class Validator {
      * @param spaceMarine parent object
      * @throws NullPointerException with message if world was fixed
      */
-    public void chapterWorldValidate(SpaceMarine spaceMarine) throws NullPointerException{
+    public static void chapterWorldValidate(SpaceMarine spaceMarine) throws NullPointerException{
         String world = spaceMarine.getChapter().getWorld();
         if (world == null || world.isEmpty()) {
             spaceMarine.getChapter().setWorld("ChapteWorldr"+ spaceMarine.getId());
@@ -82,7 +81,7 @@ public class Validator {
      * @param spaceMarine object to validate
      * @throws UnavailableMeleeWeaponException if weapon was auto-set
      */
-    public void meleeWeaponValidate(SpaceMarine spaceMarine) throws  UnavailableMeleeWeaponException{
+    public static void meleeWeaponValidate(SpaceMarine spaceMarine) throws  UnavailableMeleeWeaponException{
         if (spaceMarine.getMeleeWeapon() == null){
             spaceMarine.setMeleeWeapon(MeleeWeapon.CHAIN_AXE);
             throw new UnavailableMeleeWeaponException(spaceMarine.getName(),MeleeWeapon.CHAIN_AXE);
@@ -92,7 +91,7 @@ public class Validator {
      * Ensures creation date is valid (non-null, positive epoch); auto-sets to now if invalid.
      * @param spaceMarine object to validate
      */
-    public void creationDateValidate(SpaceMarine spaceMarine){
+    public static void creationDateValidate(SpaceMarine spaceMarine){
         ZonedDateTime originalTime = spaceMarine.getCreationDate();
         if (originalTime == null || originalTime.toInstant().toEpochMilli() <=0){
             ZonedDateTime correctTime = ZonedDateTime.now();
@@ -104,7 +103,7 @@ public class Validator {
      * @param spaceMarine object to validate
      * @throws NullPointerException with message if name was fixed
      */
-    public void nameValidate(SpaceMarine spaceMarine) throws NullPointerException{
+    public static void nameValidate(SpaceMarine spaceMarine) throws NullPointerException{
         String name = spaceMarine.getName();
         if (name == null || name.isEmpty()){
             spaceMarine.setName("SpaceMarine"+spaceMarine.getId());
@@ -116,7 +115,7 @@ public class Validator {
      * @param spaceMarine parent object
      * @throws UnavailableCoordinateException if coordinates were corrected
      */
-    public void coordinatesValidate(SpaceMarine spaceMarine) throws UnavailableCoordinateException {
+    public static void coordinatesValidate(SpaceMarine spaceMarine) throws UnavailableCoordinateException {
         Coordinates coordinates = spaceMarine.getCoordinates();
         if (coordinates == null){
             spaceMarine.setCoordinates(new Coordinates());
@@ -130,7 +129,7 @@ public class Validator {
      * @param coordinates object to validate
      * @throws UnavailableCoordinateException if value was corrected
      */
-    public void xCoordinateValidate(Coordinates coordinates) throws UnavailableCoordinateException {
+    public static void xCoordinateValidate(Coordinates coordinates) throws UnavailableCoordinateException {
         if (coordinates.getX()<-617){
             coordinates.setX(0);
             throw new UnavailableCoordinateException("X must be bigger than -617, replaced with 0");
@@ -141,7 +140,7 @@ public class Validator {
      * @param coordinates object to validate
      * @throws UnavailableCoordinateException if value was corrected
      */
-    public void yCoordinateValidate(Coordinates coordinates) throws UnavailableCoordinateException {
+    public static void yCoordinateValidate(Coordinates coordinates) throws UnavailableCoordinateException {
         if (coordinates.getY()<-842){
             coordinates.setY(0);
             throw new UnavailableCoordinateException("Y must be bigger than -842, replaced with 0");
@@ -152,7 +151,7 @@ public class Validator {
      * @param spaceMarine object to validate
      * @throws UnavailableHealthException if value was corrected
      */
-    public void healthValidate(SpaceMarine spaceMarine) throws UnavailableHealthException{
+    public static void healthValidate(SpaceMarine spaceMarine) throws UnavailableHealthException{
         double health = spaceMarine.getHealth();
         if (health < 0.0){
             spaceMarine.setHealth(0.0);

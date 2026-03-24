@@ -16,9 +16,9 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/ShowCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/Command.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/manager/FileManager.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/validator/Validator.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/ShuffleCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/Server.java
-/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/validator/Validator.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/Client.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/utils/RequestsFactory.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/outputWorkers/CollectionSaver.java

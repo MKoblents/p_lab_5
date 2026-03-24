@@ -1,15 +1,12 @@
 package server.commands;
 import server.manager.CollectionManager;
-import server.validator.Validator;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 
 public class RemoveByIdCommand implements  Command{
     private String helpInformation = "remove_by_id id : удалить элемент из коллекции по его id";
     private CollectionManager collectionManager;
-    private Validator validator;
-    public RemoveByIdCommand(CollectionManager collectionManager, Validator validator){
-        this.validator = validator;
+    public RemoveByIdCommand(CollectionManager collectionManager){
         this.collectionManager = collectionManager;
     }
 

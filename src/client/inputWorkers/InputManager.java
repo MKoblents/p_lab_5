@@ -1,9 +1,7 @@
 package client.inputWorkers;
 
-import server.validator.Validator;
 import shared.enums.MeleeWeapon;
 import client.io.Reader;
-import server.manager.CollectionManager;
 import shared.models.SpaceMarine;
 
 import java.io.IOException;

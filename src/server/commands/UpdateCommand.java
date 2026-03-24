@@ -1,7 +1,6 @@
 package server.commands;
 
 import server.manager.CollectionManager;
-import server.validator.Validator;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
@@ -13,11 +12,9 @@ public class UpdateCommand implements Command {
             "update id {element} : обновить значение элемента коллекции, id которого равен заданному";
 
     private final CollectionManager collectionManager;
-    private final Validator validator;
 
-    public UpdateCommand(CollectionManager collectionManager, Validator validator) {
+    public UpdateCommand(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
-        this.validator = validator;
     }
 
     @Override
@@ -52,7 +49,6 @@ public class UpdateCommand implements Command {
             return new CommandResponse(false,
                     "Error: Invalid SpaceMarine data", null);
         }
-        validator.spaceMarineValidate(spaceMarineInput);
         spaceMarineInput.setId(id);
         collectionManager.update(id, spaceMarineInput);
         return new CommandResponse(true,

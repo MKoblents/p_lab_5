@@ -8,7 +8,6 @@ import server.network.ServerConnectionHandler;
 import server.outputWorkers.CollectionSaver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import server.validator.Validator;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -55,20 +54,18 @@ public class Server {
             Selector selector = Selector.open();
             serverChannel.register(selector, java.nio.channels.SelectionKey.OP_ACCEPT);
             Invoker invoker = new Invoker();
-            // TODO validation in client
-            Validator validator = new Validator();
-            invoker.registerCommand("add", new AddCommand(collectionManager,validator));
+            invoker.registerCommand("add", new AddCommand(collectionManager));
             invoker.registerCommand("clear", new ClearCommand(collectionManager));
             invoker.registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager));
             invoker.registerCommand("info", new InfoCommand(collectionManager));
-            invoker.registerCommand("insert_at", new InsertAtCommand(collectionManager, validator));
+            invoker.registerCommand("insert_at", new InsertAtCommand(collectionManager));
             invoker.registerCommand("min_by_melee_weapon", new MinByMeleeWeaponCommand(collectionManager));
-            invoker.registerCommand("remove_by_id", new RemoveByIdCommand(collectionManager, validator));
-            invoker.registerCommand("remove_greater", new RemoveGreaterCommand(collectionManager, validator));
+            invoker.registerCommand("remove_by_id", new RemoveByIdCommand(collectionManager));
+            invoker.registerCommand("remove_greater", new RemoveGreaterCommand(collectionManager));
             invoker.registerCommand("show", new ShowCommand(collectionManager));
             invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
             invoker.registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
-            invoker.registerCommand("update", new UpdateCommand(collectionManager, validator));
+            invoker.registerCommand("update", new UpdateCommand(collectionManager));
             ServerConnectionHandler connectionHandler =
                     new ServerConnectionHandler(selector, invoker);
             final String finalDataFile = dataFile;

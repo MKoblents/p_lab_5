@@ -1,14 +1,11 @@
 package client.handlers;
 
 import client.inputWorkers.InputManager;
-import shared.utils.XMLParser;
+import client.validator.Validator;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.enums.MeleeWeapon;
 import shared.models.SpaceMarine;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 
 public class RequestBuilder {
     private final InputManager inputManager;
@@ -31,15 +28,25 @@ public class RequestBuilder {
                 }
                 case "insert_at" -> {
                     int index = inputManager.getLastInt();
+                    if (index<0){
+                        System.err.println("Error: Valid ID required for remove_by_id");
+                        yield null;
+                    }
                     SpaceMarine marine = inputManager.getInputSpaceMarine();
+
                     if (marine == null){
                         System.err.println("Error: Failed to parse SpaceMarine from XML");
                         yield null;
                     }
+                    Validator.spaceMarineValidate(marine);
                     yield RequestsFactory.createIdMarine(commandName, index, marine);
                 }
                 case "update" -> {
                     long id = inputManager.getLastLong();
+                    if (id <= 0) {
+                        System.err.println("Error: Valid ID required for update");
+                        yield null;
+                    }
 //                    String xml = inputManager.getLastXmlString();
 //                    if (id <= 0 || xml == null || xml.isEmpty()) {
 //                        System.err.println("Error: ID and XML data required for " + commandName);
@@ -50,6 +57,7 @@ public class RequestBuilder {
                         System.err.println("Error: Failed to parse SpaceMarine from XML");
                         yield null;
                     }
+                    Validator.spaceMarineValidate(marine);
                     yield RequestsFactory.createTwoArgs(commandName, id, marine);
                 }
                 case "add", "remove_greater" -> {
@@ -58,6 +66,7 @@ public class RequestBuilder {
                         System.err.println("Error: Failed to parse SpaceMarine from XML");
                         yield null;
                     }
+                    Validator.spaceMarineValidate(marine);
                     yield RequestsFactory.withMarine(commandName, marine);
                 }
                 case "execute_script" -> {

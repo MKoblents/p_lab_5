@@ -279,3 +279,8 @@ java.lang.ClassCastException: class java.lang.Long cannot be cast to class java.
 2026-03-24 16:32:15 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:40140
 2026-03-24 16:32:16 INFO  server.Server - Shutdown hook: saving collection...
 2026-03-24 16:32:16 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 16:47:36 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 16:47:36 INFO  server.Server - Loaded 1 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 16:47:36 INFO  server.Server - Server started on port 12345
+2026-03-24 16:47:42 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:53594
+2026-03-24 16:48:01 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:53594

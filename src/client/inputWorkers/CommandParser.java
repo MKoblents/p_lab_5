@@ -127,7 +127,7 @@ public class CommandParser {
     /** @return last long argument (0 if unset) */
     public long getLongArg() {
         long l = longArg;
-        longArg = 0;
+        longArg = -1;
         return l; }
     /** @return last double argument (0.0 if unset) */
     public double getDoubleArg() { return doubleArg; }

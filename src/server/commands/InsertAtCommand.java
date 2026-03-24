@@ -1,7 +1,6 @@
 package server.commands;
 
 import server.manager.CollectionManager;
-import server.validator.Validator;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
@@ -11,10 +10,8 @@ import java.util.Map;
 public class InsertAtCommand implements Command{
     private CollectionManager collectionManager;
     private String helpInformation = "insert_at index {element} : добавить новый элемент в заданную позицию";
-    private Validator validator;
-    public InsertAtCommand(CollectionManager collectionManager, Validator validator){
+    public InsertAtCommand(CollectionManager collectionManager){
         this.collectionManager = collectionManager;
-        this.validator = validator;
     }
 
     @Override
@@ -45,7 +42,6 @@ public class InsertAtCommand implements Command{
             return new CommandResponse(false,
                     "Error: Invalid SpaceMarine data", null);
         }
-        validator.spaceMarineValidate(spaceMarineInput);
         collectionManager.addItem(index, spaceMarineInput);
         return new CommandResponse(true,
                 spaceMarineInput.toString(),

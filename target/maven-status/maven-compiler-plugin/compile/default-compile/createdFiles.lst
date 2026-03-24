@@ -8,7 +8,6 @@ shared/dto/CommandRequest.class
 server/commands/ClearCommand.class
 server/commands/RemoveByIdCommand.class
 server/commands/AddCommand.class
-server/validator/Validator.class
 shared/models/SpaceMarine.class
 client/handlers/RequestBuilder.class
 server/network/ServerConnectionHandler.class
@@ -16,6 +15,7 @@ server/manager/FileManager.class
 server/commands/UpdateCommand.class
 client/network/ConnectionManager.class
 shared/exceptions/CreationDataException.class
+client/validator/Validator.class
 server/commands/HelpCommand.class
 server/commands/InsertAtCommand.class
 client/Client.class
