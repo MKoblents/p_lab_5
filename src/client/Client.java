@@ -26,12 +26,12 @@ public class Client {
     private static final String DEFAULT_LOG_LEVEL = "INFO";
 
     public static void main(String[] args) {
-        // ✅ 1. Парсинг аргументов командной строки
         String host = DEFAULT_HOST;
         int port = DEFAULT_PORT;
         String logLevel = DEFAULT_LOG_LEVEL;
         setLogLevel(logLevel);
         logger.info("Client starting with log level: {}", logLevel);
+
         try {
             Reader reader = new ConsoleBufferedScanner();
             CommandParser parser = new CommandParser();

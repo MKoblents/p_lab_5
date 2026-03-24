@@ -1,5 +1,8 @@
 package server.outputWorkers;
 
+import client.network.ConnectionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import server.manager.CollectionManager;
 import javax.xml.bind.*;
 import java.io.File;
@@ -8,6 +11,7 @@ import java.io.File;
  * Handles serialization with formatted output for readability.
  */
 public class CollectionSaver {
+    private static final Logger logger = LoggerFactory.getLogger(CollectionSaver.class);
     /**
      * Serializes collection to XML file at specified path.
      *
@@ -20,13 +24,20 @@ public class CollectionSaver {
      * @implNote Requires {@code @XmlRootElement} on CollectionManager and nested classes
      */
     public void save(CollectionManager collectionManager, String filePath) throws Exception {
-        if (filePath == null){
-            filePath = "new.xml";
+        try {
+            if (filePath == null){
+                filePath = "new.xml";
+            }
+            JAXBContext context = JAXBContext.newInstance(CollectionManager.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(collectionManager, new File(filePath));
+            System.out.println("Collection saved to " + filePath);
+            logger.info("Collection saved successfully: {} elements", collectionManager.getSpaceMarines().size());
+        } catch (Exception e) {
+            logger.error("Failed to save collection to {}: {}", filePath, e.getMessage(), e);
+            throw e;
         }
-        JAXBContext context = JAXBContext.newInstance(CollectionManager.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.marshal(collectionManager, new File(filePath));
-        System.out.println("Collection saved to " + filePath);
-    }
+        }
+
 }

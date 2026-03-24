@@ -1,5 +1,8 @@
 package server.manager;
 
+import client.network.ConnectionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import server.commands.Command;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -11,6 +14,7 @@ import java.util.Map;
  * Maps command names to Command implementations.
  */
 public class Invoker {
+    private static final Logger logger = LoggerFactory.getLogger(Invoker.class);
     /** Registry of available commands by name. */
     private Map<String, Command> commandMap = new HashMap<>();
     /**
@@ -24,19 +28,22 @@ public class Invoker {
     /**
      * Executes the command registered under the given key.
      */
-    public CommandResponse runCommand(CommandRequest commandRequest){
-        String key = commandRequest.commandType();
-        if (key == null) {
-            System.err.println("Unknown command: " + key);
-            System.err.println("Available commands: " + commandMap.keySet());
-            return new CommandResponse(false, null,null, null);//TODO
+    public CommandResponse runCommand(CommandRequest request) {
+        String commandType = request.commandType();
+        logger.debug("Executing command: {}", commandType);
+        Command command = commandMap.get(commandType);
+        if (command == null) {
+            logger.warn("Unknown command requested: {}", commandType);
+            return new CommandResponse(false, null, "Unknown command: " + commandType, request.requestId());
         }
-        if (!commandMap.containsKey(key)){
-            System.err.println("You entered wrong command key");
-            System.err.println("Available commands: " + commandMap.keySet());
-            return new CommandResponse(false, null,null, null);//TODO
+        try {
+            CommandResponse response = command.execute(request);
+            logger.debug("Command {} completed: success={}", commandType, response.success());
+            return response;
+        } catch (Exception e) {
+            logger.error("Error executing command {}: {}", commandType, e.getMessage(), e);
+            return new CommandResponse(false, null, "Internal error", request.requestId());
         }
-        return commandMap.get(key).execute(commandRequest);
     }
     /**
      * Returns the command registry.
