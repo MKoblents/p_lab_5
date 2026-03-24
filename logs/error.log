@@ -1,0 +1,14 @@
+2026-03-24 19:22:37.655 [main] ERROR [] server.Server - IO error with client /127.0.0.1:43658: invalid stream header: 00000091
+java.io.StreamCorruptedException: invalid stream header: 00000091
+	at java.base/java.io.ObjectInputStream.readStreamHeader(ObjectInputStream.java:958)
+	at java.base/java.io.ObjectInputStream.<init>(ObjectInputStream.java:392)
+	at server.Server.handleClient(Server.java:105)
+	at server.Server.main(Server.java:89)
+2026-03-24 19:22:37.657 [main] ERROR [] client.network.ConnectionManager - Server disconnected while reading response length
+2026-03-24 19:25:29.755 [main] ERROR [] server.Server - IO error with client /127.0.0.1:52780: invalid stream header: 00000091
+java.io.StreamCorruptedException: invalid stream header: 00000091
+	at java.base/java.io.ObjectInputStream.readStreamHeader(ObjectInputStream.java:958)
+	at java.base/java.io.ObjectInputStream.<init>(ObjectInputStream.java:392)
+	at server.Server.handleClient(Server.java:105)
+	at server.Server.main(Server.java:89)
+2026-03-24 19:25:29.757 [main] ERROR [] client.network.ConnectionManager - Server disconnected while reading response length

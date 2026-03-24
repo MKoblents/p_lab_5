@@ -61,20 +61,16 @@ public class ConnectionManager {
         String requestId = request.requestId();
         String commandType = request.commandType();
         logger.debug("Sending request: command={}, requestId={}", commandType, requestId);
-        logger.trace("Serializing request for command: {}", commandType);
         byte[] data = SerializationUtil.serialize(request);
         ByteBuffer buffer = ByteBuffer.allocate(4 + data.length);
         buffer.putInt(data.length);
         buffer.put(data);
         buffer.flip();
         logger.trace("Writing {} bytes to channel", buffer.remaining());
-        int totalWritten = 0;
         while (buffer.hasRemaining()) {
-            int written = socketChannel.write(buffer);
-            totalWritten += written;
-            logger.trace("Written {} bytes (total: {})", written, totalWritten);
+            socketChannel.write(buffer);
         }
-        logger.debug("Request sent successfully: {} bytes written, requestId={}", totalWritten, requestId);
+        logger.debug("Request sent successfully: requestId={}", requestId);
     }
     public CommandResponse readResponse() {
         if (!connected || socketChannel == null) {

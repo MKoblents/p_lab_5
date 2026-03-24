@@ -4,19 +4,24 @@ import server.commands.*;
 import server.manager.CollectionManager;
 import server.manager.FileManager;
 import server.manager.Invoker;
-import server.network.ServerConnectionHandler;
 import server.outputWorkers.CollectionSaver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.Selector;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.ByteBuffer;
+
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
+import shared.utils.SerializationUtil;
 
 /**
  * Server application entry point.
- * Single-threaded NIO server with graceful shutdown and extended logging.
+ * Single-threaded blocking I/O server with graceful shutdown.
  */
 public class Server {
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
@@ -43,21 +48,12 @@ public class Server {
         logger.info("=== SpaceMarine Server Starting ===");
         logger.info("Configuration: port={}, dataFile={}", port, dataFile);
         try {
-            FileManager fileManager = new FileManager();
             CollectionManager collectionManager = new CollectionManager();
             CollectionSaver collectionSaver = new CollectionSaver();
             logger.info("Loading collection from: {}", dataFile);
             collectionManager.loadFromFile(dataFile);
             logger.info("Loaded {} elements from {}",
                     collectionManager.getSpaceMarines().size(), dataFile);
-            logger.debug("Opening server socket channel on port {}", port);
-            ServerSocketChannel serverChannel = ServerSocketChannel.open();
-            serverChannel.configureBlocking(false);
-            serverChannel.bind(new InetSocketAddress(port));
-            logger.debug("Server socket bound to port {}", port);
-            Selector selector = Selector.open();
-            serverChannel.register(selector, java.nio.channels.SelectionKey.OP_ACCEPT);
-            logger.debug("Server channel registered with selector for OP_ACCEPT");
             Invoker invoker = new Invoker();
             logger.debug("Registering commands with Invoker");
             invoker.registerCommand("add", new AddCommand(collectionManager));
@@ -72,7 +68,6 @@ public class Server {
             invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
             invoker.registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
             invoker.registerCommand("update", new UpdateCommand(collectionManager));
-            ServerConnectionHandler connectionHandler = new ServerConnectionHandler(selector, invoker);
             final String finalDataFile = dataFile;
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 logger.info("=== Shutdown hook triggered ===");
@@ -88,19 +83,14 @@ public class Server {
             logger.info("=== SpaceMarine Server Started ===");
             logger.info("Server listening on port {}", port);
             System.out.println("Server running. Press Ctrl+C to stop.");
-            logger.debug("Entering main event loop");
-            while (!Thread.currentThread().isInterrupted()) {
-                selector.select();
-                for (var key : selector.selectedKeys()) {
-                    if (key.isAcceptable()) {
-                        logger.trace("Processing OP_ACCEPT event");
-                        connectionHandler.handleAccept(key);
-                    } else if (key.isReadable()) {
-                        logger.trace("Processing OP_READ event");
-                        connectionHandler.handleRead(key);
-                    }
+            try (ServerSocket serverSocket = new ServerSocket(port)) {
+                logger.debug("Server socket created and bound to port {}", port);
+                while (!Thread.currentThread().isInterrupted()) {
+                    logger.debug("Waiting for client connection...");
+                    Socket clientSocket = serverSocket.accept();
+                    logger.info("Client connected: {}", clientSocket.getRemoteSocketAddress());
+                    handleClient(clientSocket, invoker);
                 }
-                selector.selectedKeys().clear();
             }
             logger.info("Server main loop exited");
         } catch (IOException e) {
@@ -111,6 +101,73 @@ public class Server {
             logger.error("Unexpected error in server: {}", e.getMessage(), e);
             System.err.println("Unexpected error: " + e.getMessage());
             System.exit(1);
+        }
+    }
+    private static void handleClient(Socket clientSocket, Invoker invoker) {
+        try (
+                java.io.InputStream in = clientSocket.getInputStream();
+                java.io.OutputStream out = clientSocket.getOutputStream()
+        ) {
+            logger.debug("Streams opened for client: {}", clientSocket.getRemoteSocketAddress());
+            while (!clientSocket.isClosed()) {
+                try {
+                    byte[] lengthBytes = new byte[4];
+                    int bytesRead = 0;
+                    while (bytesRead < 4) {
+                        int read = in.read(lengthBytes, bytesRead, 4 - bytesRead);
+                        if (read == -1) {
+                            return;
+                        }
+                        bytesRead += read;
+                    }
+                    int length = java.nio.ByteBuffer.wrap(lengthBytes).getInt();
+                    logger.trace("Request length: {} bytes", length);
+                    byte[] data = new byte[length];
+                    int dataRead = 0;
+                    while (dataRead < length) {
+                        int read = in.read(data, dataRead, length - dataRead);
+                        if (read == -1) {
+                            logger.warn("Unexpected disconnect while reading request");
+                            return;
+                        }
+                        dataRead += read;
+                    }
+                    CommandRequest request = (CommandRequest) SerializationUtil.deserialize(data);
+                    logger.debug("Received request: command={}, requestId={}",
+                            request.commandType(), request.requestId());
+                    CommandResponse response = invoker.runCommand(request);
+                    logger.debug("Command executed: success={}", response.success());
+                    byte[] responseData = SerializationUtil.serialize(response);
+                    ByteBuffer responseBuffer = ByteBuffer.allocate(4 + responseData.length);
+                    responseBuffer.putInt(responseData.length);
+                    responseBuffer.put(responseData);
+                    out.write(responseBuffer.array());
+                    out.flush();
+                    logger.info("Response sent for requestId: {}", response.requestId());
+                } catch (java.io.EOFException e) {
+                    logger.info("Client disconnected normally: {}", clientSocket.getRemoteSocketAddress());
+                    break;
+                } catch (IOException e) {
+                    logger.error("IO error reading from client: {}", e.getMessage());
+                    break;
+                } catch (ClassNotFoundException e) {
+                    logger.error("Deserialization error: {}", e.getMessage(), e);
+                } catch (Exception e) {
+                    logger.error("Unexpected error processing request: {}", e.getMessage(), e);
+                }
+            }
+
+        } catch (IOException e) {
+            logger.error("IO error with client {}: {}",
+                    clientSocket.getRemoteSocketAddress(), e.getMessage(), e);
+        } finally {
+            try {
+                logger.debug("Closing connection to client: {}", clientSocket.getRemoteSocketAddress());
+                clientSocket.close();
+                logger.info("Client disconnected: {}", clientSocket.getRemoteSocketAddress());
+            } catch (IOException e) {
+                logger.error("Error closing client socket: {}", e.getMessage());
+            }
         }
     }
     private static void setLogLevel(String level) {

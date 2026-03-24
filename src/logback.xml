@@ -1,61 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <!-- ============================================= -->
-    <!-- Консольный аппендер (вывод в терминал)        -->
-    <!-- ============================================= -->
+    <!-- Консольный аппендер -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <!--
-                %d{HH:mm:ss.SSS} - время
-                [%thread] - поток
-                %-5level - уровень (INFO, DEBUG, ERROR)
-                [%X{requestId}] - уникальный ID запроса из MDC (будет пустым, если не установлен)
-                %logger{20} - имя логгера (сокращённое)
-                %msg%n - сообщение + новая строка
-            -->
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%X{requestId}] %logger{20} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- ============================================= -->
-    <!-- Файловый аппендер (запись в файл)             -->
-    <!-- ============================================= -->
+    <!-- Файловый аппендер -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <!-- Файл логов будет создан в папке logs/ -->
         <file>logs/app.log</file>
-
-        <!-- true = добавлять в конец, false = перезаписывать -->
         <append>true</append>
-
         <encoder>
-            <!-- В файле более подробный формат с датой -->
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{requestId}] %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- ============================================= -->
-    <!-- Файловый аппендер для ошибок (отдельно)       -->
-    <!-- ============================================= -->
+    <!-- Файловый аппендер для ошибок -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/error.log</file>
         <append>true</append>
-
-        <!-- Фильтр: только ERROR уровни -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{requestId}] %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-
-    <!-- ============================================= -->
-    <!-- Настройки для твоих пакетов                   -->
-    <!-- ============================================= -->
 
     <!-- Логирование сервера -->
     <logger name="server" level="DEBUG" additivity="false">
@@ -77,13 +51,7 @@
         <appender-ref ref="FILE" />
     </logger>
 
-    <!-- ============================================= -->
-    <!-- Корневой уровень логирования                  -->
-    <!-- ============================================= -->
-    <!--
-        По умолчанию INFO
-        Можно переопределить через --log-level в main()
-    -->
+    <!-- Корневой уровень логирования -->
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
