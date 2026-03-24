@@ -284,3 +284,48 @@ java.lang.ClassCastException: class java.lang.Long cannot be cast to class java.
 2026-03-24 16:47:36 INFO  server.Server - Server started on port 12345
 2026-03-24 16:47:42 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:53594
 2026-03-24 16:48:01 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:53594
+2026-03-24 16:57:48 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:33750
+2026-03-24 16:58:19 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:46330
+2026-03-24 16:58:39 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:46330
+2026-03-24 16:58:41 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:33750
+2026-03-24 16:58:42 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 16:58:42 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 16:59:04 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 16:59:04 INFO  server.Server - Loaded 3 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 16:59:04 INFO  server.Server - Server started on port 12345
+2026-03-24 16:59:08 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:48686
+2026-03-24 16:59:10 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:48686
+2026-03-24 17:00:46 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:46868
+2026-03-24 17:00:50 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 17:00:50 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:00:54 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 17:00:54 INFO  server.Server - Loaded 3 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:00:54 INFO  server.Server - Server started on port 12345
+2026-03-24 17:01:15 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 17:01:15 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:17:25 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 17:17:25 INFO  server.Server - Loaded 3 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:17:25 INFO  server.Server - Server started on port 12345
+2026-03-24 17:17:27 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:48098
+2026-03-24 17:17:27 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:48098
+2026-03-24 17:19:56 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 17:19:56 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:20:03 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 17:20:03 INFO  server.Server - Loaded 3 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:20:03 INFO  server.Server - Server started on port 12345
+2026-03-24 17:20:05 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:56126
+2026-03-24 17:22:54 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 17:22:54 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:23:00 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 17:23:00 INFO  server.Server - Loaded 3 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:23:01 INFO  server.Server - Server started on port 12345
+2026-03-24 17:23:06 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:57022
+2026-03-24 17:29:14 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 17:29:14 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:29:21 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 17:29:21 INFO  server.Server - Loaded 3 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 17:29:21 INFO  server.Server - Server started on port 12345
+2026-03-24 17:29:28 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:57206
+2026-03-24 17:29:42 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:57206
+2026-03-24 17:29:44 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 17:29:44 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml

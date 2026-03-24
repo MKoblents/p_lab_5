@@ -16,14 +16,25 @@ public class ConnectionManager {
     public boolean connect(String host, int port) {
         try {
             socketChannel = SocketChannel.open();
-            socketChannel.connect(new InetSocketAddress(host, port));
-            socketChannel.configureBlocking(true);
-            connected = true;
+            socketChannel.configureBlocking(false);
+            InetSocketAddress address = new InetSocketAddress(host, port);
+            boolean connectionStarted = socketChannel.connect(address);
+            if (!connectionStarted) {
+                int timeout = 5000;
+                long start = System.currentTimeMillis();
+                while (!socketChannel.finishConnect()) {
+                    if (System.currentTimeMillis() - start > timeout) {
+                        throw new IOException("Connection timeout");
+                    }
+                    Thread.sleep(100);
+                }
+            }
+            this.connected = true;
             System.out.println("Connected to " + host + ":" + port);
             return true;
-        } catch (IOException e) {
+        } catch (IOException |InterruptedException e) {
             System.err.println("Connection failed: " + e.getMessage());
-            connected = false;
+            this.connected = false;
             return false;
         }
     }
@@ -61,7 +72,6 @@ public class ConnectionManager {
             return (CommandResponse) SerializationUtil.deserialize(data);
         } catch (Exception e) {
             System.err.println("Error reading response: " + e.getMessage());
-            connected = false;
             return null;
         }
     }
