@@ -1,0 +1,41 @@
+package shared.models;
+
+import java.io.Serializable;
+
+public class Chapter implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private String name; //Поле не может быть null, Строка не может быть пустой
+    private String parentLegion;
+    private String world; //Поле не может быть null
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setParentLegion(String parentLegion) {
+        this.parentLegion = parentLegion;
+    }
+
+    public void setWorld(String world) {
+        this.world = world;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getParentLegion() {
+        return parentLegion;
+    }
+
+    public String getWorld() {
+        return world;
+    }
+
+    @Override
+    public String toString() {
+        return "\n      Name: "+ this.name+
+                "\n     ParenLegion: "+ this.name+
+                "\n     World: "+this.world;
+    }
+}
