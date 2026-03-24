@@ -90,7 +90,9 @@ public class CommandParser {
             return;
         }
         if (commandName.equals("filter_less_than_melee_weapon")){
+
             enumArg = parts[1];
+            System.out.println(enumArg+" in command parser");
             return;
         }
         xmlArg = listToString(parts, 2, parts.length);
@@ -105,8 +107,16 @@ public class CommandParser {
      */
     public <T extends Enum<T>> T getEnumValue(Class<T> enumType) {
         if (enumArg == null) return null;
+        System.out.println("1");
+        T[] constants = enumType.getEnumConstants();
         try {
-            System.out.println("1");
+            int index = Integer.parseInt(enumArg);
+            if (index >= 1 && index <= constants.length) {
+                return constants[index - 1];
+            }
+        } catch (NumberFormatException e) {
+        }
+        try {
             return Enum.valueOf(enumType, enumArg.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;

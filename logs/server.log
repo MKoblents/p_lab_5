@@ -172,3 +172,65 @@ java.lang.ClassCastException: class java.lang.Long cannot be cast to class java.
 2026-03-24 15:20:46 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:51524
 2026-03-24 15:20:48 INFO  server.Server - Shutdown hook: saving collection...
 2026-03-24 15:20:48 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:38:17 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 15:38:17 INFO  server.Server - Loaded 0 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:38:17 INFO  server.Server - Server started on port 12345
+2026-03-24 15:38:22 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:33238
+2026-03-24 15:39:18 ERROR s.network.ServerConnectionHandler - Unexpected error
+java.lang.ClassCastException: class java.lang.Long cannot be cast to class java.lang.Integer (java.lang.Long and java.lang.Integer are in module java.base of loader 'bootstrap')
+	at server.commands.InsertAtCommand.execute(InsertAtCommand.java:38)
+	at server.manager.Invoker.runCommand(Invoker.java:39)
+	at server.network.ServerConnectionHandler.handleRead(ServerConnectionHandler.java:94)
+	at server.Server.main(Server.java:94)
+2026-03-24 15:42:29 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 15:42:29 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:42:50 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 15:42:50 INFO  server.Server - Loaded 0 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:42:50 INFO  server.Server - Server started on port 12345
+2026-03-24 15:42:56 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:59068
+2026-03-24 15:43:17 ERROR s.network.ServerConnectionHandler - Unexpected error
+java.lang.ClassCastException: class java.lang.Long cannot be cast to class java.lang.Integer (java.lang.Long and java.lang.Integer are in module java.base of loader 'bootstrap')
+	at server.commands.InsertAtCommand.execute(InsertAtCommand.java:38)
+	at server.manager.Invoker.runCommand(Invoker.java:39)
+	at server.network.ServerConnectionHandler.handleRead(ServerConnectionHandler.java:94)
+	at server.Server.main(Server.java:94)
+2026-03-24 15:45:12 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:59068
+2026-03-24 15:45:16 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:37198
+2026-03-24 15:48:18 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:37198
+2026-03-24 15:48:20 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 15:48:20 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:48:29 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 15:48:29 INFO  server.Server - Loaded 0 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:48:29 INFO  server.Server - Server started on port 12345
+2026-03-24 15:48:31 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:52900
+2026-03-24 15:48:39 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:52900
+2026-03-24 15:48:42 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:51732
+2026-03-24 15:50:12 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:51732
+2026-03-24 15:50:14 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 15:50:14 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:50:20 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 15:50:20 INFO  server.Server - Loaded 0 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:50:20 INFO  server.Server - Server started on port 12345
+2026-03-24 15:50:23 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:44986
+2026-03-24 15:57:34 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:44986
+2026-03-24 15:57:35 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 15:57:36 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:57:50 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 15:57:50 INFO  server.Server - Loaded 0 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 15:57:50 INFO  server.Server - Server started on port 12345
+2026-03-24 15:57:54 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:55576
+2026-03-24 16:02:06 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:55576
+2026-03-24 16:02:08 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 16:02:08 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 16:02:14 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 16:02:14 INFO  server.Server - Loaded 0 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 16:02:14 INFO  server.Server - Server started on port 12345
+2026-03-24 16:02:19 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:58732
+2026-03-24 16:04:38 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:58732
+2026-03-24 16:04:41 INFO  server.Server - Shutdown hook: saving collection...
+2026-03-24 16:04:41 INFO  server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 16:04:49 INFO  server.Server - === SpaceMarine Server ===
+2026-03-24 16:04:49 INFO  server.Server - Loaded 0 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-24 16:04:49 INFO  server.Server - Server started on port 12345
+2026-03-24 16:04:52 INFO  s.network.ServerConnectionHandler - Client connected: /127.0.0.1:48250
+2026-03-24 16:05:28 INFO  s.network.ServerConnectionHandler - Client disconnected: /127.0.0.1:48250

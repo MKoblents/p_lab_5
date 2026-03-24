@@ -31,18 +31,14 @@ public class InsertAtCommand implements Command{
         }
         @SuppressWarnings("unchecked")
         Map<String, Object> args = (Map<String, Object>) data;
-        if (!args.containsKey("id") || !args.containsKey("marine")) {
+        if (!args.containsKey("index") || !args.containsKey("marine")) {
             return new CommandResponse(false,
                     "Error: Insert at requires both 'id' and 'marine' arguments", null);
         }
-        Integer id = (Integer) args.get("id");
-        if (id == null || id <= 0) {
+        int index = (int) args.get("index");
+        if (index < 0) {
             return new CommandResponse(false,
                     "Error: Valid ID required for insert at", null);
-        }
-        if (!collectionManager.isIdInCollection(id)) {
-            return new CommandResponse(false,
-                    "Error: No element found with ID " + id, null);
         }
         SpaceMarine spaceMarineInput = (SpaceMarine) args.get("marine");
         if (spaceMarineInput == null) {
@@ -50,10 +46,10 @@ public class InsertAtCommand implements Command{
                     "Error: Invalid SpaceMarine data", null);
         }
         validator.spaceMarineValidate(spaceMarineInput);
-        collectionManager.addItem(id, spaceMarineInput);
+        collectionManager.addItem(index, spaceMarineInput);
         return new CommandResponse(true,
                 spaceMarineInput.toString(),
-                "SpaceMarine with ID " + id + " inserted successfully"
+                "SpaceMarine with ID " + index + " inserted successfully"
                 );
 
     }

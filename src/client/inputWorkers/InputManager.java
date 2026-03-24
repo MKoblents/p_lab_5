@@ -84,6 +84,7 @@ public class InputManager {
      */
     public MeleeWeapon getInputMeleeWeapon() {
         System.out.println("2");
+        System.out.println(commandParser.getEnumValue(MeleeWeapon.class));
         return commandParser.getEnumValue(MeleeWeapon.class);
     }
     /**

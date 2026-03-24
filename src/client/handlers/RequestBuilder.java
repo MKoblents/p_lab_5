@@ -29,7 +29,16 @@ public class RequestBuilder {
                     }
                     yield RequestsFactory.withLongArg(commandName, id);
                 }
-                case "update", "insert_at" -> {
+                case "insert_at" -> {
+                    int index = inputManager.getLastInt();
+                    SpaceMarine marine = inputManager.getInputSpaceMarine();
+                    if (marine == null){
+                        System.err.println("Error: Failed to parse SpaceMarine from XML");
+                        yield null;
+                    }
+                    yield RequestsFactory.createIdMarine(commandName, index, marine);
+                }
+                case "update" -> {
                     long id = inputManager.getLastLong();
 //                    String xml = inputManager.getLastXmlString();
 //                    if (id <= 0 || xml == null || xml.isEmpty()) {
@@ -44,11 +53,6 @@ public class RequestBuilder {
                     yield RequestsFactory.createTwoArgs(commandName, id, marine);
                 }
                 case "add", "remove_greater" -> {
-//                    String xml = inputManager.getLastXmlString();
-//                    if (xml == null || xml.isEmpty()) {
-//                        System.err.println("Error: XML data required for " + commandName);
-//                        yield null;
-//                    }
                     SpaceMarine marine = inputManager.getInputSpaceMarine();
                     if (marine == null) {
                         System.err.println("Error: Failed to parse SpaceMarine from XML");

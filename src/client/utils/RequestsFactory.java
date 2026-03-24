@@ -26,4 +26,8 @@ public class RequestsFactory {
         System.out.println("4");
         return new CommandRequest(commandName, meleeWeapon, null);
     }
+    public static CommandRequest createIdMarine(String commandName, int index, SpaceMarine spaceMarine){
+        Map<String, Object> args = Map.of("index", index, "marine", spaceMarine);
+        return new CommandRequest(commandName, args, null);
+    }
 }
