@@ -65,6 +65,7 @@ public class RequestBuilder {
                     yield RequestsFactory.withStringArg(commandName, path);
                 }
                 case "filter_less_than_melee_weapon" -> {
+                    System.out.println("3");
                     MeleeWeapon weapon = inputManager.getInputMeleeWeapon();
                     if (weapon == null) {
                         System.err.println("Error: Valid MeleeWeapon required");

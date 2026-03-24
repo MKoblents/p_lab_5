@@ -106,6 +106,7 @@ public class CommandParser {
     public <T extends Enum<T>> T getEnumValue(Class<T> enumType) {
         if (enumArg == null) return null;
         try {
+            System.out.println("1");
             return Enum.valueOf(enumType, enumArg.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;

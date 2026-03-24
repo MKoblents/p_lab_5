@@ -23,6 +23,7 @@ public class RequestsFactory {
         return new CommandRequest(commandName, args, null);
     }
     public static CommandRequest withMeleeWeapon(String commandName, MeleeWeapon meleeWeapon){
+        System.out.println("4");
         return new CommandRequest(commandName, meleeWeapon, null);
     }
 }

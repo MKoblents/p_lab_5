@@ -20,13 +20,6 @@ public class Client {
         System.out.println("=== SpaceMarine Client ===");
         String host = "localhost";
         int port = 12345;
-//        for (int i = 0; i < args.length; i++) {
-//            if (args[i].equals("--host") && i + 1 < args.length) {
-//                host = args[++i];
-//            } else if (args[i].equals("--port") && i + 1 < args.length) {
-//                port = Integer.parseInt(args[++i]);
-//            }
-//        }
         try {
             Reader reader = new ConsoleBufferedScanner();
             CommandParser parser = new CommandParser();
@@ -43,28 +36,27 @@ public class Client {
                 return;
             }
             System.out.println("Connected! Type 'help' for commands, 'exit' to quit.");
-            Scanner scanner = new Scanner(System.in);
+            ConsoleBufferedScanner scanner = new ConsoleBufferedScanner();
             while (true) {
                 System.out.print("> ");
-                String line = scanner.nextLine().trim();
-                if (line.isEmpty()) {
+                String commandKey = inputManager.parseCommand();
+                if (commandKey.isEmpty()) {
                     continue;
                 }
-                String command = line.split("\\s+")[0].toLowerCase();
-                if (command.equals("exit")) {
+                if (commandKey.equals("exit")) {
                     break;
                 }
-                if (command.equals("execute_script")) {
-                    String[] parts = line.split("\\s+", 2);
-                    if (parts.length < 2) {
+                if (commandKey.equals("execute_script")) {
+                    String path = inputManager.getLastPath();
+                    if (path == null) {
                         System.err.println("Error: Script path required");
                         continue;
                     }
-                    scriptRunner.executeScript(parts[1]);
+                    scriptRunner.executeScript(path);
                     continue;
                 }
                 try {
-                    CommandRequest request = requestBuilder.buildRequest(line);
+                    CommandRequest request = requestBuilder.buildRequest(commandKey);
                     if (request == null) {
                         continue;
                     }

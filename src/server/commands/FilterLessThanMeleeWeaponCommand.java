@@ -7,6 +7,7 @@ import client.inputWorkers.InputManager;
 import server.manager.CollectionManager;
 import shared.models.SpaceMarine;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class FilterLessThanMeleeWeaponCommand implements Command{
@@ -25,11 +26,8 @@ public class FilterLessThanMeleeWeaponCommand implements Command{
         MeleeWeapon meleeWeapon = (MeleeWeapon) commandRequest.getData();
 //        System.out.println(meleeWeapon);
         List<SpaceMarine> spaceMarinesList = collectionManager.filterLessThanMeleeWeapon(meleeWeapon);
-        String result = "";
-        for (SpaceMarine spaceMarine : spaceMarinesList) {
-            result = result + spaceMarine + "\n";
-        }
-        return new CommandResponse(true, result, null);
+        spaceMarinesList.sort(Comparator.comparing(SpaceMarine::getName));
+        return new CommandResponse(true, spaceMarinesList, null);
 
 
     }
