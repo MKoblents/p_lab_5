@@ -57,6 +57,7 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
     @XmlElement
     private Chapter chapter; //Поле может быть null
     public SpaceMarine(){
+        this.id = generateId(this);
     }
     /**
      * Compares this Space Marine to another by health value.
@@ -82,12 +83,20 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
      * @param name the Space Marine name (must not be null/empty)
      * @param coordinates the position coordinates (must not be null)
      * @param meleeWeapon the melee weapon type (must not be null)
-     * @see CollectionManager#getNewSpaceMarine(String, Coordinates, MeleeWeapon)
      */
     public SpaceMarine(String name, Coordinates coordinates, MeleeWeapon meleeWeapon){
         this.name = name;
         this.coordinates = coordinates;
         this.meleeWeapon=meleeWeapon;
+        this.id = generateId(this);
+    }
+    /**
+     * Generates unique ID for new elements.
+     * @return identityHashCode
+     */
+    public long generateId(SpaceMarine spaceMarine) {
+        spaceMarine.setId(System.identityHashCode(spaceMarine));
+        return System.identityHashCode(spaceMarine);
     }
 
     public void setCreationDate(ZonedDateTime creationDate) {

@@ -40,7 +40,7 @@ public class Client {
             while (true) {
                 System.out.print("> ");
                 String commandKey = inputManager.parseCommand();
-                if (commandKey.isEmpty()) {
+                if (commandKey == null || commandKey.isEmpty()) {
                     continue;
                 }
                 if (commandKey.equals("exit")) {

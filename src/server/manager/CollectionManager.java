@@ -44,27 +44,6 @@ public class CollectionManager {
                 .orElse(null);
     }
     /**
-     * Creates a new empty SpaceMarine with auto-generated ID.
-     * @return initialized SpaceMarine instance
-     */
-    public SpaceMarine getNewSpaceMarine(){
-       SpaceMarine spaceMarine = new SpaceMarine();
-       generateId(spaceMarine);
-       return spaceMarine;
-    }
-    /**
-     * Creates a new SpaceMarine with required fields and auto-ID.
-     * @param name the name
-     * @param coordinates the coordinates
-     * @param meleeWeapon the melee weapon type
-     * @return initialized SpaceMarine instance
-     */
-    public SpaceMarine getNewSpaceMarine(String name, Coordinates coordinates, MeleeWeapon meleeWeapon){
-        SpaceMarine spaceMarine = new SpaceMarine(name, coordinates, meleeWeapon);
-        generateId(spaceMarine);
-        return spaceMarine;
-    }
-    /**
      * Adds a SpaceMarine to the end of the collection.
      * @param spaceMarine the element to add
      * @return true if added successfully
@@ -148,14 +127,6 @@ public class CollectionManager {
      */
     public void clear(){
         spaceMarines.clear();
-    }
-    /**
-     * Generates unique ID for new elements.
-     * @return identityHashCode
-     */
-    public long generateId(SpaceMarine spaceMarine) {
-        spaceMarine.setId(System.identityHashCode(spaceMarine));
-        return System.identityHashCode(spaceMarine);
     }
     /**
      * Randomly shuffles the collection order.
