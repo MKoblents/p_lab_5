@@ -66,9 +66,7 @@ public class Server {
                     new Thread(() -> ClientHandler.handleClient(clientSocket, invoker)).start();
                 }
             }
-
             logger.info("Server main loop exited");
-
         } catch (IOException e) {
             logger.error("Fatal IO error in server: {}", e.getMessage(), e);
             System.err.println("Server error: " + e.getMessage());

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <spaceMarines>
     <spaceMarine>
-        <id>1258084361</id>
+        <id>928294079</id>
         <name>SpaceMarine1283928880</name>
         <coordinates>
             <x>0</x>
@@ -12,7 +12,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>30578394</id>
+        <id>1534745514</id>
         <name>SpaceMarine1283928880</name>
         <coordinates>
             <x>0</x>
@@ -23,7 +23,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>2088371948</id>
+        <id>2003496028</id>
         <name>SpaceMarine200006406</name>
         <coordinates>
             <x>0</x>
@@ -34,7 +34,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1976870338</id>
+        <id>30578394</id>
         <name>SpaceMarine1834188994</name>
         <coordinates>
             <x>0</x>
@@ -45,7 +45,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1434234664</id>
+        <id>2088371948</id>
         <name>SpaceMarine13648335</name>
         <coordinates>
             <x>0</x>
@@ -56,7 +56,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1083021083</id>
+        <id>1976870338</id>
         <name>SpaceMarine247944893</name>
         <coordinates>
             <x>0</x>
@@ -67,7 +67,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1819063424</id>
+        <id>1434234664</id>
         <name>SpaceMarine2028555727</name>
         <coordinates>
             <x>0</x>
@@ -78,7 +78,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1011279482</id>
+        <id>1083021083</id>
         <name>qwr</name>
         <coordinates>
             <x>3</x>
@@ -89,7 +89,7 @@
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>208866101</id>
+        <id>1819063424</id>
         <name>SpaceMarine522553046</name>
         <coordinates>
             <x>0</x>

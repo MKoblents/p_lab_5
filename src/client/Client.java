@@ -1,5 +1,6 @@
 package client;
 
+import client.config.ClientConfig;
 import client.handlers.RequestBuilder;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.CommandParser;
@@ -19,23 +20,11 @@ import java.util.Scanner;
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
-    private static final String DEFAULT_HOST = "localhost";
-    private static final int DEFAULT_PORT = 12345;
-    private static final String DEFAULT_LOG_LEVEL = "INFO";
-
     public static void main(String[] args) {
-        String host = DEFAULT_HOST;
-        int port = DEFAULT_PORT;
-        String logLevel = DEFAULT_LOG_LEVEL;
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("--host") && i + 1 < args.length) {
-                host = args[++i];
-            } else if (args[i].equals("--port") && i + 1 < args.length) {
-                port = Integer.parseInt(args[++i]);
-            } else if (args[i].equals("--log-level") && i + 1 < args.length) {
-                logLevel = args[++i].toUpperCase();
-            }
-        }
+        ClientConfig clientConfig = ClientConfig.parse(args);
+        String host = clientConfig.getHost();
+        int port = clientConfig.getPort();
+        String logLevel = clientConfig.getLogLevel();
         setLogLevel(logLevel);
         logger.info("Client starting with log level: {}", logLevel);
 

@@ -28,6 +28,7 @@ shared/exceptions/UnavailableMeleeWeaponException.class
 server/network/ClientHandler.class
 server/commands/ExitCommand.class
 client/scripts/ScriptRunner.class
+client/config/ClientConfig.class
 server/commands/Command.class
 shared/dto/CommandResponse.class
 shared/utils/SerializationUtil.class
