@@ -1,6 +1,7 @@
 package server;
 
 import server.commands.*;
+import server.config.ServerConfig;
 import server.manager.CollectionManager;
 import server.manager.Invoker;
 import server.outputWorkers.CollectionSaver;
@@ -19,25 +20,12 @@ import shared.utils.SerializationUtil;
 
 public class Server {
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
-    private static final int DEFAULT_PORT = 12345;
-    private static final String DEFAULT_DATA_FILE = "collection.xml";
-    private static final String DEFAULT_LOG_LEVEL = "INFO";
     private static volatile boolean running = true;
     public static void main(String[] args) {
-        int port = DEFAULT_PORT;
-        String dataFile = System.getenv("PLAB5") != null
-                ? System.getenv("PLAB5")
-                : DEFAULT_DATA_FILE;
-        String logLevel = DEFAULT_LOG_LEVEL;
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("--port") && i + 1 < args.length) {
-                port = Integer.parseInt(args[++i]);
-            } else if (args[i].equals("--file") && i + 1 < args.length) {
-                dataFile = args[++i];
-            } else if (args[i].equals("--log-level") && i + 1 < args.length) {
-                logLevel = args[++i].toUpperCase();
-            }
-        }
+        ServerConfig config = ServerConfig.parse(args);
+        int port = config.getPort();
+        String dataFile = config.getFile();
+        String logLevel = config.getLogLevel();
         setLogLevel(logLevel);
         logger.info("Log level set to: {}", logLevel);
         logger.info("=== SpaceMarine Server Starting ===");

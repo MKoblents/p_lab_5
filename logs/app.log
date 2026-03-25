@@ -576,3 +576,23 @@ java.net.BindException: Address already in use
 2026-03-25 11:35:42.169 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
 2026-03-25 11:35:42.229 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=8404857e
 2026-03-25 11:35:42.229 [main] DEBUG [] client.Client - Received response for requestId: 8404857e, success: true
+2026-03-25 11:59:35.377 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 11:59:35.379 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 11:59:35.379 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:59:35.380 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:59:35.384 [main] INFO  [] server.Server - Loaded 8 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:59:35.386 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 11:59:35.386 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 11:59:35.386 [main] INFO  [] server.Server - Console reader started
+2026-03-25 11:59:35.395 [Thread-1] INFO  [] server.Server - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-03-25 11:59:46.290 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 11:59:46.302 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 11:59:46.306 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 11:59:46.307 [main] INFO  [] server.Server - Client connected: /127.0.0.1:44166
+2026-03-25 11:59:46.307 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 11:59:58.136 [main] INFO  [] server.Server - Response sent for requestId: 8acac96f
+2026-03-25 12:00:02.839 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-25 12:00:02.839 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-25 12:00:02.901 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 8 elements
+2026-03-25 12:00:02.901 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 12:00:02.901 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===

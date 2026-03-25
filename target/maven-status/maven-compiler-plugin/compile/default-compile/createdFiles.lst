@@ -35,6 +35,7 @@ client/scripts/ScriptRunner$ExecutionResult.class
 client/io/FileBufferedReader.class
 server/commands/FilterLessThanMeleeWeaponCommand.class
 server/commands/ShowCommand.class
+server/config/ServerConfig.class
 client/inputWorkers/InputManager.class
 shared/utils/XMLParser.class
 shared/exceptions/WrongIdException.class

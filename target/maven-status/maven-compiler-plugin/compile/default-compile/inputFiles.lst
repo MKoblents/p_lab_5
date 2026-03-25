@@ -5,6 +5,7 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/exceptions/UnavailableHealthException.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/inputWorkers/CommandParser.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/SumOfHealthCommand.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/config/ServerConfig.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/handlers/RequestBuilder.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/enums/AstartesCategory.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/Main.java
