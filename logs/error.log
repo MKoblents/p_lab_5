@@ -60,3 +60,13 @@ java.net.BindException: Address already in use
 	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:274)
 	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:167)
 	at server.Server.main(Server.java:88)
+2026-03-25 12:16:40.548 [main] ERROR [] server.Server - Fatal IO error in server: Address already in use
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:567)
+	at java.base/sun.nio.ch.Net.bind(Net.java:556)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:648)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:274)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:167)
+	at server.Server.main(Server.java:88)

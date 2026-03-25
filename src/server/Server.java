@@ -87,11 +87,15 @@ public class Server {
             logger.info("Console reader started");
             try (ServerSocket serverSocket = new ServerSocket(port)) {
                 logger.debug("Server socket created and bound to port {}", port);
+//                while (running) {
+//                    logger.debug("Waiting for client connection...");
+//                    Socket clientSocket = serverSocket.accept();
+//                    logger.info("Client connected: {}", clientSocket.getRemoteSocketAddress());
+//                    handleClient(clientSocket, invoker);
+//                }
                 while (running) {
-                    logger.debug("Waiting for client connection...");
                     Socket clientSocket = serverSocket.accept();
-                    logger.info("Client connected: {}", clientSocket.getRemoteSocketAddress());
-                    handleClient(clientSocket, invoker);
+                    new Thread(() -> handleClient(clientSocket, invoker)).start();
                 }
             }
 
