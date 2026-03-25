@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
-    <!-- ✅ Условное определение КОНСОЛИ -->
+    <property name="LOG_CONSOLE" value="${LOG_CONSOLE:-true}" />
+    <property name="LOG_FILE" value="${LOG_FILE:-true}" />
+    <property name="LOG_LEVEL" value="${LOG_LEVEL:-INFO}" />
     <if condition='property("LOG_CONSOLE").contains("true")'>
         <then>
             <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -11,12 +12,9 @@
             </appender>
         </then>
         <else>
-            <!-- Пустой аппендер-заглушка -->
             <appender name="CONSOLE" class="ch.qos.logback.core.helpers.NOPAppender" />
         </else>
     </if>
-
-    <!-- ✅ Условное определение ФАЙЛА -->
     <if condition='property("LOG_FILE").contains("true")'>
         <then>
             <appender name="FILE" class="ch.qos.logback.core.FileAppender">
@@ -41,28 +39,21 @@
             </appender>
         </then>
         <else>
-            <!-- Пустые аппендеры-заглушки -->
             <appender name="FILE" class="ch.qos.logback.core.helpers.NOPAppender" />
             <appender name="ERROR_FILE" class="ch.qos.logback.core.helpers.NOPAppender" />
         </else>
     </if>
-
-    <!-- ✅ Логирование сервера (всегда ссылается на аппендеры) -->
-    <logger name="server" level="${LOG_LEVEL:-INFO}" additivity="false">
+    <logger name="server" level="${LOG_LEVEL}" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="ERROR_FILE" />
     </logger>
-
-    <!-- ✅ Логирование клиента -->
-    <logger name="client" level="${LOG_LEVEL:-INFO}" additivity="false">
+    <logger name="client" level="${LOG_LEVEL}" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="ERROR_FILE" />
     </logger>
-
-    <!-- ✅ Корневой уровень -->
-    <root level="${LOG_LEVEL:-INFO}">
+    <root level="${LOG_LEVEL}">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="ERROR_FILE" />

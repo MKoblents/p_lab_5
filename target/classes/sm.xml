@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <spaceMarines>
     <spaceMarine>
-        <id>1785507932</id>
+        <id>1985836631</id>
         <name>SpaceMarine1283928880</name>
         <coordinates>
             <x>0</x>
@@ -12,7 +12,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1279271200</id>
+        <id>1578009262</id>
         <name>SpaceMarine1283928880</name>
         <coordinates>
             <x>0</x>
@@ -23,7 +23,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>52908367</id>
+        <id>1735507635</id>
         <name>SpaceMarine200006406</name>
         <coordinates>
             <x>0</x>
@@ -34,7 +34,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1527953000</id>
+        <id>1362728240</id>
         <name>SpaceMarine1834188994</name>
         <coordinates>
             <x>0</x>
@@ -45,7 +45,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>18242360</id>
+        <id>1798219673</id>
         <name>SpaceMarine13648335</name>
         <coordinates>
             <x>0</x>
@@ -56,7 +56,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1276261147</id>
+        <id>1092572064</id>
         <name>SpaceMarine247944893</name>
         <coordinates>
             <x>0</x>
@@ -67,7 +67,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1971764991</id>
+        <id>728885526</id>
         <name>SpaceMarine2028555727</name>
         <coordinates>
             <x>0</x>
@@ -76,5 +76,16 @@
         <creationDate/>
         <health>0.0</health>
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>587153993</id>
+        <name>qwr</name>
+        <coordinates>
+            <x>3</x>
+            <y>2</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
     </spaceMarine>
 </spaceMarines>

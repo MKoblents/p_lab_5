@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property name="LOG_CONSOLE" value="${LOG_CONSOLE:-true}" />
+    <property name="LOG_FILE" value="${LOG_FILE:-true}" />
+    <property name="LOG_LEVEL" value="${LOG_LEVEL:-INFO}" />
     <if condition='property("LOG_CONSOLE").contains("true")'>
         <then>
             <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -40,17 +43,17 @@
             <appender name="ERROR_FILE" class="ch.qos.logback.core.helpers.NOPAppender" />
         </else>
     </if>
-    <logger name="server" level="${LOG_LEVEL:-INFO}" additivity="false">
+    <logger name="server" level="${LOG_LEVEL}" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="ERROR_FILE" />
     </logger>
-    <logger name="client" level="${LOG_LEVEL:-INFO}" additivity="false">
+    <logger name="client" level="${LOG_LEVEL}" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="ERROR_FILE" />
     </logger>
-    <root level="${LOG_LEVEL:-INFO}">
+    <root level="${LOG_LEVEL}">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="ERROR_FILE" />
