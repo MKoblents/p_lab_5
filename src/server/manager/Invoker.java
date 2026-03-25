@@ -3,7 +3,7 @@ package server.manager;
 import client.network.ConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import server.commands.Command;
+import server.commands.*;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 
@@ -44,6 +44,22 @@ public class Invoker {
             logger.error("Error executing command {}: {}", commandType, e.getMessage(), e);
             return new CommandResponse(false, null, "Internal error", request.requestId());
         }
+    }
+    public Invoker(CollectionManager collectionManager){
+        registerCommand("add", new AddCommand(collectionManager));
+        registerCommand("clear", new ClearCommand(collectionManager));
+        registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager));
+        registerCommand("info", new InfoCommand(collectionManager));
+        registerCommand("insert_at", new InsertAtCommand(collectionManager));
+        registerCommand("min_by_melee_weapon", new MinByMeleeWeaponCommand(collectionManager));
+        registerCommand("remove_by_id", new RemoveByIdCommand(collectionManager));
+        registerCommand("remove_greater", new RemoveGreaterCommand(collectionManager));
+        registerCommand("show", new ShowCommand(collectionManager));
+        registerCommand("shuffle", new ShuffleCommand(collectionManager));
+        registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
+        registerCommand("update", new UpdateCommand(collectionManager));
+        registerCommand("help", new HelpCommand(this));
+        logger.debug("Registering commands with Invoker");
     }
     /**
      * Returns the command registry.
