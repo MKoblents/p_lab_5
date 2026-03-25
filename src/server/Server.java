@@ -1,6 +1,7 @@
 package server;
 
 import server.commands.*;
+import server.config.LoggingConfigurator;
 import server.config.ServerConfig;
 import server.manager.CollectionManager;
 import server.manager.Invoker;
@@ -26,7 +27,7 @@ public class Server {
         int port = config.getPort();
         String dataFile = config.getFile();
         String logLevel = config.getLogLevel();
-        setLogLevel(logLevel);
+        LoggingConfigurator.configure(logLevel);
         logger.info("Log level set to: {}", logLevel);
         logger.info("=== SpaceMarine Server Starting ===");
         logger.info("Configuration: port={}, dataFile={}", port, dataFile);
@@ -212,15 +213,5 @@ public class Server {
             }
         }
     }
-    private static void setLogLevel(String level) {
-        try {
-            ch.qos.logback.classic.Logger root =
-                    (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-            root.setLevel(ch.qos.logback.classic.Level.toLevel(level));
-            logger.debug("Logback root level set to: {}", level);
-        } catch (Exception e) {
-            System.err.println("Warning: Could not set log level to " + level + ", using default");
-            logger.warn("Could not set log level to {}, using default", level);
-        }
-    }
+
 }
