@@ -1,44 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%X{requestId}] %logger{20} - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/app.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{requestId}] %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <appender name="ERROR_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/error.log</file>
-        <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>ERROR</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{requestId}] %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <logger name="server" level="DEBUG" additivity="false">
+
+    <!-- ✅ Условное определение КОНСОЛИ -->
+    <if condition='property("LOG_CONSOLE").contains("true")'>
+        <then>
+            <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+                <encoder>
+                    <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level [%X{requestId}] %logger{20} - %msg%n</pattern>
+                </encoder>
+            </appender>
+        </then>
+        <else>
+            <!-- Пустой аппендер-заглушка -->
+            <appender name="CONSOLE" class="ch.qos.logback.core.helpers.NOPAppender" />
+        </else>
+    </if>
+
+    <!-- ✅ Условное определение ФАЙЛА -->
+    <if condition='property("LOG_FILE").contains("true")'>
+        <then>
+            <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+                <file>logs/app.log</file>
+                <append>true</append>
+                <encoder>
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{requestId}] %logger{36} - %msg%n</pattern>
+                </encoder>
+            </appender>
+
+            <appender name="ERROR_FILE" class="ch.qos.logback.core.FileAppender">
+                <file>logs/error.log</file>
+                <append>true</append>
+                <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                    <level>ERROR</level>
+                    <onMatch>ACCEPT</onMatch>
+                    <onMismatch>DENY</onMismatch>
+                </filter>
+                <encoder>
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{requestId}] %logger{36} - %msg%n</pattern>
+                </encoder>
+            </appender>
+        </then>
+        <else>
+            <!-- Пустые аппендеры-заглушки -->
+            <appender name="FILE" class="ch.qos.logback.core.helpers.NOPAppender" />
+            <appender name="ERROR_FILE" class="ch.qos.logback.core.helpers.NOPAppender" />
+        </else>
+    </if>
+
+    <!-- ✅ Логирование сервера (всегда ссылается на аппендеры) -->
+    <logger name="server" level="${LOG_LEVEL:-INFO}" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="ERROR_FILE" />
     </logger>
-    <logger name="client" level="DEBUG" additivity="false">
+
+    <!-- ✅ Логирование клиента -->
+    <logger name="client" level="${LOG_LEVEL:-INFO}" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="ERROR_FILE" />
     </logger>
-    <logger name="shared" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
-    </logger>
-    <root level="INFO">
+
+    <!-- ✅ Корневой уровень -->
+    <root level="${LOG_LEVEL:-INFO}">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
         <appender-ref ref="ERROR_FILE" />

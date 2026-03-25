@@ -2,32 +2,27 @@ package server;
 
 import server.commands.*;
 import server.manager.CollectionManager;
-import server.manager.FileManager;
 import server.manager.Invoker;
 import server.outputWorkers.CollectionSaver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.Scanner;
 
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.utils.SerializationUtil;
 
-/**
- * Server application entry point.
- * Single-threaded blocking I/O server with graceful shutdown.
- */
 public class Server {
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
     private static final int DEFAULT_PORT = 12345;
     private static final String DEFAULT_DATA_FILE = "collection.xml";
     private static final String DEFAULT_LOG_LEVEL = "INFO";
+    private static volatile boolean running = true;
     public static void main(String[] args) {
         int port = DEFAULT_PORT;
         String dataFile = System.getenv("PLAB5") != null
@@ -83,17 +78,25 @@ public class Server {
             }));
             logger.info("=== SpaceMarine Server Started ===");
             logger.info("Server listening on port {}", port);
-            System.out.println("Server running. Press Ctrl+C to stop.");
+            System.out.println("Server running. Press Ctrl+C to stop or type 'save'/'exit'.");
+            Thread consoleThread = new Thread(() -> {
+                handleConsoleInput(collectionManager, collectionSaver, finalDataFile);
+            });
+            consoleThread.setDaemon(true);
+            consoleThread.start();
+            logger.info("Console reader started");
             try (ServerSocket serverSocket = new ServerSocket(port)) {
                 logger.debug("Server socket created and bound to port {}", port);
-                while (!Thread.currentThread().isInterrupted()) {
+                while (running) {
                     logger.debug("Waiting for client connection...");
                     Socket clientSocket = serverSocket.accept();
                     logger.info("Client connected: {}", clientSocket.getRemoteSocketAddress());
                     handleClient(clientSocket, invoker);
                 }
             }
+
             logger.info("Server main loop exited");
+
         } catch (IOException e) {
             logger.error("Fatal IO error in server: {}", e.getMessage(), e);
             System.err.println("Server error: " + e.getMessage());
@@ -102,6 +105,57 @@ public class Server {
             logger.error("Unexpected error in server: {}", e.getMessage(), e);
             System.err.println("Unexpected error: " + e.getMessage());
             System.exit(1);
+        }
+    }
+    private static void handleConsoleInput(CollectionManager collectionManager,
+                                           CollectionSaver collectionSaver,
+                                           String dataFile) {
+        Scanner scanner = new Scanner(System.in);
+        logger.info("Console reader ready. Type 'save', 'exit', or 'help'.");
+        while (running) {
+            try {
+                if (scanner.hasNextLine()) {
+                    String command = scanner.nextLine().trim().toLowerCase();
+
+                    switch (command) {
+                        case "save":
+                            logger.info("Manual save triggered from console");
+                            try {
+                                collectionSaver.save(collectionManager, dataFile);
+                                logger.info("Collection saved to {}", dataFile);
+                                System.out.println("✓ Collection saved successfully!");
+                            } catch (Exception e) {
+                                logger.error("Save failed: {}", e.getMessage(), e);
+                                System.err.println("✗ Save failed: " + e.getMessage());
+                            }
+                            break;
+
+                        case "exit":
+                            logger.info("Exit command received from console");
+                            System.out.println("Shutting down server...");
+                            running = false;
+                            System.exit(0);
+                            break;
+                        case "help":
+                            System.out.println("Available server commands:");
+                            System.out.println("  save - Save collection to file");
+                            System.out.println("  exit - Stop server");
+                            System.out.println("  help - Show this help");
+                            break;
+                        case "":
+                            break;
+                        default:
+                            logger.warn("Unknown server command: {}", command);
+                            System.err.println("Unknown command: " + command + ". Type 'help' for list.");
+                    }
+                }
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (Exception e) {
+                logger.error("Error reading console: {}", e.getMessage());
+            }
         }
     }
     private static void handleClient(Socket clientSocket, Invoker invoker) {
@@ -157,7 +211,6 @@ public class Server {
                     logger.error("Unexpected error processing request: {}", e.getMessage(), e);
                 }
             }
-
         } catch (IOException e) {
             logger.error("IO error with client {}: {}",
                     clientSocket.getRemoteSocketAddress(), e.getMessage(), e);

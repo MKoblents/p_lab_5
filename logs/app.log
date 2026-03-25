@@ -192,3 +192,316 @@ java.io.IOException: Connection timeout
 2026-03-25 02:08:14.753 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
 2026-03-25 02:08:14.837 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=83ed4d01
 2026-03-25 02:08:14.838 [main] DEBUG [] client.Client - Received response for requestId: 83ed4d01, success: true
+2026-03-25 09:48:33.160 [main] DEBUG [] server.Server - Logback root level set to: INFO
+2026-03-25 09:48:33.163 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 09:48:33.164 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 09:48:33.164 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 09:48:33.166 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 09:48:33.179 [main] INFO  [] server.Server - Loaded 6 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 09:48:33.180 [main] DEBUG [] server.Server - Registering commands with Invoker
+2026-03-25 09:48:33.186 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 09:48:33.187 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 09:48:33.200 [main] DEBUG [] server.Server - Server socket created and bound to port 12345
+2026-03-25 09:48:33.201 [main] DEBUG [] server.Server - Waiting for client connection...
+2026-03-25 09:48:47.139 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 09:48:47.142 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 09:48:47.154 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 09:48:47.155 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 09:48:47.168 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 09:48:47.168 [main] INFO  [] server.Server - Client connected: /127.0.0.1:60312
+2026-03-25 09:48:47.169 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 09:48:47.170 [main] DEBUG [] server.Server - Streams opened for client: /127.0.0.1:60312
+2026-03-25 09:48:50.331 [main] DEBUG [] client.Client - User entered command: 'help'
+2026-03-25 09:48:50.357 [main] DEBUG [] client.Client - Sending request: help with requestId: 97ecdb0f
+2026-03-25 09:48:50.357 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=help, requestId=97ecdb0f
+2026-03-25 09:48:50.371 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=97ecdb0f
+2026-03-25 09:48:50.371 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 09:48:50.371 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 09:48:50.404 [main] DEBUG [] server.Server - Received request: command=help, requestId=97ecdb0f
+2026-03-25 09:48:50.405 [main] DEBUG [] server.manager.Invoker - Executing command: help
+2026-03-25 09:48:50.405 [main] WARN  [] server.manager.Invoker - Unknown command requested: help
+2026-03-25 09:48:50.406 [main] DEBUG [] server.Server - Command executed: success=false
+2026-03-25 09:48:50.413 [main] INFO  [] server.Server - Response sent for requestId: 97ecdb0f
+2026-03-25 09:48:50.441 [main] DEBUG [] client.network.ConnectionManager - Response received: success=false, requestId=97ecdb0f
+2026-03-25 09:48:50.441 [main] DEBUG [] client.Client - Received response for requestId: 97ecdb0f, success: false
+2026-03-25 09:49:18.972 [main] DEBUG [] server.Server - Closing connection to client: /127.0.0.1:60312
+2026-03-25 09:49:18.972 [main] INFO  [] server.Server - Client disconnected: /127.0.0.1:60312
+2026-03-25 09:49:18.973 [main] DEBUG [] server.Server - Waiting for client connection...
+2026-03-25 09:49:26.811 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-25 09:49:26.812 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-25 09:49:26.937 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 6 elements
+2026-03-25 09:49:26.937 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 09:49:26.937 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-25 09:53:25.447 [main] DEBUG [] server.Server - Logback root level set to: INFO
+2026-03-25 09:53:25.449 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 09:53:25.449 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 09:53:25.449 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 09:53:25.450 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 09:53:25.455 [main] INFO  [] server.Server - Loaded 6 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 09:53:25.455 [main] DEBUG [] server.Server - Registering commands with Invoker
+2026-03-25 09:53:25.458 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 09:53:25.458 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 09:53:25.464 [main] DEBUG [] server.Server - Server socket created and bound to port 12345
+2026-03-25 09:53:25.464 [main] DEBUG [] server.Server - Waiting for client connection...
+2026-03-25 09:53:28.080 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 09:53:28.081 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 09:53:28.088 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 09:53:28.089 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 09:53:28.095 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 09:53:28.096 [main] INFO  [] server.Server - Client connected: /127.0.0.1:54312
+2026-03-25 09:53:28.096 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 09:53:28.096 [main] DEBUG [] server.Server - Streams opened for client: /127.0.0.1:54312
+2026-03-25 09:53:30.091 [main] DEBUG [] client.Client - User entered command: 'help'
+2026-03-25 09:53:30.104 [main] DEBUG [] client.Client - Sending request: help with requestId: 8b4cfb7f
+2026-03-25 09:53:30.104 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=help, requestId=8b4cfb7f
+2026-03-25 09:53:30.109 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=8b4cfb7f
+2026-03-25 09:53:30.109 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 09:53:30.109 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 09:53:30.121 [main] DEBUG [] server.Server - Received request: command=help, requestId=8b4cfb7f
+2026-03-25 09:53:30.121 [main] DEBUG [] server.manager.Invoker - Executing command: help
+2026-03-25 09:53:30.122 [main] DEBUG [] server.manager.Invoker - Command help completed: success=true
+2026-03-25 09:53:30.122 [main] DEBUG [] server.Server - Command executed: success=true
+2026-03-25 09:53:30.125 [main] INFO  [] server.Server - Response sent for requestId: 8b4cfb7f
+2026-03-25 09:53:30.138 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=8b4cfb7f
+2026-03-25 09:53:30.138 [main] DEBUG [] client.Client - Received response for requestId: 8b4cfb7f, success: true
+2026-03-25 09:55:17.565 [main] DEBUG [] server.Server - Closing connection to client: /127.0.0.1:54312
+2026-03-25 09:55:17.566 [main] INFO  [] server.Server - Client disconnected: /127.0.0.1:54312
+2026-03-25 09:55:17.566 [main] DEBUG [] server.Server - Waiting for client connection...
+2026-03-25 09:55:33.661 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-25 09:55:33.661 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-25 09:55:33.728 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 6 elements
+2026-03-25 09:55:33.728 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 09:55:33.728 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-25 10:01:34.092 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 10:01:34.094 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 10:01:34.104 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 10:01:34.104 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 10:01:34.109 [main] ERROR [] client.network.ConnectionManager - IO error while connecting to localhost:12345: Connection refused
+java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:684)
+	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:946)
+	at client.network.ConnectionManager.connect(ConnectionManager.java:30)
+	at client.Client.main(Client.java:55)
+2026-03-25 10:01:34.111 [main] ERROR [] client.Client - Failed to connect to server at localhost:12345
+2026-03-25 10:05:47.338 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 10:05:47.339 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 10:05:47.353 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 10:05:47.354 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 10:05:47.359 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 10:05:47.359 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 10:05:56.392 [main] DEBUG [] client.Client - User entered command: 'help'
+2026-03-25 10:05:56.406 [main] DEBUG [] client.Client - Sending request: help with requestId: d1ed03b7
+2026-03-25 10:05:56.406 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=help, requestId=d1ed03b7
+2026-03-25 10:05:56.412 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=d1ed03b7
+2026-03-25 10:05:56.412 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 10:05:56.412 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 10:05:56.472 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=d1ed03b7
+2026-03-25 10:05:56.473 [main] DEBUG [] client.Client - Received response for requestId: d1ed03b7, success: true
+2026-03-25 10:09:54.117 [main] DEBUG [] client.Client - User entered command: 'ф�add'
+2026-03-25 10:09:54.118 [main] WARN  [] client.Client - Failed to build request for command: ф�add
+2026-03-25 10:09:57.693 [main] DEBUG [] client.Client - User entered command: 'add'
+2026-03-25 10:10:03.617 [main] DEBUG [] client.Client - Sending request: add with requestId: 7c24c7ea
+2026-03-25 10:10:03.617 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=add, requestId=7c24c7ea
+2026-03-25 10:10:03.621 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=7c24c7ea
+2026-03-25 10:10:03.621 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 10:10:03.621 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 10:10:03.650 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=7c24c7ea
+2026-03-25 10:10:03.651 [main] DEBUG [] client.Client - Received response for requestId: 7c24c7ea, success: true
+2026-03-25 10:10:07.852 [main] DEBUG [] client.Client - User entered command: 'show'
+2026-03-25 10:10:07.853 [main] DEBUG [] client.Client - Sending request: show with requestId: b236deba
+2026-03-25 10:10:07.853 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=show, requestId=b236deba
+2026-03-25 10:10:07.853 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=b236deba
+2026-03-25 10:10:07.853 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 10:10:07.853 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 10:10:07.882 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=b236deba
+2026-03-25 10:10:07.883 [main] DEBUG [] client.Client - Received response for requestId: b236deba, success: true
+2026-03-25 10:11:59.536 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 10:11:59.537 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 10:11:59.544 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 10:11:59.545 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 10:11:59.553 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 10:11:59.554 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 10:12:06.367 [main] DEBUG [] client.Client - User entered command: 'info'
+2026-03-25 10:12:06.379 [main] DEBUG [] client.Client - Sending request: info with requestId: 485bcc08
+2026-03-25 10:12:06.380 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=info, requestId=485bcc08
+2026-03-25 10:12:06.385 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=485bcc08
+2026-03-25 10:12:06.385 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 10:12:06.385 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 10:12:06.454 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=485bcc08
+2026-03-25 10:12:06.455 [main] DEBUG [] client.Client - Received response for requestId: 485bcc08, success: true
+2026-03-25 10:19:37.090 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 10:19:37.093 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 10:19:37.116 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 10:19:37.117 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 10:19:37.129 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 10:19:37.130 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 10:20:05.650 [main] DEBUG [] client.Client - User entered command: 'help'
+2026-03-25 10:20:05.670 [main] DEBUG [] client.Client - Sending request: help with requestId: 9efd2648
+2026-03-25 10:20:05.671 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=help, requestId=9efd2648
+2026-03-25 10:20:05.682 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=9efd2648
+2026-03-25 10:20:05.682 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 10:20:05.682 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 10:20:05.754 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=9efd2648
+2026-03-25 10:20:05.755 [main] DEBUG [] client.Client - Received response for requestId: 9efd2648, success: true
+2026-03-25 10:32:46.518 [main] DEBUG [] server.Server - Logback root level set to: INFO
+2026-03-25 10:32:46.522 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 10:32:46.526 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 10:32:46.527 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:32:46.530 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:32:46.544 [main] INFO  [] server.Server - Loaded 6 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:32:46.546 [main] DEBUG [] server.Server - Registering commands with Invoker
+2026-03-25 10:32:46.552 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 10:32:46.553 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 10:32:46.564 [main] ERROR [] server.Server - Fatal IO error in server: Address already in use
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:567)
+	at java.base/sun.nio.ch.Net.bind(Net.java:556)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:648)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:274)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:167)
+	at server.Server.main(Server.java:87)
+2026-03-25 10:32:46.570 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-25 10:32:46.570 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-25 10:32:46.703 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 6 elements
+2026-03-25 10:32:46.703 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:32:46.703 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-25 10:33:48.987 [main] DEBUG [] server.Server - Logback root level set to: INFO
+2026-03-25 10:33:48.990 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 10:33:48.991 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 10:33:48.991 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:33:48.993 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:33:49.004 [main] INFO  [] server.Server - Loaded 6 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:33:49.005 [main] DEBUG [] server.Server - Registering commands with Invoker
+2026-03-25 10:33:49.012 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 10:33:49.013 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 10:33:49.025 [main] DEBUG [] server.Server - Server socket created and bound to port 12345
+2026-03-25 10:33:49.025 [main] DEBUG [] server.Server - Waiting for client connection...
+2026-03-25 10:34:03.395 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 10:34:03.398 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 10:34:03.421 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 10:34:03.423 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 10:34:03.435 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 10:34:03.436 [main] INFO  [] server.Server - Client connected: /127.0.0.1:48386
+2026-03-25 10:34:03.437 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 10:34:03.437 [main] DEBUG [] server.Server - Streams opened for client: /127.0.0.1:48386
+2026-03-25 10:34:06.950 [main] DEBUG [] client.Client - User entered command: 'save'
+2026-03-25 10:34:06.951 [main] WARN  [] client.Client - Failed to build request for command: save
+2026-03-25 10:38:49.083 [main] DEBUG [] server.Server - Closing connection to client: /127.0.0.1:48386
+2026-03-25 10:38:49.084 [main] INFO  [] server.Server - Client disconnected: /127.0.0.1:48386
+2026-03-25 10:38:49.084 [main] DEBUG [] server.Server - Waiting for client connection...
+2026-03-25 10:38:49.084 [main] INFO  [] server.Server - Manual save triggered
+2026-03-25 10:38:49.214 [main] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 6 elements
+2026-03-25 10:38:49.215 [main] INFO  [] server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:38:50.937 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-25 10:38:50.937 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-25 10:38:50.946 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 6 elements
+2026-03-25 10:38:50.946 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:38:50.946 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-25 10:38:58.653 [main] DEBUG [] server.Server - Logback root level set to: INFO
+2026-03-25 10:38:58.655 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 10:38:58.655 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 10:38:58.655 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:38:58.657 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:38:58.663 [main] INFO  [] server.Server - Loaded 6 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:38:58.664 [main] DEBUG [] server.Server - Registering commands with Invoker
+2026-03-25 10:38:58.668 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 10:38:58.669 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 10:38:58.670 [main] INFO  [] server.Server - Console reader started
+2026-03-25 10:38:58.678 [main] DEBUG [] server.Server - Server socket created and bound to port 12345
+2026-03-25 10:38:58.678 [main] DEBUG [] server.Server - Waiting for client connection...
+2026-03-25 10:38:58.682 [Thread-1] INFO  [] server.Server - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-03-25 10:39:05.704 [Thread-1] WARN  [] server.Server - Unknown server command: ыфsave
+2026-03-25 10:39:11.594 [Thread-1] INFO  [] server.Server - Manual save triggered from console
+2026-03-25 10:39:11.710 [Thread-1] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 6 elements
+2026-03-25 10:39:11.711 [Thread-1] INFO  [] server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:39:23.065 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 10:39:23.069 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 10:39:23.087 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 10:39:23.090 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 10:39:23.105 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 10:39:23.105 [main] INFO  [] server.Server - Client connected: /127.0.0.1:52258
+2026-03-25 10:39:23.106 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 10:39:23.106 [main] DEBUG [] server.Server - Streams opened for client: /127.0.0.1:52258
+2026-03-25 10:39:26.481 [main] DEBUG [] client.Client - User entered command: 'show'
+2026-03-25 10:39:26.504 [main] DEBUG [] client.Client - Sending request: show with requestId: e4936e5a
+2026-03-25 10:39:26.504 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=show, requestId=e4936e5a
+2026-03-25 10:39:26.516 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=e4936e5a
+2026-03-25 10:39:26.516 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 10:39:26.516 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 10:39:26.546 [main] DEBUG [] server.Server - Received request: command=show, requestId=e4936e5a
+2026-03-25 10:39:26.546 [main] DEBUG [] server.manager.Invoker - Executing command: show
+2026-03-25 10:39:26.550 [main] DEBUG [] server.manager.Invoker - Command show completed: success=true
+2026-03-25 10:39:26.551 [main] DEBUG [] server.Server - Command executed: success=true
+2026-03-25 10:39:26.563 [main] INFO  [] server.Server - Response sent for requestId: e4936e5a
+2026-03-25 10:39:26.596 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=e4936e5a
+2026-03-25 10:39:26.597 [main] DEBUG [] client.Client - Received response for requestId: e4936e5a, success: true
+2026-03-25 10:39:31.307 [main] DEBUG [] client.Client - User entered command: 'add'
+2026-03-25 10:39:33.250 [main] DEBUG [] client.Client - Sending request: add with requestId: 3af78fc4
+2026-03-25 10:39:33.250 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=add, requestId=3af78fc4
+2026-03-25 10:39:33.255 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=3af78fc4
+2026-03-25 10:39:33.256 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 10:39:33.257 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 10:39:33.259 [main] DEBUG [] server.Server - Received request: command=add, requestId=3af78fc4
+2026-03-25 10:39:33.259 [main] DEBUG [] server.manager.Invoker - Executing command: add
+2026-03-25 10:39:33.260 [main] DEBUG [] server.manager.Invoker - Command add completed: success=true
+2026-03-25 10:39:33.260 [main] DEBUG [] server.Server - Command executed: success=true
+2026-03-25 10:39:33.261 [main] INFO  [] server.Server - Response sent for requestId: 3af78fc4
+2026-03-25 10:39:33.263 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=3af78fc4
+2026-03-25 10:39:33.264 [main] DEBUG [] client.Client - Received response for requestId: 3af78fc4, success: true
+2026-03-25 10:39:36.485 [main] DEBUG [] client.Client - User entered command: 'save'
+2026-03-25 10:39:36.486 [main] WARN  [] client.Client - Failed to build request for command: save
+2026-03-25 10:39:44.988 [Thread-1] INFO  [] server.Server - Manual save triggered from console
+2026-03-25 10:39:44.999 [Thread-1] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 7 elements
+2026-03-25 10:39:44.999 [Thread-1] INFO  [] server.Server - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:39:50.144 [Thread-1] INFO  [] server.Server - Exit command received from console
+2026-03-25 10:39:50.145 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-25 10:39:50.145 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-25 10:39:50.158 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 7 elements
+2026-03-25 10:39:50.159 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 10:39:50.159 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-25 11:00:26.725 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 11:00:26.729 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 11:00:26.729 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:00:26.730 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:00:26.739 [main] INFO  [] server.Server - Loaded 7 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:00:26.741 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 11:00:26.741 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 11:00:26.742 [main] INFO  [] server.Server - Console reader started
+2026-03-25 11:00:26.752 [Thread-1] INFO  [] server.Server - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-03-25 11:02:50.432 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-25 11:02:50.433 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-25 11:02:50.564 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 7 elements
+2026-03-25 11:02:50.564 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:02:50.564 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-25 11:03:01.716 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 11:03:01.720 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 11:03:01.720 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:03:01.722 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:03:01.731 [main] INFO  [] server.Server - Loaded 7 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:03:01.734 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 11:03:01.734 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 11:03:01.735 [main] INFO  [] server.Server - Console reader started
+2026-03-25 11:03:01.753 [Thread-1] INFO  [] server.Server - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-03-25 11:05:01.480 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-25 11:05:01.481 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-25 11:05:01.609 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 7 elements
+2026-03-25 11:05:01.610 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:05:01.610 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-25 11:05:16.706 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 11:05:16.710 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 11:05:16.711 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:05:16.712 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:05:16.724 [main] INFO  [] server.Server - Loaded 7 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 11:05:16.730 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 11:05:16.731 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 11:05:16.732 [main] INFO  [] server.Server - Console reader started
+2026-03-25 11:05:16.751 [Thread-1] INFO  [] server.Server - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-03-25 11:06:20.590 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 11:06:20.612 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 11:06:20.624 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 11:06:20.624 [main] INFO  [] server.Server - Client connected: /127.0.0.1:55362
+2026-03-25 11:06:20.625 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 11:06:35.575 [main] INFO  [] server.Server - Client disconnected: /127.0.0.1:55362
