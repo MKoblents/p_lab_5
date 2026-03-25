@@ -68,6 +68,7 @@ public class Server {
             invoker.registerCommand("shuffle", new ShuffleCommand(collectionManager));
             invoker.registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
             invoker.registerCommand("update", new UpdateCommand(collectionManager));
+            invoker.registerCommand("help", new HelpCommand(invoker));
             final String finalDataFile = dataFile;
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 logger.info("=== Shutdown hook triggered ===");

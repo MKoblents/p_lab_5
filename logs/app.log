@@ -146,3 +146,49 @@ java.io.StreamCorruptedException: invalid stream header: 00000091
 2026-03-24 19:41:19.475 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 6 elements
 2026-03-24 19:41:19.475 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
 2026-03-24 19:41:19.475 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-25 01:49:46.590 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 01:49:46.594 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 01:49:46.618 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 01:49:46.619 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 01:49:46.636 [main] ERROR [] client.network.ConnectionManager - IO error while connecting to localhost:12345: Connection refused
+java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:684)
+	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:946)
+	at client.network.ConnectionManager.connect(ConnectionManager.java:30)
+	at client.Client.main(Client.java:48)
+2026-03-25 01:49:46.641 [main] ERROR [] client.Client - Failed to connect to server at localhost:12345
+2026-03-25 01:56:23.045 [main] DEBUG [] client.Client - Log level set to: DEBUG
+2026-03-25 01:56:23.049 [main] INFO  [] client.Client - Client starting with log level: DEBUG
+2026-03-25 01:56:23.069 [main] INFO  [] client.Client - Connecting to se.ifmo.ru:12345
+2026-03-25 01:56:23.071 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to se.ifmo.ru:12345
+2026-03-25 01:56:28.107 [main] ERROR [] client.network.ConnectionManager - Connection timeout to se.ifmo.ru:12345
+2026-03-25 01:56:28.108 [main] ERROR [] client.network.ConnectionManager - IO error while connecting to se.ifmo.ru:12345: Connection timeout
+java.io.IOException: Connection timeout
+	at client.network.ConnectionManager.connect(ConnectionManager.java:33)
+	at client.Client.main(Client.java:57)
+2026-03-25 01:56:28.111 [main] ERROR [] client.Client - Failed to connect to server at se.ifmo.ru:12345
+2026-03-25 02:05:10.736 [main] DEBUG [] client.Client - Log level set to: DEBUG
+2026-03-25 02:05:10.740 [main] INFO  [] client.Client - Client starting with log level: DEBUG
+2026-03-25 02:05:10.761 [main] INFO  [] client.Client - Connecting to helios.cs.ifmo.ru:12345
+2026-03-25 02:05:10.763 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to helios.cs.ifmo.ru:12345
+2026-03-25 02:05:15.853 [main] ERROR [] client.network.ConnectionManager - Connection timeout to helios.cs.ifmo.ru:12345
+2026-03-25 02:05:15.854 [main] ERROR [] client.network.ConnectionManager - IO error while connecting to helios.cs.ifmo.ru:12345: Connection timeout
+java.io.IOException: Connection timeout
+	at client.network.ConnectionManager.connect(ConnectionManager.java:33)
+	at client.Client.main(Client.java:57)
+2026-03-25 02:05:15.858 [main] ERROR [] client.Client - Failed to connect to server at helios.cs.ifmo.ru:12345
+2026-03-25 02:08:09.089 [main] DEBUG [] client.Client - Log level set to: INFO
+2026-03-25 02:08:09.096 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 02:08:09.120 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 02:08:09.122 [main] DEBUG [] client.network.ConnectionManager - Attempting to connect to localhost:12345
+2026-03-25 02:08:09.133 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 02:08:09.134 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 02:08:14.713 [main] DEBUG [] client.Client - User entered command: 'show'
+2026-03-25 02:08:14.735 [main] DEBUG [] client.Client - Sending request: show with requestId: 83ed4d01
+2026-03-25 02:08:14.736 [main] DEBUG [] client.network.ConnectionManager - Sending request: command=show, requestId=83ed4d01
+2026-03-25 02:08:14.753 [main] DEBUG [] client.network.ConnectionManager - Request sent successfully: requestId=83ed4d01
+2026-03-25 02:08:14.753 [main] DEBUG [] client.Client - Waiting for response...
+2026-03-25 02:08:14.753 [main] DEBUG [] client.network.ConnectionManager - Waiting for response from server...
+2026-03-25 02:08:14.837 [main] DEBUG [] client.network.ConnectionManager - Response received: success=true, requestId=83ed4d01
+2026-03-25 02:08:14.838 [main] DEBUG [] client.Client - Received response for requestId: 83ed4d01, success: true

@@ -55,4 +55,15 @@
         <health>0.0</health>
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
+    <spaceMarine>
+        <id>247944893</id>
+        <name>SpaceMarine247944893</name>
+        <coordinates>
+            <x>0</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
 </spaceMarines>
