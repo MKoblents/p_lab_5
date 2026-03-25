@@ -78,13 +78,7 @@ public class Server {
             }));
             logger.info("=== SpaceMarine Server Started ===");
             logger.info("Server listening on port {}", port);
-            System.out.println("Server running. Press Ctrl+C to stop or type 'save'/'exit'.");
-            Thread consoleThread = new Thread(() -> {
-                handleConsoleInput(collectionManager, collectionSaver, finalDataFile);
-            });
-            consoleThread.setDaemon(true);
-            consoleThread.start();
-            logger.info("Console reader started");
+            System.out.println("Server running. Press Ctrl+C to stop.");
             try (ServerSocket serverSocket = new ServerSocket(port)) {
                 logger.debug("Server socket created and bound to port {}", port);
 //                while (running) {
@@ -98,9 +92,7 @@ public class Server {
                     new Thread(() -> handleClient(clientSocket, invoker)).start();
                 }
             }
-
             logger.info("Server main loop exited");
-
         } catch (IOException e) {
             logger.error("Fatal IO error in server: {}", e.getMessage(), e);
             System.err.println("Server error: " + e.getMessage());
@@ -215,6 +207,7 @@ public class Server {
                     logger.error("Unexpected error processing request: {}", e.getMessage(), e);
                 }
             }
+
         } catch (IOException e) {
             logger.error("IO error with client {}: {}",
                     clientSocket.getRemoteSocketAddress(), e.getMessage(), e);

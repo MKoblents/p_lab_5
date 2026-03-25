@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <spaceMarines>
     <spaceMarine>
+<<<<<<< HEAD
         <id>728885526</id>
+=======
+        <id>876213901</id>
         <name>SpaceMarine1283928880</name>
         <coordinates>
             <x>0</x>
@@ -12,6 +15,19 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
+        <id>233021551</id>
+>>>>>>> origin/main
+        <name>SpaceMarine1283928880</name>
+        <coordinates>
+            <x>0</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+<<<<<<< HEAD
         <id>1647809929</id>
         <name>SpaceMarine1283928880</name>
         <coordinates>
@@ -24,6 +40,9 @@
     </spaceMarine>
     <spaceMarine>
         <id>1258084361</id>
+=======
+        <id>1991313236</id>
+>>>>>>> origin/main
         <name>SpaceMarine200006406</name>
         <coordinates>
             <x>0</x>
@@ -34,7 +53,11 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
+<<<<<<< HEAD
         <id>391914049</id>
+=======
+        <id>736778932</id>
+>>>>>>> origin/main
         <name>SpaceMarine1834188994</name>
         <coordinates>
             <x>0</x>
@@ -45,7 +68,11 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
+<<<<<<< HEAD
         <id>96406857</id>
+=======
+        <id>1032000752</id>
+>>>>>>> origin/main
         <name>SpaceMarine13648335</name>
         <coordinates>
             <x>0</x>
@@ -56,7 +83,11 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
+<<<<<<< HEAD
         <id>1534745514</id>
+=======
+        <id>770911223</id>
+>>>>>>> origin/main
         <name>SpaceMarine247944893</name>
         <coordinates>
             <x>0</x>
@@ -66,6 +97,7 @@
         <health>0.0</health>
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
+<<<<<<< HEAD
     <spaceMarine>
         <id>2003496028</id>
         <name>SpaceMarine2028555727</name>
@@ -88,4 +120,6 @@
         <health>0.0</health>
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
     </spaceMarine>
+=======
+>>>>>>> origin/main
 </spaceMarines>
