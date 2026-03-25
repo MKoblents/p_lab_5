@@ -25,11 +25,13 @@ server/manager/CollectionManager.class
 shared/exceptions/UnavailableHealthException.class
 server/commands/InfoCommand.class
 shared/exceptions/UnavailableMeleeWeaponException.class
+server/network/ClientHandler.class
 server/commands/ExitCommand.class
 client/scripts/ScriptRunner.class
 server/commands/Command.class
 shared/dto/CommandResponse.class
 shared/utils/SerializationUtil.class
+server/console/ConsoleHandler.class
 server/manager/Invoker.class
 client/inputWorkers/CommandParser.class
 client/scripts/ScriptRunner$ExecutionResult.class

@@ -617,3 +617,28 @@ java.net.BindException: Address already in use
 2026-03-25 12:09:08.171 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 8 elements
 2026-03-25 12:09:08.171 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
 2026-03-25 12:09:08.171 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-25 18:48:37.374 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-25 18:48:37.382 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-25 18:48:37.383 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 18:48:37.385 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 18:48:37.399 [main] INFO  [] server.Server - Loaded 8 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 18:48:37.406 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-25 18:48:37.406 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-25 18:48:37.409 [main] INFO  [] server.Server - Console reader started
+2026-03-25 18:48:37.428 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-03-25 18:48:56.853 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-25 18:48:56.879 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-25 18:48:56.897 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-25 18:48:56.897 [main] INFO  [] server.Server - Client connected: /127.0.0.1:51376
+2026-03-25 18:48:56.898 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-25 18:49:03.307 [Thread-2] INFO  [] server.Server - Response sent for requestId: 7a0d84d9
+2026-03-25 18:49:06.921 [Thread-2] INFO  [] server.Server - Response sent for requestId: 7134e557
+2026-03-25 18:49:20.173 [Thread-1] INFO  [] server.console.ConsoleHandler - Manual save triggered from console
+2026-03-25 18:49:20.316 [Thread-1] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 9 elements
+2026-03-25 18:49:20.316 [Thread-1] INFO  [] server.console.ConsoleHandler - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 18:49:31.998 [Thread-1] INFO  [] server.console.ConsoleHandler - Exit command received from console
+2026-03-25 18:49:31.999 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-25 18:49:32.000 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-25 18:49:32.014 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 9 elements
+2026-03-25 18:49:32.015 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-25 18:49:32.015 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===

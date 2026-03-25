@@ -3,6 +3,7 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/manager/CollectionManager.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/RemoveByIdCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/exceptions/UnavailableHealthException.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/console/ConsoleHandler.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/inputWorkers/CommandParser.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/SumOfHealthCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/config/ServerConfig.java
@@ -35,6 +36,7 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/scripts/ScriptRunner.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/SaveCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/exceptions/UnavailableCoordinateException.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/network/ClientHandler.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/exceptions/UnavailableMeleeWeaponException.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/enums/Weapon.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/exceptions/WrongIdException.java

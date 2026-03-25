@@ -1,41 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <spaceMarines>
     <spaceMarine>
-        <id>331994761</id>
+        <id>1258084361</id>
         <name>SpaceMarine1283928880</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>96406857</id>
-        <name>SpaceMarine1283928880</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>1534745514</id>
-        <name>SpaceMarine200006406</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>2003496028</id>
-        <name>SpaceMarine1834188994</name>
         <coordinates>
             <x>0</x>
             <y>0</y>
@@ -46,7 +13,7 @@
     </spaceMarine>
     <spaceMarine>
         <id>30578394</id>
-        <name>SpaceMarine13648335</name>
+        <name>SpaceMarine1283928880</name>
         <coordinates>
             <x>0</x>
             <y>0</y>
@@ -57,7 +24,7 @@
     </spaceMarine>
     <spaceMarine>
         <id>2088371948</id>
-        <name>SpaceMarine247944893</name>
+        <name>SpaceMarine200006406</name>
         <coordinates>
             <x>0</x>
             <y>0</y>
@@ -68,7 +35,7 @@
     </spaceMarine>
     <spaceMarine>
         <id>1976870338</id>
-        <name>SpaceMarine2028555727</name>
+        <name>SpaceMarine1834188994</name>
         <coordinates>
             <x>0</x>
             <y>0</y>
@@ -79,6 +46,39 @@
     </spaceMarine>
     <spaceMarine>
         <id>1434234664</id>
+        <name>SpaceMarine13648335</name>
+        <coordinates>
+            <x>0</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>1083021083</id>
+        <name>SpaceMarine247944893</name>
+        <coordinates>
+            <x>0</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>1819063424</id>
+        <name>SpaceMarine2028555727</name>
+        <coordinates>
+            <x>0</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>1011279482</id>
         <name>qwr</name>
         <coordinates>
             <x>3</x>

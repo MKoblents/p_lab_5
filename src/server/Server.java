@@ -3,6 +3,7 @@ package server;
 import server.commands.*;
 import server.config.LoggingConfigurator;
 import server.config.ServerConfig;
+import server.console.ConsoleHandler;
 import server.manager.CollectionManager;
 import server.manager.Invoker;
 import server.outputWorkers.CollectionSaver;
@@ -14,6 +15,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -21,7 +23,7 @@ import shared.utils.SerializationUtil;
 
 public class Server {
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
-    private static volatile boolean running = true;
+    private static final AtomicBoolean running = new AtomicBoolean(true);
     public static void main(String[] args) {
         ServerConfig config = ServerConfig.parse(args);
         int port = config.getPort();
@@ -69,18 +71,18 @@ public class Server {
             logger.info("Server listening on port {}", port);
             System.out.println("Server running. Press Ctrl+C to stop or type 'save'/'exit'.");
             Thread consoleThread = new Thread(() -> {
-                handleConsoleInput(collectionManager, collectionSaver, finalDataFile);
+                new ConsoleHandler(collectionManager, collectionSaver, finalDataFile, running).handleConsoleInput();
             });
             consoleThread.setDaemon(true);
             consoleThread.start();
             logger.info("Console reader started");
             try (ServerSocket serverSocket = new ServerSocket(port)) {
                 logger.debug("Server socket created and bound to port {}", port);
-                while (running) {
+                while (running.get()) {
                     logger.debug("Waiting for client connection...");
                     Socket clientSocket = serverSocket.accept();
                     logger.info("Client connected: {}", clientSocket.getRemoteSocketAddress());
-                    handleClient(clientSocket, invoker);
+                    new Thread(() -> handleClient(clientSocket, invoker)).start();
                 }
             }
 
@@ -96,57 +98,7 @@ public class Server {
             System.exit(1);
         }
     }
-    private static void handleConsoleInput(CollectionManager collectionManager,
-                                           CollectionSaver collectionSaver,
-                                           String dataFile) {
-        Scanner scanner = new Scanner(System.in);
-        logger.info("Console reader ready. Type 'save', 'exit', or 'help'.");
-        while (running) {
-            try {
-                if (scanner.hasNextLine()) {
-                    String command = scanner.nextLine().trim().toLowerCase();
 
-                    switch (command) {
-                        case "save":
-                            logger.info("Manual save triggered from console");
-                            try {
-                                collectionSaver.save(collectionManager, dataFile);
-                                logger.info("Collection saved to {}", dataFile);
-                                System.out.println("✓ Collection saved successfully!");
-                            } catch (Exception e) {
-                                logger.error("Save failed: {}", e.getMessage(), e);
-                                System.err.println("✗ Save failed: " + e.getMessage());
-                            }
-                            break;
-
-                        case "exit":
-                            logger.info("Exit command received from console");
-                            System.out.println("Shutting down server...");
-                            running = false;
-                            System.exit(0);
-                            break;
-                        case "help":
-                            System.out.println("Available server commands:");
-                            System.out.println("  save - Save collection to file");
-                            System.out.println("  exit - Stop server");
-                            System.out.println("  help - Show this help");
-                            break;
-                        case "":
-                            break;
-                        default:
-                            logger.warn("Unknown server command: {}", command);
-                            System.err.println("Unknown command: " + command + ". Type 'help' for list.");
-                    }
-                }
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            } catch (Exception e) {
-                logger.error("Error reading console: {}", e.getMessage());
-            }
-        }
-    }
     private static void handleClient(Socket clientSocket, Invoker invoker) {
         try (
                 java.io.InputStream in = clientSocket.getInputStream();
