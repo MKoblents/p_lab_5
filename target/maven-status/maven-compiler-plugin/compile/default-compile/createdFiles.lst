@@ -1,3 +1,4 @@
+client/session/ClientSession.class
 client/handlers/ResponseHandler.class
 shared/exceptions/UnavailableCoordinateException.class
 client/io/Reader.class

@@ -99,4 +99,15 @@
         <health>0.0</health>
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
+    <spaceMarine>
+        <id>843512726</id>
+        <name>agf</name>
+        <coordinates>
+            <x>324</x>
+            <y>1234</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
 </spaceMarines>

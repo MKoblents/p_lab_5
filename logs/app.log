@@ -752,3 +752,34 @@ java.net.BindException: Address already in use
 2026-03-26 19:58:18.401 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 9 elements
 2026-03-26 19:58:18.402 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
 2026-03-26 19:58:18.402 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-03-26 20:13:22.485 [main] INFO  [] server.Server - Log level set to: INFO
+2026-03-26 20:13:22.487 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-03-26 20:13:22.487 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-26 20:13:22.488 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-26 20:13:22.494 [main] INFO  [] server.Server - Loaded 9 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-26 20:13:22.495 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-03-26 20:13:22.495 [main] INFO  [] server.Server - Server listening on port 12345
+2026-03-26 20:13:22.496 [main] INFO  [] server.Server - Console reader started
+2026-03-26 20:13:22.507 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-03-26 20:13:26.108 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-26 20:13:26.123 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-26 20:13:26.136 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-26 20:13:26.136 [main] INFO  [] server.Server - Client connected: /127.0.0.1:36490
+2026-03-26 20:13:26.137 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-26 20:13:46.396 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-03-26 20:13:46.417 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-03-26 20:13:46.434 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-03-26 20:13:46.434 [main] INFO  [] server.Server - Client connected: /127.0.0.1:47352
+2026-03-26 20:13:46.436 [main] INFO  [] client.Client - Successfully connected to server
+2026-03-26 20:13:48.927 [main] WARN  [] client.session.ClientSession - Failed to build request for command: sjow
+2026-03-26 20:13:51.531 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: f9786480
+2026-03-26 20:13:57.900 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 8c79dc45
+2026-03-26 20:14:03.119 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 5e0a669e
+2026-03-26 20:14:07.294 [Thread-1] INFO  [] server.console.ConsoleHandler - Manual save triggered from console
+2026-03-26 20:14:07.427 [Thread-1] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 10 elements
+2026-03-26 20:14:07.427 [Thread-1] INFO  [] server.console.ConsoleHandler - Collection saved to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-26 20:14:13.806 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-03-26 20:14:13.807 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-03-26 20:14:13.819 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 10 elements
+2026-03-26 20:14:13.820 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-03-26 20:14:13.820 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
