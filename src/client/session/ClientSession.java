@@ -11,7 +11,7 @@ import shared.dto.CommandResponse;
 
 import java.io.IOException;
 
-public class ClientSession {
+public class ClientSession implements AutoCloseable {
     private static final Logger logger = LoggerFactory.getLogger(ClientSession.class);
     private final InputManager inputManager;
     private final RequestBuilder requestBuilder;
@@ -30,7 +30,7 @@ public class ClientSession {
     }
 
     public void run() throws IOException {
-
+        System.out.println("Connected! Type 'help' for commands, 'exit' to quit.");
         while (true) {
             System.out.print("> ");
             String commandKey = inputManager.parseCommand();
@@ -76,6 +76,15 @@ public class ClientSession {
                 logger.error("Error processing command '{}': {}", commandKey, e.getMessage(), e);
                 System.err.println("Error: " + e.getMessage());
             }
+        }
+    }
+    @Override
+    public void close(){
+        logger.info("Disconnecting from server");
+        try {
+            connection.disconnect();
+        } catch (Exception e) {
+            logger.error("Error during disconnect: {}", e.getMessage());
         }
     }
 }
