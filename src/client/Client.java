@@ -11,6 +11,7 @@ import client.network.ConnectionManager;
 import client.scripts.ScriptRunner;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.utils.LoggingConfigurator;
 import shared.utils.XMLParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class Client {
         String host = clientConfig.getHost();
         int port = clientConfig.getPort();
         String logLevel = clientConfig.getLogLevel();
-        setLogLevel(logLevel);
+        LoggingConfigurator.configure(logLevel);
         logger.info("Client starting with log level: {}", logLevel);
 
         try {
@@ -105,15 +106,6 @@ public class Client {
         }
     }
 
-    private static void setLogLevel(String level) {
-        try {
-            ch.qos.logback.classic.Logger root =
-                    (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-            root.setLevel(ch.qos.logback.classic.Level.toLevel(level));
-            logger.debug("Log level set to: {}", level);
-        } catch (Exception e) {
-            System.err.println("Warning: Could not set log level to " + level + ", using default");
-        }
-    }
+
 
 }

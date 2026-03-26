@@ -1,4 +1,4 @@
-package server.config;
+package shared.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

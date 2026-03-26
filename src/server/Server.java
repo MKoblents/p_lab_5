@@ -1,7 +1,6 @@
 package server;
 
-import server.commands.*;
-import server.config.LoggingConfigurator;
+import shared.utils.LoggingConfigurator;
 import server.config.ServerConfig;
 import server.console.ConsoleHandler;
 import server.manager.CollectionManager;

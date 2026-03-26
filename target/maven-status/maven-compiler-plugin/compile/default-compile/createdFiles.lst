@@ -16,8 +16,8 @@ server/commands/UpdateCommand.class
 client/network/ConnectionManager.class
 shared/exceptions/CreationDataException.class
 client/validator/Validator.class
+shared/utils/LoggingConfigurator.class
 server/commands/HelpCommand.class
-server/config/LoggingConfigurator.class
 server/commands/InsertAtCommand.class
 client/Client.class
 server/commands/MinByMeleeWeaponCommand.class
