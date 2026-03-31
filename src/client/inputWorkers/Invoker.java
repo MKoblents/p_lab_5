@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Invoker {
+//TODO
     private Map<String, ClientCommand> commandMap = new HashMap<>();
     public void registerCommand(String name, ClientCommand command){
         commandMap.put(name, command);
