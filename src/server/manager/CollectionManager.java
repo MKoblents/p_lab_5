@@ -1,6 +1,6 @@
 package server.manager;
 import shared.enums.MeleeWeapon;
-import client.validator.Validator;
+import client.utils.Validator;
 import shared.models.SpaceMarine;
 import shared.utils.XMLParser;
 import javax.xml.bind.annotation.*;
