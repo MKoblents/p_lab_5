@@ -37,6 +37,7 @@ public class Invoker {
         registerCommand("remove_greater", new RemoveGreater(inputManager));
         registerCommand("shuffle", new Shuffle());
         registerCommand("sum_of_health", new SumOfHealth());
+        registerCommand("show", new Show());
     }
 }
 
