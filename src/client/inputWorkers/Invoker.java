@@ -34,6 +34,7 @@ public class Invoker {
         registerCommand("min_by_melee_weapon", new MinByMeleeWeapon());
         registerCommand("exit", new Exit());
         registerCommand("remove_by_id", new RemoveById(inputManager));
+        registerCommand("remove_greater", new RemoveGreater(inputManager));
     }
 }
 
