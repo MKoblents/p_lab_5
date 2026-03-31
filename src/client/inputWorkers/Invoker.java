@@ -32,6 +32,8 @@ public class Invoker {
         registerCommand("info", new Info());
         registerCommand("insert_at", new InsertAt(inputManager));
         registerCommand("min_by_melee_weapon", new MinByMeleeWeapon());
+        registerCommand("exit", new Exit());
+        registerCommand("remove_by_id", new RemoveById(inputManager));
     }
 }
 
