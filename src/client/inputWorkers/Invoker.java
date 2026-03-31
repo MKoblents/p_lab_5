@@ -36,6 +36,7 @@ public class Invoker {
         registerCommand("remove_by_id", new RemoveById(inputManager));
         registerCommand("remove_greater", new RemoveGreater(inputManager));
         registerCommand("shuffle", new Shuffle());
+        registerCommand("sum_of_health", new SumOfHealth());
     }
 }
 
