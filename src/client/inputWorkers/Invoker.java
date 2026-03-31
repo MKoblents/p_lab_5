@@ -29,6 +29,7 @@ public class Invoker {
         registerCommand("clear", new Clear());
         registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeapon(inputManager));
         registerCommand("help", new Help());
+        registerCommand("info", new Info());
     }
 }
 
