@@ -1,7 +1,9 @@
 package client.inputWorkers;
 
 import client.command.Add;
+import client.command.Clear;
 import client.command.ClientCommand;
+import client.command.FilterLessThanMeleeWeapon;
 import shared.dto.CommandRequest;
 
 import java.util.HashMap;
@@ -27,6 +29,9 @@ public class Invoker {
         }
         public Invoker(InputManager inputManager){
         registerCommand("add", new Add(inputManager));
+        registerCommand("clear", new Clear());
+        registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeapon(inputManager));
+        ;
     }
 }
 

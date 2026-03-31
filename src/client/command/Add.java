@@ -16,6 +16,7 @@ public class Add implements ClientCommand{
         SpaceMarine spaceMarine = inputManager.getInputSpaceMarine();
         if (spaceMarine == null) {
             System.err.println("Error: Failed to parse SpaceMarine from XML");
+            return null;
         }
         Validator.spaceMarineValidate(spaceMarine);
         return RequestsFactory.withMarine("add", spaceMarine);
