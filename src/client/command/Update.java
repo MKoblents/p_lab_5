@@ -1,0 +1,30 @@
+package client.command;
+
+import client.inputWorkers.InputManager;
+import client.utils.RequestsFactory;
+import client.utils.Validator;
+import shared.dto.CommandRequest;
+import shared.models.SpaceMarine;
+
+public class Update implements ClientCommand{
+    private InputManager inputManager;
+    public Update(InputManager inputManager){
+        this.inputManager = inputManager;
+    }
+
+    @Override
+    public CommandRequest execute() {
+        long id = inputManager.getLastLong();
+        if (id <= 0) {
+            System.err.println("Error: Valid ID required for update");
+            return null;
+        }
+        SpaceMarine marine = inputManager.getInputSpaceMarine();
+        if (marine == null) {
+            System.err.println("Error: Failed to parse SpaceMarine from XML");
+            return null;
+        }
+        Validator.spaceMarineValidate(marine);
+        return RequestsFactory.createTwoArgs("update", id, marine);
+    }
+}
