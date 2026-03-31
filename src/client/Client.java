@@ -1,10 +1,10 @@
 package client;
 
 import client.config.ClientConfig;
-import client.handlers.RequestBuilder;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.CommandParser;
 import client.inputWorkers.InputManager;
+import client.inputWorkers.Invoker;
 import client.io.ConsoleBufferedScanner;
 import client.io.Reader;
 import client.network.ConnectionManager;
@@ -35,10 +35,10 @@ public class Client {
             CommandParser parser = new CommandParser();
             InputManager inputManager = new InputManager(reader, parser);
             ConnectionManager connection = new ConnectionManager();
-            RequestBuilder requestBuilder = new RequestBuilder(inputManager);
             ResponseHandler responseHandler = new ResponseHandler();
+            Invoker invoker = new Invoker(inputManager);
             ScriptRunner scriptRunner = new ScriptRunner(
-                    inputManager, requestBuilder, connection, responseHandler
+                    inputManager, connection, responseHandler, invoker
             );
 
             logger.info("Connecting to {}:{}", host, port);
@@ -50,7 +50,7 @@ public class Client {
                 return;
             }
             logger.info("Successfully connected to server");
-            ClientSession clientSession = new ClientSession(inputManager,requestBuilder,connection,responseHandler,scriptRunner);
+            ClientSession clientSession = new ClientSession(inputManager,connection,responseHandler,scriptRunner, invoker);
             clientSession.run();
             logger.info("Disconnecting from server");
             connection.disconnect();

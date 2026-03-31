@@ -1,4 +1,4 @@
-package client.validator;
+package client.utils;
 
 import shared.enums.MeleeWeapon;
 import shared.exceptions.*;

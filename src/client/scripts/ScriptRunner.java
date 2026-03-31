@@ -3,6 +3,7 @@ package client.scripts;
 import client.handlers.RequestBuilder;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
+import client.inputWorkers.Invoker;
 import client.io.FileBufferedReader;
 import client.io.Reader;
 import shared.utils.XMLParser;
@@ -15,22 +16,21 @@ import java.util.*;
 
 public class ScriptRunner {
     private final InputManager inputManager;
-    private final RequestBuilder requestBuilder;
     private final ConnectionManager connectionManager;
     private final ResponseHandler responseHandler;
+    private Invoker invoker;
 //    private final XMLParser xmlParser;
     private static final ThreadLocal<Deque<String>> executingScripts =
             ThreadLocal.withInitial(ArrayDeque::new);
     private static final int MAX_SCRIPT_DEPTH = 5;
 
     public ScriptRunner(InputManager inputManager,
-                        RequestBuilder requestBuilder,
                         ConnectionManager connectionManager,
-                        ResponseHandler responseHandler) {
+                        ResponseHandler responseHandler, Invoker invoker) {
         this.inputManager = inputManager;
-        this.requestBuilder = requestBuilder;
         this.connectionManager = connectionManager;
         this.responseHandler = responseHandler;
+        this.invoker = invoker;
     }
 
     /**
@@ -130,7 +130,7 @@ public class ScriptRunner {
                     }
                     continue;
                 }
-                CommandRequest request = requestBuilder.buildRequest(commandName);
+                CommandRequest request = invoker.runCommand(commandName);
                 if (request == null) {
                     errorCount++;
                     details.add("Line: Failed to build request for " + commandName);

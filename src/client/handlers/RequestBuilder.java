@@ -1,7 +1,7 @@
 package client.handlers;
 
 import client.inputWorkers.InputManager;
-import client.validator.Validator;
+import client.utils.Validator;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.enums.MeleeWeapon;

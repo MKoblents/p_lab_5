@@ -1,7 +1,7 @@
 package client.session;
-import client.handlers.RequestBuilder;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
+import client.inputWorkers.Invoker;
 import client.network.ConnectionManager;
 import client.scripts.ScriptRunner;
 import org.slf4j.Logger;
@@ -14,19 +14,19 @@ import java.io.IOException;
 public class ClientSession implements AutoCloseable {
     private static final Logger logger = LoggerFactory.getLogger(ClientSession.class);
     private final InputManager inputManager;
-    private final RequestBuilder requestBuilder;
     private final ConnectionManager connection;
     private final ResponseHandler responseHandler;
     private final ScriptRunner scriptRunner;
+    private Invoker invoker;
 
-    public ClientSession(InputManager im, RequestBuilder rb,
+    public ClientSession(InputManager im,
                          ConnectionManager conn, ResponseHandler rh,
-                         ScriptRunner sr) {
+                         ScriptRunner sr, Invoker invoker) {
         this.inputManager = im;
-        this.requestBuilder = rb;
         this.connection = conn;
         this.responseHandler = rh;
         this.scriptRunner = sr;
+        this.invoker = invoker;
     }
 
     public void run() throws IOException {
@@ -38,10 +38,10 @@ public class ClientSession implements AutoCloseable {
                 continue;
             }
             logger.debug("User entered command: '{}'", commandKey);
-            if (commandKey.equals("exit")) {
-                logger.info("User requested exit");
-                break;
-            }
+//            if (commandKey.equals("exit")) {
+//                logger.info("User requested exit");
+//                break;
+//            }
             if (commandKey.equals("execute_script")) {
                 String path = inputManager.getLastPath();
                 if (path == null) {
@@ -54,7 +54,7 @@ public class ClientSession implements AutoCloseable {
                 continue;
             }
             try {
-                CommandRequest request = requestBuilder.buildRequest(commandKey);
+                CommandRequest request = invoker.runCommand(commandKey);
                 if (request == null) {
                     logger.warn("Failed to build request for command: {}", commandKey);
                     continue;
