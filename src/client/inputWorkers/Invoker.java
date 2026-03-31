@@ -15,13 +15,13 @@ public class Invoker {
     public CommandRequest runCommand(String commandName) {
         ClientCommand command = commandMap.get(commandName);
         if (command == null) {
-            return new CommandRequest(null, null, "Unknown command: " + commandName);
+            return null;
         }
         try {
             CommandRequest request = command.execute();
            return request;
         } catch (Exception e) {
-            return new CommandRequest(null, null,null);
+            return null;
         }
         }
         public Invoker(InputManager inputManager){
