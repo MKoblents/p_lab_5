@@ -15,7 +15,11 @@ public class ConnectionManager {
     private static final Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
     private SocketChannel socketChannel;
     private boolean connected = false;
+    private String host;
+    private int port;
     public boolean connect(String host, int port) {
+        this.host = host;
+        this.port = port;
         logger.debug("Attempting to connect to {}:{}", host, port);
         try {
             socketChannel = SocketChannel.open();
@@ -149,5 +153,12 @@ public class ConnectionManager {
     }
     public boolean isConnected() {
         return connected;
+    }
+
+    public String getHost() {
+        return host;
+    }
+    public int getPort(){
+        return port;
     }
 }
