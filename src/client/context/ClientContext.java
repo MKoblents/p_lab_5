@@ -3,6 +3,9 @@ package client.context;
 import client.network.ConnectionManager;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class ClientContext {
     private final String clientId;
     private final String parentClientId;
@@ -10,16 +13,21 @@ public class ClientContext {
     private final Instant createdAt;
     private final boolean isRoot;
     private volatile boolean active;
+    private final int peerPort;
+    private final List<String> childClientIds = new CopyOnWriteArrayList<>();  // Список ID детей
+
     public ClientContext(String clientId,
                          String parentClientId,
                          ConnectionManager connection,
-                         boolean isRoot) {
+                         boolean isRoot,
+                         int peerPort) {
         this.clientId = clientId;
         this.parentClientId = parentClientId;
         this.connection = connection;
         this.createdAt = Instant.now();
         this.isRoot = isRoot;
         this.active = true;
+        this.peerPort = peerPort;
     }
     public String getClientId() {
         return clientId;
@@ -65,5 +73,21 @@ public class ClientContext {
     @Override
     public int hashCode() {
         return clientId.hashCode();
+    }
+
+    public int getPeerPort() {
+        return peerPort;
+    }
+    public boolean addChild(String childClientId){
+        return childClientIds.add(childClientId);
+    }
+    public List<String> getChildClientIds() {
+        return List.copyOf(childClientIds);
+    }
+    public boolean removeChild(String childClientId) {
+        return childClientIds.remove(childClientId);
+    }
+    public void clearChildren() {
+        childClientIds.clear();
     }
 }
