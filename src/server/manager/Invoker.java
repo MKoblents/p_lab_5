@@ -33,7 +33,7 @@ public class Invoker {
         Command command = commandMap.get(commandType);
         if (command == null) {
             logger.warn("Unknown command requested: {}", commandType);
-            return new CommandResponse(false, null, "Unknown command: " + commandType, request.requestId());
+            return new CommandResponse(false, null, "Unknown command: " + commandType, request.requestId(), request.clientId());
         }
         try {
             CommandResponse response = command.execute(request);
@@ -41,10 +41,10 @@ public class Invoker {
             return response;
         } catch (Exception e) {
             logger.error("Error executing command {}: {}", commandType, e.getMessage(), e);
-            return new CommandResponse(false, null, "Internal error", request.requestId());
+            return new CommandResponse(false, null, "Internal error", request.requestId(), request.clientId());
         }
     }
-    public Invoker(CollectionManager collectionManager){
+    public Invoker(CollectionManager collectionManager, ClientRegistry clientRegistry){
         registerCommand("add", new AddCommand(collectionManager));
         registerCommand("clear", new ClearCommand(collectionManager));
         registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager));
@@ -58,6 +58,7 @@ public class Invoker {
         registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
         registerCommand("update", new UpdateCommand(collectionManager));
         registerCommand("help", new HelpCommand(this));
+        // registerCommand("spawn_client", new SpawnClientCommand(clientRegistry));
         logger.debug("Registering commands with Invoker");
     }
     /**
