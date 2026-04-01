@@ -1,4 +1,4 @@
-package client.session;
+package client.context;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
 import client.inputWorkers.Invoker;

@@ -9,15 +9,10 @@ import client.io.ConsoleBufferedScanner;
 import client.io.Reader;
 import client.network.ConnectionManager;
 import client.scripts.ScriptRunner;
-import client.session.ClientSession;
-import shared.dto.CommandRequest;
-import shared.dto.CommandResponse;
+import client.context.ClientSession;
 import shared.utils.LoggingConfigurator;
-import shared.utils.XMLParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Scanner;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);

@@ -1,6 +1,5 @@
 package client.scripts;
 
-import client.handlers.RequestBuilder;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
 import client.inputWorkers.Invoker;
