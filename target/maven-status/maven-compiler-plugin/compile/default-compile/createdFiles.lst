@@ -14,6 +14,7 @@ server/commands/AddCommand.class
 client/utils/Validator.class
 client/command/Shuffle.class
 shared/models/SpaceMarine.class
+client/command/ForwardCommand.class
 client/handlers/RequestBuilder.class
 server/network/ServerConnectionHandler.class
 client/command/Exit.class

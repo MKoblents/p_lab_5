@@ -74,6 +74,7 @@ public class CommandParser {
             if (parts[i].equals("-c") && i+1<parts.length){
                 if (targetClientId == null) {
                     targetClientId = parts[i + 1];
+                    System.out.println("FOUND TARGET CLIENT iD:"+ targetClientId);
                     i++;
                 } else {
                     throw new IOException("CLient Id already entered!");
@@ -122,7 +123,9 @@ public class CommandParser {
     }
 
     public String getTargetClientId() {
-        return targetClientId;
+        String id = targetClientId;
+        targetClientId = null;
+        return id;
     }
 
     /**

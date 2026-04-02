@@ -1,0 +1,62 @@
+2026-04-02 17:51:16.544 [main] ERROR [] client.command.ForwardCommand - Failed to forward command
+java.lang.NullPointerException: Cannot invoke "Object.hashCode()" because "key" is null
+	at java.base/java.util.concurrent.ConcurrentHashMap.get(ConcurrentHashMap.java:936)
+	at client.context.ClientContext.getChildPeerPort(ClientContext.java:99)
+	at client.command.ForwardCommand.getTargetPort(ForwardCommand.java:74)
+	at client.command.ForwardCommand.execute(ForwardCommand.java:37)
+	at client.inputWorkers.Invoker.runCommand(Invoker.java:36)
+	at client.context.ClientSession.run(ClientSession.java:64)
+	at client.Client.main(Client.java:142)
+2026-04-02 18:43:33.573 [main] ERROR [] client.command.ForwardCommand - Timeout waiting for response from 0664e3d3
+2026-04-02 18:51:13.640 [main] ERROR [] client.command.ForwardCommand - Timeout waiting for response from 0f24f973
+2026-04-02 19:09:58.717 [Thread-2] ERROR [] client.Client - Failed to execute forwarded command
+java.lang.NullPointerException: null
+	at java.base/java.util.Objects.requireNonNull(Objects.java:209)
+	at java.base/java.util.ImmutableCollections$SetN.contains(ImmutableCollections.java:937)
+	at client.inputWorkers.Invoker.runCommand(Invoker.java:77)
+	at client.Client.lambda$handleForwardCommand$2(Client.java:173)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-04-02 19:40:56.105 [main] ERROR [] client.command.SpawnClient - Failed to spawn child d6dd183d
+java.io.IOException: Cannot run program "gnome-terminal": error=2, No such file or directory
+	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+	at client.process.ClientProcessManager.spawnChild(ClientProcessManager.java:51)
+	at client.command.SpawnClient.handleResponse(SpawnClient.java:40)
+	at client.context.ClientSession.run(ClientSession.java:78)
+	at client.Client.main(Client.java:145)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+	... 5 common frames omitted
+2026-04-02 19:47:48.274 [main] ERROR [] client.command.ForwardCommand - Failed to forward command
+java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.connect0(Native Method)
+	at java.base/sun.nio.ch.Net.connect(Net.java:591)
+	at java.base/sun.nio.ch.Net.connect(Net.java:580)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:593)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at java.base/java.net.Socket.connect(Socket.java:583)
+	at java.base/java.net.Socket.<init>(Socket.java:507)
+	at java.base/java.net.Socket.<init>(Socket.java:287)
+	at client.hierarchy.PeerConnection.sendToPeer(PeerConnection.java:118)
+	at client.command.ForwardCommand.execute(ForwardCommand.java:54)
+	at client.inputWorkers.Invoker.runCommand(Invoker.java:97)
+	at client.context.ClientSession.run(ClientSession.java:64)
+	at client.Client.main(Client.java:145)
+2026-04-02 20:05:29.173 [main] ERROR [] client.command.SpawnClient - Failed to spawn child a906f927
+java.io.IOException: Cannot run program "tmux": error=2, No such file or directory
+	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1143)
+	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1073)
+	at client.process.ClientProcessManager.spawnChild(ClientProcessManager.java:53)
+	at client.command.SpawnClient.handleResponse(SpawnClient.java:40)
+	at client.context.ClientSession.run(ClientSession.java:78)
+	at client.Client.main(Client.java:145)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+	at java.base/java.lang.ProcessImpl.<init>(ProcessImpl.java:314)
+	at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:244)
+	at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1110)
+	... 5 common frames omitted

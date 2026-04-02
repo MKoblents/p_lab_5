@@ -53,3 +53,342 @@
 2026-04-02 12:47:08.645 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 12 elements
 2026-04-02 12:47:08.646 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
 2026-04-02 12:47:08.646 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 17:50:50.784 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 17:50:50.786 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 17:50:50.786 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 17:50:50.787 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 17:50:50.792 [main] INFO  [] server.Server - Loaded 12 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 17:50:50.794 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 17:50:50.794 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 17:50:50.794 [main] INFO  [] server.Server - Console reader started
+2026-04-02 17:50:50.800 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 17:51:08.306 [main] INFO  [] server.Server - Client connected: /127.0.0.1:53522
+2026-04-02 18:27:39.675 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 18:27:39.676 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 18:27:39.808 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 12 elements
+2026-04-02 18:27:39.808 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:27:39.808 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 18:27:51.789 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 18:27:51.792 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 18:27:51.792 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:27:51.793 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:27:51.803 [main] INFO  [] server.Server - Loaded 12 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:27:51.807 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 18:27:51.807 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 18:27:51.808 [main] INFO  [] server.Server - Console reader started
+2026-04-02 18:27:51.819 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 18:27:54.143 [main] INFO  [] server.Server - Client connected: /127.0.0.1:48836
+2026-04-02 18:28:00.726 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client dbf28fd5 for parent 1980aa08
+2026-04-02 18:28:00.729 [Thread-2] INFO  [] server.manager.ClientRegistry - Client dbf28fd5 registered as child of 1980aa08
+2026-04-02 18:28:00.735 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 340474c5
+2026-04-02 18:28:01.261 [main] INFO  [] server.Server - Client connected: /127.0.0.1:48842
+2026-04-02 18:28:45.293 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: eb9f4daf
+2026-04-02 18:29:37.569 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 1ee02e6e
+2026-04-02 18:35:25.397 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:48842
+2026-04-02 18:35:25.721 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:48836
+2026-04-02 18:35:28.076 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 18:35:28.077 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 18:35:28.163 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 12 elements
+2026-04-02 18:35:28.163 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:35:28.163 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 18:35:39.952 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 18:35:39.954 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 18:35:39.955 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:35:39.956 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:35:39.962 [main] INFO  [] server.Server - Loaded 12 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:35:39.964 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 18:35:39.964 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 18:35:39.965 [main] INFO  [] server.Server - Console reader started
+2026-04-02 18:35:39.976 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 18:35:42.868 [main] INFO  [] server.Server - Client connected: /127.0.0.1:35788
+2026-04-02 18:36:09.170 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 149bc96e for parent 9f6ace08
+2026-04-02 18:36:09.172 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 149bc96e registered as child of 9f6ace08
+2026-04-02 18:36:09.175 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: b8ad8a20
+2026-04-02 18:36:09.635 [main] INFO  [] server.Server - Client connected: /127.0.0.1:52754
+2026-04-02 18:36:21.138 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: b12caa0d
+2026-04-02 18:39:09.142 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:52754
+2026-04-02 18:39:09.470 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:35788
+2026-04-02 18:39:11.719 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 18:39:11.720 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 18:39:11.851 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 12 elements
+2026-04-02 18:39:11.851 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:39:11.851 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 18:39:27.475 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 18:39:27.477 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 18:39:27.477 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:39:27.478 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:39:27.485 [main] INFO  [] server.Server - Loaded 12 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:39:27.488 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 18:39:27.488 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 18:39:27.489 [main] INFO  [] server.Server - Console reader started
+2026-04-02 18:39:27.501 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 18:39:30.476 [main] INFO  [] server.Server - Client connected: /127.0.0.1:51380
+2026-04-02 18:39:35.383 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client b0a23bc2 for parent e6ee5b5b
+2026-04-02 18:39:35.385 [Thread-2] INFO  [] server.manager.ClientRegistry - Client b0a23bc2 registered as child of e6ee5b5b
+2026-04-02 18:39:35.389 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 686a700d
+2026-04-02 18:39:35.883 [main] INFO  [] server.Server - Client connected: /127.0.0.1:58614
+2026-04-02 18:39:46.596 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 6bbd4759
+2026-04-02 18:42:21.822 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:58614
+2026-04-02 18:42:22.150 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:51380
+2026-04-02 18:42:23.610 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 18:42:23.611 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 18:42:23.747 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 12 elements
+2026-04-02 18:42:23.747 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:42:23.747 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 18:42:34.469 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 18:42:34.471 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 18:42:34.471 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:42:34.472 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:42:34.480 [main] INFO  [] server.Server - Loaded 12 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:42:34.484 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 18:42:34.485 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 18:42:34.486 [main] INFO  [] server.Server - Console reader started
+2026-04-02 18:42:34.502 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 18:42:37.010 [main] INFO  [] server.Server - Client connected: /127.0.0.1:56692
+2026-04-02 18:42:43.252 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 0664e3d3 for parent 7c468ff2
+2026-04-02 18:42:43.254 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 0664e3d3 registered as child of 7c468ff2
+2026-04-02 18:42:43.258 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 1e1e807d
+2026-04-02 18:42:43.700 [main] INFO  [] server.Server - Client connected: /127.0.0.1:52294
+2026-04-02 18:43:03.609 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 09e87d3c
+2026-04-02 18:49:16.035 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:52294
+2026-04-02 18:49:16.364 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:56692
+2026-04-02 18:49:20.257 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 18:49:20.257 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 18:49:20.370 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 12 elements
+2026-04-02 18:49:20.371 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:49:20.371 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 18:49:28.516 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 18:49:28.518 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 18:49:28.518 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:49:28.520 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:49:28.526 [main] INFO  [] server.Server - Loaded 12 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 18:49:28.529 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 18:49:28.530 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 18:49:28.531 [main] INFO  [] server.Server - Console reader started
+2026-04-02 18:49:28.542 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 18:49:31.595 [main] INFO  [] server.Server - Client connected: /127.0.0.1:32886
+2026-04-02 18:49:37.669 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 0f24f973 for parent baed7dd9
+2026-04-02 18:49:37.672 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 0f24f973 registered as child of baed7dd9
+2026-04-02 18:49:37.677 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 10213c98
+2026-04-02 18:49:38.137 [main] INFO  [] server.Server - Client connected: /127.0.0.1:50340
+2026-04-02 18:50:43.670 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 3e141246
+2026-04-02 19:01:37.973 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:50340
+2026-04-02 19:01:38.304 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:32886
+2026-04-02 19:01:39.811 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 19:01:39.812 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 19:01:39.946 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 12 elements
+2026-04-02 19:01:39.947 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:01:39.947 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 19:01:48.206 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 19:01:48.208 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 19:01:48.209 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:01:48.210 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:01:48.217 [main] INFO  [] server.Server - Loaded 12 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:01:48.219 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 19:01:48.219 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 19:01:48.220 [main] INFO  [] server.Server - Console reader started
+2026-04-02 19:01:48.232 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 19:01:50.884 [main] INFO  [] server.Server - Client connected: /127.0.0.1:46248
+2026-04-02 19:02:00.840 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 3f1c5cbb for parent b3f5e6b0
+2026-04-02 19:02:00.842 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 3f1c5cbb registered as child of b3f5e6b0
+2026-04-02 19:02:00.846 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 1804331a
+2026-04-02 19:02:01.366 [main] INFO  [] server.Server - Client connected: /127.0.0.1:42030
+2026-04-02 19:11:44.438 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:42030
+2026-04-02 19:11:44.768 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:46248
+2026-04-02 19:11:46.344 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 19:11:46.345 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 19:11:46.462 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 12 elements
+2026-04-02 19:11:46.462 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:11:46.462 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 19:11:56.398 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 19:11:56.400 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 19:11:56.400 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:11:56.402 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:11:56.409 [main] INFO  [] server.Server - Loaded 12 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:11:56.411 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 19:11:56.412 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 19:11:56.413 [main] INFO  [] server.Server - Console reader started
+2026-04-02 19:11:56.424 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 19:11:59.644 [main] INFO  [] server.Server - Client connected: /127.0.0.1:46800
+2026-04-02 19:12:07.412 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 1d8987f9 for parent 2856319d
+2026-04-02 19:12:07.414 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 1d8987f9 registered as child of 2856319d
+2026-04-02 19:12:07.417 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 34dde0cc
+2026-04-02 19:12:07.931 [main] INFO  [] server.Server - Client connected: /127.0.0.1:56956
+2026-04-02 19:12:22.247 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 88903180
+2026-04-02 19:12:38.888 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: e473a995
+2026-04-02 19:21:35.100 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:56956
+2026-04-02 19:21:35.426 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:46800
+2026-04-02 19:21:36.593 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 19:21:36.593 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 19:21:36.669 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 12 elements
+2026-04-02 19:21:36.670 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:21:36.670 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 19:21:45.075 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 19:21:45.078 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 19:21:45.078 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:21:45.079 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:21:45.087 [main] INFO  [] server.Server - Loaded 12 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:21:45.091 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 19:21:45.091 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 19:21:45.092 [main] INFO  [] server.Server - Console reader started
+2026-04-02 19:21:45.104 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 19:21:48.094 [main] INFO  [] server.Server - Client connected: /127.0.0.1:41066
+2026-04-02 19:21:57.892 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 09302b27 for parent 26e3e094
+2026-04-02 19:21:57.895 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 09302b27 registered as child of 26e3e094
+2026-04-02 19:21:57.902 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 75366317
+2026-04-02 19:21:58.447 [main] INFO  [] server.Server - Client connected: /127.0.0.1:53774
+2026-04-02 19:22:15.989 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: f943eacc
+2026-04-02 19:22:22.835 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: cc89d7f9
+2026-04-02 19:35:42.104 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:53774
+2026-04-02 19:35:42.435 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:41066
+2026-04-02 19:35:43.495 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 19:35:43.495 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 19:35:43.619 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 13 elements
+2026-04-02 19:35:43.620 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:35:43.620 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 19:35:52.839 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 19:35:52.841 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 19:35:52.841 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:35:52.843 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:35:52.850 [main] INFO  [] server.Server - Loaded 13 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:35:52.852 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 19:35:52.853 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 19:35:52.854 [main] INFO  [] server.Server - Console reader started
+2026-04-02 19:35:52.864 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 19:35:54.813 [main] INFO  [] server.Server - Client connected: /127.0.0.1:32952
+2026-04-02 19:36:00.788 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 7353a13b for parent c5192285
+2026-04-02 19:36:00.790 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 7353a13b registered as child of c5192285
+2026-04-02 19:36:00.795 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 065d1ca4
+2026-04-02 19:36:01.326 [main] INFO  [] server.Server - Client connected: /127.0.0.1:32968
+2026-04-02 19:40:32.364 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:32968
+2026-04-02 19:40:32.692 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:32952
+2026-04-02 19:40:34.118 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 19:40:34.119 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 19:40:34.253 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 13 elements
+2026-04-02 19:40:34.254 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:40:34.254 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 19:40:45.316 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 19:40:45.319 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 19:40:45.320 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:40:45.321 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:40:45.330 [main] INFO  [] server.Server - Loaded 13 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:40:45.334 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 19:40:45.334 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 19:40:45.335 [main] INFO  [] server.Server - Console reader started
+2026-04-02 19:40:45.346 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 19:40:47.797 [main] INFO  [] server.Server - Client connected: /127.0.0.1:55366
+2026-04-02 19:40:56.070 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client d6dd183d for parent cdb120f8
+2026-04-02 19:40:56.072 [Thread-2] INFO  [] server.manager.ClientRegistry - Client d6dd183d registered as child of cdb120f8
+2026-04-02 19:40:56.076 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 60a840f7
+2026-04-02 19:44:34.221 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:55366
+2026-04-02 19:44:36.960 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 19:44:36.961 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 19:44:37.093 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 13 elements
+2026-04-02 19:44:37.094 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:44:37.094 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 19:46:10.302 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 19:46:10.305 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 19:46:10.305 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:46:10.306 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:46:10.315 [main] INFO  [] server.Server - Loaded 13 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:46:10.319 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 19:46:10.319 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 19:46:10.320 [main] INFO  [] server.Server - Console reader started
+2026-04-02 19:46:10.333 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 19:46:13.546 [main] INFO  [] server.Server - Client connected: /127.0.0.1:49666
+2026-04-02 19:46:19.172 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 1d26a3ac for parent 5eb1ae3f
+2026-04-02 19:46:19.173 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 1d26a3ac registered as child of 5eb1ae3f
+2026-04-02 19:46:19.177 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: a5275cd7
+2026-04-02 19:46:20.264 [main] INFO  [] server.Server - Client connected: /127.0.0.1:49674
+2026-04-02 19:47:34.985 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:49674
+2026-04-02 19:47:57.575 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 9d17e82e for parent 5eb1ae3f
+2026-04-02 19:47:57.576 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 9d17e82e registered as child of 5eb1ae3f
+2026-04-02 19:47:57.577 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 3c5fcb1d
+2026-04-02 19:47:58.629 [main] INFO  [] server.Server - Client connected: /127.0.0.1:46816
+2026-04-02 19:48:53.364 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 37daac7c
+2026-04-02 19:49:18.233 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 084d89cf
+2026-04-02 19:49:33.261 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 58802dda
+2026-04-02 19:53:20.960 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:49666
+2026-04-02 19:53:20.969 [Thread-4] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:46816
+2026-04-02 19:53:22.262 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 19:53:22.263 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 19:53:22.346 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 14 elements
+2026-04-02 19:53:22.346 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:53:22.346 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 19:53:44.773 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 19:53:44.777 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 19:53:44.777 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:53:44.779 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:53:44.791 [main] INFO  [] server.Server - Loaded 14 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 19:53:44.796 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 19:53:44.796 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 19:53:44.797 [main] INFO  [] server.Server - Console reader started
+2026-04-02 19:53:44.818 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 19:53:47.963 [main] INFO  [] server.Server - Client connected: /127.0.0.1:38264
+2026-04-02 19:53:56.690 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 0d2e4312 for parent 3cd1e124
+2026-04-02 19:53:56.692 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 0d2e4312 registered as child of 3cd1e124
+2026-04-02 19:53:56.696 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 7b9fec66
+2026-04-02 19:53:57.742 [main] INFO  [] server.Server - Client connected: /127.0.0.1:39344
+2026-04-02 19:54:23.501 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: b6680f6b
+2026-04-02 19:54:30.195 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 91d9080e
+2026-04-02 19:54:53.611 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:39344
+2026-04-02 19:54:53.612 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:38264
+2026-04-02 20:05:14.245 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 20:05:14.246 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 20:05:14.388 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 15 elements
+2026-04-02 20:05:14.388 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:05:14.388 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 20:05:16.526 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 20:05:16.529 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 20:05:16.529 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:05:16.530 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:05:16.537 [main] INFO  [] server.Server - Loaded 15 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:05:16.541 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 20:05:16.541 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 20:05:16.542 [main] INFO  [] server.Server - Console reader started
+2026-04-02 20:05:16.556 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 20:05:22.161 [main] INFO  [] server.Server - Client connected: /127.0.0.1:35700
+2026-04-02 20:05:29.137 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client a906f927 for parent 686b1c8e
+2026-04-02 20:05:29.139 [Thread-2] INFO  [] server.manager.ClientRegistry - Client a906f927 registered as child of 686b1c8e
+2026-04-02 20:05:29.143 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: e9f2f9a2
+2026-04-02 20:05:36.937 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:35700
+2026-04-02 20:05:39.504 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 20:05:39.505 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 20:05:39.628 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 15 elements
+2026-04-02 20:05:39.629 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:05:39.629 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 20:06:01.404 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 20:06:01.409 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 20:06:01.410 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:06:01.412 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:06:01.424 [main] INFO  [] server.Server - Loaded 15 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:06:01.431 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 20:06:01.432 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 20:06:01.433 [main] INFO  [] server.Server - Console reader started
+2026-04-02 20:06:01.452 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 20:06:03.617 [main] INFO  [] server.Server - Client connected: /127.0.0.1:44394
+2026-04-02 20:06:08.257 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 6caec98f for parent 4865f679
+2026-04-02 20:06:08.259 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 6caec98f registered as child of 4865f679
+2026-04-02 20:06:08.264 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 024aff3e
+2026-04-02 20:09:13.180 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:44394
+2026-04-02 20:09:15.147 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-02 20:09:15.148 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-02 20:09:15.277 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 15 elements
+2026-04-02 20:09:15.278 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:09:15.278 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-02 20:11:17.976 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-02 20:11:17.980 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-02 20:11:17.980 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:11:17.982 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:11:17.993 [main] INFO  [] server.Server - Loaded 15 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-02 20:11:17.999 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-02 20:11:17.999 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-02 20:11:18.001 [main] INFO  [] server.Server - Console reader started
+2026-04-02 20:11:18.020 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-02 20:11:58.137 [main] INFO  [] server.Server - Client connected: /127.0.0.1:59078
+2026-04-02 20:12:05.175 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client ec4997f9 for parent c83f7fbf
+2026-04-02 20:12:05.177 [Thread-2] INFO  [] server.manager.ClientRegistry - Client ec4997f9 registered as child of c83f7fbf
+2026-04-02 20:12:05.183 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: af5e63b4
+2026-04-02 20:12:05.688 [main] INFO  [] server.Server - Client connected: /127.0.0.1:44440
+2026-04-02 20:12:47.265 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:44440
+2026-04-02 20:12:58.820 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:59078

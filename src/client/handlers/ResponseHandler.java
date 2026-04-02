@@ -1,5 +1,7 @@
 package client.handlers;
 
+
+import client.context.ClientContext;
 import client.scripts.ScriptRunner;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
@@ -7,6 +9,10 @@ import shared.models.SpaceMarine;
 import java.util.List;
 
 public class ResponseHandler {
+    private ClientContext context;
+    public ResponseHandler(ClientContext context){
+        this.context=context;
+    }
 
     /**
      * Handles server response and displays to user.
@@ -17,6 +23,7 @@ public class ResponseHandler {
             System.err.println("Error: Null response from server");
             return;
         }
+        System.out.println("\n[Client: "+ context.getClientId()+"]");
         if (response.success()) {
             System.out.println(response.message());
         } else {

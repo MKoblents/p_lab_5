@@ -28,6 +28,10 @@ public class ClientProcessManager {
         logger.info("Spawning child client: {} (parent: {})", childClientId, parentClientId);
 
         List<String> command = new ArrayList<>();
+        command.add("tmux");
+        command.add("new-window");
+        command.add("-n");
+        command.add("child_" + childClientId);
         command.add("java");
         command.add("-jar");
         command.add("/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/target/p_lab_5-client.jar");
@@ -44,6 +48,8 @@ public class ClientProcessManager {
 
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.redirectErrorStream(true);
+        pb.redirectOutput(ProcessBuilder.Redirect.DISCARD);
+        pb.redirectError(ProcessBuilder.Redirect.DISCARD);
         Process process = pb.start();
 
         childProcesses.put(childClientId, process);
