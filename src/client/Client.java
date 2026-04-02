@@ -83,7 +83,7 @@ public class Client {
                 }
             }
             ClientProcessManager processManager = new ClientProcessManager(host, port);
-            Invoker invoker = new Invoker(inputManager,context,connection,processManager);
+            Invoker invoker = new Invoker(inputManager,context,connection,processManager, peerConnection);
             ScriptRunner scriptRunner = new ScriptRunner(
                     inputManager, connection, responseHandler, invoker
             );
