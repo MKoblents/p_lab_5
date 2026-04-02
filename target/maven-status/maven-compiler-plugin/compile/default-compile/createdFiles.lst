@@ -1,9 +1,9 @@
-client/session/ClientSession.class
 shared/enums/ClientState.class
 client/handlers/ResponseHandler.class
 shared/exceptions/UnavailableCoordinateException.class
 client/command/Add.class
 client/io/Reader.class
+server/manager/ClientRegistry.class
 server/manager/FileManager$1.class
 server/Server.class
 shared/models/Chapter.class
@@ -21,7 +21,9 @@ server/manager/FileManager.class
 server/commands/UpdateCommand.class
 client/network/ConnectionManager.class
 shared/exceptions/CreationDataException.class
+client/context/ClientContext.class
 shared/dto/ClientStatus.class
+client/command/SpawnClient.class
 client/command/Help.class
 client/command/RemoveGreater.class
 shared/utils/LoggingConfigurator.class
@@ -31,6 +33,7 @@ server/commands/InsertAtCommand.class
 client/Client.class
 server/commands/MinByMeleeWeaponCommand.class
 server/manager/CollectionManager.class
+client/process/ClientProcessManager.class
 shared/exceptions/UnavailableHealthException.class
 client/command/FilterLessThanMeleeWeapon.class
 server/commands/InfoCommand.class
@@ -42,6 +45,7 @@ client/command/Info.class
 client/config/ClientConfig.class
 server/commands/Command.class
 shared/dto/CommandResponse.class
+client/hierarchy/PeerConnection.class
 shared/utils/SerializationUtil.class
 server/console/ConsoleHandler.class
 server/manager/Invoker.class
@@ -61,9 +65,11 @@ server/outputWorkers/CollectionSaver.class
 client/io/ConsoleBufferedScanner.class
 server/commands/SumOfHealthCommand.class
 server/commands/SaveCommand.class
+client/context/ClientSession.class
 shared/enums/Weapon.class
 server/manager/FileManager$Operation.class
 client/command/InsertAt.class
+server/commands/SpawnClientCommand.class
 client/command/Show.class
 shared/enums/AstartesCategory.class
 shared/enums/MeleeWeapon.class

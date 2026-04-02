@@ -24,13 +24,14 @@ public class RemoveByIdCommand implements  Command{
         if (!collectionManager.isIdInCollection(id)) {
             return new CommandResponse(
                     false,id,
-                    "Element with ID " + id + " does not exist", commandRequest.requestId());
+                    "Element with ID " + id + " does not exist", commandRequest.requestId(), commandRequest.clientId());
         }
         collectionManager.remove(id);
         return new CommandResponse(
                 true,id,
                 "Element with ID " + id + " removed successfully",
-                commandRequest.requestId()
+                commandRequest.requestId(),
+                commandRequest.clientId()
 
         );
     }

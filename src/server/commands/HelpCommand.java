@@ -21,7 +21,7 @@ public class HelpCommand implements Command {
         for (Command command: invoker.getCommandMap().values()){
             result = result + command.getHelpInformation()+"\n";
         }
-        return  new CommandResponse(true, result, "Helped success", commandRequest.requestId());
+        return  new CommandResponse(true, result, "Helped success", commandRequest.requestId(), commandRequest.clientId());
 
     }
 }

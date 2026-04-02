@@ -58,7 +58,7 @@ public class Invoker {
         registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
         registerCommand("update", new UpdateCommand(collectionManager));
         registerCommand("help", new HelpCommand(this));
-        // registerCommand("spawn_client", new SpawnClientCommand(clientRegistry));
+        registerCommand("spawn_client", new SpawnClientCommand(clientRegistry));
         logger.debug("Registering commands with Invoker");
     }
     /**

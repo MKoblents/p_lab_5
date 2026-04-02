@@ -27,7 +27,7 @@ public class FilterLessThanMeleeWeaponCommand implements Command{
 //        System.out.println(meleeWeapon);
         List<SpaceMarine> spaceMarinesList = collectionManager.filterLessThanMeleeWeapon(meleeWeapon);
         spaceMarinesList.sort(Comparator.comparing(SpaceMarine::getName));
-        return new CommandResponse(true, spaceMarinesList, "Filter succsess", commandRequest.requestId());
+        return new CommandResponse(true, spaceMarinesList, "Filter succsess", commandRequest.requestId(), commandRequest.clientId());
 
 
     }

@@ -16,7 +16,7 @@ public class ShuffleCommand implements Command{
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
         collectionManager.shuffle();
-        return new CommandResponse(true, null, "Shuffle completed.", commandRequest.requestId());
+        return new CommandResponse(true, null, "Shuffle completed.", commandRequest.requestId(), commandRequest.clientId());
     }
     public ShuffleCommand(CollectionManager collectionManager){
         this.collectionManager = collectionManager;

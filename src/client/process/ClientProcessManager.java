@@ -30,7 +30,7 @@ public class ClientProcessManager {
         List<String> command = new ArrayList<>();
         command.add("java");
         command.add("-jar");
-        command.add("client.jar");
+        command.add("/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/target/p_lab_5-client.jar");
         command.add("--host");
         command.add(host);
         command.add("--port");

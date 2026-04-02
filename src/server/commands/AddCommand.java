@@ -19,6 +19,6 @@ public class AddCommand implements Command {
     public CommandResponse execute(CommandRequest commandRequest) {
         SpaceMarine spaceMarine = (SpaceMarine) commandRequest.args();
         collectionManager.addItem(spaceMarine);
-        return  new CommandResponse(true, spaceMarine, "Added successfully", commandRequest.requestId());
+        return  new CommandResponse(true, spaceMarine, "Added successfully", commandRequest.requestId(), commandRequest.clientId());
     }
 }

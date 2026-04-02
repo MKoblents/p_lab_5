@@ -1,6 +1,9 @@
 package client.inputWorkers;
 
 import client.command.*;
+import client.context.ClientContext;
+import client.network.ConnectionManager;
+import client.process.ClientProcessManager;
 import shared.dto.CommandRequest;
 
 import java.util.HashMap;
@@ -24,7 +27,10 @@ public class Invoker {
             return null;
         }
         }
-        public Invoker(InputManager inputManager){
+        public Invoker(InputManager inputManager,
+                       ClientContext context,
+                       ConnectionManager connection,
+                       ClientProcessManager processManager){
         registerCommand("add", new Add(inputManager));
         registerCommand("clear", new Clear());
         registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeapon(inputManager));
@@ -39,6 +45,7 @@ public class Invoker {
         registerCommand("sum_of_health", new SumOfHealth());
         registerCommand("show", new Show());
         registerCommand("update", new Update(inputManager));
+        registerCommand("spawn_client", new SpawnClient(context,connection,processManager));
     }
 }
 

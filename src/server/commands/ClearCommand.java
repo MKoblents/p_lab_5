@@ -19,6 +19,6 @@ public class ClearCommand implements Command{
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
         collectionManager.clear();
-        return  new CommandResponse(true, null,"Cleared successfully", commandRequest.requestId());
+        return  new CommandResponse(true, null,"Cleared successfully", commandRequest.requestId(), commandRequest.clientId());
     }
 }

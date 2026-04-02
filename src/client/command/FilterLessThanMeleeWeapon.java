@@ -17,6 +17,6 @@ public class FilterLessThanMeleeWeapon implements ClientCommand{
             System.err.println("Error: Valid MeleeWeapon required");
             return  null;
         }
-        return RequestsFactory.withMeleeWeapon("clear", weapon);
+        return RequestsFactory.withMeleeWeapon("filter_less_than_melee_weapon", weapon);
     }
 }

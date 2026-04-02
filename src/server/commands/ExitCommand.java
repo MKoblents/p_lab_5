@@ -14,6 +14,6 @@ public class ExitCommand implements Command{
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
         System.exit(0);
-        return new CommandResponse(true, null,"Exited successfully", commandRequest.requestId());
+        return new CommandResponse(true, null,"Exited successfully", commandRequest.requestId(), commandRequest.clientId());
     }
 }

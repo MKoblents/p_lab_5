@@ -27,6 +27,6 @@ public class RemoveGreaterCommand implements Command {
         collectionManager.removeGreater(spaceMarine);
         return new CommandResponse(
                 true,
-                spaceMarine, "Removed succsessfully", commandRequest.requestId());
+                spaceMarine, "Removed succsessfully", commandRequest.requestId(), commandRequest.clientId());
     }
 }

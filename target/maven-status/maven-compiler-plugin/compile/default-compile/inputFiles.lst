@@ -1,3 +1,4 @@
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/command/SpawnClient.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/handlers/ResponseHandler.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/io/FileBufferedReader.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/manager/CollectionManager.java
@@ -11,6 +12,8 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/handlers/RequestBuilder.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/enums/AstartesCategory.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/command/FilterLessThanMeleeWeapon.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/hierarchy/PeerConnection.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/SpawnClientCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/Main.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/network/ConnectionManager.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/command/RemoveById.java
@@ -21,6 +24,8 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/inputWorkers/Invoker.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/AddCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/ShowCommand.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/manager/ClientRegistry.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/context/ClientSession.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/Command.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/command/Clear.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/utils/LoggingConfigurator.java
@@ -33,6 +38,8 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/Server.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/Client.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/utils/RequestsFactory.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/context/ClientContext.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/registry/ClientRegistry.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/outputWorkers/CollectionSaver.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/RemoveGreaterCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/ClearCommand.java
@@ -54,9 +61,9 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/utils/Validator.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/network/ClientHandler.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/exceptions/UnavailableMeleeWeaponException.java
-/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/session/ClientSession.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/enums/Weapon.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/exceptions/WrongIdException.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/process/ClientProcessManager.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/io/Reader.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/inputWorkers/InputManager.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/ExecuteScriptCommand.java

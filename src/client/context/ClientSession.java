@@ -1,8 +1,10 @@
 package client.context;
+import client.command.SpawnClient;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
 import client.inputWorkers.Invoker;
 import client.network.ConnectionManager;
+import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,16 +19,21 @@ public class ClientSession implements AutoCloseable {
     private final ConnectionManager connection;
     private final ResponseHandler responseHandler;
     private final ScriptRunner scriptRunner;
-    private Invoker invoker;
+    private final Invoker invoker;
+    private final ClientContext context;
+    private final SpawnClient spawnClientCommand;
 
     public ClientSession(InputManager im,
                          ConnectionManager conn, ResponseHandler rh,
-                         ScriptRunner sr, Invoker invoker) {
+                         ScriptRunner sr, Invoker invoker,
+                         ClientContext context, ClientProcessManager processManager) {
         this.inputManager = im;
         this.connection = conn;
         this.responseHandler = rh;
         this.scriptRunner = sr;
         this.invoker = invoker;
+        this.context = context;
+        this.spawnClientCommand = new SpawnClient(context,connection, processManager);
     }
 
     public void run() throws IOException {
@@ -67,7 +74,11 @@ public class ClientSession implements AutoCloseable {
                 if (response != null) {
                     logger.debug("Received response for requestId: {}, success: {}",
                             response.requestId(), response.success());
-                    responseHandler.handle(response);
+                    if ("spawn_client".equals(request.commandType()) && response.clientId() != null) {
+                        spawnClientCommand.handleResponse(response, context);
+                    } else {
+                        responseHandler.handle(response);
+                    }
                 } else {
                     logger.warn("No response received from server");
                     System.err.println("No response from server");

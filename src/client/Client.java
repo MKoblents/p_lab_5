@@ -1,18 +1,25 @@
 package client;
 
 import client.config.ClientConfig;
+import client.context.ClientContext;
 import client.handlers.ResponseHandler;
+import client.hierarchy.PeerConnection;
 import client.inputWorkers.CommandParser;
 import client.inputWorkers.InputManager;
 import client.inputWorkers.Invoker;
 import client.io.ConsoleBufferedScanner;
 import client.io.Reader;
 import client.network.ConnectionManager;
+import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
 import client.context.ClientSession;
+import client.utils.RequestsFactory;
 import shared.utils.LoggingConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.UUID;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
@@ -31,10 +38,8 @@ public class Client {
             InputManager inputManager = new InputManager(reader, parser);
             ConnectionManager connection = new ConnectionManager();
             ResponseHandler responseHandler = new ResponseHandler();
-            Invoker invoker = new Invoker(inputManager);
-            ScriptRunner scriptRunner = new ScriptRunner(
-                    inputManager, connection, responseHandler, invoker
-            );
+
+
 
             logger.info("Connecting to {}:{}", host, port);
             System.out.println("=== SpaceMarine Client ===");
@@ -44,8 +49,61 @@ public class Client {
                 System.err.println("Failed to connect. Exiting.");
                 return;
             }
+            String clientId = null;
+            String parentClientId = null;
+            int parentPeerPort = -1;
+
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equals("--client-id") && i + 1 < args.length) {
+                    clientId = args[++i];
+                }
+                if (args[i].equals("--parent-id") && i + 1 < args.length) {
+                    parentClientId = args[++i];
+                }
+                if (args[i].equals("--parent-peer-port") && i + 1 < args.length) {
+                    parentPeerPort = Integer.parseInt(args[++i]);
+                }
+            }
+            if (clientId == null) {
+                clientId = UUID.randomUUID().toString().substring(0, 8);
+            }
+            RequestsFactory.setClientId(clientId);
+            logger.info("Using client ID: {}", clientId);
+            PeerConnection peerConnection = new PeerConnection();
+            int myPeerPort = peerConnection.startListening((message) -> {
+                if (message.contains("PARENT_EXIT")) {
+                    logger.info("Parent requested shutdown");
+                    System.exit(0);
+                }
+            });
+            boolean isRoot = (parentClientId == null);
+            ClientContext context = new ClientContext(
+                    clientId,
+                    parentClientId,
+                    connection,
+                    isRoot,
+                    myPeerPort
+            );
+
+            if (parentClientId != null && parentPeerPort > 0) {
+                try {
+                    peerConnection.sendToPeer(
+                            "localhost",
+                            parentPeerPort,
+                            "REGISTER_CHILD:" + clientId
+                    );
+                    logger.info("Registered with parent on port {}", parentPeerPort);
+                } catch (IOException e) {
+                    logger.warn("Failed to register with parent: {}", e.getMessage());
+                }
+            }
+            ClientProcessManager processManager = new ClientProcessManager(host, port);
+            Invoker invoker = new Invoker(inputManager,context,connection,processManager);
+            ScriptRunner scriptRunner = new ScriptRunner(
+                    inputManager, connection, responseHandler, invoker
+            );
             logger.info("Successfully connected to server");
-            ClientSession clientSession = new ClientSession(inputManager,connection,responseHandler,scriptRunner, invoker);
+            ClientSession clientSession = new ClientSession(inputManager,connection,responseHandler,scriptRunner, invoker, context,processManager);
             clientSession.run();
             logger.info("Disconnecting from server");
             connection.disconnect();
