@@ -1,6 +1,9 @@
 package client.inputWorkers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import client.io.Reader;
 /**
  * Parses command-line input into structured arguments.
@@ -21,6 +24,7 @@ public class CommandParser {
     private String pathArg;
     /** Raw enum string for deferred parsing via {@link #getEnumValue(Class)}. */
     private String enumArg;
+    private String targetClientId;
     /**
      * Joins array elements [start, finish) into lowercase string.
      * @param strings source array
@@ -64,6 +68,23 @@ public class CommandParser {
             commandName = line.trim().toLowerCase();
             return;
         }
+        targetClientId = null;
+        List<String> filteredParts = new ArrayList<>();
+        for (int i = 0; i < parts.length; i++){
+            if (parts[i].equals("-c") && i+1<parts.length){
+                if (targetClientId == null) {
+                    targetClientId = parts[i + 1];
+                    i++;
+                } else {
+                    throw new IOException("CLient Id already entered!");
+                }
+            }else {
+                filteredParts.add(parts[i]);
+            }
+        }
+
+        parts = filteredParts.toArray(new String[0]);
+
         commandName = parts[0];
         if (commandName.equals("add") || commandName.equals("remove_greater")){
             xmlArg = listToString(parts, 1, parts.length);
@@ -99,6 +120,11 @@ public class CommandParser {
         reader.setLastXmlString(xmlArg);
 
     }
+
+    public String getTargetClientId() {
+        return targetClientId;
+    }
+
     /**
      * Converts cached enum string to typed enum constant.
      * @param enumType target enum class

@@ -49,24 +49,9 @@ public class Client {
                 System.err.println("Failed to connect. Exiting.");
                 return;
             }
-            String clientId = null;
-            String parentClientId = null;
-            int parentPeerPort = -1;
-
-            for (int i = 0; i < args.length; i++) {
-                if (args[i].equals("--client-id") && i + 1 < args.length) {
-                    clientId = args[++i];
-                }
-                if (args[i].equals("--parent-id") && i + 1 < args.length) {
-                    parentClientId = args[++i];
-                }
-                if (args[i].equals("--parent-peer-port") && i + 1 < args.length) {
-                    parentPeerPort = Integer.parseInt(args[++i]);
-                }
-            }
-            if (clientId == null) {
-                clientId = UUID.randomUUID().toString().substring(0, 8);
-            }
+            String clientId = clientConfig.getClientId();
+            String parentClientId = clientConfig.getParentClientId();
+            int parentPeerPort = clientConfig.getParentPeerPort();
             RequestsFactory.setClientId(clientId);
             logger.info("Using client ID: {}", clientId);
             PeerConnection peerConnection = new PeerConnection();
@@ -103,6 +88,20 @@ public class Client {
                     inputManager, connection, responseHandler, invoker
             );
             logger.info("Successfully connected to server");
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                logger.info("Client shutting down, notifying children...");
+                for (String childId : context.getChildClientIds()) {
+                    Integer peerPort = context.getChildPeerPort(childId);
+                    if (peerPort != null) {
+                        try {
+                            peerConnection.sendToPeer("localhost", peerPort, "PARENT_EXIT");
+                        } catch (IOException e) {
+                            logger.warn("Failed to notify child {}", childId);
+                        }
+                    }
+                }
+                processManager.destroyAllChildren();
+            }));
             ClientSession clientSession = new ClientSession(inputManager,connection,responseHandler,scriptRunner, invoker, context,processManager);
             clientSession.run();
             logger.info("Disconnecting from server");

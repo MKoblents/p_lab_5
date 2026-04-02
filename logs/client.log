@@ -5,3 +5,21 @@
 2026-04-02 12:29:01.285 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 40803
 2026-04-02 12:29:01.289 [main] INFO  [] client.Client - Successfully connected to server
 2026-04-02 12:29:06.370 [main] WARN  [] client.context.ClientSession - Failed to build request for command: ыshow
+2026-04-02 12:46:38.751 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-02 12:46:38.762 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-02 12:46:38.769 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-02 12:46:38.779 [main] INFO  [] client.Client - Using client ID: ee704d83
+2026-04-02 12:46:38.782 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 34683
+2026-04-02 12:46:38.786 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-02 12:46:42.892 [main] WARN  [] client.context.ClientSession - Failed to build request for command: ы�
+2026-04-02 12:46:46.810 [main] WARN  [] client.context.ClientSession - Failed to build request for command: ы
+2026-04-02 12:46:52.513 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: 158b16be (parent: ee704d83)
+2026-04-02 12:46:52.532 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 81264
+2026-04-02 12:46:52.959 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-02 12:46:52.969 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-02 12:46:52.974 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-02 12:46:52.974 [main] INFO  [] client.Client - Using client ID: 158b16be
+2026-04-02 12:46:52.977 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 33337
+2026-04-02 12:46:52.980 [main] INFO  [] client.Client - Registered with parent on port 34683
+2026-04-02 12:46:52.981 [pool-1-thread-2] INFO  [] client.hierarchy.PeerConnection - P2P message received: REGISTER_CHILD:158b16be
+2026-04-02 12:46:52.982 [main] INFO  [] client.Client - Successfully connected to server

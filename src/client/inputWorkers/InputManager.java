@@ -23,6 +23,9 @@ public class InputManager {
         this.reader= reader;
         this.commandParser = commandParser;
     }
+    public String getTargetClientId(){
+        return commandParser.getTargetClientId();
+    }
     /**
      * Returns the last parsed long argument from command input.
      * @return long value (0 if not set or parse failed)

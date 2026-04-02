@@ -1,9 +1,12 @@
 package client.context;
 
 import client.network.ConnectionManager;
+import com.sun.xml.bind.v2.TODO;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ClientContext {
@@ -14,8 +17,8 @@ public class ClientContext {
     private final boolean isRoot;
     private volatile boolean active;
     private final int peerPort;
-    private final List<String> childClientIds = new CopyOnWriteArrayList<>();  // Список ID детей
-
+    private final Map<String, Integer> childPeerPorts = new ConcurrentHashMap<>(); //TODO
+    private final List<String> childClientIds = new CopyOnWriteArrayList<>();
     public ClientContext(String clientId,
                          String parentClientId,
                          ConnectionManager connection,
@@ -52,8 +55,7 @@ public class ClientContext {
         connection.disconnect();
     }
     public boolean isParentOf(String otherClientId) {
-//TODO
-        return false;
+        return childClientIds.contains(otherClientId);
     }
     @Override
     public String toString() {
@@ -89,5 +91,11 @@ public class ClientContext {
     }
     public void clearChildren() {
         childClientIds.clear();
+    }
+    public void registerChildPort(String childId, int peerPort) {
+        childPeerPorts.put(childId, peerPort);
+    }
+    public Integer getChildPeerPort(String childId) {
+        return childPeerPorts.get(childId);
     }
 }
