@@ -1,15 +1,17 @@
 package server.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import server.manager.ClientRegistry;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
-
 import java.util.UUID;
 
-public class SpawnClientCommand implements Command{
+public class SpawnClientCommand implements Command {
+    private static final Logger logger = LoggerFactory.getLogger(SpawnClientCommand.class);
     private final ClientRegistry clientRegistry;
     private final String HELP_INFO = "spawn_client : создать нового клиента (дочерний процесс)";
-    public SpawnClientCommand(ClientRegistry clientRegistry){
+    public SpawnClientCommand(ClientRegistry clientRegistry) {
         this.clientRegistry = clientRegistry;
     }
 
@@ -22,7 +24,10 @@ public class SpawnClientCommand implements Command{
     public CommandResponse execute(CommandRequest commandRequest) {
         String childClientId = UUID.randomUUID().toString().substring(0, 8);
         String parentClientId = commandRequest.clientId();
+        logger.info("Creating child client {} for parent {}", childClientId, parentClientId);
         clientRegistry.register(childClientId, parentClientId);
-        return new CommandResponse(true, null, "Child client created: "+childClientId, commandRequest.requestId(), childClientId);
+        logger.debug("Child {} registered in registry", childClientId);
+        return new CommandResponse(true, null, "Child client created: "+childClientId,
+                commandRequest.requestId(), childClientId);
     }
 }

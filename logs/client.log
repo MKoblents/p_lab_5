@@ -1,0 +1,7 @@
+2026-04-02 12:29:01.259 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-02 12:29:01.268 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-02 12:29:01.273 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-02 12:29:01.282 [main] INFO  [] client.Client - Using client ID: 478ff861
+2026-04-02 12:29:01.285 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 40803
+2026-04-02 12:29:01.289 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-02 12:29:06.370 [main] WARN  [] client.context.ClientSession - Failed to build request for command: ыshow
