@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
@@ -31,6 +32,8 @@ public class Client {
     private static Invoker staticInvoker;
     private static ClientContext staticContext;
     private static PeerConnection staticPeerConnection;
+    private static final AtomicBoolean processingForwardedCommand = new AtomicBoolean(false);
+    public static final Object inputLock = new Object();
 
     public static void main(String[] args) {
         ClientConfig clientConfig = ClientConfig.parse(args);
@@ -155,9 +158,14 @@ public class Client {
         }
     }
     private static void handleForwardCommand(String message, PeerConnection peerConnection) {
+        if (!processingForwardedCommand.compareAndSet(false, true)) {
+            System.out.println("⚠ Another command is being processed, ignoring...");
+            return;
+        }
         String[] parts = message.split(":", 4);
         if (parts.length < 4) {
             logger.warn("Malformed FORWARD message: {}", message);
+            processingForwardedCommand.set(false);
             return;
         }
 
@@ -169,7 +177,7 @@ public class Client {
         System.out.println("\n📨 Received command from client " + fromClientId + ": " + command);
         System.out.println("🔍 DEBUG: Starting to execute command...");
 
-        new Thread(() -> {
+        synchronized (inputLock) {
             try {
                 System.out.println("🔍 DEBUG: Temp reader set");
                 System.out.println("🔍 DEBUG: Parsed command name: " + command);
@@ -207,8 +215,10 @@ public class Client {
             } catch (Exception e) {
                 System.err.println("✗ Failed to execute command: " + e.getMessage());
                 e.printStackTrace();
+            } finally {
+                processingForwardedCommand.set(false);
             }
-        }).start();
+        }
     }
     private static void handleChildRegistration(String message) {
         String[] parts = message.split(":", 3);
@@ -240,5 +250,8 @@ public class Client {
             return -1;
         }
         return null;
+    }
+    public static boolean isProcessingForwardedCommand() {
+        return processingForwardedCommand.get();
     }
 }

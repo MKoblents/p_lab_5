@@ -165,4 +165,17 @@
         <health>0.0</health>
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
+    <spaceMarine>
+        <id>1733242084</id>
+        <name>wef</name>
+        <coordinates>
+            <x>2</x>
+            <y>1</y>
+        </coordinates>
+        <creationDate/>
+        <health>21.0</health>
+        <category>AGGRESSOR</category>
+        <weaponType>BOLT_RIFLE</weaponType>
+        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
+    </spaceMarine>
 </spaceMarines>

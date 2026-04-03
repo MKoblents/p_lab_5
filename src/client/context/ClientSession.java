@@ -1,4 +1,5 @@
 package client.context;
+import client.Client;
 import client.command.SpawnClient;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
@@ -39,6 +40,16 @@ public class ClientSession implements AutoCloseable {
     public void run() throws IOException {
         System.out.println("Connected! Type 'help' for commands, 'exit' to quit.");
         while (true) {
+            if (Client.isProcessingForwardedCommand()) {
+                try {
+                    Thread.sleep(100);
+                    continue;
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+            synchronized (Client.inputLock){
             System.out.print("> ");
             String commandKey = inputManager.parseCommand();
             if (commandKey == null || commandKey.isEmpty()) {
@@ -87,7 +98,7 @@ public class ClientSession implements AutoCloseable {
                 logger.error("Error processing command '{}': {}", commandKey, e.getMessage(), e);
                 System.err.println("Error: " + e.getMessage());
             }
-        }
+        }}
     }
     @Override
     public void close(){

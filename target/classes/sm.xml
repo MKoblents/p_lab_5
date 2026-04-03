@@ -144,7 +144,18 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1358935321</id>
+        <id>887750041</id>
+        <name>SpaceMarine1358935321</name>
+        <coordinates>
+            <x>0</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>1010953501</id>
         <name>SpaceMarine1358935321</name>
         <coordinates>
             <x>0</x>
