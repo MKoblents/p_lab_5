@@ -1,5 +1,6 @@
 package server.client;
 
+import server.network.ClientConnection;
 import shared.dto.ClientStatus;
 import shared.enums.ClientState;
 
@@ -11,10 +12,12 @@ public class ConnectedClient {
     private ClientState clientState;
     private Instant lastHeartbeat;
     private int commandsExecuted;
-    public ConnectedClient(String clientId, ClientState clientState){
+    private ClientConnection clientConnection;
+    public ConnectedClient(String clientId, ClientState clientState, ClientConnection clientConnection){
         this.clientId = clientId;
         this.clientState = clientState;
         this.lastHeartbeat = Instant.now();
+        this.clientConnection = clientConnection;
     }
     public void upgradeHeartbeat(){
         this.lastHeartbeat = Instant.now();
@@ -27,5 +30,9 @@ public class ConnectedClient {
     }
     public void markOnline(){
         this.clientState = ClientState.ONLINE;
+    }
+
+    public ClientConnection getClientConnection() {
+        return clientConnection;
     }
 }

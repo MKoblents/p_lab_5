@@ -2,6 +2,7 @@ package client.network;
 
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.dto.HandshakeRequest;
 import shared.utils.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,5 +161,20 @@ public class ConnectionManager {
     }
     public int getPort(){
         return port;
+    }
+    public boolean sendHandshake(HandshakeRequest handshake) throws IOException {
+        if (!connected || socketChannel == null) {
+            throw new IOException("Not connected to server");
+        }
+        logger.debug("Sending handshake for client: {}", handshake.clientId());
+        byte[] data = SerializationUtil.serialize(handshake);
+        ByteBuffer buffer = ByteBuffer.allocate(4 + data.length);
+        buffer.putInt(data.length);
+        buffer.put(data);
+        buffer.flip();
+        while (buffer.hasRemaining()) {
+            socketChannel.write(buffer);
+        }
+        return true;
     }
 }

@@ -16,6 +16,7 @@ import client.context.ClientSession;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.dto.HandshakeRequest;
 import shared.models.SpaceMarine;
 import shared.utils.LoggingConfigurator;
 import org.slf4j.Logger;
@@ -60,6 +61,16 @@ public class Client {
             }
             String clientId = clientConfig.getClientId();
             String parentClientId = clientConfig.getParentClientId();
+            try {
+                HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
+                connection.sendHandshake(handshake);
+                logger.info("Handshake sent successfully. Client={}, Parent={}", clientId, parentClientId);
+            } catch (IOException e) {
+                logger.error("Failed to send handshake to server", e);
+                System.err.println("Handshake failed: " + e.getMessage());
+                connection.disconnect();
+                return;
+            }
             int parentPeerPort = clientConfig.getParentPeerPort();
             RequestsFactory.setClientId(clientId);
             logger.info("Using client ID: {}", clientId);
