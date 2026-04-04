@@ -12,12 +12,10 @@ public class ConnectedClient {
     private ClientState clientState;
     private Instant lastHeartbeat;
     private int commandsExecuted;
-    private ClientConnection clientConnection;
-    public ConnectedClient(String clientId, ClientState clientState, ClientConnection clientConnection){
+    public ConnectedClient(String clientId, ClientState clientState){
         this.clientId = clientId;
         this.clientState = clientState;
         this.lastHeartbeat = Instant.now();
-        this.clientConnection = clientConnection;
     }
     public void upgradeHeartbeat(){
         this.lastHeartbeat = Instant.now();
@@ -32,7 +30,4 @@ public class ConnectedClient {
         this.clientState = ClientState.ONLINE;
     }
 
-    public ClientConnection getClientConnection() {
-        return clientConnection;
-    }
 }

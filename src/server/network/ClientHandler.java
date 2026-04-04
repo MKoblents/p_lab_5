@@ -3,22 +3,30 @@ package server.network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.Server;
+import server.manager.ClientRegistry;
 import server.manager.Invoker;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.dto.HandshakeRequest;
 import shared.utils.SerializationUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
 public class ClientHandler {
     private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
-    public static void handleClient(Socket clientSocket, Invoker invoker) {
+    public static void handleClient(Socket clientSocket, Invoker invoker, ClientRegistry clientRegistry) {
         try (
-                java.io.InputStream in = clientSocket.getInputStream();
-                java.io.OutputStream out = clientSocket.getOutputStream()
+                InputStream in = clientSocket.getInputStream();
+                OutputStream out = clientSocket.getOutputStream()
         ) {
+            if (!processHandshake(in, out, clientRegistry)) {
+                logger.warn("Handshake failed, closing connection");
+                return;
+            }
             logger.debug("Streams opened for client: {}", clientSocket.getRemoteSocketAddress());
             while (!clientSocket.isClosed()) {
                 try {
@@ -70,6 +78,9 @@ public class ClientHandler {
         } catch (IOException e) {
             logger.error("IO error with client {}: {}",
                     clientSocket.getRemoteSocketAddress(), e.getMessage(), e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+//            TODO
         } finally {
             try {
                 logger.debug("Closing connection to client: {}", clientSocket.getRemoteSocketAddress());
@@ -80,5 +91,34 @@ public class ClientHandler {
             }
         }
     }
+    private static boolean processHandshake(InputStream in, OutputStream out, ClientRegistry registry)
+            throws IOException, ClassNotFoundException {
+        byte[] lenBytes = new byte[4];
+        int read = in.read(lenBytes);
+        if (read < 4) return false;
 
+        int length = ByteBuffer.wrap(lenBytes).getInt();
+        byte[] data = new byte[length];
+        int totalRead = 0;
+        while (totalRead < length) {
+            int r = in.read(data, totalRead, length - totalRead);
+            if (r == -1) return false;
+            totalRead += r;
+        }
+        HandshakeRequest handshake = (HandshakeRequest) SerializationUtil.deserialize(data);
+        if (handshake.parentClientId() != null && !registry.exists(handshake.parentClientId())) {
+            CommandResponse error = new CommandResponse(false, null, "Parent not found", "0", handshake.clientId());
+            out.write(SerializationUtil.serialize(error));
+            out.flush();
+            return false;
+        }
+        registry.register(handshake.clientId(), handshake.parentClientId());
+        logger.info("Client {} registered (parent: {})", handshake.clientId(),
+                handshake.parentClientId() != null ? handshake.parentClientId() : "ROOT");
+        CommandResponse ack = new CommandResponse(true, null, "Handshake OK", "0", handshake.clientId());
+        out.write(SerializationUtil.serialize(ack));
+        out.flush();
+
+        return true;
+    }
 }

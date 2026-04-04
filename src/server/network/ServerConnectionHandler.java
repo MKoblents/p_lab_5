@@ -99,8 +99,8 @@ public class ServerConnectionHandler {
             closeChannel(channel, key);
             return;
         }
-        ClientConnection connection = new ClientConnection(channel);
-        clientRegistry.register(clientId, parentClientId, connection);
+//        ClientConnection connection = new ClientConnection(channel);
+        clientRegistry.register(clientId, parentClientId);
         key.attach(ClientChannelState.READY_FOR_COMMANDS);
         logger.info("Client {} registered successfully. Parent: {}", clientId,
                 parentClientId != null ? parentClientId : "ROOT");

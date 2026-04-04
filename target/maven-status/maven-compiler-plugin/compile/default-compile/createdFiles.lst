@@ -9,6 +9,7 @@ server/Server.class
 shared/models/Chapter.class
 shared/dto/CommandRequest.class
 server/commands/ClearCommand.class
+shared/dto/ServerMessage$MessageType.class
 server/commands/RemoveByIdCommand.class
 server/commands/AddCommand.class
 client/utils/Validator.class
@@ -22,6 +23,7 @@ server/manager/FileManager.class
 server/commands/UpdateCommand.class
 client/network/ConnectionManager.class
 shared/exceptions/CreationDataException.class
+shared/dto/ServerMessage.class
 client/context/ClientContext.class
 shared/dto/ClientStatus.class
 client/handlers/ForwardCommandsHandler.class
@@ -49,6 +51,7 @@ client/config/ClientConfig.class
 server/commands/Command.class
 shared/dto/CommandResponse.class
 client/hierarchy/PeerConnection.class
+shared/dto/HandshakeRequest.class
 shared/utils/SerializationUtil.class
 server/console/ConsoleHandler.class
 server/manager/Invoker.class
@@ -75,12 +78,14 @@ server/manager/FileManager$Operation.class
 client/command/InsertAt.class
 server/commands/SpawnClientCommand.class
 client/command/Show.class
+server/network/ClientChannelState.class
 shared/enums/AstartesCategory.class
 shared/enums/MeleeWeapon.class
 client/command/MinByMeleeWeapon.class
 client/utils/RequestsFactory.class
 client/command/ClientCommand.class
 client/command/RemoveById.class
+server/network/ClientConnection.class
 client/command/Update.class
 server/commands/ShuffleCommand.class
 server/commands/RemoveGreaterCommand.class

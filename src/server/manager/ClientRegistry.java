@@ -13,8 +13,8 @@ public class ClientRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ClientRegistry.class);
     private final Map<String, ConnectedClient> clients = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> parentChildRelations = new ConcurrentHashMap<>();
-    public void register(String clientId, String parentClientId, ClientConnection clientConnection) {
-        ConnectedClient client = new ConnectedClient(clientId, ClientState.ONLINE, clientConnection);
+    public void register(String clientId, String parentClientId) {
+        ConnectedClient client = new ConnectedClient(clientId, ClientState.ONLINE);
         clients.put(clientId, client);
         if (parentClientId != null) {
             parentChildRelations
@@ -37,9 +37,6 @@ public class ClientRegistry {
         ConnectedClient removed = clients.remove(clientId);
         if (removed != null) {
             removed.markOffline();
-            if (removed.getClientConnection() != null) {
-                removed.getClientConnection().close();
-            }
             logger.info("Client {} unregistered", clientId);
         }
         parentChildRelations.values().forEach(childrenSet ->

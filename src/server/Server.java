@@ -36,7 +36,7 @@ public class Server {
             collectionManager.loadFromFile(dataFile);
             logger.info("Loaded {} elements from {}",
                     collectionManager.getSpaceMarines().size(), dataFile);
-            Invoker invoker = new Invoker(collectionManager, clientRegistry);
+            Invoker invoker = new Invoker(collectionManager);
             final String finalDataFile = dataFile;
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 logger.info("=== Shutdown hook triggered ===");
@@ -64,7 +64,7 @@ public class Server {
                     logger.debug("Waiting for client connection...");
                     Socket clientSocket = serverSocket.accept();
                     logger.info("Client connected: {}", clientSocket.getRemoteSocketAddress());
-                    new Thread(() -> ClientHandler.handleClient(clientSocket, invoker)).start();
+                    new Thread(() -> ClientHandler.handleClient(clientSocket, invoker, clientRegistry)).start();
                 }
             }
             logger.info("Server main loop exited");

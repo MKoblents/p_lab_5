@@ -8,3 +8,5 @@ java.net.BindException: Address already in use
 	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:274)
 	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:167)
 	at server.Server.main(Server.java:61)
+2026-04-04 18:51:26.461 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-04 18:51:27.854 [Thread-2] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset

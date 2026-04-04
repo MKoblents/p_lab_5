@@ -975,3 +975,24 @@ Caused by: java.io.IOException: error=2, No such file or directory
 2026-04-04 15:44:19.018 [Thread-0] WARN  [] client.Client - Failed to notify child 6a179995
 2026-04-04 15:44:19.019 [Thread-0] WARN  [] client.Client - Failed to notify child 6a179995
 2026-04-04 15:44:19.020 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 18:49:53.975 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 18:49:53.991 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 18:49:53.998 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 18:49:54.007 [main] INFO  [] client.Client - Handshake sent successfully. Client=root1, Parent=null
+2026-04-04 18:49:54.007 [main] INFO  [] client.Client - Using client ID: root1
+2026-04-04 18:49:54.012 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 41701
+2026-04-04 18:49:54.017 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 18:50:37.377 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 18:50:37.404 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 18:50:37.417 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 18:50:37.431 [main] INFO  [] client.Client - Handshake sent successfully. Client=child1, Parent=root1
+2026-04-04 18:50:37.433 [main] INFO  [] client.Client - Using client ID: child1
+2026-04-04 18:50:37.441 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 40435
+2026-04-04 18:50:37.450 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 18:51:17.734 [main] INFO  [] client.command.ForwardCommand - Forwarding command 'show' to client child1
+2026-04-04 18:51:17.735 [main] WARN  [] client.command.ForwardCommand - No port found for client ID: child1
+2026-04-04 18:51:17.736 [main] WARN  [] client.context.ClientSession - Failed to build request for command: show
+2026-04-04 18:51:26.130 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 18:51:26.130 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 18:51:27.525 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 18:51:27.526 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes

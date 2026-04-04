@@ -44,7 +44,9 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/RemoveGreaterCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/ClearCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/utils/XMLParser.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/dto/HandshakeRequest.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/ExitCommand.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/network/ClientChannelState.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/command/Info.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/command/InsertAt.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/command/ClientCommand.java
@@ -54,6 +56,7 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/enums/MeleeWeapon.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/dto/CommandResponse.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/models/Coordinates.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/dto/ServerMessage.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/scripts/ScriptRunner.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/SaveCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/exceptions/UnavailableCoordinateException.java
@@ -76,6 +79,7 @@
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/config/ClientConfig.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/exceptions/CreationDataException.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/FilterLessThanMeleeWeaponCommand.java
+/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/network/ClientConnection.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/client/command/ForwardCommand.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/shared/models/SpaceMarine.java
 /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/server/commands/HelpCommand.java

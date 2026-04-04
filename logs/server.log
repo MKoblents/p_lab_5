@@ -649,3 +649,27 @@ java.net.BindException: Address already in use
 2026-04-04 15:44:23.455 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 17 elements
 2026-04-04 15:44:23.455 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
 2026-04-04 15:44:23.455 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-04 18:49:20.047 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-04 18:49:20.051 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-04 18:49:20.052 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-04 18:49:20.054 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-04 18:49:20.069 [main] INFO  [] server.Server - Loaded 17 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-04 18:49:20.076 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-04 18:49:20.077 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-04 18:49:20.078 [main] INFO  [] server.Server - Console reader started
+2026-04-04 18:49:20.096 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-04 18:49:53.998 [main] INFO  [] server.Server - Client connected: /127.0.0.1:52826
+2026-04-04 18:49:54.024 [Thread-2] INFO  [] server.manager.ClientRegistry - Root client root1 registered
+2026-04-04 18:49:54.025 [Thread-2] INFO  [] server.network.ClientHandler - Client root1 registered (parent: ROOT)
+2026-04-04 18:50:37.417 [main] INFO  [] server.Server - Client connected: /127.0.0.1:36978
+2026-04-04 18:50:37.433 [Thread-3] INFO  [] server.manager.ClientRegistry - Client child1 registered as child of root1
+2026-04-04 18:50:37.434 [Thread-3] INFO  [] server.network.ClientHandler - Client child1 registered (parent: root1)
+2026-04-04 18:51:26.461 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-04 18:51:26.463 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:36978
+2026-04-04 18:51:27.854 [Thread-2] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-04 18:51:27.855 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:52826
+2026-04-04 18:51:28.837 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-04 18:51:28.837 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-04 18:51:28.971 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 17 elements
+2026-04-04 18:51:28.972 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-04 18:51:28.972 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===

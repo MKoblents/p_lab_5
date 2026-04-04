@@ -9,10 +9,8 @@ import java.util.UUID;
 
 public class SpawnClientCommand implements Command {
     private static final Logger logger = LoggerFactory.getLogger(SpawnClientCommand.class);
-    private final ClientRegistry clientRegistry;
     private final String HELP_INFO = "spawn_client : создать нового клиента (дочерний процесс)";
-    public SpawnClientCommand(ClientRegistry clientRegistry) {
-        this.clientRegistry = clientRegistry;
+    public SpawnClientCommand() {
     }
 
     @Override
@@ -25,7 +23,6 @@ public class SpawnClientCommand implements Command {
         String childClientId = UUID.randomUUID().toString().substring(0, 8);
         String parentClientId = commandRequest.clientId();
         logger.info("Creating child client {} for parent {}", childClientId, parentClientId);
-        clientRegistry.register(childClientId, parentClientId);
         logger.debug("Child {} registered in registry", childClientId);
         return new CommandResponse(true, null, "Child client created: "+childClientId,
                 commandRequest.requestId(), childClientId);
