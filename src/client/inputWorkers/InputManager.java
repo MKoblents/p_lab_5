@@ -84,8 +84,6 @@ public class InputManager {
      * @return enum value or null if invalid/not provided
      */
     public MeleeWeapon getInputMeleeWeapon() {
-        System.out.println("2");
-        System.out.println(commandParser.getEnumValue(MeleeWeapon.class));
         return commandParser.getEnumValue(MeleeWeapon.class);
     }
     /**

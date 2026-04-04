@@ -911,3 +911,67 @@ Caused by: java.io.IOException: error=2, No such file or directory
 2026-04-03 15:21:55.129 [Thread-0] WARN  [] client.Client - Failed to notify child f16d2b43
 2026-04-03 15:21:55.130 [Thread-0] WARN  [] client.Client - Failed to notify child f16d2b43
 2026-04-03 15:21:55.131 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 15:42:15.945 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 15:42:15.964 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 15:42:15.980 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 15:42:15.982 [main] INFO  [] client.Client - Using client ID: e41bf263
+2026-04-04 15:42:15.990 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 32889
+2026-04-04 15:42:15.999 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 15:42:22.678 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=6a179995
+2026-04-04 15:42:22.679 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: 6a179995 (parent: e41bf263)
+2026-04-04 15:42:22.697 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 12848
+2026-04-04 15:42:22.700 [main] INFO  [] client.command.SpawnClient - Child 6a179995 added to context
+2026-04-04 15:42:22.701 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 6a179995 exited with code 0
+2026-04-04 15:42:23.143 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 15:42:23.161 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 15:42:23.172 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 15:42:23.174 [main] INFO  [] client.Client - Using client ID: 6a179995
+2026-04-04 15:42:23.181 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 34873
+2026-04-04 15:42:23.197 [main] INFO  [] client.Client - Registered with parent on port 32889
+2026-04-04 15:42:23.197 [pool-1-thread-2] INFO  [] client.hierarchy.PeerConnection - P2P message received: REGISTER_CHILD:6a179995:34873
+2026-04-04 15:42:23.199 [pool-1-thread-2] INFO  [] client.Client - Child client 6a179995 registered with port 34873
+2026-04-04 15:42:23.203 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 15:42:44.329 [main] INFO  [] client.command.ForwardCommand - Forwarding command 'insert_at' to client 6a179995
+2026-04-04 15:42:44.336 [main] WARN  [] client.context.ClientSession - Failed to build request for command: insert_at
+2026-04-04 15:42:44.337 [pool-1-thread-2] INFO  [] client.hierarchy.PeerConnection - P2P message received: FORWARD:e41bf263:e4c313b1:insert_at
+2026-04-04 15:42:44.338 [pool-1-thread-2] INFO  [] client.Client - Received forwarded command from e41bf263: insert_at
+2026-04-04 15:43:29.175 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 15:43:29.194 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 15:43:29.207 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 15:43:29.209 [main] INFO  [] client.Client - Using client ID: a874822d
+2026-04-04 15:43:29.217 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 39211
+2026-04-04 15:43:29.226 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 15:43:38.812 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 15:43:38.813 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 15:43:43.391 [main] WARN  [] client.context.ClientSession - Failed to build request for command: [a
+2026-04-04 15:43:52.024 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=bbda8460
+2026-04-04 15:43:52.025 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: bbda8460 (parent: 6a179995)
+2026-04-04 15:43:52.039 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 13064
+2026-04-04 15:43:52.041 [main] INFO  [] client.command.SpawnClient - Child bbda8460 added to context
+2026-04-04 15:43:52.043 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client bbda8460 exited with code 0
+2026-04-04 15:43:52.490 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 15:43:52.508 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 15:43:52.518 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 15:43:52.520 [main] INFO  [] client.Client - Using client ID: bbda8460
+2026-04-04 15:43:52.529 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 44871
+2026-04-04 15:43:52.538 [pool-1-thread-2] INFO  [] client.hierarchy.PeerConnection - P2P message received: REGISTER_CHILD:bbda8460:44871
+2026-04-04 15:43:52.539 [pool-1-thread-2] INFO  [] client.Client - Child client bbda8460 registered with port 44871
+2026-04-04 15:43:52.539 [main] INFO  [] client.Client - Registered with parent on port 34873
+2026-04-04 15:43:52.545 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 15:44:08.678 [main] INFO  [] client.command.ForwardCommand - Forwarding command 'show' to client bbda8460
+2026-04-04 15:44:08.679 [main] WARN  [] client.command.ForwardCommand - No port found for client ID: bbda8460
+2026-04-04 15:44:08.680 [main] WARN  [] client.context.ClientSession - Failed to build request for command: show
+2026-04-04 15:44:17.411 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 15:44:17.419 [Thread-0] INFO  [] client.Client - Notified child bbda8460
+2026-04-04 15:44:17.419 [Thread-0] INFO  [] client.Client - Notified child bbda8460
+2026-04-04 15:44:17.420 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 15:44:17.421 [pool-1-thread-2] INFO  [] client.hierarchy.PeerConnection - P2P message received: PARENT_EXIT
+2026-04-04 15:44:17.421 [pool-1-thread-3] INFO  [] client.hierarchy.PeerConnection - P2P message received: PARENT_EXIT
+2026-04-04 15:44:17.421 [pool-1-thread-2] INFO  [] client.Client - Parent requested shutdown
+2026-04-04 15:44:17.421 [pool-1-thread-3] INFO  [] client.Client - Parent requested shutdown
+2026-04-04 15:44:17.422 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 15:44:17.422 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 15:44:19.013 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 15:44:19.018 [Thread-0] WARN  [] client.Client - Failed to notify child 6a179995
+2026-04-04 15:44:19.019 [Thread-0] WARN  [] client.Client - Failed to notify child 6a179995
+2026-04-04 15:44:19.020 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes

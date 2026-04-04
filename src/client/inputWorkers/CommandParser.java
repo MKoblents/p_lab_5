@@ -74,7 +74,6 @@ public class CommandParser {
             if (parts[i].equals("-c") && i+1<parts.length){
                 if (targetClientId == null) {
                     targetClientId = parts[i + 1];
-                    System.out.println("FOUND TARGET CLIENT iD:"+ targetClientId);
                     i++;
                 } else {
                     throw new IOException("CLient Id already entered!");
@@ -114,7 +113,6 @@ public class CommandParser {
         if (commandName.equals("filter_less_than_melee_weapon")){
 
             enumArg = parts[1];
-            System.out.println(enumArg+" in command parser");
             return;
         }
         xmlArg = listToString(parts, 2, parts.length);

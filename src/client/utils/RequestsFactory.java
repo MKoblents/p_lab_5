@@ -29,7 +29,6 @@ public class RequestsFactory {
         return new CommandRequest(commandName, args, generateRequestId(), clientId);
     }
     public static CommandRequest withMeleeWeapon(String commandName, MeleeWeapon meleeWeapon){
-        System.out.println("4");
         return new CommandRequest(commandName, meleeWeapon, generateRequestId(), clientId);
     }
     public static CommandRequest createIdMarine(String commandName, int index, SpaceMarine spaceMarine){

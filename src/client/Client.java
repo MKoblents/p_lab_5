@@ -70,7 +70,7 @@ public class Client {
             PeerConnection peerConnection = new PeerConnection();
             staticPeerConnection = peerConnection;
             int myPeerPort = peerConnection.startListening((message) -> {
-                System.out.println("🔍 DEBUG: P2P message received in child: " + message);
+               logger.debug("P2P message received in child: " + message);
                 logger.debug("P2P message received: {}", message);
                 if (message.startsWith("FORWARD:")) {
                     handleForwardCommand(message, peerConnection);
@@ -99,7 +99,7 @@ public class Client {
             staticContext = context;
             if (parentClientId != null && parentPeerPort > 0) {
                 try {
-                    System.out.println("🔍 DEBUG: Registering with parent on port " + parentPeerPort);
+                   logger.debug("Registering with parent on port " + parentPeerPort);
                     peerConnection.sendToPeer(
                             "localhost",
                             parentPeerPort,
@@ -159,7 +159,7 @@ public class Client {
     }
     private static void handleForwardCommand(String message, PeerConnection peerConnection) {
         if (!processingForwardedCommand.compareAndSet(false, true)) {
-            System.out.println("⚠ Another command is being processed, ignoring...");
+            System.out.println("Another command is being processed, ignoring...");
             return;
         }
         String[] parts = message.split(":", 4);
@@ -174,33 +174,33 @@ public class Client {
         String command = parts[3];
 
         logger.info("Received forwarded command from {}: {}", fromClientId, command);
-        System.out.println("\n📨 Received command from client " + fromClientId + ": " + command);
-        System.out.println("🔍 DEBUG: Starting to execute command...");
+        System.out.println("\n Received command from client " + fromClientId + ": " + command);
+       logger.debug("Starting to execute command...");
 
         synchronized (inputLock) {
             try {
-                System.out.println("🔍 DEBUG: Temp reader set");
-                System.out.println("🔍 DEBUG: Parsed command name: " + command);
-                System.out.println("🔍 DEBUG: Calling runServerCommand...");
+               logger.debug("Temp reader set");
+               logger.debug("Parsed command name: " + command);
+               logger.debug("Calling runServerCommand...");
                 CommandRequest request = staticInvoker.runServerCommand(command);
-                System.out.println("🔍 DEBUG: runServerCommand returned: " + (request != null ? request.commandType() : "null"));
+               logger.debug("runServerCommand returned: " + (request != null ? request.commandType() : "null"));
 
                 CommandResponse response = null;
                 String resultMsg;
                 boolean success;
 
                 if (request != null) {
-                    System.out.println("🔍 DEBUG: Sending request to server...");
+                   logger.debug("Sending request to server...");
                     staticConnection.sendRequest(request);
-                    System.out.println("🔍 DEBUG: Waiting for response...");
+                   logger.debug("Waiting for response...");
                     response = staticConnection.readResponse();
                     success = response != null && response.success();
                     resultMsg = response != null ? response.message() : "No response from server";
-                    System.out.println("🔍 DEBUG: Response received - success=" + success);
+                   logger.debug("Response received - success=" + success);
                 } else {
                     success = false;
                     resultMsg = "Failed to build request for command: " + command;
-                    System.out.println("🔍 DEBUG: Request is null, command failed");
+                   logger.debug("Request is null, command failed");
                 }
                 if (success) {
                     System.out.println("\n✓ Command '" + command + "' executed successfully");
@@ -208,9 +208,9 @@ public class Client {
                         System.out.println("  Result: " + response.result());
                     }
                 } else {
-                    System.err.println("\n✗ Command '" + command + "' failed: " + resultMsg);
+                    System.err.println("\nCommand '" + command + "' failed: " + resultMsg);
                 }
-                System.out.println("🔍 DEBUG: Original reader restored");
+               logger.debug("Original reader restored");
 
             } catch (Exception e) {
                 System.err.println("✗ Failed to execute command: " + e.getMessage());
@@ -230,7 +230,7 @@ public class Client {
                 staticContext.registerChildPort(childId, childPort);
                 staticContext.addChild(childId);
                 logger.info("Child client {} registered with port {}", childId, childPort);
-                System.out.println("✓ New child client connected: " + childId);
+                System.out.println("New child client connected: " + childId);
             } else {
                 logger.warn("Context not initialized, cannot register child: {}", childId);
             }

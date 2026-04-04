@@ -23,8 +23,6 @@ public class Invoker {
     private final ClientProcessManager processManager;
 
     private Map<String, ClientCommand> commandMap = new HashMap<>();
-
-    // Команды, которые всегда выполняются локально
     private static final Set<String> LOCAL_COMMANDS = Set.of(
             "spawn_client", "exit", "help", "whoami"
     );
@@ -62,44 +60,26 @@ public class Invoker {
         registerCommand("show", new Show());
         registerCommand("update", new Update(inputManager));
         registerCommand("spawn_client", new SpawnClient(context, connection, processManager));
-//        registerCommand("whoami", new WhoAmI(context));
     }
 
     public CommandRequest runCommand(String commandName) {
         String targetClientId = inputManager.getTargetClientId();
-
-        // ЛОГИРУЕМ ВСЕ ПАРАМЕТРЫ
-        System.out.println("========================================");
-        System.out.println("🔍 runCommand called:");
-        System.out.println("   commandName: '" + commandName + "'");
-        System.out.println("   targetClientId: '" + targetClientId + "'");
-        System.out.println("   myClientId: '" + context.getClientId() + "'");
-        System.out.println("   isLocalCommand: " + LOCAL_COMMANDS.contains(commandName));
-        System.out.println("========================================");
-
-        // Локальные команды всегда выполняем сами
+        logger.debug("Executing command '{}' for client {}", commandName, context.getClientId());
         if (LOCAL_COMMANDS.contains(commandName)) {
             System.out.println("📌 Local command, executing directly");
             return runServerCommand(commandName);
         }
-
-        // Если есть targetClientId
         if (targetClientId != null && !targetClientId.isEmpty()) {
-            // Если команда адресована нам самим
             if (targetClientId.equals(context.getClientId())) {
-                System.out.println("📌 Command targeted to self, executing locally");
+                System.out.println("Command targeted to self, executing locally");
                 return runServerCommand(commandName);
             }
-
-            // Иначе - отправляем другому клиенту
-            System.out.println("📤 FORWARDING command '" + commandName + "' to client: " + targetClientId);
+            System.out.println("FORWARDING command '" + commandName + "' to client: " + targetClientId);
             ForwardCommand fc = new ForwardCommand(targetClientId, commandName, context, peerConnection);
             fc.execute();
             return null;
         }
-
-        // Нет targetClientId - выполняем на сервере через текущий клиент
-        System.out.println("📌 No target, executing on server via current client");
+        System.out.println("No target, executing on server via current client");
         return runServerCommand(commandName);
     }
 
