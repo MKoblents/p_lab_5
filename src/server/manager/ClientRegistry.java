@@ -12,6 +12,7 @@ public class ClientRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ClientRegistry.class);
     private final Map<String, ConnectedClient> clients = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> parentChildRelations = new ConcurrentHashMap<>();
+    private PendingCommandQueue pendingCommandQueue = new PendingCommandQueue();
     public void register(String clientId, String parentClientId) {
         ConnectedClient client = new ConnectedClient(clientId, ClientState.ONLINE);
         clients.put(clientId, client);
@@ -64,5 +65,9 @@ public class ClientRegistry {
         if (getChildren(parentId).contains(childId)){
             return  true;
         } return  false;
+    }
+
+    public PendingCommandQueue getPendingCommandQueue() {
+        return pendingCommandQueue;
     }
 }

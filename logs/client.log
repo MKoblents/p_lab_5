@@ -996,3 +996,107 @@ Caused by: java.io.IOException: error=2, No such file or directory
 2026-04-04 18:51:26.130 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
 2026-04-04 18:51:27.525 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
 2026-04-04 18:51:27.526 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 20:05:00.347 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:05:00.360 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:05:00.366 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:05:00.374 [main] INFO  [] client.Client - Handshake sent successfully. Client=root1, Parent=null
+2026-04-04 20:05:00.374 [main] INFO  [] client.Client - Using client ID: root1
+2026-04-04 20:05:00.377 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 34275
+2026-04-04 20:05:00.381 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:05:05.090 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:05:05.108 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:05:05.118 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:05:05.128 [main] INFO  [] client.Client - Handshake sent successfully. Client=child1, Parent=root1
+2026-04-04 20:05:05.129 [main] INFO  [] client.Client - Using client ID: child1
+2026-04-04 20:05:05.135 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 36915
+2026-04-04 20:05:05.142 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:05:27.396 [main] ERROR [] client.context.ClientSession - Error processing command 'show': shared.dto.ForwardCommandObject
+java.io.NotSerializableException: shared.dto.ForwardCommandObject
+	at java.base/java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1187)
+	at java.base/java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1572)
+	at java.base/java.io.ObjectOutputStream.writeRecordData(ObjectOutputStream.java:1490)
+	at java.base/java.io.ObjectOutputStream.writeOrdinaryObject(ObjectOutputStream.java:1434)
+	at java.base/java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1181)
+	at java.base/java.io.ObjectOutputStream.writeObject(ObjectOutputStream.java:350)
+	at shared.utils.SerializationUtil.serialize(SerializationUtil.java:9)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:69)
+	at client.context.ClientSession.run(ClientSession.java:82)
+	at client.Client.main(Client.java:159)
+2026-04-04 20:05:49.376 [main] ERROR [] client.network.ConnectionManager - Unexpected error while reading response: capacity < 0: (-1393754107 < 0)
+java.lang.IllegalArgumentException: capacity < 0: (-1393754107 < 0)
+	at java.base/java.nio.Buffer.createCapacityException(Buffer.java:279)
+	at java.base/java.nio.ByteBuffer.allocate(ByteBuffer.java:362)
+	at client.network.ConnectionManager.readResponse(ConnectionManager.java:103)
+	at client.context.ClientSession.run(ClientSession.java:84)
+	at client.Client.main(Client.java:159)
+2026-04-04 20:05:49.377 [main] WARN  [] client.context.ClientSession - No response received from server
+2026-04-04 20:06:15.197 [main] ERROR [] client.network.ConnectionManager - Unexpected error while reading response: capacity < 0: (-1393754107 < 0)
+java.lang.IllegalArgumentException: capacity < 0: (-1393754107 < 0)
+	at java.base/java.nio.Buffer.createCapacityException(Buffer.java:279)
+	at java.base/java.nio.ByteBuffer.allocate(ByteBuffer.java:362)
+	at client.network.ConnectionManager.readResponse(ConnectionManager.java:103)
+	at client.context.ClientSession.run(ClientSession.java:84)
+	at client.Client.main(Client.java:159)
+2026-04-04 20:06:15.199 [main] WARN  [] client.context.ClientSession - No response received from server
+2026-04-04 20:07:13.368 [main] ERROR [] client.network.ConnectionManager - Server disconnected while reading response data
+2026-04-04 20:07:13.368 [main] WARN  [] client.context.ClientSession - No response received from server
+2026-04-04 20:07:13.369 [main] ERROR [] client.network.ConnectionManager - Attempted to send request but not connected
+2026-04-04 20:07:13.369 [main] ERROR [] client.context.ClientSession - Error processing command 'show': Not connected to server
+java.io.IOException: Not connected to server
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:64)
+	at client.context.ClientSession.run(ClientSession.java:82)
+	at client.Client.main(Client.java:159)
+2026-04-04 20:08:01.132 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 20:08:01.133 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 20:08:05.585 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 20:08:05.586 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 20:10:08.046 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:10:08.057 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:10:08.063 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:10:08.073 [main] INFO  [] client.Client - Handshake sent successfully. Client=root1, Parent=null
+2026-04-04 20:10:08.074 [main] INFO  [] client.Client - Using client ID: root1
+2026-04-04 20:10:08.082 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 35975
+2026-04-04 20:10:08.087 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:10:10.756 [main] ERROR [] client.network.ConnectionManager - Unexpected error while reading response: capacity < 0: (-1393754107 < 0)
+java.lang.IllegalArgumentException: capacity < 0: (-1393754107 < 0)
+	at java.base/java.nio.Buffer.createCapacityException(Buffer.java:279)
+	at java.base/java.nio.ByteBuffer.allocate(ByteBuffer.java:362)
+	at client.network.ConnectionManager.readResponse(ConnectionManager.java:103)
+	at client.context.ClientSession.run(ClientSession.java:84)
+	at client.Client.main(Client.java:159)
+2026-04-04 20:10:10.760 [main] WARN  [] client.context.ClientSession - No response received from server
+2026-04-04 20:13:41.141 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 20:13:41.142 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 20:23:59.405 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:23:59.432 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:23:59.444 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:23:59.457 [main] INFO  [] client.Client - Handshake sent successfully. Client=root1, Parent=null
+2026-04-04 20:23:59.500 [main] ERROR [] client.network.ConnectionManager - Unexpected error while reading response: capacity < 0: (-1393754107 < 0)
+java.lang.IllegalArgumentException: capacity < 0: (-1393754107 < 0)
+	at java.base/java.nio.Buffer.createCapacityException(Buffer.java:279)
+	at java.base/java.nio.ByteBuffer.allocate(ByteBuffer.java:362)
+	at client.network.ConnectionManager.readResponse(ConnectionManager.java:103)
+	at client.Client.main(Client.java:68)
+2026-04-04 20:23:59.504 [main] INFO  [] client.Client - Using client ID: root1
+2026-04-04 20:23:59.512 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 43545
+2026-04-04 20:23:59.520 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:30:30.879 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 20:30:30.879 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 20:30:51.517 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:30:51.540 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:30:51.553 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:30:51.570 [main] INFO  [] client.Client - Handshake sent successfully. Client=root1, Parent=null
+2026-04-04 20:30:51.642 [main] INFO  [] client.Client - Using client ID: root1
+2026-04-04 20:30:51.654 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 38087
+2026-04-04 20:30:51.668 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:31:01.122 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:31:01.143 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:31:01.152 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:31:01.166 [main] INFO  [] client.Client - Handshake sent successfully. Client=child1, Parent=root1
+2026-04-04 20:31:01.187 [main] INFO  [] client.Client - Using client ID: child1
+2026-04-04 20:31:01.193 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 46697
+2026-04-04 20:31:01.202 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:32:48.817 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 20:32:48.817 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 20:32:50.216 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 20:32:50.217 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes

@@ -65,6 +65,7 @@ public class Client {
                 HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
                 connection.sendHandshake(handshake);
                 logger.info("Handshake sent successfully. Client={}, Parent={}", clientId, parentClientId);
+                CommandResponse handshakeResponse = connection.readResponse();
             } catch (IOException e) {
                 logger.error("Failed to send handshake to server", e);
                 System.err.println("Handshake failed: " + e.getMessage());

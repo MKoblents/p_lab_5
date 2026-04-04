@@ -94,7 +94,7 @@ public class ClientHandler {
     private static boolean processHandshake(InputStream in, OutputStream out, ClientRegistry registry)
             throws IOException, ClassNotFoundException {
         byte[] lenBytes = new byte[4];
-        int read = in.read(lenBytes);
+        int read = in.read(lenBytes,0, 4);
         if (read < 4) return false;
 
         int length = ByteBuffer.wrap(lenBytes).getInt();
@@ -116,7 +116,11 @@ public class ClientHandler {
         logger.info("Client {} registered (parent: {})", handshake.clientId(),
                 handshake.parentClientId() != null ? handshake.parentClientId() : "ROOT");
         CommandResponse ack = new CommandResponse(true, null, "Handshake OK", "0", handshake.clientId());
-        out.write(SerializationUtil.serialize(ack));
+        byte[] responseData = SerializationUtil.serialize(ack);
+        ByteBuffer responseBuffer = ByteBuffer.allocate(4 + responseData.length);
+        responseBuffer.putInt(responseData.length);
+        responseBuffer.put(responseData);
+        out.write(responseBuffer.array());
         out.flush();
 
         return true;

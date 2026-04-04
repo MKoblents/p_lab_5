@@ -1,6 +1,5 @@
 package server.client;
 
-import server.network.ClientConnection;
 import shared.dto.ClientStatus;
 import shared.enums.ClientState;
 

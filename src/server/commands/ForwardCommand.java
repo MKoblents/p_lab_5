@@ -24,7 +24,7 @@ public class ForwardCommand implements Command{
         String parentId = fco.parentId();
         String childId = fco.childId();
         if (clientRegistry.exists(childId) && clientRegistry.isParentOf(parentId, childId)){
-//TODO
+            clientRegistry.getPendingCommandQueue().addPendingCommand(childId, fco);
             return new CommandResponse(true, null, "Command sent to child", commandRequest.requestId(), parentId);
         }
         return new CommandResponse(false, null, "Failed to send to child", commandRequest.requestId(), parentId);

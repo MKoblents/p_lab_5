@@ -44,7 +44,7 @@ public class Invoker {
             return new CommandResponse(false, null, "Internal error", request.requestId(), request.clientId());
         }
     }
-    public Invoker(CollectionManager collectionManager){
+    public Invoker(CollectionManager collectionManager, ClientRegistry clientRegistry){
         registerCommand("add", new AddCommand(collectionManager));
         registerCommand("clear", new ClearCommand(collectionManager));
         registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager));
@@ -59,6 +59,7 @@ public class Invoker {
         registerCommand("update", new UpdateCommand(collectionManager));
         registerCommand("help", new HelpCommand(this));
         registerCommand("spawn_client", new SpawnClientCommand());
+        registerCommand("forward_command", new ForwardCommand(clientRegistry));
         logger.debug("Registering commands with Invoker");
     }
     /**

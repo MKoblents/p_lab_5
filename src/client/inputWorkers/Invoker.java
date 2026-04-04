@@ -8,10 +8,12 @@ import client.process.ClientProcessManager;
 import shared.dto.CommandRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import shared.dto.ForwardCommandObject;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 public class Invoker {
     private static final Logger logger = LoggerFactory.getLogger(Invoker.class);
@@ -66,7 +68,7 @@ public class Invoker {
         String targetClientId = inputManager.getTargetClientId();
         logger.debug("Executing command '{}' for client {}", commandName, context.getClientId());
         if (LOCAL_COMMANDS.contains(commandName)) {
-            System.out.println("📌 Local command, executing directly");
+            System.out.println("Local command, executing directly");
             return runServerCommand(commandName);
         }
         if (targetClientId != null && !targetClientId.isEmpty()) {
@@ -75,9 +77,9 @@ public class Invoker {
                 return runServerCommand(commandName);
             }
             System.out.println("FORWARDING command '" + commandName + "' to client: " + targetClientId);
-            ForwardCommand fc = new ForwardCommand(targetClientId, commandName, context, peerConnection);
-            fc.execute();
-            return null;
+            ForwardCommandObject fco = new ForwardCommandObject(context.getClientId(), targetClientId, commandName);
+            CommandRequest cr = new CommandRequest("forward_command", fco, UUID.randomUUID().toString().substring(0, 8), context.getClientId());
+            return cr;
         }
         System.out.println("No target, executing on server via current client");
         return runServerCommand(commandName);

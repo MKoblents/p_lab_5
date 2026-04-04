@@ -36,7 +36,7 @@ public class Server {
             collectionManager.loadFromFile(dataFile);
             logger.info("Loaded {} elements from {}",
                     collectionManager.getSpaceMarines().size(), dataFile);
-            Invoker invoker = new Invoker(collectionManager);
+            Invoker invoker = new Invoker(collectionManager, clientRegistry);
             final String finalDataFile = dataFile;
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 logger.info("=== Shutdown hook triggered ===");
