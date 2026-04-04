@@ -3,7 +3,6 @@ package server.manager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.client.ConnectedClient;
-import server.network.ClientConnection;
 import shared.enums.ClientState;
 
 import java.util.*;
@@ -60,5 +59,10 @@ public class ClientRegistry {
         if (client != null) {
             client.upgradeHeartbeat();
         }
+    }
+    public boolean isParentOf(String parentId, String childId){
+        if (getChildren(parentId).contains(childId)){
+            return  true;
+        } return  false;
     }
 }
