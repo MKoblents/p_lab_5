@@ -10,3 +10,6 @@ java.net.BindException: Address already in use
 	at server.Server.main(Server.java:61)
 2026-04-04 18:51:26.461 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
 2026-04-04 18:51:27.854 [Thread-2] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-04 20:54:50.608 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-04 21:00:59.642 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-04 21:22:05.096 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset

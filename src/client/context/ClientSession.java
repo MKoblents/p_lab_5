@@ -56,10 +56,6 @@ public class ClientSession implements AutoCloseable {
                 continue;
             }
             logger.debug("User entered command: '{}'", commandKey);
-//            if (commandKey.equals("exit")) {
-//                logger.info("User requested exit");
-//                break;
-//            }
             if (commandKey.equals("execute_script")) {
                 String path = inputManager.getLastPath();
                 if (path == null) {

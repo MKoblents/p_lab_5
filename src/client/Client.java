@@ -3,7 +3,6 @@ package client;
 import client.config.ClientConfig;
 import client.context.ClientContext;
 import client.handlers.ResponseHandler;
-import client.hierarchy.PeerConnection;
 import client.inputWorkers.CommandParser;
 import client.inputWorkers.InputManager;
 import client.inputWorkers.Invoker;
@@ -29,10 +28,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
     private static ConnectionManager staticConnection;
-    private static InputManager staticInputManager;
     private static Invoker staticInvoker;
     private static ClientContext staticContext;
-    private static PeerConnection staticPeerConnection;
     private static final AtomicBoolean processingForwardedCommand = new AtomicBoolean(false);
     public static final Object inputLock = new Object();
 
@@ -76,56 +73,18 @@ public class Client {
             RequestsFactory.setClientId(clientId);
             logger.info("Using client ID: {}", clientId);
             staticConnection = connection;
-            staticInputManager = inputManager;
             staticContext = null;
-            staticPeerConnection = null;
-            PeerConnection peerConnection = new PeerConnection();
-            staticPeerConnection = peerConnection;
-            int myPeerPort = peerConnection.startListening((message) -> {
-               logger.debug("P2P message received in child: " + message);
-                logger.debug("P2P message received: {}", message);
-                if (message.startsWith("FORWARD:")) {
-                    handleForwardCommand(message, peerConnection);
-                }
-                else if (message.startsWith("REGISTER_CHILD:")) {
-                    handleChildRegistration(message);
-                }
-                else if (message.contains("PARENT_EXIT")) {
-                    logger.info("Parent requested shutdown");
-                    System.out.println("\n⚠ Parent client shut down, exiting...");
-                    System.exit(0);
-                }
-                else if (message.startsWith("FORWARD_RESULT:")) {
-                    logger.debug("Forward result received, handled by PeerConnection");
-                }
-            });
             boolean isRoot = (parentClientId == null);
             ClientContext context = new ClientContext(
                     clientId,
                     parentClientId,
                     connection,
-                    isRoot,
-                    myPeerPort
+                    isRoot
             );
             ResponseHandler responseHandler = new ResponseHandler(context);
             staticContext = context;
-            if (parentClientId != null && parentPeerPort > 0) {
-                try {
-                   logger.debug("Registering with parent on port " + parentPeerPort);
-                    peerConnection.sendToPeer(
-                            "localhost",
-                            parentPeerPort,
-                            "REGISTER_CHILD:" + clientId + ":" + myPeerPort
-                    );
-                    logger.info("Registered with parent on port {}", parentPeerPort);
-                    System.out.println("✓ Registered with parent client");
-                } catch (IOException e) {
-                    logger.warn("Failed to register with parent: {}", e.getMessage());
-                    System.err.println("⚠ Could not register with parent: " + e.getMessage());
-                }
-            }
             ClientProcessManager processManager = new ClientProcessManager(host, port);
-            Invoker invoker = new Invoker(inputManager, context, connection, processManager, peerConnection);
+            Invoker invoker = new Invoker(inputManager, context, connection, processManager);
             staticInvoker = invoker;
             ScriptRunner scriptRunner = new ScriptRunner(
                     inputManager, connection, responseHandler, invoker
@@ -137,21 +96,6 @@ public class Client {
             } else {
                 System.out.println("This is a ROOT client (direct connection to server)");
             }
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                logger.info("Client shutting down, notifying children...");
-                for (String childId : context.getChildClientIds()) {
-                    Integer childPort = context.getChildPeerPort(childId);
-                    if (childPort != null) {
-                        try {
-                            peerConnection.sendToPeer("localhost", childPort, "PARENT_EXIT");
-                            logger.info("Notified child {}", childId);
-                        } catch (IOException e) {
-                            logger.warn("Failed to notify child {}", childId);
-                        }
-                    }
-                }
-                processManager.destroyAllChildren();
-            }));
 
             ClientSession clientSession = new ClientSession(
                     inputManager, connection, responseHandler,
@@ -169,7 +113,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-    private static void handleForwardCommand(String message, PeerConnection peerConnection) {
+    private static void handleForwardCommand(String message) {
         if (!processingForwardedCommand.compareAndSet(false, true)) {
             System.out.println("Another command is being processed, ignoring...");
             return;
@@ -239,7 +183,6 @@ public class Client {
             int childPort = Integer.parseInt(parts[2]);
 
             if (staticContext != null) {
-                staticContext.registerChildPort(childId, childPort);
                 staticContext.addChild(childId);
                 logger.info("Child client {} registered with port {}", childId, childPort);
                 System.out.println("New child client connected: " + childId);
@@ -249,19 +192,6 @@ public class Client {
         } else {
             logger.warn("Malformed REGISTER_CHILD message: {}", message);
         }
-    }
-    private static Integer getClientPort(String clientId) {
-        if (staticContext == null) {
-            return null;
-        }
-        Integer port = staticContext.getChildPeerPort(clientId);
-        if (port != null) {
-            return port;
-        }
-        if (clientId.equals(staticContext.getParentClientId())) {
-            return -1;
-        }
-        return null;
     }
     public static boolean isProcessingForwardedCommand() {
         return processingForwardedCommand.get();

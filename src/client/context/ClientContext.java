@@ -16,21 +16,17 @@ public class ClientContext {
     private final Instant createdAt;
     private final boolean isRoot;
     private volatile boolean active;
-    private final int peerPort;
-    private final Map<String, Integer> childPeerPorts = new ConcurrentHashMap<>(); //TODO
     private final List<String> childClientIds = new CopyOnWriteArrayList<>();
     public ClientContext(String clientId,
                          String parentClientId,
                          ConnectionManager connection,
-                         boolean isRoot,
-                         int peerPort) {
+                         boolean isRoot) {
         this.clientId = clientId;
         this.parentClientId = parentClientId;
         this.connection = connection;
         this.createdAt = Instant.now();
         this.isRoot = isRoot;
         this.active = true;
-        this.peerPort = peerPort;
     }
     public String getClientId() {
         return clientId;
@@ -77,9 +73,6 @@ public class ClientContext {
         return clientId.hashCode();
     }
 
-    public int getPeerPort() {
-        return peerPort;
-    }
     public boolean addChild(String childClientId){
         return childClientIds.add(childClientId);
     }
@@ -92,10 +85,5 @@ public class ClientContext {
     public void clearChildren() {
         childClientIds.clear();
     }
-    public void registerChildPort(String childId, int peerPort) {
-        childPeerPorts.put(childId, peerPort);
-    }
-    public Integer getChildPeerPort(String childId) {
-        return childPeerPorts.get(childId);
-    }
+
 }

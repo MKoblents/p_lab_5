@@ -26,7 +26,6 @@ shared/dto/ServerMessage.class
 client/context/ClientContext.class
 shared/dto/ClientStatus.class
 shared/dto/ForwardCommandObject.class
-client/handlers/ForwardCommandsHandler.class
 client/command/SpawnClient.class
 client/command/Help.class
 client/command/RemoveGreater.class
@@ -35,7 +34,6 @@ client/command/SumOfHealth.class
 server/commands/HelpCommand.class
 server/commands/InsertAtCommand.class
 client/Client.class
-client/handlers/ForwardCommandsHandler$ForwardExecutionResult.class
 server/commands/MinByMeleeWeaponCommand.class
 server/manager/CollectionManager.class
 client/process/ClientProcessManager.class
@@ -50,7 +48,6 @@ client/command/Info.class
 client/config/ClientConfig.class
 server/commands/Command.class
 shared/dto/CommandResponse.class
-client/hierarchy/PeerConnection.class
 shared/dto/HandshakeRequest.class
 shared/utils/SerializationUtil.class
 server/console/ConsoleHandler.class
@@ -69,7 +66,6 @@ shared/utils/XMLParser.class
 shared/exceptions/WrongIdException.class
 client/inputWorkers/Invoker.class
 server/outputWorkers/CollectionSaver.class
-client/handlers/ForwardCommandsHandler$ForwardMessage.class
 client/io/ConsoleBufferedScanner.class
 server/commands/SumOfHealthCommand.class
 server/commands/SaveCommand.class

@@ -2,7 +2,6 @@ package client.inputWorkers;
 
 import client.command.*;
 import client.context.ClientContext;
-import client.hierarchy.PeerConnection;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import shared.dto.CommandRequest;
@@ -20,7 +19,6 @@ public class Invoker {
 
     private final InputManager inputManager;
     private final ClientContext context;
-    private final PeerConnection peerConnection;
     private final ConnectionManager connection;
     private final ClientProcessManager processManager;
 
@@ -32,9 +30,7 @@ public class Invoker {
     public Invoker(InputManager inputManager,
                    ClientContext context,
                    ConnectionManager connection,
-                   ClientProcessManager processManager,
-                   PeerConnection peerConnection) {
-        this.peerConnection = peerConnection;
+                   ClientProcessManager processManager) {
         this.inputManager = inputManager;
         this.context = context;
         this.connection = connection;

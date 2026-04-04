@@ -23,10 +23,10 @@ public class SpawnClient implements ClientCommand {
 
     @Override
     public CommandRequest execute() {
-        logger.debug("Executing spawn_client command, peerPort={}", context.getPeerPort());
+        logger.debug("Executing spawn_client command");
         return new CommandRequest(
                 "spawn_client",
-                context.getPeerPort(),
+                null,
                 generateRequestId(),
                 context.getClientId()
         );
@@ -39,8 +39,7 @@ public class SpawnClient implements ClientCommand {
             try {
                 processManager.spawnChild(
                         childClientId,
-                        parentContext.getClientId(),
-                        parentContext.getPeerPort()
+                        parentContext.getClientId()
                 );
                 parentContext.addChild(childClientId);
                 logger.info("Child {} added to context", childClientId);

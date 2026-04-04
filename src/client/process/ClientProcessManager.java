@@ -23,8 +23,7 @@ public class ClientProcessManager {
      * Spawns a new client process with server-assigned clientId.
      */
     public void spawnChild(String childClientId,
-                           String parentClientId,
-                           int parentPeerPort) throws IOException {
+                           String parentClientId) throws IOException {
         logger.info("Spawning child client: {} (parent: {})", childClientId, parentClientId);
 
         List<String> command = new ArrayList<>();
@@ -43,8 +42,6 @@ public class ClientProcessManager {
         command.add(childClientId);
         command.add("--parent-id");
         command.add(parentClientId);
-        command.add("--parent-peer-port");
-        command.add(String.valueOf(parentPeerPort));
 
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.redirectErrorStream(true);

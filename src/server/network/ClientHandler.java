@@ -7,6 +7,7 @@ import server.manager.ClientRegistry;
 import server.manager.Invoker;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.dto.ForwardCommandObject;
 import shared.dto.HandshakeRequest;
 import shared.utils.SerializationUtil;
 
@@ -63,6 +64,26 @@ public class ClientHandler {
                     out.write(responseBuffer.array());
                     out.flush();
                     logger.info("Response sent for requestId: {}", response.requestId());
+                    ForwardCommandObject pendingCmd = clientRegistry.getPendingCommandQueue().poll(request.clientId());
+                    if (pendingCmd != null) {
+                        logger.debug("Executing pending command for client {}: {}",
+                                request.clientId(), pendingCmd.commandKey());
+                        CommandRequest pendingRequest = new CommandRequest(
+                                pendingCmd.commandKey(),
+                                null,
+                                java.util.UUID.randomUUID().toString(),
+                                request.clientId()
+                        );
+
+                        CommandResponse pendingResponse = invoker.runCommand(pendingRequest);
+                        logger.debug("Pending command executed: success={}", pendingResponse.success());
+                        byte[] pendingData = SerializationUtil.serialize(pendingResponse);
+                        ByteBuffer pendingBuffer = ByteBuffer.allocate(4 + pendingData.length);
+                        pendingBuffer.putInt(pendingData.length);
+                        pendingBuffer.put(pendingData);
+                        out.write(pendingBuffer.array());
+                        out.flush();
+                    }
                 } catch (java.io.EOFException e) {
                     logger.info("Client disconnected normally: {}", clientSocket.getRemoteSocketAddress());
                     break;

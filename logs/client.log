@@ -1100,3 +1100,52 @@ java.lang.IllegalArgumentException: capacity < 0: (-1393754107 < 0)
 2026-04-04 20:32:48.817 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
 2026-04-04 20:32:50.216 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
 2026-04-04 20:32:50.217 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 20:53:48.488 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:53:48.514 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:53:48.528 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:53:48.543 [main] INFO  [] client.Client - Handshake sent successfully. Client=root1, Parent=null
+2026-04-04 20:53:48.593 [main] INFO  [] client.Client - Using client ID: root1
+2026-04-04 20:53:48.600 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 41047
+2026-04-04 20:53:48.609 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:53:51.043 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:53:51.073 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:53:51.090 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:53:51.105 [main] INFO  [] client.Client - Handshake sent successfully. Client=child1, Parent=root1
+2026-04-04 20:53:51.137 [main] INFO  [] client.Client - Using client ID: child1
+2026-04-04 20:53:51.145 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 35599
+2026-04-04 20:53:51.157 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:54:50.272 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 20:54:50.273 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 20:54:52.701 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 20:54:52.702 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 20:59:28.786 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:59:28.814 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:59:28.834 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:59:28.853 [main] INFO  [] client.Client - Handshake sent successfully. Client=root1, Parent=null
+2026-04-04 20:59:28.938 [main] INFO  [] client.Client - Using client ID: root1
+2026-04-04 20:59:28.946 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 44095
+2026-04-04 20:59:28.963 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:59:32.041 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 20:59:32.063 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 20:59:32.072 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 20:59:32.083 [main] INFO  [] client.Client - Handshake sent successfully. Client=child1, Parent=root1
+2026-04-04 20:59:32.106 [main] INFO  [] client.Client - Using client ID: child1
+2026-04-04 20:59:32.111 [main] INFO  [] client.hierarchy.PeerConnection - P2P listener started on port 34889
+2026-04-04 20:59:32.120 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 20:59:42.290 [main] WARN  [] client.context.ClientSession - Failed to build request for command: ы
+2026-04-04 21:00:59.306 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 21:00:59.307 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 21:01:05.024 [Thread-0] INFO  [] client.Client - Client shutting down, notifying children...
+2026-04-04 21:01:05.025 [Thread-0] INFO  [] client.process.ClientProcessManager - Destroying 0 child processes
+2026-04-04 21:21:03.074 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 21:21:03.082 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 21:21:03.086 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 21:21:03.092 [main] INFO  [] client.Client - Handshake sent successfully. Client=root1, Parent=null
+2026-04-04 21:21:03.121 [main] INFO  [] client.Client - Using client ID: root1
+2026-04-04 21:21:03.124 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-04 21:21:06.212 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-04 21:21:06.222 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-04 21:21:06.228 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-04 21:21:06.233 [main] INFO  [] client.Client - Handshake sent successfully. Client=child1, Parent=root1
+2026-04-04 21:21:06.246 [main] INFO  [] client.Client - Using client ID: child1
+2026-04-04 21:21:06.249 [main] INFO  [] client.Client - Successfully connected to server
