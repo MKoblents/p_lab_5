@@ -187,4 +187,48 @@
         <health>21.0</health>
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
     </spaceMarine>
+    <spaceMarine>
+        <id>1613095350</id>
+        <name>SpaceMarine1720339</name>
+        <coordinates>
+            <x>0</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>587153993</id>
+        <name>sdfa</name>
+        <coordinates>
+            <x>3</x>
+            <y>3</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>757004314</id>
+        <name>SpaceMarine1443435931</name>
+        <coordinates>
+            <x>0</x>
+            <y>234</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>980138431</id>
+        <name>sdf</name>
+        <coordinates>
+            <x>3</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
 </spaceMarines>

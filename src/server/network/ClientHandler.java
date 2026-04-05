@@ -24,10 +24,13 @@ public class ClientHandler {
                 InputStream in = clientSocket.getInputStream();
                 OutputStream out = clientSocket.getOutputStream()
         ) {
-            if (!processHandshake(in, out, clientRegistry)) {
+            HandshakeRequest handshake = processHandshake(in, out, clientRegistry);
+
+            if (handshake == null) {
                 logger.warn("Handshake failed, closing connection");
                 return;
             }
+            clientRegistry.registerStream(handshake.clientId(), out);
             logger.debug("Streams opened for client: {}", clientSocket.getRemoteSocketAddress());
             while (!clientSocket.isClosed()) {
                 try {
@@ -62,28 +65,23 @@ public class ClientHandler {
                     responseBuffer.putInt(responseData.length);
                     responseBuffer.put(responseData);
                     out.write(responseBuffer.array());
-                    out.flush();
+//                    out.flush();
                     logger.info("Response sent for requestId: {}", response.requestId());
-                    ForwardCommandObject pendingCmd = clientRegistry.getPendingCommandQueue().poll(request.clientId());
-                    if (pendingCmd != null) {
-                        logger.debug("Executing pending command for client {}: {}",
-                                request.clientId(), pendingCmd.commandKey());
-                        CommandRequest pendingRequest = new CommandRequest(
-                                pendingCmd.commandKey(),
-                                null,
-                                java.util.UUID.randomUUID().toString(),
-                                request.clientId()
-                        );
-
-                        CommandResponse pendingResponse = invoker.runCommand(pendingRequest);
-                        logger.debug("Pending command executed: success={}", pendingResponse.success());
-                        byte[] pendingData = SerializationUtil.serialize(pendingResponse);
-                        ByteBuffer pendingBuffer = ByteBuffer.allocate(4 + pendingData.length);
-                        pendingBuffer.putInt(pendingData.length);
-                        pendingBuffer.put(pendingData);
-                        out.write(pendingBuffer.array());
-                        out.flush();
-                    }
+//                    ForwardCommandObject pendingCmd = clientRegistry.getPendingCommandQueue().poll(request.clientId());
+//                    if (pendingCmd != null) {
+//                        OutputStream childOut = clientRegistry.getStream(pendingCmd.childId());
+//                        if (childOut != null) {
+//                            byte[] fwdData = SerializationUtil.serialize(pendingCmd);
+//                            ByteBuffer buf = ByteBuffer.allocate(4 + fwdData.length);
+//                            buf.putInt(fwdData.length);
+//                            buf.put(fwdData);
+//                            buf.flip();
+//                            childOut.write(buf.array());
+//                            childOut.flush();
+//                            logger.info("Forwarded command {} to client {}", pendingCmd.commandKey(), pendingCmd.childId());
+//                        }
+//                    }
+                    out.flush();
                 } catch (java.io.EOFException e) {
                     logger.info("Client disconnected normally: {}", clientSocket.getRemoteSocketAddress());
                     break;
@@ -112,18 +110,18 @@ public class ClientHandler {
             }
         }
     }
-    private static boolean processHandshake(InputStream in, OutputStream out, ClientRegistry registry)
+    private static HandshakeRequest processHandshake(InputStream in, OutputStream out, ClientRegistry registry)
             throws IOException, ClassNotFoundException {
         byte[] lenBytes = new byte[4];
         int read = in.read(lenBytes,0, 4);
-        if (read < 4) return false;
+        if (read < 4) return null;
 
         int length = ByteBuffer.wrap(lenBytes).getInt();
         byte[] data = new byte[length];
         int totalRead = 0;
         while (totalRead < length) {
             int r = in.read(data, totalRead, length - totalRead);
-            if (r == -1) return false;
+            if (r == -1) return null;
             totalRead += r;
         }
         HandshakeRequest handshake = (HandshakeRequest) SerializationUtil.deserialize(data);
@@ -131,7 +129,7 @@ public class ClientHandler {
             CommandResponse error = new CommandResponse(false, null, "Parent not found", "0", handshake.clientId());
             out.write(SerializationUtil.serialize(error));
             out.flush();
-            return false;
+            return null;
         }
         registry.register(handshake.clientId(), handshake.parentClientId());
         logger.info("Client {} registered (parent: {})", handshake.clientId(),
@@ -144,6 +142,6 @@ public class ClientHandler {
         out.write(responseBuffer.array());
         out.flush();
 
-        return true;
+        return handshake;
     }
 }

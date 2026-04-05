@@ -4,6 +4,7 @@ import client.command.SpawnClient;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
 import client.inputWorkers.Invoker;
+import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.dto.ForwardCommandObject;
 
 import java.io.IOException;
 

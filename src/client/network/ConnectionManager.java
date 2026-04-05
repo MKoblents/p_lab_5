@@ -177,4 +177,8 @@ public class ConnectionManager {
         }
         return true;
     }
+
+    public SocketChannel getSocketChannel() {
+        return socketChannel;
+    }
 }

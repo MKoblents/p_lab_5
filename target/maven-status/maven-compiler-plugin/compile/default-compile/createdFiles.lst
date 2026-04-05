@@ -33,6 +33,7 @@ shared/utils/LoggingConfigurator.class
 client/command/SumOfHealth.class
 server/commands/HelpCommand.class
 server/commands/InsertAtCommand.class
+client/network/AsyncNetworkReader.class
 client/Client.class
 server/commands/MinByMeleeWeaponCommand.class
 server/manager/CollectionManager.class
@@ -79,6 +80,7 @@ shared/enums/AstartesCategory.class
 shared/enums/MeleeWeapon.class
 client/command/MinByMeleeWeapon.class
 client/utils/RequestsFactory.class
+client/inputWorkers/ConsoleInputReader.class
 client/command/ClientCommand.class
 client/command/RemoveById.class
 client/command/Update.class

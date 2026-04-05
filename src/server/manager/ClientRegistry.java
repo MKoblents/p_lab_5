@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import server.client.ConnectedClient;
 import shared.enums.ClientState;
 
+import java.io.OutputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,6 +14,8 @@ public class ClientRegistry {
     private final Map<String, ConnectedClient> clients = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> parentChildRelations = new ConcurrentHashMap<>();
     private PendingCommandQueue pendingCommandQueue = new PendingCommandQueue();
+    private final Map<String, OutputStream> clientStreams = new ConcurrentHashMap<>();
+
     public void register(String clientId, String parentClientId) {
         ConnectedClient client = new ConnectedClient(clientId, ClientState.ONLINE);
         clients.put(clientId, client);
@@ -69,5 +72,14 @@ public class ClientRegistry {
 
     public PendingCommandQueue getPendingCommandQueue() {
         return pendingCommandQueue;
+    }
+    public void registerStream(String clientId, OutputStream out) {
+        clientStreams.put(clientId, out);
+    }
+    public OutputStream getStream(String clientId) {
+        return clientStreams.get(clientId);
+    }
+    public void removeStream(String clientId) {
+        clientStreams.remove(clientId);
     }
 }

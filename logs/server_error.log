@@ -13,3 +13,23 @@ java.net.BindException: Address already in use
 2026-04-04 20:54:50.608 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
 2026-04-04 21:00:59.642 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
 2026-04-04 21:22:05.096 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-04 21:33:24.988 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-04 21:38:27.441 [Thread-3] ERROR [] server.manager.Invoker - Error executing command show: null
+java.lang.NullPointerException: null
+	at java.base/java.util.Comparator.lambda$comparing$77a9974f$1(Comparator.java:473)
+	at java.base/java.util.TimSort.binarySort(TimSort.java:296)
+	at java.base/java.util.TimSort.sort(TimSort.java:221)
+	at java.base/java.util.Arrays.sort(Arrays.java:1307)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:353)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
+	at server.commands.ShowCommand.execute(ShowCommand.java:28)
+	at server.manager.Invoker.runCommand(Invoker.java:39)
+	at server.network.ClientHandler.handleClient(ClientHandler.java:58)
+	at server.Server.lambda$main$2(Server.java:67)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-04-04 21:41:22.658 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-05 09:33:34.909 [Thread-5] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
