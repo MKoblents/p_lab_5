@@ -32,11 +32,15 @@ public class AsyncNetworkReader implements Runnable {
             while (running && channel.isOpen()) {
                 if (expectedLength == -1) {
                     while (lengthBuffer.hasRemaining()) {
-                        if (channel.read(lengthBuffer) == -1) {
+                        int read = channel.read(lengthBuffer);
+                        if (read == -1) {
                             logger.warn("Server disconnected (EOF detected)");
                             triggerDisconnect();
                             close();
                             return; }
+                        if (read == 0) {
+                            try { Thread.sleep(50); } catch (InterruptedException e) {}
+                        }
                     }
                     lengthBuffer.flip();
                     expectedLength = lengthBuffer.getInt();
@@ -44,7 +48,11 @@ public class AsyncNetworkReader implements Runnable {
                     lengthBuffer.clear();
                 }
                 while (dataBuffer.hasRemaining()) {
-                    if (channel.read(dataBuffer) == -1) { close(); return; }
+                    int read = channel.read(dataBuffer);
+                    if (read == -1) { close(); return; }
+                    if (read == 0) {
+                        try { Thread.sleep(50); } catch (InterruptedException e) {}
+                    }
                 }
                 dataBuffer.flip();
                 byte[] payload = new byte[expectedLength];

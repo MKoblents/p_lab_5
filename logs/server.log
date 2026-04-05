@@ -1598,3 +1598,37 @@ java.net.BindException: Address already in use
 2026-04-05 13:36:15.632 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 0 elements
 2026-04-05 13:36:15.632 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
 2026-04-05 13:36:15.632 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-05 13:46:07.490 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-05 13:46:07.494 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-05 13:46:07.494 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-05 13:46:07.497 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-05 13:46:07.505 [main] INFO  [] server.Server - Loaded 0 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-05 13:46:07.510 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-05 13:46:07.510 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-05 13:46:07.511 [main] INFO  [] server.Server - Console reader started
+2026-04-05 13:46:07.533 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-05 13:46:11.783 [main] INFO  [] server.Server - Client connected: /127.0.0.1:37372
+2026-04-05 13:46:11.839 [Thread-2] INFO  [] server.manager.ClientRegistry - Root client accbd16e registered
+2026-04-05 13:46:11.839 [Thread-2] INFO  [] server.network.ClientHandler - Client accbd16e registered (parent: ROOT)
+2026-04-05 13:46:18.321 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 93fa345c for parent accbd16e
+2026-04-05 13:46:18.322 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 8894c118
+2026-04-05 13:46:18.885 [main] INFO  [] server.Server - Client connected: /127.0.0.1:51366
+2026-04-05 13:46:18.904 [Thread-3] INFO  [] server.manager.ClientRegistry - Client 93fa345c registered as child of accbd16e
+2026-04-05 13:46:18.905 [Thread-3] INFO  [] server.network.ClientHandler - Client 93fa345c registered (parent: accbd16e)
+2026-04-05 13:46:33.774 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 93f392f1
+2026-04-05 13:46:47.129 [Thread-2] INFO  [] server.manager.PendingCommandQueue - 93fa345c added new comandRequestCommandRequest{commandType='forward_command', requestId='429fcf29', args=ForwardCommandObject[parentId=accbd16e, childId=93fa345c, commandKey=info]}
+2026-04-05 13:46:47.131 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 429fcf29
+2026-04-05 13:46:47.132 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child 93fa345c: forward_command
+2026-04-05 13:46:47.133 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client accbd16e
+2026-04-05 13:46:47.492 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: ed721a0d
+2026-04-05 13:46:52.567 [Thread-3] INFO  [] server.manager.ClientRegistry - Unregistering client: 93fa345c
+2026-04-05 13:46:52.567 [Thread-3] INFO  [] server.manager.ClientRegistry - Client 93fa345c and subtree fully unregistered
+2026-04-05 13:46:52.568 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:51366
+2026-04-05 13:46:53.774 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: accbd16e
+2026-04-05 13:46:53.775 [Thread-2] INFO  [] server.manager.ClientRegistry - Client accbd16e and subtree fully unregistered
+2026-04-05 13:46:53.776 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:37372
+2026-04-05 13:46:57.606 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-05 13:46:57.607 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-05 13:46:57.737 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 1 elements
+2026-04-05 13:46:57.737 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-05 13:46:57.737 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===

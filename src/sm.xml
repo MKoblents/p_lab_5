@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<spaceMarines/>
+<spaceMarines>
+    <spaceMarine>
+        <id>1443435931</id>
+        <name>dsf</name>
+        <coordinates>
+            <x>342</x>
+            <y>234</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+</spaceMarines>

@@ -1698,3 +1698,21 @@ java.nio.channels.ClosedChannelException: null
 2026-04-05 13:36:03.686 [main] INFO  [] client.network.ConnectionManager - Disconnected from server
 2026-04-05 13:36:03.686 [main] INFO  [] client.Client - Client stopped
 2026-04-05 13:36:06.781 [Thread-0] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-05 13:46:11.748 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:46:11.766 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:46:11.782 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:46:11.798 [main] INFO  [] client.Client - Handshake sent successfully. Client=accbd16e, Parent=null
+2026-04-05 13:46:11.868 [main] INFO  [] client.Client - Using client ID: accbd16e
+2026-04-05 13:46:11.872 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:46:18.381 [Thread-1] INFO  [] client.command.SpawnClient - Received spawn response, childId=93fa345c
+2026-04-05 13:46:18.382 [Thread-1] INFO  [] client.process.ClientProcessManager - Spawning child client: 93fa345c (parent: accbd16e)
+2026-04-05 13:46:18.397 [Thread-1] INFO  [] client.process.ClientProcessManager - Child process started with PID: 28268
+2026-04-05 13:46:18.400 [Thread-1] INFO  [] client.command.SpawnClient - Child 93fa345c added to context
+2026-04-05 13:46:18.401 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 93fa345c exited with code 0
+2026-04-05 13:46:18.857 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:46:18.874 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:46:18.885 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:46:18.903 [main] INFO  [] client.Client - Handshake sent successfully. Client=93fa345c, Parent=accbd16e
+2026-04-05 13:46:18.938 [main] INFO  [] client.Client - Using client ID: 93fa345c
+2026-04-05 13:46:18.945 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:46:47.485 [Thread-1] INFO  [] client.context.ClientSession - Received forwarded command: info

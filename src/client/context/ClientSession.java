@@ -145,7 +145,7 @@ public class ClientSession implements AutoCloseable {
                 }
             }
             try {
-                Thread.sleep(50);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
