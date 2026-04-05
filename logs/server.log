@@ -1505,3 +1505,43 @@ java.net.BindException: Address already in use
 2026-04-05 13:13:10.390 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 0 elements
 2026-04-05 13:13:10.390 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
 2026-04-05 13:13:10.390 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-05 13:20:01.625 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-05 13:20:01.627 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-05 13:20:01.627 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-05 13:20:01.628 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-05 13:20:01.631 [main] INFO  [] server.Server - Loaded 0 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-05 13:20:01.632 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-05 13:20:01.633 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-05 13:20:01.633 [main] INFO  [] server.Server - Console reader started
+2026-04-05 13:20:01.641 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-05 13:20:05.466 [main] INFO  [] server.Server - Client connected: /127.0.0.1:46086
+2026-04-05 13:20:05.487 [Thread-2] INFO  [] server.manager.ClientRegistry - Root client fea26af0 registered
+2026-04-05 13:20:05.487 [Thread-2] INFO  [] server.network.ClientHandler - Client fea26af0 registered (parent: ROOT)
+2026-04-05 13:20:11.277 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client e92b3a34 for parent fea26af0
+2026-04-05 13:20:11.278 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 53925f92
+2026-04-05 13:20:12.547 [main] INFO  [] server.Server - Client connected: /127.0.0.1:41770
+2026-04-05 13:20:12.554 [Thread-3] INFO  [] server.manager.ClientRegistry - Client e92b3a34 registered as child of fea26af0
+2026-04-05 13:20:12.555 [Thread-3] INFO  [] server.network.ClientHandler - Client e92b3a34 registered (parent: fea26af0)
+2026-04-05 13:20:17.601 [Thread-3] INFO  [] server.commands.SpawnClientCommand - Creating child client 3a14dcce for parent e92b3a34
+2026-04-05 13:20:17.603 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 5ad34ef4
+2026-04-05 13:20:18.669 [main] INFO  [] server.Server - Client connected: /127.0.0.1:43278
+2026-04-05 13:20:18.675 [Thread-4] INFO  [] server.manager.ClientRegistry - Client 3a14dcce registered as child of e92b3a34
+2026-04-05 13:20:18.676 [Thread-4] INFO  [] server.network.ClientHandler - Client 3a14dcce registered (parent: e92b3a34)
+2026-04-05 13:20:26.198 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: fea26af0
+2026-04-05 13:20:26.198 [Thread-2] INFO  [] server.manager.ClientRegistry - Forcing disconnect for child: e92b3a34
+2026-04-05 13:20:26.198 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: e92b3a34
+2026-04-05 13:20:26.198 [Thread-2] INFO  [] server.manager.ClientRegistry - Forcing disconnect for child: 3a14dcce
+2026-04-05 13:20:26.198 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: 3a14dcce
+2026-04-05 13:20:26.198 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-05 13:20:26.198 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 3a14dcce and subtree fully unregistered
+2026-04-05 13:20:26.198 [Thread-4] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-05 13:20:26.199 [Thread-2] INFO  [] server.manager.ClientRegistry - Client e92b3a34 and subtree fully unregistered
+2026-04-05 13:20:26.199 [Thread-2] INFO  [] server.manager.ClientRegistry - Client fea26af0 and subtree fully unregistered
+2026-04-05 13:20:26.199 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:46086
+2026-04-05 13:20:26.199 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:41770
+2026-04-05 13:20:26.199 [Thread-4] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:43278
+2026-04-05 13:20:46.073 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-05 13:20:46.074 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-05 13:20:46.134 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 0 elements
+2026-04-05 13:20:46.135 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-05 13:20:46.135 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===

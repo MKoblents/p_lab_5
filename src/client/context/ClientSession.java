@@ -31,6 +31,7 @@ public class ClientSession implements AutoCloseable {
     private volatile boolean running = true;
     private AsyncNetworkReader networkReader;
     private Thread networkThread;
+    private volatile boolean serverConnected = true;
 
     public ClientSession(InputManager im, ConnectionManager conn, ResponseHandler rh,
                          ScriptRunner sr, Invoker invoker, ClientContext context,
@@ -47,12 +48,22 @@ public class ClientSession implements AutoCloseable {
     public void run() throws IOException {
         System.out.println("Connected! Type 'help' for commands, 'exit' to quit.");
 
-        networkReader = new AsyncNetworkReader(connection.getSocketChannel());
+        networkReader = new AsyncNetworkReader(
+                connection.getSocketChannel(),
+                () -> {
+                    this.serverConnected = false;
+                    this.running = false;
+                    System.out.println("Server connection lost!");
+                }
+        );
         networkThread = new Thread(networkReader);
         networkThread.setDaemon(true);
         networkThread.start();
 
         while (running) {
+            if (!serverConnected) {
+                break;
+            }
             processNetworkMessages();
             String commandKey = inputManager.parseCommand();
             if (commandKey == null || commandKey.isEmpty()) continue;

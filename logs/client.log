@@ -1614,3 +1614,41 @@ java.nio.channels.ClosedChannelException: null
 	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
 	at client.context.ClientSession.run(ClientSession.java:78)
 	at client.Client.main(Client.java:103)
+2026-04-05 13:20:05.451 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:20:05.460 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:20:05.466 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:20:05.473 [main] INFO  [] client.Client - Handshake sent successfully. Client=fea26af0, Parent=null
+2026-04-05 13:20:05.504 [main] INFO  [] client.Client - Using client ID: fea26af0
+2026-04-05 13:20:05.507 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:20:12.304 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=e92b3a34
+2026-04-05 13:20:12.305 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: e92b3a34 (parent: fea26af0)
+2026-04-05 13:20:12.315 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 25927
+2026-04-05 13:20:12.316 [main] INFO  [] client.command.SpawnClient - Child e92b3a34 added to context
+2026-04-05 13:20:12.316 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client e92b3a34 exited with code 0
+2026-04-05 13:20:12.534 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:20:12.543 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:20:12.547 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:20:12.553 [main] INFO  [] client.Client - Handshake sent successfully. Client=e92b3a34, Parent=fea26af0
+2026-04-05 13:20:12.568 [main] INFO  [] client.Client - Using client ID: e92b3a34
+2026-04-05 13:20:12.572 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:20:18.426 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=3a14dcce
+2026-04-05 13:20:18.426 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: 3a14dcce (parent: e92b3a34)
+2026-04-05 13:20:18.437 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 25967
+2026-04-05 13:20:18.438 [main] INFO  [] client.command.SpawnClient - Child 3a14dcce added to context
+2026-04-05 13:20:18.438 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 3a14dcce exited with code 0
+2026-04-05 13:20:18.654 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:20:18.663 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:20:18.668 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:20:18.674 [main] INFO  [] client.Client - Handshake sent successfully. Client=3a14dcce, Parent=e92b3a34
+2026-04-05 13:20:18.688 [main] INFO  [] client.Client - Using client ID: 3a14dcce
+2026-04-05 13:20:18.691 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:20:26.198 [Thread-0] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-05 13:20:26.198 [Thread-0] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-05 13:20:28.499 [main] INFO  [] client.Client - Disconnecting from server
+2026-04-05 13:20:28.499 [main] INFO  [] client.network.ConnectionManager - Disconnecting from server
+2026-04-05 13:20:28.500 [main] INFO  [] client.network.ConnectionManager - Disconnected from server
+2026-04-05 13:20:28.500 [main] INFO  [] client.Client - Client stopped
+2026-04-05 13:20:29.940 [main] INFO  [] client.Client - Disconnecting from server
+2026-04-05 13:20:29.941 [main] INFO  [] client.network.ConnectionManager - Disconnecting from server
+2026-04-05 13:20:29.941 [main] INFO  [] client.network.ConnectionManager - Disconnected from server
+2026-04-05 13:20:29.941 [main] INFO  [] client.Client - Client stopped

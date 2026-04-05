@@ -10,6 +10,7 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AsyncNetworkReader implements Runnable {
+    private final Runnable onDisconnect;
     private static final Logger logger = LoggerFactory.getLogger(AsyncNetworkReader.class);
     private final SocketChannel channel;
     private final ConcurrentLinkedQueue<CommandResponse> responseQueue = new ConcurrentLinkedQueue<>();
@@ -20,8 +21,9 @@ public class AsyncNetworkReader implements Runnable {
     private int expectedLength = -1;
     private ByteBuffer dataBuffer;
 
-    public AsyncNetworkReader(SocketChannel channel) {
+    public AsyncNetworkReader(SocketChannel channel, Runnable onDisconnect) {
         this.channel = channel;
+        this.onDisconnect = onDisconnect;
     }
 
     @Override
@@ -30,7 +32,11 @@ public class AsyncNetworkReader implements Runnable {
             while (running && channel.isOpen()) {
                 if (expectedLength == -1) {
                     while (lengthBuffer.hasRemaining()) {
-                        if (channel.read(lengthBuffer) == -1) { close(); return; }
+                        if (channel.read(lengthBuffer) == -1) {
+                            logger.warn("Server disconnected (EOF detected)");
+                            triggerDisconnect();
+                            close();
+                            return; }
                     }
                     lengthBuffer.flip();
                     expectedLength = lengthBuffer.getInt();
@@ -57,7 +63,9 @@ public class AsyncNetworkReader implements Runnable {
             }
         } catch (IOException | ClassNotFoundException e) {
             logger.error("Reader thread terminated: {}", e.getMessage());
+            triggerDisconnect();
             close();
+            if (onDisconnect != null) onDisconnect.run();
         }
     }
 
@@ -65,4 +73,9 @@ public class AsyncNetworkReader implements Runnable {
     public ConcurrentLinkedQueue<CommandRequest> getForwardQueue() { return forwardQueue; }
     public void stop() { running = false; }
     private void close() { running = false; try { channel.close(); } catch (IOException ignored) {} }
+    private void triggerDisconnect() {
+        if (onDisconnect != null) {
+            onDisconnect.run();
+        }
+    }
 }
