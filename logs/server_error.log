@@ -33,3 +33,30 @@ java.lang.NullPointerException: null
 	at java.base/java.lang.Thread.run(Thread.java:840)
 2026-04-04 21:41:22.658 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
 2026-04-05 09:33:34.909 [Thread-5] ERROR [] server.network.ClientHandler - IO error reading from client: Connection reset
+2026-04-05 12:53:26.168 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-05 12:57:44.126 [main] ERROR [] server.Server - Fatal IO error in server: Address already in use
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:567)
+	at java.base/sun.nio.ch.Net.bind(Net.java:556)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:648)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:274)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:167)
+	at server.Server.main(Server.java:61)
+2026-04-05 12:57:54.260 [main] ERROR [] server.Server - Fatal IO error in server: Address already in use
+java.net.BindException: Address already in use
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:567)
+	at java.base/sun.nio.ch.Net.bind(Net.java:556)
+	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:648)
+	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:274)
+	at java.base/java.net.ServerSocket.<init>(ServerSocket.java:167)
+	at server.Server.main(Server.java:61)
+2026-04-05 13:01:08.427 [Thread-4] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-05 13:01:08.427 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-05 13:10:04.301 [Thread-4] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-05 13:11:06.440 [Thread-5] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-05 13:11:06.441 [Thread-6] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-05 13:11:06.441 [Thread-7] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed

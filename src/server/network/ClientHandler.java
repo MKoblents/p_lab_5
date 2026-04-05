@@ -2,7 +2,6 @@ package server.network;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import server.Server;
 import server.manager.ClientRegistry;
 import server.manager.Invoker;
 import shared.dto.CommandRequest;
@@ -20,6 +19,7 @@ import java.nio.ByteBuffer;
 public class ClientHandler {
     private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
     public static void handleClient(Socket clientSocket, Invoker invoker, ClientRegistry clientRegistry) {
+        String clientId = null;
         try (
                 InputStream in = clientSocket.getInputStream();
                 OutputStream out = clientSocket.getOutputStream()
@@ -30,7 +30,9 @@ public class ClientHandler {
                 logger.warn("Handshake failed, closing connection");
                 return;
             }
-            clientRegistry.registerStream(handshake.clientId(), out);
+            clientId = handshake.clientId();
+            clientRegistry.registerStream(clientId, out);
+            clientRegistry.registerSocket(clientId, clientSocket);
             logger.debug("Streams opened for client: {}", clientSocket.getRemoteSocketAddress());
             while (!clientSocket.isClosed()) {
                 try {
@@ -43,7 +45,7 @@ public class ClientHandler {
                         }
                         bytesRead += read;
                     }
-                    int length = java.nio.ByteBuffer.wrap(lengthBytes).getInt();
+                    int length = ByteBuffer.wrap(lengthBytes).getInt();
                     logger.trace("Request length: {} bytes", length);
                     byte[] data = new byte[length];
                     int dataRead = 0;
@@ -67,22 +69,17 @@ public class ClientHandler {
                     out.write(responseBuffer.array());
                     out.flush();
                     logger.info("Response sent for requestId: {}", response.requestId());
-//                    CommandRequest pendingRequest = clientRegistry.getPendingCommandQueue().poll(request.clientId());
-                    // Проверка: если текущий запрос был forward_command, нужно отправить ожидающую команду ребёнку
-                    if ("forward_command".equals(request.commandType()) && request.args() instanceof ForwardCommandObject fco) {
+                    if ("forward_command".equals(request.commandType()) &&
+                            request.args() instanceof ForwardCommandObject fco) {
+
                         String targetChildId = fco.childId();
-
-                        // Опрос очереди по ID ребёнка (не родителя!)
                         CommandRequest pendingRequest = clientRegistry.getPendingCommandQueue().poll(targetChildId);
-
                         if (pendingRequest != null) {
-                            logger.info("Found pending command for child {}: {}", targetChildId, pendingRequest.commandType());
-
-                            // Получаем сокет ребёнка
+                            logger.info("Found pending command for child {}: {}",
+                                    targetChildId, pendingRequest.commandType());
                             OutputStream childOut = clientRegistry.getStream(targetChildId);
                             if (childOut != null) {
                                 try {
-                                    // Отправляем готовый CommandRequest ребёнку
                                     byte[] pendingData = SerializationUtil.serialize(pendingRequest);
                                     ByteBuffer pendingBuffer = ByteBuffer.allocate(4 + pendingData.length);
                                     pendingBuffer.putInt(pendingData.length);
@@ -112,26 +109,28 @@ public class ClientHandler {
                     logger.error("Unexpected error processing request: {}", e.getMessage(), e);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             logger.error("IO error with client {}: {}",
                     clientSocket.getRemoteSocketAddress(), e.getMessage(), e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-//            TODO
         } finally {
-            try {
-                logger.debug("Closing connection to client: {}", clientSocket.getRemoteSocketAddress());
-                clientSocket.close();
-                logger.info("Client disconnected: {}", clientSocket.getRemoteSocketAddress());
-            } catch (IOException e) {
-                logger.error("Error closing client socket: {}", e.getMessage());
+            if (clientId != null) {
+                try {
+                    clientRegistry.unregister(clientId);
+                } catch (Exception e) {
+                    logger.error("Cleanup failed for client {}: {}", clientId, e.getMessage());
+                }
             }
+            try {
+                clientSocket.close();
+            } catch (IOException ignored) {}
+            logger.info("Client disconnected: {}", clientSocket.getRemoteSocketAddress());
         }
     }
+
     private static HandshakeRequest processHandshake(InputStream in, OutputStream out, ClientRegistry registry)
             throws IOException, ClassNotFoundException {
         byte[] lenBytes = new byte[4];
-        int read = in.read(lenBytes,0, 4);
+        int read = in.read(lenBytes, 0, 4);
         if (read < 4) return null;
 
         int length = ByteBuffer.wrap(lenBytes).getInt();
@@ -159,7 +158,6 @@ public class ClientHandler {
         responseBuffer.put(responseData);
         out.write(responseBuffer.array());
         out.flush();
-
         return handshake;
     }
 }

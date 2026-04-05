@@ -1459,3 +1459,158 @@ java.nio.channels.ClosedChannelException: null
 2026-04-05 12:01:20.541 [main] INFO  [] client.Client - Using client ID: 445b323c
 2026-04-05 12:01:20.545 [main] INFO  [] client.Client - Successfully connected to server
 2026-04-05 12:01:36.722 [main] INFO  [] client.context.ClientSession - Received forwarded command: help
+2026-04-05 12:53:14.099 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 12:53:14.107 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 12:53:14.113 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 12:53:14.120 [main] INFO  [] client.Client - Handshake sent successfully. Client=760124d2, Parent=null
+2026-04-05 12:53:14.151 [main] INFO  [] client.Client - Using client ID: 760124d2
+2026-04-05 12:53:14.154 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 12:53:22.234 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=0f6182d3
+2026-04-05 12:53:22.235 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: 0f6182d3 (parent: 760124d2)
+2026-04-05 12:53:22.242 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 23133
+2026-04-05 12:53:22.243 [main] INFO  [] client.command.SpawnClient - Child 0f6182d3 added to context
+2026-04-05 12:53:22.243 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 0f6182d3 exited with code 0
+2026-04-05 12:53:22.459 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 12:53:22.468 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 12:53:22.475 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 12:53:22.480 [main] INFO  [] client.Client - Handshake sent successfully. Client=0f6182d3, Parent=760124d2
+2026-04-05 12:53:22.494 [main] INFO  [] client.Client - Using client ID: 0f6182d3
+2026-04-05 12:53:22.496 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 12:53:35.089 [main] ERROR [] client.Client - Fatal error in client
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.run(ClientSession.java:68)
+	at client.Client.main(Client.java:103)
+2026-04-05 13:00:50.986 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:00:50.995 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:00:51.000 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:00:51.006 [main] INFO  [] client.Client - Handshake sent successfully. Client=3c3dde3d, Parent=null
+2026-04-05 13:00:51.040 [main] INFO  [] client.Client - Using client ID: 3c3dde3d
+2026-04-05 13:00:51.044 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:00:58.283 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=e8cd2d4e
+2026-04-05 13:00:58.283 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: e8cd2d4e (parent: 3c3dde3d)
+2026-04-05 13:00:58.292 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 24192
+2026-04-05 13:00:58.294 [main] INFO  [] client.command.SpawnClient - Child e8cd2d4e added to context
+2026-04-05 13:00:58.295 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client e8cd2d4e exited with code 0
+2026-04-05 13:00:58.525 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:00:58.534 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:00:58.539 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:00:58.547 [main] INFO  [] client.Client - Handshake sent successfully. Client=e8cd2d4e, Parent=3c3dde3d
+2026-04-05 13:00:58.560 [main] INFO  [] client.Client - Using client ID: e8cd2d4e
+2026-04-05 13:00:58.562 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:01:03.414 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=82c04aef
+2026-04-05 13:01:03.414 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: 82c04aef (parent: e8cd2d4e)
+2026-04-05 13:01:03.425 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 24225
+2026-04-05 13:01:03.426 [main] INFO  [] client.command.SpawnClient - Child 82c04aef added to context
+2026-04-05 13:01:03.427 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 82c04aef exited with code 0
+2026-04-05 13:01:03.642 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:01:03.651 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:01:03.657 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:01:03.664 [main] INFO  [] client.Client - Handshake sent successfully. Client=82c04aef, Parent=e8cd2d4e
+2026-04-05 13:01:03.680 [main] INFO  [] client.Client - Using client ID: 82c04aef
+2026-04-05 13:01:03.683 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:01:17.514 [main] ERROR [] client.Client - Fatal error in client
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.run(ClientSession.java:68)
+	at client.Client.main(Client.java:103)
+2026-04-05 13:01:31.910 [main] ERROR [] client.Client - Fatal error in client
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.run(ClientSession.java:68)
+	at client.Client.main(Client.java:103)
+2026-04-05 13:09:44.844 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:09:44.853 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:09:44.858 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:09:44.863 [main] INFO  [] client.Client - Handshake sent successfully. Client=16db033b, Parent=null
+2026-04-05 13:09:44.896 [main] INFO  [] client.Client - Using client ID: 16db033b
+2026-04-05 13:09:44.899 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:09:50.987 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=6d6f4e8e
+2026-04-05 13:09:50.987 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: 6d6f4e8e (parent: 16db033b)
+2026-04-05 13:09:50.995 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 24839
+2026-04-05 13:09:50.996 [main] INFO  [] client.command.SpawnClient - Child 6d6f4e8e added to context
+2026-04-05 13:09:50.997 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 6d6f4e8e exited with code 0
+2026-04-05 13:09:51.235 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:09:51.247 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:09:51.254 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:09:51.260 [main] INFO  [] client.Client - Handshake sent successfully. Client=6d6f4e8e, Parent=16db033b
+2026-04-05 13:09:51.272 [main] INFO  [] client.Client - Using client ID: 6d6f4e8e
+2026-04-05 13:09:51.275 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:09:58.779 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=3cf885db
+2026-04-05 13:09:58.779 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: 3cf885db (parent: 6d6f4e8e)
+2026-04-05 13:09:58.790 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 24879
+2026-04-05 13:09:58.791 [main] INFO  [] client.command.SpawnClient - Child 3cf885db added to context
+2026-04-05 13:09:58.793 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 3cf885db exited with code 0
+2026-04-05 13:09:59.009 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:09:59.018 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:09:59.024 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:09:59.031 [main] INFO  [] client.Client - Handshake sent successfully. Client=3cf885db, Parent=6d6f4e8e
+2026-04-05 13:09:59.048 [main] INFO  [] client.Client - Using client ID: 3cf885db
+2026-04-05 13:09:59.050 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:10:18.656 [main] ERROR [] client.Client - Fatal error in client
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.run(ClientSession.java:78)
+	at client.Client.main(Client.java:103)
+2026-04-05 13:10:53.486 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=7411d969
+2026-04-05 13:10:53.486 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: 7411d969 (parent: 16db033b)
+2026-04-05 13:10:53.488 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 24943
+2026-04-05 13:10:53.488 [main] INFO  [] client.command.SpawnClient - Child 7411d969 added to context
+2026-04-05 13:10:53.493 [ForkJoinPool.commonPool-worker-2] INFO  [] client.process.ClientProcessManager - Child client 7411d969 exited with code 0
+2026-04-05 13:10:53.729 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:10:53.737 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:10:53.743 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:10:53.750 [main] INFO  [] client.Client - Handshake sent successfully. Client=7411d969, Parent=16db033b
+2026-04-05 13:10:53.766 [main] INFO  [] client.Client - Using client ID: 7411d969
+2026-04-05 13:10:53.768 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:10:56.044 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=82754e7c
+2026-04-05 13:10:56.045 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: 82754e7c (parent: 7411d969)
+2026-04-05 13:10:56.053 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 24975
+2026-04-05 13:10:56.054 [main] INFO  [] client.command.SpawnClient - Child 82754e7c added to context
+2026-04-05 13:10:56.055 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 82754e7c exited with code 0
+2026-04-05 13:10:56.290 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:10:56.301 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:10:56.307 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:10:56.315 [main] INFO  [] client.Client - Handshake sent successfully. Client=82754e7c, Parent=7411d969
+2026-04-05 13:10:56.327 [main] INFO  [] client.Client - Using client ID: 82754e7c
+2026-04-05 13:10:56.330 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:10:57.839 [main] INFO  [] client.command.SpawnClient - Received spawn response, childId=ada6390b
+2026-04-05 13:10:57.839 [main] INFO  [] client.process.ClientProcessManager - Spawning child client: ada6390b (parent: 82754e7c)
+2026-04-05 13:10:57.848 [main] INFO  [] client.process.ClientProcessManager - Child process started with PID: 25008
+2026-04-05 13:10:57.849 [main] INFO  [] client.command.SpawnClient - Child ada6390b added to context
+2026-04-05 13:10:57.850 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client ada6390b exited with code 0
+2026-04-05 13:10:58.068 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:10:58.077 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:10:58.085 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:10:58.093 [main] INFO  [] client.Client - Handshake sent successfully. Client=ada6390b, Parent=82754e7c
+2026-04-05 13:10:58.108 [main] INFO  [] client.Client - Using client ID: ada6390b
+2026-04-05 13:10:58.112 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:11:16.855 [main] ERROR [] client.Client - Fatal error in client
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.run(ClientSession.java:78)
+	at client.Client.main(Client.java:103)
+2026-04-05 13:11:21.023 [main] ERROR [] client.Client - Fatal error in client
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.run(ClientSession.java:78)
+	at client.Client.main(Client.java:103)
+2026-04-05 13:11:24.954 [main] ERROR [] client.Client - Fatal error in client
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.run(ClientSession.java:78)
+	at client.Client.main(Client.java:103)

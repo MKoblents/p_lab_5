@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import server.client.ConnectedClient;
 import shared.enums.ClientState;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,6 +18,7 @@ public class ClientRegistry {
     private final Map<String, Set<String>> parentChildRelations = new ConcurrentHashMap<>();
     private PendingCommandQueue pendingCommandQueue = new PendingCommandQueue();
     private final Map<String, OutputStream> clientStreams = new ConcurrentHashMap<>();
+    private final  Map<String , Socket> clientsSockets = new HashMap<>();
 
     public void register(String clientId, String parentClientId) {
         ConnectedClient client = new ConnectedClient(clientId, ClientState.ONLINE);
@@ -29,22 +33,34 @@ public class ClientRegistry {
             logger.info("Root client {} registered", clientId);
         }
     }
-    public void unregister(String clientId) {
+    public synchronized void unregister(String clientId) {
+        if (!clients.containsKey(clientId)) {
+            return;
+        }
         logger.info("Unregistering client: {}", clientId);
+        clientStreams.remove(clientId);
         Set<String> children = parentChildRelations.remove(clientId);
         if (children != null) {
             for (String childId : children) {
+                logger.info("Forcing disconnect for child: {}", childId);
+                Socket childSocket = clientsSockets.remove(childId);
+                if (childSocket != null && !childSocket.isClosed()) {
+                    try {
+                        childSocket.close();
+                    } catch (IOException ignored) {}
+                }
                 unregister(childId);
             }
         }
-        ConnectedClient removed = clients.remove(clientId);
-        if (removed != null) {
-            removed.markOffline();
-            logger.info("Client {} unregistered", clientId);
+        clients.remove(clientId);
+        for (Set<String> childSet : parentChildRelations.values()) {
+            childSet.remove(clientId);
         }
-        parentChildRelations.values().forEach(childrenSet ->
-                childrenSet.remove(clientId)
-        );
+        Socket socket = clientsSockets.remove(clientId);
+        if (socket != null && !socket.isClosed()) {
+            try { socket.close(); } catch (IOException ignored) {}
+        }
+        logger.info("Client {} and subtree fully unregistered", clientId);
     }
     public boolean exists(String clientId) {
         return clients.containsKey(clientId);
@@ -81,5 +97,8 @@ public class ClientRegistry {
     }
     public void removeStream(String clientId) {
         clientStreams.remove(clientId);
+    }
+    public  void  registerSocket(String clientId, Socket socketChannel){
+        clientsSockets.put(clientId, socketChannel);
     }
 }
