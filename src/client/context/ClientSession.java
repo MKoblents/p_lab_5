@@ -59,12 +59,10 @@ public class ClientSession implements AutoCloseable {
         networkThread = new Thread(networkReader);
         networkThread.setDaemon(true);
         networkThread.start();
-
+        Thread responseThread = new Thread(this::processResponsesLoop);
+        responseThread.setDaemon(true);
+        responseThread.start();
         while (running) {
-            if (!serverConnected) {
-                break;
-            }
-            processNetworkMessages();
             String commandKey = inputManager.parseCommand();
             if (commandKey == null || commandKey.isEmpty()) continue;
 
@@ -73,7 +71,6 @@ public class ClientSession implements AutoCloseable {
                 if (path != null) scriptRunner.executeScript(path);
                 continue;
             }
-
             CommandRequest request = invoker.runCommand(commandKey);
             if (request != null) {
                 connection.sendRequest(request);
@@ -132,5 +129,27 @@ public class ClientSession implements AutoCloseable {
         running = false;
         if (networkReader != null) networkReader.stop();
         connection.disconnect();
+    }
+    private void processResponsesLoop() {
+        while (running) {
+            CommandResponse response = networkReader.getResponseQueue().poll();
+            if (response != null) {
+                handleResponse(response);
+            }
+            CommandRequest forwarded = networkReader.getForwardQueue().poll();
+            if (forwarded != null) {
+                if (forwarded.args() instanceof ForwardCommandObject fco) {
+                    handleForwardedCommand(fco.commandKey());
+                } else {
+                    logger.warn("Received unknown forwarded object type");
+                }
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
     }
 }

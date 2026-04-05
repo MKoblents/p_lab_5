@@ -1652,3 +1652,49 @@ java.nio.channels.ClosedChannelException: null
 2026-04-05 13:20:29.941 [main] INFO  [] client.network.ConnectionManager - Disconnecting from server
 2026-04-05 13:20:29.941 [main] INFO  [] client.network.ConnectionManager - Disconnected from server
 2026-04-05 13:20:29.941 [main] INFO  [] client.Client - Client stopped
+2026-04-05 13:34:39.524 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:34:39.534 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:34:39.540 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:34:39.548 [main] INFO  [] client.Client - Handshake sent successfully. Client=0e64673b, Parent=null
+2026-04-05 13:34:39.578 [main] INFO  [] client.Client - Using client ID: 0e64673b
+2026-04-05 13:34:39.582 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:34:46.298 [Thread-1] INFO  [] client.command.SpawnClient - Received spawn response, childId=2b8ea184
+2026-04-05 13:34:46.299 [Thread-1] INFO  [] client.process.ClientProcessManager - Spawning child client: 2b8ea184 (parent: 0e64673b)
+2026-04-05 13:34:46.309 [Thread-1] INFO  [] client.process.ClientProcessManager - Child process started with PID: 27200
+2026-04-05 13:34:46.311 [Thread-1] INFO  [] client.command.SpawnClient - Child 2b8ea184 added to context
+2026-04-05 13:34:46.311 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 2b8ea184 exited with code 0
+2026-04-05 13:34:46.530 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:34:46.540 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:34:46.544 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:34:46.551 [main] INFO  [] client.Client - Handshake sent successfully. Client=2b8ea184, Parent=0e64673b
+2026-04-05 13:34:46.566 [main] INFO  [] client.Client - Using client ID: 2b8ea184
+2026-04-05 13:34:46.569 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:35:02.195 [Thread-1] INFO  [] client.context.ClientSession - Received forwarded command: info
+2026-04-05 13:35:36.258 [Thread-1] INFO  [] client.command.SpawnClient - Received spawn response, childId=bfef5db6
+2026-04-05 13:35:36.259 [Thread-1] INFO  [] client.process.ClientProcessManager - Spawning child client: bfef5db6 (parent: 0e64673b)
+2026-04-05 13:35:36.261 [Thread-1] INFO  [] client.process.ClientProcessManager - Child process started with PID: 27261
+2026-04-05 13:35:36.261 [Thread-1] INFO  [] client.command.SpawnClient - Child bfef5db6 added to context
+2026-04-05 13:35:36.266 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client bfef5db6 exited with code 0
+2026-04-05 13:35:36.485 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:35:36.495 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:35:36.500 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:35:36.507 [main] INFO  [] client.Client - Handshake sent successfully. Client=bfef5db6, Parent=0e64673b
+2026-04-05 13:35:36.523 [main] INFO  [] client.Client - Using client ID: bfef5db6
+2026-04-05 13:35:36.525 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:35:53.310 [Thread-1] INFO  [] client.command.SpawnClient - Received spawn response, childId=59e96ff4
+2026-04-05 13:35:53.311 [Thread-1] INFO  [] client.process.ClientProcessManager - Spawning child client: 59e96ff4 (parent: bfef5db6)
+2026-04-05 13:35:53.323 [Thread-1] INFO  [] client.process.ClientProcessManager - Child process started with PID: 27298
+2026-04-05 13:35:53.325 [Thread-1] INFO  [] client.command.SpawnClient - Child 59e96ff4 added to context
+2026-04-05 13:35:53.325 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 59e96ff4 exited with code 0
+2026-04-05 13:35:53.553 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-05 13:35:53.562 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-05 13:35:53.568 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-05 13:35:53.574 [main] INFO  [] client.Client - Handshake sent successfully. Client=59e96ff4, Parent=bfef5db6
+2026-04-05 13:35:53.589 [main] INFO  [] client.Client - Using client ID: 59e96ff4
+2026-04-05 13:35:53.593 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-05 13:35:59.543 [Thread-0] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-05 13:36:03.685 [main] INFO  [] client.Client - Disconnecting from server
+2026-04-05 13:36:03.686 [main] INFO  [] client.network.ConnectionManager - Disconnecting from server
+2026-04-05 13:36:03.686 [main] INFO  [] client.network.ConnectionManager - Disconnected from server
+2026-04-05 13:36:03.686 [main] INFO  [] client.Client - Client stopped
+2026-04-05 13:36:06.781 [Thread-0] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
