@@ -23,9 +23,6 @@ public class Invoker {
     private final ClientProcessManager processManager;
 
     private Map<String, ClientCommand> commandMap = new HashMap<>();
-    private static final Set<String> LOCAL_COMMANDS = Set.of(
-            "spawn_client", "exit", "help", "whoami"
-    );
 
     public Invoker(InputManager inputManager,
                    ClientContext context,
@@ -63,10 +60,6 @@ public class Invoker {
     public CommandRequest runCommand(String commandName) {
         String targetClientId = inputManager.getTargetClientId();
         logger.debug("Executing command '{}' for client {}", commandName, context.getClientId());
-        if (LOCAL_COMMANDS.contains(commandName)) {
-            System.out.println("Local command, executing directly");
-            return runServerCommand(commandName);
-        }
         if (targetClientId != null && !targetClientId.isEmpty()) {
             if (targetClientId.equals(context.getClientId())) {
                 System.out.println("Command targeted to self, executing locally");

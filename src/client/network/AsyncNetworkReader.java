@@ -1,8 +1,8 @@
 package client.network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
-import shared.dto.ForwardCommandObject;
 import shared.utils.SerializationUtil;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,7 +13,7 @@ public class AsyncNetworkReader implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(AsyncNetworkReader.class);
     private final SocketChannel channel;
     private final ConcurrentLinkedQueue<CommandResponse> responseQueue = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<ForwardCommandObject> forwardQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<CommandRequest> forwardQueue = new ConcurrentLinkedQueue<>();
     private volatile boolean running = true;
 
     private final ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
@@ -49,7 +49,7 @@ public class AsyncNetworkReader implements Runnable {
                 Object obj = SerializationUtil.deserialize(payload);
                 if (obj instanceof CommandResponse resp) {
                     responseQueue.offer(resp);
-                } else if (obj instanceof ForwardCommandObject fwd) {
+                } else if (obj instanceof CommandRequest fwd) {
                     forwardQueue.offer(fwd);
                 } else {
                     logger.warn("Unknown object type received: {}", obj.getClass().getSimpleName());
@@ -62,7 +62,7 @@ public class AsyncNetworkReader implements Runnable {
     }
 
     public ConcurrentLinkedQueue<CommandResponse> getResponseQueue() { return responseQueue; }
-    public ConcurrentLinkedQueue<ForwardCommandObject> getForwardQueue() { return forwardQueue; }
+    public ConcurrentLinkedQueue<CommandRequest> getForwardQueue() { return forwardQueue; }
     public void stop() { running = false; }
     private void close() { running = false; try { channel.close(); } catch (IOException ignored) {} }
 }

@@ -69,7 +69,6 @@ public class Client {
                 connection.disconnect();
                 return;
             }
-            int parentPeerPort = clientConfig.getParentPeerPort();
             RequestsFactory.setClientId(clientId);
             logger.info("Using client ID: {}", clientId);
             staticConnection = connection;

@@ -116,3 +116,26 @@ java.lang.ClassCastException: class shared.dto.ForwardCommandObject cannot be ca
 	at client.network.ConnectionManager.readResponse(ConnectionManager.java:116)
 	at client.context.ClientSession.run(ClientSession.java:82)
 	at client.Client.main(Client.java:104)
+2026-04-05 11:17:40.687 [main] ERROR [] client.Client - Fatal error in client
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.run(ClientSession.java:68)
+	at client.Client.main(Client.java:104)
+2026-04-05 11:36:25.497 [main] ERROR [] client.Client - Fatal error in client
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.run(ClientSession.java:68)
+	at client.Client.main(Client.java:103)
+2026-04-05 11:36:31.211 [main] ERROR [] client.context.ClientSession - Failed to send forwarded command request
+java.nio.channels.ClosedChannelException: null
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpenAndConnected(SocketChannelImpl.java:215)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:527)
+	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
+	at client.context.ClientSession.handleForwardedCommand(ClientSession.java:105)
+	at client.context.ClientSession.processNetworkMessages(ClientSession.java:81)
+	at client.context.ClientSession.run(ClientSession.java:56)
+	at client.Client.main(Client.java:103)

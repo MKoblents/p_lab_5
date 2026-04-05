@@ -65,23 +65,41 @@ public class ClientHandler {
                     responseBuffer.putInt(responseData.length);
                     responseBuffer.put(responseData);
                     out.write(responseBuffer.array());
-//                    out.flush();
-                    logger.info("Response sent for requestId: {}", response.requestId());
-//                    ForwardCommandObject pendingCmd = clientRegistry.getPendingCommandQueue().poll(request.clientId());
-//                    if (pendingCmd != null) {
-//                        OutputStream childOut = clientRegistry.getStream(pendingCmd.childId());
-//                        if (childOut != null) {
-//                            byte[] fwdData = SerializationUtil.serialize(pendingCmd);
-//                            ByteBuffer buf = ByteBuffer.allocate(4 + fwdData.length);
-//                            buf.putInt(fwdData.length);
-//                            buf.put(fwdData);
-//                            buf.flip();
-//                            childOut.write(buf.array());
-//                            childOut.flush();
-//                            logger.info("Forwarded command {} to client {}", pendingCmd.commandKey(), pendingCmd.childId());
-//                        }
-//                    }
                     out.flush();
+                    logger.info("Response sent for requestId: {}", response.requestId());
+//                    CommandRequest pendingRequest = clientRegistry.getPendingCommandQueue().poll(request.clientId());
+                    // Проверка: если текущий запрос был forward_command, нужно отправить ожидающую команду ребёнку
+                    if ("forward_command".equals(request.commandType()) && request.args() instanceof ForwardCommandObject fco) {
+                        String targetChildId = fco.childId();
+
+                        // Опрос очереди по ID ребёнка (не родителя!)
+                        CommandRequest pendingRequest = clientRegistry.getPendingCommandQueue().poll(targetChildId);
+
+                        if (pendingRequest != null) {
+                            logger.info("Found pending command for child {}: {}", targetChildId, pendingRequest.commandType());
+
+                            // Получаем сокет ребёнка
+                            OutputStream childOut = clientRegistry.getStream(targetChildId);
+                            if (childOut != null) {
+                                try {
+                                    // Отправляем готовый CommandRequest ребёнку
+                                    byte[] pendingData = SerializationUtil.serialize(pendingRequest);
+                                    ByteBuffer pendingBuffer = ByteBuffer.allocate(4 + pendingData.length);
+                                    pendingBuffer.putInt(pendingData.length);
+                                    pendingBuffer.put(pendingData);
+                                    childOut.write(pendingBuffer.array());
+                                    childOut.flush();
+                                    logger.info("Forwarded command {} to client {}",
+                                            pendingRequest.commandType(), pendingRequest.clientId());
+                                } catch (IOException e) {
+                                    logger.error("Failed to forward command to child {}: {}",
+                                            targetChildId, e.getMessage(), e);
+                                }
+                            } else {
+                                logger.warn("OutputStream not registered for child client {}", targetChildId);
+                            }
+                        }
+                    }
                 } catch (java.io.EOFException e) {
                     logger.info("Client disconnected normally: {}", clientSocket.getRemoteSocketAddress());
                     break;

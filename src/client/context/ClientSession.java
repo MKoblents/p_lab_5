@@ -1,5 +1,5 @@
 package client.context;
-import client.Client;
+
 import client.command.SpawnClient;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
@@ -15,6 +15,8 @@ import shared.dto.CommandResponse;
 import shared.dto.ForwardCommandObject;
 
 import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientSession implements AutoCloseable {
     private static final Logger logger = LoggerFactory.getLogger(ClientSession.class);
@@ -25,86 +27,99 @@ public class ClientSession implements AutoCloseable {
     private final Invoker invoker;
     private final ClientContext context;
     private final SpawnClient spawnClientCommand;
+    private final BlockingQueue<CommandResponse> responseQueue = new LinkedBlockingQueue<>();
+    private volatile boolean running = true;
+    private AsyncNetworkReader networkReader;
+    private Thread networkThread;
 
-    public ClientSession(InputManager im,
-                         ConnectionManager conn, ResponseHandler rh,
-                         ScriptRunner sr, Invoker invoker,
-                         ClientContext context, ClientProcessManager processManager) {
+    public ClientSession(InputManager im, ConnectionManager conn, ResponseHandler rh,
+                         ScriptRunner sr, Invoker invoker, ClientContext context,
+                         ClientProcessManager processManager) {
         this.inputManager = im;
         this.connection = conn;
         this.responseHandler = rh;
         this.scriptRunner = sr;
         this.invoker = invoker;
         this.context = context;
-        this.spawnClientCommand = new SpawnClient(context,connection, processManager);
+        this.spawnClientCommand = new SpawnClient(context, connection, processManager);
     }
 
     public void run() throws IOException {
         System.out.println("Connected! Type 'help' for commands, 'exit' to quit.");
-        while (true) {
-            if (Client.isProcessingForwardedCommand()) {
-                try {
-                    Thread.sleep(100);
-                    continue;
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-            synchronized (Client.inputLock){
-            System.out.print("> ");
+
+        networkReader = new AsyncNetworkReader(connection.getSocketChannel());
+        networkThread = new Thread(networkReader);
+        networkThread.setDaemon(true);
+        networkThread.start();
+
+        while (running) {
+            processNetworkMessages();
             String commandKey = inputManager.parseCommand();
-            if (commandKey == null || commandKey.isEmpty()) {
-                continue;
-            }
-            logger.debug("User entered command: '{}'", commandKey);
-            if (commandKey.equals("execute_script")) {
+            if (commandKey == null || commandKey.isEmpty()) continue;
+
+            if ("execute_script".equals(commandKey)) {
                 String path = inputManager.getLastPath();
-                if (path == null) {
-                    logger.warn("execute_script called without path");
-                    System.err.println("Error: Script path required");
-                    continue;
-                }
-                logger.info("Executing script: {}", path);
-                scriptRunner.executeScript(path);
+                if (path != null) scriptRunner.executeScript(path);
                 continue;
             }
-            try {
-                CommandRequest request = invoker.runCommand(commandKey);
-                if (request == null) {
-                    logger.warn("Failed to build request for command: {}", commandKey);
-                    continue;
-                }
-                logger.debug("Sending request: {} with requestId: {}",
-                        request.commandType(), request.requestId());
+
+            CommandRequest request = invoker.runCommand(commandKey);
+            if (request != null) {
                 connection.sendRequest(request);
-                logger.debug("Waiting for response...");
-                CommandResponse response = connection.readResponse();
-                if (response != null) {
-                    logger.debug("Received response for requestId: {}, success: {}",
-                            response.requestId(), response.success());
-                    if ("spawn_client".equals(request.commandType()) && response.clientId() != null) {
-                        spawnClientCommand.handleResponse(response, context);
-                    } else {
-                        responseHandler.handle(response);
-                    }
-                } else {
-                    logger.warn("No response received from server");
-                    System.err.println("No response from server");
-                }
-            } catch (Exception e) {
-                logger.error("Error processing command '{}': {}", commandKey, e.getMessage(), e);
-                System.err.println("Error: " + e.getMessage());
             }
-        }}
-    }
-    @Override
-    public void close(){
-        logger.info("Disconnecting from server");
-        try {
-            connection.disconnect();
-        } catch (Exception e) {
-            logger.error("Error during disconnect: {}", e.getMessage());
         }
+    }
+
+    private void processNetworkMessages() {
+        CommandResponse response = networkReader.getResponseQueue().poll();
+        if (response != null) {
+            handleResponse(response);
+        }
+        CommandRequest forwarded = networkReader.getForwardQueue().poll();
+        if (forwarded != null) {
+            if (forwarded.args() instanceof ForwardCommandObject fco){
+                handleForwardedCommand(fco.commandKey());
+            }
+            else {
+                logger.warn("Not FCO Type");
+            }
+        }
+    }
+
+    private void handleResponse(CommandResponse response) {
+        if ("spawn_client".equals(response.requestId()) ||
+                (response.message() != null && response.message().contains("Child client created"))) {
+            spawnClientCommand.handleResponse(response, context);
+        } else {
+            responseHandler.handle(response);
+        }
+    }
+
+    private void handleForwardedCommand(String commandKey) {
+        logger.info("Received forwarded command: {}", commandKey);
+        System.out.println("\n[Received command from parent: " + commandKey + "]");
+
+        CommandRequest localRequest = invoker.runCommand(commandKey);
+        if (localRequest != null) {
+            try {
+                connection.sendRequest(localRequest);
+//                CommandResponse commandResponse =connection.readResponse();
+//                if (commandResponse != null){
+//                    handleResponse(commandResponse);
+//                }
+            } catch (IOException e) {
+                logger.error("Failed to send forwarded command request", e);
+                System.err.println("Network error while executing forwarded command");
+            }
+        } else {
+            System.err.println("Failed to build request for forwarded command: " + commandKey);
+        }
+    }
+
+    @Override
+    public void close() {
+        running = false;
+        if (networkReader != null) networkReader.stop();
+        connection.disconnect();
     }
 }
