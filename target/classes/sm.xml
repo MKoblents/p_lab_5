@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <spaceMarines>
     <spaceMarine>
-        <id>1021330729</id>
+        <id>2003496028</id>
         <name>SpaceMarine1021330729</name>
         <coordinates>
             <x>12</x>
@@ -9,12 +9,10 @@
         </coordinates>
         <creationDate/>
         <health>1.0</health>
-        <category>AGGRESSOR</category>
-        <weaponType>BOLT_RIFLE</weaponType>
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>2003496028</id>
+        <id>1819063424</id>
         <name>SpaceMarine726181440</name>
         <coordinates>
             <x>0</x>
@@ -25,7 +23,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1083021083</id>
+        <id>1011279482</id>
         <name>dsf</name>
         <coordinates>
             <x>1</x>
@@ -36,7 +34,7 @@
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1819063424</id>
+        <id>208866101</id>
         <name>remove_greater {element} : удалить из коллекции все элементы, превышающие заданный</name>
         <coordinates>
             <x>0</x>
@@ -47,7 +45,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1011279482</id>
+        <id>543846639</id>
         <name>sdf</name>
         <coordinates>
             <x>12</x>
@@ -58,7 +56,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>208866101</id>
+        <id>690686166</id>
         <name>sdf</name>
         <coordinates>
             <x>322</x>
@@ -69,7 +67,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>543846639</id>
+        <id>576020159</id>
         <name>SpaceMarine1950701640</name>
         <coordinates>
             <x>0</x>
@@ -80,7 +78,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>690686166</id>
+        <id>921420643</id>
         <name>SpaceMarine802243390</name>
         <coordinates>
             <x>0</x>
@@ -91,7 +89,7 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>576020159</id>
+        <id>1165303897</id>
         <name>dger</name>
         <coordinates>
             <x>2</x>
@@ -107,7 +105,7 @@
         </chapter>
     </spaceMarine>
     <spaceMarine>
-        <id>1423561005</id>
+        <id>943870983</id>
         <name>we2</name>
         <coordinates>
             <x>12</x>
@@ -123,7 +121,7 @@
         </chapter>
     </spaceMarine>
     <spaceMarine>
-        <id>875917495</id>
+        <id>1136419747</id>
         <name>we</name>
         <coordinates>
             <x>23</x>

@@ -186,4 +186,8 @@ public class ScriptRunner {
             return new ExecutionResult(success, successCount, errorCount, details);
         }
     }
+
+    public void setInvoker(Invoker invoker) {
+        this.invoker = invoker;
+    }
 }

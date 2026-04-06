@@ -36,6 +36,7 @@ server/commands/HelpCommand.class
 server/commands/InsertAtCommand.class
 client/network/AsyncNetworkReader.class
 client/Client.class
+client/command/ExecuteScript.class
 server/commands/MinByMeleeWeaponCommand.class
 server/manager/CollectionManager.class
 client/process/ClientProcessManager.class

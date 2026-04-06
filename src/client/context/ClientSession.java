@@ -38,6 +38,7 @@ public class ClientSession implements AutoCloseable {
         this.connection = conn;
         this.responseHandler = rh;
         this.scriptRunner = sr;
+        scriptRunner.setInvoker(invoker);
         this.invoker = invoker;
         this.context = context;
         this.spawnClientCommand = new SpawnClient(context, connection, processManager);
@@ -66,14 +67,9 @@ public class ClientSession implements AutoCloseable {
             String commandKey = inputManager.parseCommand();
             if (commandKey != null && !commandKey.isEmpty()) {
                 synchronized (inputLock) {
-                    if ("execute_script".equals(commandKey)) {
-                        String path = inputManager.getLastPath();
-                        if (path != null) scriptRunner.executeScript(path);
-                    } else {
-                        CommandRequest request = invoker.runCommand(commandKey);
-                        if (request != null) {
-                            connection.sendRequest(request);
-                        }
+                    CommandRequest request = invoker.runCommand(commandKey);
+                    if (request != null) {
+                        connection.sendRequest(request);
                     }
                 }
             } else {
