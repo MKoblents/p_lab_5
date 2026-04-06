@@ -13,7 +13,6 @@ import shared.dto.ForwardCommandObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class Invoker {
@@ -38,6 +37,10 @@ public class Invoker {
         this.processManager = processManager;
         this.runner = runner;
         registerCommands();
+    }
+
+    public ClientContext getContext() {
+        return context;
     }
 
     public void registerCommand(String name, ClientCommand command) {
@@ -97,5 +100,9 @@ public class Invoker {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public SpawnClient getCommand(String commadKey) {
+        return (SpawnClient) commandMap.get(commadKey);
     }
 }

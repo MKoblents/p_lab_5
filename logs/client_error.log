@@ -194,3 +194,17 @@ java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
 	at client.inputWorkers.InputManager.parseCommand(InputManager.java:66)
 	at client.context.ClientSession.run(ClientSession.java:67)
 	at client.Client.main(Client.java:103)
+2026-04-06 18:58:28.397 [main] ERROR [] client.Client - Fatal error in client
+java.io.IOException: Console input closed (EOF)
+	at client.io.ConsoleBufferedScanner.nextLine(ConsoleBufferedScanner.java:30)
+	at client.inputWorkers.CommandParser.parse(CommandParser.java:57)
+	at client.inputWorkers.InputManager.parseCommand(InputManager.java:66)
+	at client.context.ClientSession.run(ClientSession.java:67)
+	at client.Client.main(Client.java:102)
+2026-04-06 18:58:31.088 [main] ERROR [] client.Client - Fatal error in client
+java.io.IOException: Console input closed (EOF)
+	at client.io.ConsoleBufferedScanner.nextLine(ConsoleBufferedScanner.java:30)
+	at client.inputWorkers.CommandParser.parse(CommandParser.java:57)
+	at client.inputWorkers.InputManager.parseCommand(InputManager.java:66)
+	at client.context.ClientSession.run(ClientSession.java:67)
+	at client.Client.main(Client.java:102)

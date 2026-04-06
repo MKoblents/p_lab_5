@@ -135,6 +135,10 @@ public class ScriptRunner {
                 connectionManager.sendRequest(request);
                 CommandResponse response = connectionManager.readResponse();
                 if (response != null && response.success()) {
+                    if ("spawn_client".equals(response.requestId()) ||
+                            (response.message() != null && response.message().contains("Child client created"))) {
+                        invoker.getCommand("spawn_client").handleResponse(response, invoker.getContext());
+                    }
                     successCount++;
                     String detail = commandName + " - " + response.message();
                     if (response.result() != null) {

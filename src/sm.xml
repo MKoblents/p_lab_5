@@ -1,52 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <spaceMarines>
     <spaceMarine>
-        <id>2003496028</id>
-        <name>2</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>1083021083</id>
-        <name>2</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>1819063424</id>
-        <name>2</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>302977067</id>
-        <name>2</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>615651455</id>
-        <name>2</name>
+        <id>1088565237</id>
+        <name>wef</name>
         <coordinates>
             <x>0</x>
             <y>0</y>
