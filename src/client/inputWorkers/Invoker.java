@@ -88,7 +88,7 @@ public class Invoker {
         }
         try {
             CommandRequest request = command.execute(flag);
-            if (request == null) {
+            if (request == null &&  !"execute_script".equals(commandName)) {
                 System.err.println("Command returned null request: " + commandName);
             }
             return request;

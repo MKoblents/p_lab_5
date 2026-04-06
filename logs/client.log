@@ -1982,3 +1982,74 @@ java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
 2026-04-06 14:43:43.984 [main] INFO  [] client.Client - Using client ID: e7223254
 2026-04-06 14:43:43.987 [main] INFO  [] client.Client - Successfully connected to server
 2026-04-06 14:44:01.737 [Thread-2] INFO  [] client.context.ClientSession - Received forwarded command: execute_script
+2026-04-06 14:46:50.750 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 14:46:50.770 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 14:46:50.785 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 14:46:50.794 [main] INFO  [] client.Client - Handshake sent successfully. Client=9948ad06, Parent=null
+2026-04-06 14:46:50.842 [main] INFO  [] client.Client - Using client ID: 9948ad06
+2026-04-06 14:46:50.846 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 15:06:53.345 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 15:06:53.356 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 15:06:53.362 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 15:06:53.367 [main] INFO  [] client.Client - Handshake sent successfully. Client=ea4e78c7, Parent=null
+2026-04-06 15:06:53.399 [main] INFO  [] client.Client - Using client ID: ea4e78c7
+2026-04-06 15:06:53.402 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 15:12:53.936 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 15:12:53.948 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 15:12:53.955 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 15:12:53.960 [main] INFO  [] client.Client - Handshake sent successfully. Client=b4229121, Parent=null
+2026-04-06 15:12:53.986 [main] INFO  [] client.Client - Using client ID: b4229121
+2026-04-06 15:12:53.989 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 15:16:12.087 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 15:16:12.096 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 15:16:12.101 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 15:16:12.107 [main] INFO  [] client.Client - Handshake sent successfully. Client=e60be8cf, Parent=null
+2026-04-06 15:16:12.134 [main] INFO  [] client.Client - Using client ID: e60be8cf
+2026-04-06 15:16:12.137 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 15:23:59.628 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 15:23:59.638 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 15:23:59.644 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 15:23:59.650 [main] INFO  [] client.Client - Handshake sent successfully. Client=a8a38b98, Parent=null
+2026-04-06 15:23:59.678 [main] INFO  [] client.Client - Using client ID: a8a38b98
+2026-04-06 15:23:59.681 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 15:31:28.163 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 15:31:28.174 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 15:31:28.178 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 15:31:28.186 [main] INFO  [] client.Client - Handshake sent successfully. Client=c170cbcf, Parent=null
+2026-04-06 15:31:28.213 [main] INFO  [] client.Client - Using client ID: c170cbcf
+2026-04-06 15:31:28.216 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 15:39:39.972 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 15:39:39.980 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 15:39:39.984 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 15:39:39.989 [main] INFO  [] client.Client - Handshake sent successfully. Client=ca459fcc, Parent=null
+2026-04-06 15:39:40.017 [main] INFO  [] client.Client - Using client ID: ca459fcc
+2026-04-06 15:39:40.019 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 17:52:06.064 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 17:52:06.088 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 17:52:06.102 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 17:52:06.118 [main] INFO  [] client.Client - Handshake sent successfully. Client=1dcab1a9, Parent=null
+2026-04-06 17:52:06.182 [main] INFO  [] client.Client - Using client ID: 1dcab1a9
+2026-04-06 17:52:06.187 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 17:58:39.487 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 17:58:39.511 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 17:58:39.525 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 17:58:39.546 [main] INFO  [] client.Client - Handshake sent successfully. Client=be06d30e, Parent=null
+2026-04-06 17:58:39.616 [main] INFO  [] client.Client - Using client ID: be06d30e
+2026-04-06 17:58:39.622 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 17:59:22.528 [Thread-2] INFO  [] client.command.SpawnClient - Received spawn response, childId=225c15d0
+2026-04-06 17:59:22.529 [Thread-2] INFO  [] client.process.ClientProcessManager - Spawning child client: 225c15d0 (parent: be06d30e)
+2026-04-06 17:59:22.546 [Thread-2] INFO  [] client.process.ClientProcessManager - Child process started with PID: 18878
+2026-04-06 17:59:22.549 [Thread-2] INFO  [] client.command.SpawnClient - Child 225c15d0 added to context
+2026-04-06 17:59:22.549 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client 225c15d0 exited with code 0
+2026-04-06 17:59:23.025 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 17:59:23.054 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 17:59:23.074 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 17:59:23.092 [main] INFO  [] client.Client - Handshake sent successfully. Client=225c15d0, Parent=be06d30e
+2026-04-06 17:59:23.129 [main] INFO  [] client.Client - Using client ID: 225c15d0
+2026-04-06 17:59:23.139 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 17:59:39.400 [Thread-2] INFO  [] client.context.ClientSession - Received forwarded command: execute_script
+2026-04-06 18:00:23.128 [Thread-1] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-06 18:00:23.145 [main] INFO  [] client.Client - Disconnecting from server
+2026-04-06 18:00:23.146 [main] INFO  [] client.network.ConnectionManager - Disconnecting from server
+2026-04-06 18:00:23.146 [main] INFO  [] client.network.ConnectionManager - Disconnected from server
+2026-04-06 18:00:23.146 [main] INFO  [] client.Client - Client stopped

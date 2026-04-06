@@ -65,3 +65,4 @@ java.net.BindException: Address already in use
 2026-04-05 13:35:59.543 [Thread-5] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
 2026-04-05 13:36:06.780 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
 2026-04-05 14:38:39.101 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-06 18:00:23.105 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
