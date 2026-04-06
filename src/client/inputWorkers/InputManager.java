@@ -1,5 +1,6 @@
 package client.inputWorkers;
 
+import client.io.ConsoleBufferedScanner;
 import shared.enums.MeleeWeapon;
 import client.io.Reader;
 import shared.models.SpaceMarine;
@@ -83,7 +84,7 @@ public class InputManager {
      * Returns parsed MeleeWeapon enum from command argument.
      * @return enum value or null if invalid/not provided
      */
-    public MeleeWeapon getInputMeleeWeapon() {
+    public MeleeWeapon getLastInputMeleeWeapon() {
         return commandParser.getEnumValue(MeleeWeapon.class);
     }
     /**
@@ -104,5 +105,24 @@ public class InputManager {
 
     public void setLastPath(String scriptPath) {
         commandParser.setLastPath(scriptPath);
+    }
+    public <T extends Enum<T>> T getNewEnumType(Class<T> enumType) throws IOException {
+        synchronized (this) {
+            ConsoleBufferedScanner scanner = (ConsoleBufferedScanner) reader;
+            return scanner.getInputEnum(enumType);
+        }
+    }
+    public int getNewInt() throws IOException {
+        synchronized (this) {
+            ConsoleBufferedScanner scanner = (ConsoleBufferedScanner) reader;
+            return (int) scanner.getInputLong();
+        }
+    }
+
+    public long getNewLong() throws IOException {
+        synchronized (this) {
+            ConsoleBufferedScanner scanner = (ConsoleBufferedScanner) reader;
+            return scanner.getInputLong();
+        }
     }
 }

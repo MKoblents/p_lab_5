@@ -2,9 +2,12 @@ package client.command;
 
 import client.inputWorkers.InputManager;
 import client.utils.RequestsFactory;
+import client.utils.SideFlag;
 import client.utils.Validator;
 import shared.dto.CommandRequest;
 import shared.models.SpaceMarine;
+
+import java.io.IOException;
 
 public class Update implements ClientCommand{
     private InputManager inputManager;
@@ -13,8 +16,17 @@ public class Update implements ClientCommand{
     }
 
     @Override
-    public CommandRequest execute() {
-        long id = inputManager.getLastLong();
+    public CommandRequest execute(SideFlag flag) {
+        long id;
+        if (flag == SideFlag.FORWARDED){
+            try {
+                id = inputManager.getNewLong();
+            } catch (IOException e) {
+                id = -1;
+            }
+        }else {
+            id = inputManager.getLastLong();
+        }
         if (id <= 0) {
             System.err.println("Error: Valid ID required for update");
             return null;

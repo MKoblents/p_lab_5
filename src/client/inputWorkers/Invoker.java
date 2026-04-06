@@ -4,6 +4,7 @@ import client.command.*;
 import client.context.ClientContext;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
+import client.utils.SideFlag;
 import shared.dto.CommandRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ public class Invoker {
         if (targetClientId != null && !targetClientId.isEmpty()) {
             if (targetClientId.equals(context.getClientId())) {
                 System.out.println("Command targeted to self, executing locally");
-                return runServerCommand(commandName);
+                return runServerCommand(commandName, SideFlag.SELF);
             }
             System.out.println("FORWARDING command '" + commandName + "' to client: " + targetClientId);
             ForwardCommandObject fco = new ForwardCommandObject(context.getClientId(), targetClientId, commandName);
@@ -71,17 +72,17 @@ public class Invoker {
             return cr;
         }
         System.out.println("No target, executing on server via current client");
-        return runServerCommand(commandName);
+        return runServerCommand(commandName, SideFlag.SELF);
     }
 
-    public CommandRequest runServerCommand(String commandName) {
+    public CommandRequest runServerCommand(String commandName, SideFlag flag) {
         ClientCommand command = commandMap.get(commandName);
         if (command == null) {
             System.err.println("Unknown command: " + commandName);
             return null;
         }
         try {
-            CommandRequest request = command.execute();
+            CommandRequest request = command.execute(flag);
             if (request == null) {
                 System.err.println("Command returned null request: " + commandName);
             }

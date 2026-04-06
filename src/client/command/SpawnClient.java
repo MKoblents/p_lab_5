@@ -3,6 +3,7 @@ package client.command;
 import client.context.ClientContext;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
+import client.utils.SideFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import shared.dto.CommandRequest;
@@ -22,7 +23,7 @@ public class SpawnClient implements ClientCommand {
     }
 
     @Override
-    public CommandRequest execute() {
+    public CommandRequest execute(SideFlag flag) {
         logger.debug("Executing spawn_client command");
         return new CommandRequest(
                 "spawn_client",

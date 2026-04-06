@@ -26,13 +26,13 @@ public class ConsoleBufferedScanner implements Reader {
     }
 
     @Override
-    public String nextLine() throws IOException {
+    public String nextLine() {
         String line = "";
         try {
             line = reader.nextLine();
         }
         catch (Exception e) {
-            System.out.println("-----------");
+//            System.out.println("-----------");
             reader = new Scanner(System.in);
         }
         return line;

@@ -84,6 +84,10 @@ public class CommandParser {
         }
 
         parts = filteredParts.toArray(new String[0]);
+        if (targetClientId!=null){
+            commandName = parts[0];
+            return;
+        }
 
         commandName = parts[0];
         if (commandName.equals("add") || commandName.equals("remove_greater")){

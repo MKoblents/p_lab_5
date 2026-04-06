@@ -2,9 +2,12 @@ package client.command;
 
 import client.inputWorkers.InputManager;
 import client.utils.RequestsFactory;
+import client.utils.SideFlag;
 import client.utils.Validator;
 import shared.dto.CommandRequest;
 import shared.models.SpaceMarine;
+
+import java.io.IOException;
 
 public class InsertAt implements ClientCommand{
     private InputManager inputManager;
@@ -12,8 +15,17 @@ public class InsertAt implements ClientCommand{
         this.inputManager = inputManager;
     }
     @Override
-    public CommandRequest execute() {
-        int index = inputManager.getLastInt();
+    public CommandRequest execute(SideFlag flag) {
+        int index;
+        if (flag == SideFlag.FORWARDED){
+            try {
+                index = inputManager.getNewInt();
+            } catch (IOException e) {
+                index = -1;
+            }
+        }else {
+            index = inputManager.getLastInt();
+        }
         if (index<0){
             System.err.println("Error: Valid ID required for remove_by_id");
             return null;

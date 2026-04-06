@@ -8,6 +8,7 @@ import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
+import client.utils.SideFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import shared.dto.CommandRequest;
@@ -32,6 +33,8 @@ public class ClientSession implements AutoCloseable {
     private AsyncNetworkReader networkReader;
     private Thread networkThread;
     private volatile boolean serverConnected = true;
+    private volatile boolean processingForwardedCommand = false;
+    private final Object inputLock = new Object();
 
     public ClientSession(InputManager im, ConnectionManager conn, ResponseHandler rh,
                          ScriptRunner sr, Invoker invoker, ClientContext context,
@@ -63,7 +66,19 @@ public class ClientSession implements AutoCloseable {
         responseThread.setDaemon(true);
         responseThread.start();
         while (running) {
-            String commandKey = inputManager.parseCommand();
+            String commandKey;
+            synchronized (inputLock) {
+                while (processingForwardedCommand && running) {
+                    try {
+                        inputLock.wait(100);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+                if (!running) break;
+                commandKey = inputManager.parseCommand();
+            }
             if (commandKey == null || commandKey.isEmpty()) continue;
 
             if ("execute_script".equals(commandKey)) {
@@ -78,21 +93,21 @@ public class ClientSession implements AutoCloseable {
         }
     }
 
-    private void processNetworkMessages() {
-        CommandResponse response = networkReader.getResponseQueue().poll();
-        if (response != null) {
-            handleResponse(response);
-        }
-        CommandRequest forwarded = networkReader.getForwardQueue().poll();
-        if (forwarded != null) {
-            if (forwarded.args() instanceof ForwardCommandObject fco){
-                handleForwardedCommand(fco.commandKey());
-            }
-            else {
-                logger.warn("Not FCO Type");
-            }
-        }
-    }
+//    private void processNetworkMessages() {
+//        CommandResponse response = networkReader.getResponseQueue().poll();
+//        if (response != null) {
+//            handleResponse(response);
+//        }
+//        CommandRequest forwarded = networkReader.getForwardQueue().poll();
+//        if (forwarded != null) {
+//            if (forwarded.args() instanceof ForwardCommandObject fco){
+//                handleForwardedCommand(fco.commandKey());
+//            }
+//            else {
+//                logger.warn("Not FCO Type");
+//            }
+//        }
+//    }
 
     private void handleResponse(CommandResponse response) {
         if ("spawn_client".equals(response.requestId()) ||
@@ -106,21 +121,30 @@ public class ClientSession implements AutoCloseable {
     private void handleForwardedCommand(String commandKey) {
         logger.info("Received forwarded command: {}", commandKey);
         System.out.println("\n[Received command from parent: " + commandKey + "]");
-
-        CommandRequest localRequest = invoker.runCommand(commandKey);
-        if (localRequest != null) {
-            try {
-                connection.sendRequest(localRequest);
-//                CommandResponse commandResponse =connection.readResponse();
-//                if (commandResponse != null){
-//                    handleResponse(commandResponse);
-//                }
-            } catch (IOException e) {
-                logger.error("Failed to send forwarded command request", e);
-                System.err.println("Network error while executing forwarded command");
+        synchronized (inputLock) {
+            processingForwardedCommand = true;
+        }
+        try {
+            CommandRequest localRequest = invoker.runServerCommand(commandKey, SideFlag.FORWARDED);
+            if (localRequest != null) {
+                try {
+                    connection.sendRequest(localRequest);
+                    //                CommandResponse commandResponse =connection.readResponse();
+                    //                if (commandResponse != null){
+                    //                    handleResponse(commandResponse);
+                    //                }
+                } catch (IOException e) {
+                    logger.error("Failed to send forwarded command request", e);
+                    System.err.println("Network error while executing forwarded command");
+                }
+            } else {
+                System.err.println("Failed to build request for forwarded command: " + commandKey);
             }
-        } else {
-            System.err.println("Failed to build request for forwarded command: " + commandKey);
+        }finally {
+            synchronized (inputLock) {
+                processingForwardedCommand = false;
+                inputLock.notifyAll();
+            }
         }
     }
 

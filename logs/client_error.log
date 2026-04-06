@@ -188,3 +188,9 @@ java.nio.channels.ClosedChannelException: null
 	at client.network.ConnectionManager.sendRequest(ConnectionManager.java:76)
 	at client.context.ClientSession.run(ClientSession.java:78)
 	at client.Client.main(Client.java:103)
+2026-04-05 14:38:39.076 [main] ERROR [] client.Client - Fatal error in client
+java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
+	at client.inputWorkers.CommandParser.parse(CommandParser.java:103)
+	at client.inputWorkers.InputManager.parseCommand(InputManager.java:66)
+	at client.context.ClientSession.run(ClientSession.java:67)
+	at client.Client.main(Client.java:103)

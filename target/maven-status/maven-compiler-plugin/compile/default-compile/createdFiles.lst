@@ -11,6 +11,7 @@ shared/dto/CommandRequest.class
 server/commands/ClearCommand.class
 shared/dto/ServerMessage$MessageType.class
 server/commands/RemoveByIdCommand.class
+client/utils/SideFlag.class
 server/commands/AddCommand.class
 client/utils/Validator.class
 server/commands/ForwardCommand.class
