@@ -97,7 +97,7 @@ public class ScriptRunner {
      * Internal execution logic (after Reader is switched).
      * @return ExecutionResult with summary
      */
-    private ExecutionResult executeScriptInternal(String scriptPath) throws IOException {
+    private ExecutionResult executeScriptInternal(String scriptPath) throws IOException, InterruptedException {
         List<String> details = new ArrayList<>();
         int successCount = 0;
         int errorCount = 0;

@@ -2,7 +2,7 @@
 <spaceMarines>
     <spaceMarine>
         <id>2003496028</id>
-        <name>SpaceMarine1220271960</name>
+        <name>SpaceMarine726181440</name>
         <coordinates>
             <x>0</x>
             <y>0</y>
@@ -13,21 +13,21 @@
     </spaceMarine>
     <spaceMarine>
         <id>1083021083</id>
-        <name>SpaceMarine1372877011</name>
+        <name>dsf</name>
         <coordinates>
-            <x>0</x>
-            <y>0</y>
+            <x>1</x>
+            <y>1</y>
         </coordinates>
         <creationDate/>
         <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
         <id>1819063424</id>
-        <name>dsf</name>
+        <name>remove_greater {element} : удалить из коллекции все элементы, превышающие заданный</name>
         <coordinates>
-            <x>342</x>
-            <y>234</y>
+            <x>0</x>
+            <y>0</y>
         </coordinates>
         <creationDate/>
         <health>0.0</health>
@@ -35,7 +35,29 @@
     </spaceMarine>
     <spaceMarine>
         <id>1011279482</id>
-        <name>SpaceMarine969404208</name>
+        <name>sdf</name>
+        <coordinates>
+            <x>12</x>
+            <y>12</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>208866101</id>
+        <name>sdf</name>
+        <coordinates>
+            <x>322</x>
+            <y>234</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>543846639</id>
+        <name>SpaceMarine1950701640</name>
         <coordinates>
             <x>0</x>
             <y>0</y>
@@ -45,8 +67,8 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>2006606717</id>
-        <name>SpaceMarine2006606717</name>
+        <id>690686166</id>
+        <name>SpaceMarine802243390</name>
         <coordinates>
             <x>0</x>
             <y>0</y>

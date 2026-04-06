@@ -1820,3 +1820,183 @@ java.net.BindException: Address already in use
 2026-04-06 04:55:51.993 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 3 elements
 2026-04-06 04:55:51.993 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
 2026-04-06 04:55:51.993 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-06 05:00:20.897 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-06 05:00:20.901 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-06 05:00:20.901 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 05:00:20.904 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 05:00:20.914 [main] INFO  [] server.Server - Loaded 3 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 05:00:20.920 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-06 05:00:20.921 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-06 05:00:20.922 [main] INFO  [] server.Server - Console reader started
+2026-04-06 05:00:20.936 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-06 05:00:25.255 [main] INFO  [] server.Server - Client connected: /127.0.0.1:36608
+2026-04-06 05:00:25.301 [Thread-2] INFO  [] server.manager.ClientRegistry - Root client de65c393 registered
+2026-04-06 05:00:25.302 [Thread-2] INFO  [] server.network.ClientHandler - Client de65c393 registered (parent: ROOT)
+2026-04-06 05:00:32.052 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 7791207b for parent de65c393
+2026-04-06 05:00:32.054 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 40958874
+2026-04-06 05:00:32.651 [main] INFO  [] server.Server - Client connected: /127.0.0.1:58644
+2026-04-06 05:00:32.668 [Thread-3] INFO  [] server.manager.ClientRegistry - Client 7791207b registered as child of de65c393
+2026-04-06 05:00:32.668 [Thread-3] INFO  [] server.network.ClientHandler - Client 7791207b registered (parent: de65c393)
+2026-04-06 05:00:43.730 [Thread-2] INFO  [] server.manager.PendingCommandQueue - 7791207b added new comandRequestCommandRequest{commandType='forward_command', requestId='3af9d288', args=ForwardCommandObject[parentId=de65c393, childId=7791207b, commandKey=info]}
+2026-04-06 05:00:43.733 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 3af9d288
+2026-04-06 05:00:43.733 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child 7791207b: forward_command
+2026-04-06 05:00:43.735 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client de65c393
+2026-04-06 05:01:06.861 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: e3bab327
+2026-04-06 05:01:06.867 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 8f13471b
+2026-04-06 05:02:18.432 [Thread-2] INFO  [] server.manager.PendingCommandQueue - 7791207b added new comandRequestCommandRequest{commandType='forward_command', requestId='6df93028', args=ForwardCommandObject[parentId=de65c393, childId=7791207b, commandKey=insert_at]}
+2026-04-06 05:02:18.433 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 6df93028
+2026-04-06 05:02:18.433 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child 7791207b: forward_command
+2026-04-06 05:02:18.434 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client de65c393
+2026-04-06 05:02:33.346 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 79cf1be5
+2026-04-06 05:02:49.615 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 06bfae9f
+2026-04-06 05:05:54.872 [Thread-3] INFO  [] server.manager.ClientRegistry - Unregistering client: 7791207b
+2026-04-06 05:05:54.873 [Thread-3] INFO  [] server.manager.ClientRegistry - Client 7791207b and subtree fully unregistered
+2026-04-06 05:05:54.873 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:58644
+2026-04-06 05:05:55.934 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: de65c393
+2026-04-06 05:05:55.934 [Thread-2] INFO  [] server.manager.ClientRegistry - Client de65c393 and subtree fully unregistered
+2026-04-06 05:05:55.934 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:36608
+2026-04-06 05:25:33.671 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-06 05:25:33.671 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-06 05:25:33.801 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 4 elements
+2026-04-06 05:25:33.801 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 05:25:33.801 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-06 05:40:35.269 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-06 05:40:35.272 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-06 05:40:35.273 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 05:40:35.275 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 05:40:35.285 [main] INFO  [] server.Server - Loaded 4 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 05:40:35.289 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-06 05:40:35.289 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-06 05:40:35.290 [main] INFO  [] server.Server - Console reader started
+2026-04-06 05:40:35.306 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-06 05:40:42.632 [main] INFO  [] server.Server - Client connected: /127.0.0.1:57806
+2026-04-06 05:40:42.680 [Thread-2] INFO  [] server.manager.ClientRegistry - Root client adbaaaa3 registered
+2026-04-06 05:40:42.681 [Thread-2] INFO  [] server.network.ClientHandler - Client adbaaaa3 registered (parent: ROOT)
+2026-04-06 05:40:49.637 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 43954e23 for parent adbaaaa3
+2026-04-06 05:40:49.639 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 76a90fbe
+2026-04-06 05:40:50.343 [main] INFO  [] server.Server - Client connected: /127.0.0.1:39218
+2026-04-06 05:40:50.356 [Thread-3] INFO  [] server.manager.ClientRegistry - Client 43954e23 registered as child of adbaaaa3
+2026-04-06 05:40:50.357 [Thread-3] INFO  [] server.network.ClientHandler - Client 43954e23 registered (parent: adbaaaa3)
+2026-04-06 05:40:59.650 [Thread-2] INFO  [] server.manager.PendingCommandQueue - 43954e23 added new comandRequestCommandRequest{commandType='forward_command', requestId='f4ef4613', args=ForwardCommandObject[parentId=adbaaaa3, childId=43954e23, commandKey=info]}
+2026-04-06 05:40:59.653 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: f4ef4613
+2026-04-06 05:40:59.654 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child 43954e23: forward_command
+2026-04-06 05:40:59.654 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client adbaaaa3
+2026-04-06 05:40:59.763 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 9a0fc126
+2026-04-06 05:41:13.432 [Thread-2] INFO  [] server.manager.PendingCommandQueue - 43954e23 added new comandRequestCommandRequest{commandType='forward_command', requestId='dd5d0228', args=ForwardCommandObject[parentId=adbaaaa3, childId=43954e23, commandKey=add]}
+2026-04-06 05:41:13.433 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: dd5d0228
+2026-04-06 05:41:13.434 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child 43954e23: forward_command
+2026-04-06 05:41:13.435 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client adbaaaa3
+2026-04-06 05:41:15.108 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 29c774e8
+2026-04-06 05:43:08.124 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 2ea46449
+2026-04-06 05:43:12.881 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 5a5f4b31
+2026-04-06 05:43:46.901 [Thread-2] INFO  [] server.manager.PendingCommandQueue - 43954e23 added new comandRequestCommandRequest{commandType='forward_command', requestId='721be1f2', args=ForwardCommandObject[parentId=adbaaaa3, childId=43954e23, commandKey=insert_at]}
+2026-04-06 05:43:46.901 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 721be1f2
+2026-04-06 05:43:46.902 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child 43954e23: forward_command
+2026-04-06 05:43:46.902 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client adbaaaa3
+2026-04-06 05:43:48.850 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 529afa89
+2026-04-06 05:44:48.776 [Thread-3] INFO  [] server.manager.ClientRegistry - Unregistering client: 43954e23
+2026-04-06 05:44:48.777 [Thread-3] INFO  [] server.manager.ClientRegistry - Client 43954e23 and subtree fully unregistered
+2026-04-06 05:44:48.778 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:39218
+2026-04-06 05:44:50.075 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: adbaaaa3
+2026-04-06 05:44:50.076 [Thread-2] INFO  [] server.manager.ClientRegistry - Client adbaaaa3 and subtree fully unregistered
+2026-04-06 05:44:50.076 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:57806
+2026-04-06 05:44:53.149 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-06 05:44:53.150 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-06 05:44:53.271 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 7 elements
+2026-04-06 05:44:53.272 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 05:44:53.272 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-06 06:00:13.179 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-06 06:00:13.181 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-06 06:00:13.181 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 06:00:13.183 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 06:00:13.188 [main] INFO  [] server.Server - Loaded 7 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 06:00:13.190 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-06 06:00:13.190 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-06 06:00:13.190 [main] INFO  [] server.Server - Console reader started
+2026-04-06 06:00:13.200 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-06 06:00:16.749 [main] INFO  [] server.Server - Client connected: /127.0.0.1:44714
+2026-04-06 06:00:16.779 [Thread-2] INFO  [] server.manager.ClientRegistry - Root client 9f131342 registered
+2026-04-06 06:00:16.780 [Thread-2] INFO  [] server.network.ClientHandler - Client 9f131342 registered (parent: ROOT)
+2026-04-06 06:00:23.350 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client f9ea397b for parent 9f131342
+2026-04-06 06:00:23.351 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 8203a21f
+2026-04-06 06:00:23.985 [main] INFO  [] server.Server - Client connected: /127.0.0.1:35302
+2026-04-06 06:00:24.003 [Thread-3] INFO  [] server.manager.ClientRegistry - Client f9ea397b registered as child of 9f131342
+2026-04-06 06:00:24.004 [Thread-3] INFO  [] server.network.ClientHandler - Client f9ea397b registered (parent: 9f131342)
+2026-04-06 06:00:33.046 [Thread-2] INFO  [] server.manager.PendingCommandQueue - f9ea397b added new comandRequestCommandRequest{commandType='forward_command', requestId='59c47a65', args=ForwardCommandObject[parentId=9f131342, childId=f9ea397b, commandKey=add]}
+2026-04-06 06:00:33.049 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 59c47a65
+2026-04-06 06:00:33.050 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child f9ea397b: forward_command
+2026-04-06 06:00:33.051 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client 9f131342
+2026-04-06 06:01:21.626 [Thread-3] INFO  [] server.manager.ClientRegistry - Unregistering client: f9ea397b
+2026-04-06 06:01:21.627 [Thread-3] INFO  [] server.manager.ClientRegistry - Client f9ea397b and subtree fully unregistered
+2026-04-06 06:01:21.627 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:35302
+2026-04-06 06:01:24.342 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: 9f131342
+2026-04-06 06:01:24.342 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 9f131342 and subtree fully unregistered
+2026-04-06 06:01:24.342 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:44714
+2026-04-06 06:01:30.578 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-06 06:01:30.579 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-06 06:01:30.639 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 7 elements
+2026-04-06 06:01:30.639 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 06:01:30.639 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-06 06:08:52.483 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-06 06:08:52.485 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-06 06:08:52.485 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 06:08:52.486 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 06:08:52.491 [main] INFO  [] server.Server - Loaded 7 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 06:08:52.493 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-06 06:08:52.493 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-06 06:08:52.494 [main] INFO  [] server.Server - Console reader started
+2026-04-06 06:08:52.501 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-06 06:08:55.165 [main] INFO  [] server.Server - Client connected: /127.0.0.1:50588
+2026-04-06 06:08:55.198 [Thread-2] INFO  [] server.manager.ClientRegistry - Root client 9692cefb registered
+2026-04-06 06:08:55.199 [Thread-2] INFO  [] server.network.ClientHandler - Client 9692cefb registered (parent: ROOT)
+2026-04-06 06:11:59.885 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: 9692cefb
+2026-04-06 06:11:59.885 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 9692cefb and subtree fully unregistered
+2026-04-06 06:11:59.885 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:50588
+2026-04-06 06:12:03.255 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-06 06:12:03.256 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-06 06:12:03.314 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 7 elements
+2026-04-06 06:12:03.314 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 06:12:03.314 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-06 13:30:54.004 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-06 13:30:54.007 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-06 13:30:54.008 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 13:30:54.010 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 13:30:54.019 [main] INFO  [] server.Server - Loaded 7 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 13:30:54.023 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-06 13:30:54.023 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-06 13:30:54.024 [main] INFO  [] server.Server - Console reader started
+2026-04-06 13:30:54.042 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-06 13:30:57.118 [main] INFO  [] server.Server - Client connected: /127.0.0.1:38174
+2026-04-06 13:30:57.163 [Thread-2] INFO  [] server.manager.ClientRegistry - Root client 9ffceb21 registered
+2026-04-06 13:30:57.163 [Thread-2] INFO  [] server.network.ClientHandler - Client 9ffceb21 registered (parent: ROOT)
+2026-04-06 13:31:06.751 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 7b5b0c6a for parent 9ffceb21
+2026-04-06 13:31:06.753 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 577d7991
+2026-04-06 13:31:07.364 [main] INFO  [] server.Server - Client connected: /127.0.0.1:52178
+2026-04-06 13:31:07.384 [Thread-3] INFO  [] server.manager.ClientRegistry - Client 7b5b0c6a registered as child of 9ffceb21
+2026-04-06 13:31:07.384 [Thread-3] INFO  [] server.network.ClientHandler - Client 7b5b0c6a registered (parent: 9ffceb21)
+2026-04-06 13:31:21.806 [Thread-2] INFO  [] server.manager.PendingCommandQueue - 7b5b0c6a added new comandRequestCommandRequest{commandType='forward_command', requestId='eaf4a91a', args=ForwardCommandObject[parentId=9ffceb21, childId=7b5b0c6a, commandKey=info]}
+2026-04-06 13:31:21.808 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: eaf4a91a
+2026-04-06 13:31:21.809 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child 7b5b0c6a: forward_command
+2026-04-06 13:31:21.810 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client 9ffceb21
+2026-04-06 13:31:21.872 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: b5918606
+2026-04-06 13:31:33.166 [Thread-2] INFO  [] server.manager.PendingCommandQueue - 7b5b0c6a added new comandRequestCommandRequest{commandType='forward_command', requestId='98dd356c', args=ForwardCommandObject[parentId=9ffceb21, childId=7b5b0c6a, commandKey=add]}
+2026-04-06 13:31:33.167 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 98dd356c
+2026-04-06 13:31:33.170 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child 7b5b0c6a: forward_command
+2026-04-06 13:31:33.171 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client 9ffceb21
+2026-04-06 13:32:08.466 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 3efcc214
+2026-04-06 13:32:28.131 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: c9fad100
+2026-04-06 13:33:52.462 [Thread-2] INFO  [] server.manager.PendingCommandQueue - 7b5b0c6a added new comandRequestCommandRequest{commandType='forward_command', requestId='34d5b721', args=ForwardCommandObject[parentId=9ffceb21, childId=7b5b0c6a, commandKey=insert_at]}
+2026-04-06 13:33:52.463 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 34d5b721
+2026-04-06 13:33:52.463 [Thread-2] INFO  [] server.network.ClientHandler - Found pending command for child 7b5b0c6a: forward_command
+2026-04-06 13:33:52.464 [Thread-2] INFO  [] server.network.ClientHandler - Forwarded command forward_command to client 9ffceb21
+2026-04-06 13:34:02.344 [Thread-3] INFO  [] server.manager.ClientRegistry - Unregistering client: 7b5b0c6a
+2026-04-06 13:34:02.345 [Thread-3] INFO  [] server.manager.ClientRegistry - Client 7b5b0c6a and subtree fully unregistered
+2026-04-06 13:34:02.345 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:52178
+2026-04-06 13:34:03.212 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: 9ffceb21
+2026-04-06 13:34:03.212 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 9ffceb21 and subtree fully unregistered
+2026-04-06 13:34:03.212 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:38174
+2026-04-06 13:34:07.050 [Thread-0] INFO  [] server.Server - === Shutdown hook triggered ===
+2026-04-06 13:34:07.050 [Thread-0] INFO  [] server.Server - Saving collection before shutdown...
+2026-04-06 13:34:07.175 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 9 elements
+2026-04-06 13:34:07.175 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-06 13:34:07.175 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
