@@ -83,11 +83,10 @@ public class Client {
             ResponseHandler responseHandler = new ResponseHandler(context);
             staticContext = context;
             ClientProcessManager processManager = new ClientProcessManager(host, port);
-            Invoker invoker = new Invoker(inputManager, context, connection, processManager);
-            staticInvoker = invoker;
             ScriptRunner scriptRunner = new ScriptRunner(
-                    inputManager, connection, responseHandler, invoker
+                    inputManager, connection, responseHandler, null
             );
+            Invoker invoker = new Invoker(inputManager, context, connection, processManager, scriptRunner);
             logger.info("Successfully connected to server");
             System.out.println("Connected to server! Client ID: " + clientId);
             if (!isRoot) {

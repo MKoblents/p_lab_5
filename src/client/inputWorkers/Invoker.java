@@ -4,6 +4,7 @@ import client.command.*;
 import client.context.ClientContext;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
+import client.scripts.ScriptRunner;
 import client.utils.SideFlag;
 import shared.dto.CommandRequest;
 import org.slf4j.Logger;
@@ -22,17 +23,20 @@ public class Invoker {
     private final ClientContext context;
     private final ConnectionManager connection;
     private final ClientProcessManager processManager;
+    private final ScriptRunner runner;
 
     private Map<String, ClientCommand> commandMap = new HashMap<>();
 
     public Invoker(InputManager inputManager,
                    ClientContext context,
                    ConnectionManager connection,
-                   ClientProcessManager processManager) {
+                   ClientProcessManager processManager,
+                   ScriptRunner runner) {
         this.inputManager = inputManager;
         this.context = context;
         this.connection = connection;
         this.processManager = processManager;
+        this.runner = runner;
         registerCommands();
     }
 
@@ -56,6 +60,7 @@ public class Invoker {
         registerCommand("show", new Show());
         registerCommand("update", new Update(inputManager));
         registerCommand("spawn_client", new SpawnClient(context, connection, processManager));
+        registerCommand("execute_script", new ExecuteScript(inputManager, runner));
     }
 
     public CommandRequest runCommand(String commandName) {
@@ -83,7 +88,7 @@ public class Invoker {
         }
         try {
             CommandRequest request = command.execute(flag);
-            if (request == null) {
+            if (request == null &&  !"execute_script".equals(commandName)) {
                 System.err.println("Command returned null request: " + commandName);
             }
             return request;

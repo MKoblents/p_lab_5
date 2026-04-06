@@ -38,7 +38,7 @@ public class FileBufferedReader implements Reader{
         this.filePath = filePath;
         this.bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath));
         preloadNextLine();
-        //this.xmlParser = xmlParser;
+        this.xmlParser = xmlParser;
     }
     /**
      * Returns the source file path.

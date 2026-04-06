@@ -118,6 +118,12 @@ public class InputManager {
             return (int) scanner.getInputLong();
         }
     }
+    public String getNewString() throws IOException {
+        synchronized (this) {
+            ConsoleBufferedScanner scanner = (ConsoleBufferedScanner) reader;
+            return scanner.getInputString();
+        }
+    }
 
     public long getNewLong() throws IOException {
         synchronized (this) {

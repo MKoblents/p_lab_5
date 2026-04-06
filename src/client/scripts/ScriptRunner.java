@@ -101,8 +101,7 @@ public class ScriptRunner {
         List<String> details = new ArrayList<>();
         int successCount = 0;
         int errorCount = 0;
-        Reader reader = inputManager.getReader();
-        while (reader.hasNextLine()) {
+        while (inputManager.getReader().hasNextLine()) {
             try {
                 String commandName = inputManager.parseCommand();
                 if (commandName == null || commandName.isEmpty()) {
@@ -112,16 +111,13 @@ public class ScriptRunner {
                 if (commandName.equals("execute_script")) {
                     String nestedPath = inputManager.getLastPath();
                     if (nestedPath != null && !nestedPath.isEmpty()) {
-                        ExecutionResult nestedResult = executeScriptInternal(nestedPath);
-                        if (nestedResult.success()) {
-                            successCount += nestedResult.successCount();
-                            details.addAll(nestedResult.details());
-                            System.out.println("     Nested script executed");
-                        } else {
-                            errorCount += nestedResult.errorCount();
-                            details.addAll(nestedResult.details());
-                            System.err.println("     Nested script failed");
-                        }
+                         if (executeScript(nestedPath)){
+                             successCount ++;
+                             details.add("execute_script "+ nestedPath+" done");
+                         }else {
+                             errorCount++;
+                             details.add("execute_script "+ nestedPath+" failed");
+                         }
                     } else {
                         errorCount++;
                         details.add("Script path required");
@@ -140,8 +136,12 @@ public class ScriptRunner {
                 CommandResponse response = connectionManager.readResponse();
                 if (response != null && response.success()) {
                     successCount++;
-                    details.add(commandName + " - " + response.message()+"\n"+response.result());
-                    System.out.println("    " + response.message());
+                    String detail = commandName + " - " + response.message();
+                    if (response.result() != null) {
+                        detail += " | Result: " + response.result().toString();
+                    }
+                    details.add(detail);
+//                    System.out.println("    " + response.message());
                 } else {
                     errorCount++;
                     String msg = response != null ? response.message() : "No response";
@@ -185,5 +185,9 @@ public class ScriptRunner {
         public static ExecutionResult of(boolean success, int successCount, int errorCount, List<String> details) {
             return new ExecutionResult(success, successCount, errorCount, details);
         }
+    }
+
+    public void setInvoker(Invoker invoker) {
+        this.invoker = invoker;
     }
 }
