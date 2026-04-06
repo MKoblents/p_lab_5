@@ -48,7 +48,7 @@ public class ScriptRunner {
             return false;
         }
         executingScripts.get().push(normalizedPath);
-        System.out.println("📜 Entering script: " + scriptPath + " (depth: " + executingScripts.get().size() + ")");
+        System.out.println(" Entering script: " + scriptPath + " (depth: " + executingScripts.get().size() + ")");
         Reader originalReader = inputManager.getReader();
         try {
             FileBufferedReader scriptReader = new FileBufferedReader(scriptPath, new XMLParser(scriptPath));
@@ -73,7 +73,7 @@ public class ScriptRunner {
                 System.err.println("Error restoring reader: " + e.getMessage());
             }
             executingScripts.get().pop();
-            System.out.println("📜 Exiting script: " + scriptPath);
+            System.out.println("Exiting script: " + scriptPath);
         }
     }
 
@@ -81,7 +81,7 @@ public class ScriptRunner {
      * Prints execution summary to console.
      */
     private void printExecutionSummary(ExecutionResult result) {
-        System.out.println("\n📊 Script completed: " +
+        System.out.println("\n Script completed: " +
                 result.successCount() + " succeeded, " +
                 result.errorCount() + " failed");
         if (!result.details().isEmpty() && result.details().size() <= 10) {
@@ -108,7 +108,7 @@ public class ScriptRunner {
                 if (commandName == null || commandName.isEmpty()) {
                     continue;
                 }
-                System.out.println("  → " + commandName);
+                System.out.println("  " + commandName);
                 if (commandName.equals("execute_script")) {
                     String nestedPath = inputManager.getLastPath();
                     if (nestedPath != null && !nestedPath.isEmpty()) {
@@ -140,17 +140,17 @@ public class ScriptRunner {
                 CommandResponse response = connectionManager.readResponse();
                 if (response != null && response.success()) {
                     successCount++;
-                    details.add("✓ " + commandName + " - " + response.message());
-                    System.out.println("    ✓ " + response.message());
+                    details.add(commandName + " - " + response.message()+"\n"+response.result());
+                    System.out.println("    " + response.message());
                 } else {
                     errorCount++;
                     String msg = response != null ? response.message() : "No response";
-                    details.add("✗ " + commandName + " - " + msg);
-                    System.err.println("    ✗ Error: " + msg);
+                    details.add(commandName + " - " + msg);
+                    System.err.println("    Error: " + msg);
                 }
             } catch (Exception e) {
                 errorCount++;
-                details.add("✗ Exception: " + e.getMessage());
+                details.add("Exception: " + e.getMessage());
                 System.err.println("  " + e.getMessage());
             }
         }

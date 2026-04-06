@@ -1922,3 +1922,9 @@ java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
 2026-04-06 13:50:23.931 [Thread-2] INFO  [] client.context.ClientSession - Received forwarded command: insert_at
 2026-04-06 13:53:20.293 [Thread-2] INFO  [] client.context.ClientSession - Received forwarded command: help
 2026-04-06 13:53:51.920 [Thread-2] INFO  [] client.context.ClientSession - Received forwarded command: help
+2026-04-06 14:00:31.024 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 14:00:31.037 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 14:00:31.051 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 14:00:31.061 [main] INFO  [] client.Client - Handshake sent successfully. Client=8dbb3d13, Parent=null
+2026-04-06 14:00:31.106 [main] INFO  [] client.Client - Using client ID: 8dbb3d13
+2026-04-06 14:00:31.109 [main] INFO  [] client.Client - Successfully connected to server
