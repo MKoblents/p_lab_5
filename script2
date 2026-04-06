@@ -1,6 +1,6 @@
 # Complex workflow
 info
-add <spaceMarine><name>1</name></spaceMarine>
+#add <spaceMarine><name>1</name></spaceMarine>
 #add <spaceMarine><name>A</name><coordinates><x>0</x><y>0</y></coordinates><health>100.0</health><meleeWeapon>CHAIN_SWORD</meleeWeapon></spaceMarine>
 execute_script /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/sctipt3
 

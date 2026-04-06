@@ -1964,3 +1964,21 @@ java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
 2026-04-06 14:31:12.856 [main] INFO  [] client.Client - Using client ID: c32bf2ec
 2026-04-06 14:31:12.866 [main] INFO  [] client.Client - Successfully connected to server
 2026-04-06 14:31:35.625 [Thread-2] INFO  [] client.context.ClientSession - Received forwarded command: execute_script
+2026-04-06 14:40:30.552 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 14:40:30.575 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 14:40:30.590 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 14:40:30.607 [main] INFO  [] client.Client - Handshake sent successfully. Client=f254aa35, Parent=null
+2026-04-06 14:40:30.683 [main] INFO  [] client.Client - Using client ID: f254aa35
+2026-04-06 14:40:30.693 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 14:43:43.700 [Thread-2] INFO  [] client.command.SpawnClient - Received spawn response, childId=e7223254
+2026-04-06 14:43:43.700 [Thread-2] INFO  [] client.process.ClientProcessManager - Spawning child client: e7223254 (parent: f254aa35)
+2026-04-06 14:43:43.710 [Thread-2] INFO  [] client.process.ClientProcessManager - Child process started with PID: 13096
+2026-04-06 14:43:43.712 [Thread-2] INFO  [] client.command.SpawnClient - Child e7223254 added to context
+2026-04-06 14:43:43.712 [ForkJoinPool.commonPool-worker-1] INFO  [] client.process.ClientProcessManager - Child client e7223254 exited with code 0
+2026-04-06 14:43:43.953 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-06 14:43:43.962 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-06 14:43:43.967 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-06 14:43:43.973 [main] INFO  [] client.Client - Handshake sent successfully. Client=e7223254, Parent=f254aa35
+2026-04-06 14:43:43.984 [main] INFO  [] client.Client - Using client ID: e7223254
+2026-04-06 14:43:43.987 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-06 14:44:01.737 [Thread-2] INFO  [] client.context.ClientSession - Received forwarded command: execute_script
