@@ -20,7 +20,7 @@ public class ConsoleInputReader implements Runnable {
             try {
                 if (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
-                    if (line != null && !line.trim().isEmpty()) {
+                    if (line != null) {
                         inputQueue.offer(line);
                     }
                 } else {

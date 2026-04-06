@@ -77,4 +77,38 @@
         <health>0.0</health>
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
+    <spaceMarine>
+        <id>13719050</id>
+        <name>dger</name>
+        <coordinates>
+            <x>2</x>
+            <y>2</y>
+        </coordinates>
+        <creationDate/>
+        <health>12.0</health>
+        <category>AGGRESSOR</category>
+        <weaponType>BOLT_RIFLE</weaponType>
+        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
+        <chapter>
+            <name>1</name>
+            <parentLegion>1</parentLegion>
+            <world>1</world>
+        </chapter>
+    </spaceMarine>
+    <spaceMarine>
+        <id>396883763</id>
+        <name>we2</name>
+        <coordinates>
+            <x>12</x>
+            <y>12</y>
+        </coordinates>
+        <creationDate/>
+        <health>12313.0</health>
+        <meleeWeapon>CHAIN_SWORD</meleeWeapon>
+        <chapter>
+            <name>1</name>
+            <parentLegion>1</parentLegion>
+            <world>1</world>
+        </chapter>
+    </spaceMarine>
 </spaceMarines>
