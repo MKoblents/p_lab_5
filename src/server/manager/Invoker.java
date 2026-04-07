@@ -2,6 +2,7 @@ package server.manager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import server.client.ConnectedClient;
 import server.commands.*;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -16,6 +17,7 @@ public class Invoker {
     private static final Logger logger = LoggerFactory.getLogger(Invoker.class);
     /** Registry of available commands by name. */
     private Map<String, Command> commandMap = new HashMap<>();
+    private ClientRegistry clientRegistry;
     /**
      * Registers a command under the specified name.
      * @param name the command name/key
@@ -37,6 +39,8 @@ public class Invoker {
         }
         try {
             CommandResponse response = command.execute(request);
+            // After command.execute(request) succeeds:
+            clientRegistry.getClient(request.clientId()).ifPresent(ConnectedClient::markOnline);
             logger.debug("Command {} completed: success={}", commandType, response.success());
             return response;
         } catch (Exception e) {
@@ -45,6 +49,7 @@ public class Invoker {
         }
     }
     public Invoker(CollectionManager collectionManager, ClientRegistry clientRegistry){
+        this.clientRegistry = clientRegistry;
         registerCommand("add", new AddCommand(collectionManager));
         registerCommand("clear", new ClearCommand(collectionManager));
         registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager));
@@ -60,6 +65,7 @@ public class Invoker {
         registerCommand("help", new HelpCommand(this));
         registerCommand("spawn_client", new SpawnClientCommand());
         registerCommand("forward_command", new ForwardCommand(clientRegistry));
+        registerCommand(CommandRequest.CMD_HEARTBEAT, new HeartbeatCommand(clientRegistry));
         logger.debug("Registering commands with Invoker");
     }
     /**

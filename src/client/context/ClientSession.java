@@ -16,9 +16,17 @@ import shared.dto.CommandResponse;
 import shared.dto.ForwardCommandObject;
 
 import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ClientSession implements AutoCloseable {
     private static final Logger logger = LoggerFactory.getLogger(ClientSession.class);
+    private volatile ScheduledExecutorService heartbeatScheduler;
+    private static final int HEARTBEAT_INTERVAL_SEC = 5;
+    private static final String CMD_HEARTBEAT = "heartbeat";
     private final InputManager inputManager;
     private final ConnectionManager connection;
     private final ResponseHandler responseHandler;
@@ -58,6 +66,24 @@ public class ClientSession implements AutoCloseable {
         Thread responseThread = new Thread(this::processResponsesLoop);
         responseThread.setDaemon(true);
         responseThread.start();
+        heartbeatScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread t = new Thread(r, "heatbeat-scheduler");
+            t.setDaemon(true);
+            return t;
+        });
+        Runnable heartbeatTask = ()->{
+            try {
+                CommandRequest request = new CommandRequest(
+                        CommandRequest.CMD_HEARTBEAT,
+                        null,
+                        UUID.randomUUID().toString().substring(0,8),
+                        context.getClientId());
+                connection.sendRequest(request);
+            } catch (IOException | RuntimeException e) {
+                logger.warn("Heartbeat failed: {}", e.getMessage());
+            }
+        };
+        heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask,0, 5, TimeUnit.SECONDS);
 
         while (running) {
             if (!networkReader.getForwardQueue().isEmpty()) {
@@ -128,5 +154,13 @@ public class ClientSession implements AutoCloseable {
         running = false;
         if (networkReader != null) networkReader.stop();
         connection.disconnect();
+        if (heartbeatScheduler != null && !heartbeatScheduler.isShutdown()) {
+            heartbeatScheduler.shutdownNow();
+            try {
+                heartbeatScheduler.awaitTermination(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 }

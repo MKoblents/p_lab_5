@@ -2384,3 +2384,212 @@ java.io.IOException: Console input closed (EOF)
 2026-04-07 10:37:33.491 [main] INFO  [] client.Client - Successfully connected to server
 2026-04-07 10:37:41.938 [Thread-2] INFO  [] client.context.ClientSession - Received forwarded command: info
 2026-04-07 10:38:08.649 [Thread-1] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-07 12:06:34.556 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:06:34.566 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:06:34.572 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-07 12:06:34.579 [main] INFO  [] client.Client - Handshake sent successfully. Client=15c6fb9c, Parent=null
+2026-04-07 12:06:34.611 [main] INFO  [] client.Client - Using client ID: 15c6fb9c
+2026-04-07 12:06:34.614 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-07 12:08:12.035 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:08:12.051 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:08:12.063 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-07 12:08:12.076 [main] INFO  [] client.Client - Handshake sent successfully. Client=b006294b, Parent=null
+2026-04-07 12:08:12.093 [main] INFO  [] client.Client - Using client ID: b006294b
+2026-04-07 12:08:12.095 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-07 12:13:08.832 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:13:08.846 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:13:08.856 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-07 12:13:08.871 [main] INFO  [] client.Client - Handshake sent successfully. Client=f5acaf2e, Parent=null
+2026-04-07 12:13:08.924 [main] INFO  [] client.Client - Using client ID: f5acaf2e
+2026-04-07 12:13:08.928 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-07 12:13:16.272 [Thread-2] INFO  [] client.command.SpawnClient - Received spawn response, childId=15763b02
+2026-04-07 12:13:16.273 [Thread-2] INFO  [] client.process.ClientProcessManager - Spawning child client: 15763b02 (parent: f5acaf2e)
+2026-04-07 12:13:16.285 [Thread-2] INFO  [] client.process.ClientProcessManager - Child process started with PID: 19317
+2026-04-07 12:13:16.286 [Thread-2] INFO  [] client.command.SpawnClient - Child 15763b02 added to context
+2026-04-07 12:13:16.761 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:13:16.782 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:13:16.798 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-07 12:13:16.816 [main] INFO  [] client.Client - Handshake sent successfully. Client=15763b02, Parent=f5acaf2e
+2026-04-07 12:13:16.853 [main] INFO  [] client.Client - Using client ID: 15763b02
+2026-04-07 12:13:16.861 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-07 12:13:47.071 [Thread-1] ERROR [] client.network.AsyncNetworkReader - Reader thread terminated: Connection reset
+2026-04-07 12:13:47.078 [Thread-1] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-07 12:13:48.947 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:13:51.905 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:13:53.948 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:13:56.907 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:13:58.950 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:01.909 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:03.952 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:06.911 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:08.953 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:11.912 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:13.955 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:16.914 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:18.956 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:21.915 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:23.958 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:26.917 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:28.960 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:31.919 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:33.961 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:36.921 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:38.962 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:41.923 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:43.964 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:46.924 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:48.966 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:51.925 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:53.967 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:56.927 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:14:58.969 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:01.928 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:03.971 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:06.930 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:08.972 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:11.932 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:13.973 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:16.933 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:18.975 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:21.935 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:23.976 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:26.936 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:28.977 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:31.938 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:33.979 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:36.941 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:38.980 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:41.942 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:43.982 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:46.943 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:48.983 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:51.945 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:53.984 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:56.946 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:15:58.986 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:01.948 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:03.987 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:06.949 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:08.988 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:11.949 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:13.989 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:16.950 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:18.991 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:21.952 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:23.992 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:26.953 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:28.993 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:31.954 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:33.995 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:36.955 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:38.996 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:41.956 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:43.997 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:46.958 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:48.998 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:51.959 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:54.000 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:56.960 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:16:59.001 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:01.962 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:04.002 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:06.963 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:09.003 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:11.964 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:14.005 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:16.966 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:19.007 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:21.967 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:24.008 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:26.969 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:29.009 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:31.970 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:34.010 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:36.972 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:39.011 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:41.974 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:44.013 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:46.975 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:49.014 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:51.976 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:54.016 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:56.977 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:17:59.018 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:01.979 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:04.019 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:06.980 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:09.020 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:11.982 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:14.022 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:16.983 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:19.023 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:21.984 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:24.025 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:26.986 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:29.026 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:31.988 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:34.028 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:36.990 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:39.029 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:41.991 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:44.031 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:46.992 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:49.033 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:51.994 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:54.034 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:56.995 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:18:59.035 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:01.996 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:04.037 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:06.997 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:09.038 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:11.999 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:14.039 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:17.000 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:19.041 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:22.001 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:24.042 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:27.002 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:29.043 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:32.004 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:34.045 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:37.005 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:39.047 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:42.006 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:44.048 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:47.008 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:49.049 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:52.009 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:54.051 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:57.010 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:19:59.052 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:02.012 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:04.053 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:07.014 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:09.055 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:12.015 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:14.056 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:17.016 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:19.058 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:22.018 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:24.059 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:27.019 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:29.061 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:32.020 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:34.062 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:20:40.158 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:20:40.179 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:20:40.200 [main] ERROR [] client.network.ConnectionManager - IO error while connecting to localhost:12345: Connection refused
+java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:684)
+	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:946)
+	at client.network.ConnectionManager.connect(ConnectionManager.java:36)
+	at client.Client.main(Client.java:54)
+2026-04-07 12:20:40.203 [main] ERROR [] client.Client - Failed to connect to server at localhost:12345
+2026-04-07 12:20:50.007 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:20:50.021 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:20:50.029 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-07 12:20:50.044 [main] INFO  [] client.Client - Handshake sent successfully. Client=33ce923e, Parent=null
+2026-04-07 12:20:50.098 [main] INFO  [] client.Client - Using client ID: 33ce923e
+2026-04-07 12:20:50.102 [main] INFO  [] client.Client - Successfully connected to server

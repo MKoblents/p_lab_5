@@ -12,10 +12,21 @@
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>1776409896</id>
+        <id>1083021083</id>
         <name>asd</name>
         <coordinates>
             <x>21</x>
+            <y>23</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>1105322512</id>
+        <name>fda</name>
+        <coordinates>
+            <x>23</x>
             <y>23</y>
         </coordinates>
         <creationDate/>

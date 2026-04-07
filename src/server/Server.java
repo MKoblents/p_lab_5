@@ -53,7 +53,7 @@ public class Server {
             logger.info("Server listening on port {}", port);
             System.out.println("Server running. Press Ctrl+C to stop or type 'save'/'exit'.");
             Thread consoleThread = new Thread(() -> {
-                new ConsoleHandler(collectionManager, collectionSaver, finalDataFile, running).handleConsoleInput();
+                new ConsoleHandler(collectionManager, collectionSaver, finalDataFile, running, clientRegistry).handleConsoleInput();
             });
             consoleThread.setDaemon(true);
             consoleThread.start();

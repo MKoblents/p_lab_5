@@ -101,4 +101,25 @@ public class ClientRegistry {
     public  void  registerSocket(String clientId, Socket socketChannel){
         clientsSockets.put(clientId, socketChannel);
     }
+    public Collection<ConnectedClient> getAllClients() {
+        return clients.values();
+    }
+    public void printStatusToConsole() {
+        System.out.println("\n=== Connected Clients ===");
+        System.out.printf("%-10s %-10s %-25s %-10s%n", "ID", "STATE", "LAST_HEARTBEAT", "UPTIME");
+        System.out.println("------------------------------------------------------------");
+        for (ConnectedClient client : clients.values()) {
+            var status = client.getClientStatus();
+            String uptime = java.time.Duration.between(
+                    status.lastHeartbeat(), java.time.Instant.now()
+            ).toString().replaceAll("(\\d[HMS])(?!$)", "$1 ");
+            System.out.printf("%-10s %-10s %-25s %-10s%n",
+                    status.clientId(),
+                    status.clientState(),
+                    status.lastHeartbeat(),
+                    uptime
+            );
+        }
+        System.out.println("============================================================\n");
+    }
 }

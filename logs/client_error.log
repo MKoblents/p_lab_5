@@ -208,3 +208,12 @@ java.io.IOException: Console input closed (EOF)
 	at client.inputWorkers.InputManager.parseCommand(InputManager.java:66)
 	at client.context.ClientSession.run(ClientSession.java:67)
 	at client.Client.main(Client.java:102)
+2026-04-07 12:13:47.071 [Thread-1] ERROR [] client.network.AsyncNetworkReader - Reader thread terminated: Connection reset
+2026-04-07 12:20:40.200 [main] ERROR [] client.network.ConnectionManager - IO error while connecting to localhost:12345: Connection refused
+java.net.ConnectException: Connection refused
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:684)
+	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:946)
+	at client.network.ConnectionManager.connect(ConnectionManager.java:36)
+	at client.Client.main(Client.java:54)
+2026-04-07 12:20:40.203 [main] ERROR [] client.Client - Failed to connect to server at localhost:12345
