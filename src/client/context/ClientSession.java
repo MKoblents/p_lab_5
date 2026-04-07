@@ -57,11 +57,11 @@ public class ClientSession implements AutoCloseable {
         System.out.println("Connected! Type 'help' for commands, 'exit' to quit.");
         mainThread = Thread.currentThread();
         networkReader = new AsyncNetworkReader(connection.getSocketChannel(), () -> {
-            this.running = false;
+//            this.running = false;
             System.out.println("Server connection lost!");
-            if (mainThread != null) {
-                mainThread.interrupt();
-            }
+//            if (mainThread != null) {
+//                mainThread.interrupt();
+//            }
         });
         networkThread = new Thread(networkReader);
         networkThread.setDaemon(true);
@@ -99,7 +99,17 @@ public class ClientSession implements AutoCloseable {
                 synchronized (inputLock) {
                     CommandRequest request = invoker.runCommand(commandKey);
                     if (request != null) {
-                        connection.sendRequest(request);
+                        try {
+                            if (!connection.isConnected()){
+                                System.out.println("Not connected to server. Can't send request.");
+                            }
+                            else {
+                                connection.sendRequest(request);
+                            }
+                        }catch (IOException e){
+                            System.err.println("Network error while sending request: " + e.getMessage());
+
+                        }
                     }
                 }
             } else {
