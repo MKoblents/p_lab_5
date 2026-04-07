@@ -100,7 +100,13 @@ public class ClientRegistry {
     public boolean isParentOf(String parentId, String childId){
         if (getChildren(parentId).contains(childId)){
             return  true;
-        } return  false;
+        }
+        for (String directChild : getChildren(parentId)) {
+            if (isParentOf(directChild, childId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public PendingCommandQueue getPendingCommandQueue() {
