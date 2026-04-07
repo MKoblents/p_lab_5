@@ -99,10 +99,13 @@ public class Client {
                     inputManager, connection, responseHandler,
                     scriptRunner, invoker, context, processManager
             );
-            clientSession.run();
-
-            logger.info("Disconnecting from server");
-            connection.disconnect();
+            try {
+                clientSession.run();
+            } catch (IOException e) {
+                logger.info("Client session ended: {}", e.getMessage());
+            } finally {
+                clientSession.close();
+            }
             logger.info("Client stopped");
             System.out.println("Client stopped.");
         } catch (Exception e) {

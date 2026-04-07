@@ -31,7 +31,7 @@ public class ClientHealthMonitor {
      */
     public ClientHealthMonitor(ClientRegistry clientRegistry, long clientHeartbeatInterval, TimeUnit unit) {
         this.clientRegistry = clientRegistry;
-        this.heartbeatTimeout = Duration.ofSeconds(clientHeartbeatInterval).multipliedBy(3); // 3× rule
+        this.heartbeatTimeout = Duration.ofSeconds(clientHeartbeatInterval).multipliedBy(3);
         this.scanInterval = Duration.ofSeconds(clientHeartbeatInterval).multipliedBy(3);
         this.scanner = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread t = new Thread(r, "client-health-scanner");
@@ -80,7 +80,6 @@ public class ClientHealthMonitor {
         int markedOffline = 0;
 
         for (ConnectedClient client : clientRegistry.getAllClients()) {
-            // Skip already-offline clients
             if (client.getClientStatus().clientState() == ClientState.OFFLINE) {
                 continue;
             }
