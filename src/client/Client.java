@@ -1,5 +1,6 @@
 package client;
 
+import client.command.Reconnect;
 import client.config.ClientConfig;
 import client.context.ClientContext;
 import client.handlers.ResponseHandler;
@@ -75,7 +76,6 @@ public class Client {
             ScriptRunner scriptRunner = new ScriptRunner(
                     inputManager, connection, responseHandler, null
             );
-            Invoker invoker = new Invoker(inputManager, context, connection, processManager, scriptRunner);
             logger.info("Successfully connected to server");
             System.out.println("Connected to server! Client ID: " + clientId);
             if (!isRoot) {
@@ -84,10 +84,12 @@ public class Client {
                 System.out.println("This is a ROOT client (direct connection to server)");
             }
 
+            Invoker invoker = new Invoker(inputManager, context, connection, processManager, scriptRunner);
             ClientSession clientSession = new ClientSession(
                     inputManager, connection, responseHandler,
                     scriptRunner, invoker, context, processManager
             );
+            invoker.registerCommand("reconnect", new Reconnect(connection,context,clientSession));
 //            try {
 ////                HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
 ////                connection.sendHandshake(handshake);

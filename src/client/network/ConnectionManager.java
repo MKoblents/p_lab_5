@@ -159,6 +159,10 @@ public class ConnectionManager {
         return connected;
     }
 
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
     public String getHost() {
         return host;
     }

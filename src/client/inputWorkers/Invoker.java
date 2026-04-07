@@ -2,6 +2,7 @@ package client.inputWorkers;
 
 import client.command.*;
 import client.context.ClientContext;
+import client.context.ClientSession;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;

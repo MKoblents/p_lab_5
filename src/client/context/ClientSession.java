@@ -60,6 +60,7 @@ public class ClientSession implements AutoCloseable {
         networkReader = new AsyncNetworkReader(connection.getSocketChannel(), () -> {
 //            this.running = false;
             System.out.println("Server connection lost!");
+            connection.setConnected(false);
 //            if (mainThread != null) {
 //                mainThread.interrupt();
 //            }
@@ -208,7 +209,7 @@ public class ClientSession implements AutoCloseable {
         }
     }
 
-    private boolean attemptReconnect() {
+    public boolean attemptReconnect() {
         String host = connection.getHost();
         int port = connection.getPort();
         System.out.println(" Attempting to reconnect to " + host + ":" + port + "...");
@@ -231,5 +232,20 @@ public class ClientSession implements AutoCloseable {
             System.err.println(" Reconnection failed. Check server status and try again.");
             return false;
         }
+    }
+    public void restartNetworkReader() {
+        if (networkReader != null) networkReader.stop();
+        if (networkThread != null && networkThread.isAlive()) {
+            try { networkThread.join(500); } catch (InterruptedException ignored) {}
+        }
+        networkReader = new AsyncNetworkReader(connection.getSocketChannel(), () -> {
+            System.out.println("  Server connection lost!");
+            connection.setConnected(false);
+        });
+
+        networkThread = new Thread(networkReader);
+        networkThread.setDaemon(true);
+        networkThread.start();
+        System.out.println(" Network reader restarted successfully.");
     }
 }
