@@ -23,6 +23,9 @@ public class ResponseHandler {
             System.err.println("Error: Null response from server");
             return;
         }
+        if (response.result() == null && "ok".equals(response.message())) {
+            return;
+        }
         System.out.println("\n[Client: "+ context.getClientId()+"]");
         if (response.success()) {
             System.out.println(response.message());

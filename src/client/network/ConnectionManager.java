@@ -18,6 +18,7 @@ public class ConnectionManager {
     private boolean connected = false;
     private String host;
     private int port;
+    private final Object writeLock = new Object();
     public boolean connect(String host, int port) {
         this.host = host;
         this.port = port;
@@ -72,8 +73,10 @@ public class ConnectionManager {
         buffer.put(data);
         buffer.flip();
         logger.trace("Writing {} bytes to channel", buffer.remaining());
-        while (buffer.hasRemaining()) {
-            socketChannel.write(buffer);
+        synchronized (writeLock) {
+            while (buffer.hasRemaining()) {
+                socketChannel.write(buffer);
+            }
         }
         logger.debug("Request sent successfully: requestId={}", requestId);
     }
@@ -172,8 +175,10 @@ public class ConnectionManager {
         buffer.putInt(data.length);
         buffer.put(data);
         buffer.flip();
-        while (buffer.hasRemaining()) {
-            socketChannel.write(buffer);
+        synchronized (writeLock) {
+            while (buffer.hasRemaining()) {
+                socketChannel.write(buffer);
+            }
         }
         return true;
     }

@@ -3,13 +3,13 @@ client/handlers/ResponseHandler.class
 shared/exceptions/UnavailableCoordinateException.class
 client/command/Add.class
 client/io/Reader.class
+server/commands/HeartbeatCommand.class
 server/manager/ClientRegistry.class
 server/manager/FileManager$1.class
 server/Server.class
 shared/models/Chapter.class
 shared/dto/CommandRequest.class
 server/commands/ClearCommand.class
-shared/dto/ServerMessage$MessageType.class
 server/commands/RemoveByIdCommand.class
 client/utils/SideFlag.class
 server/commands/AddCommand.class
@@ -23,7 +23,6 @@ server/manager/FileManager.class
 server/commands/UpdateCommand.class
 client/network/ConnectionManager.class
 shared/exceptions/CreationDataException.class
-shared/dto/ServerMessage.class
 client/context/ClientContext.class
 shared/dto/ClientStatus.class
 shared/dto/ForwardCommandObject.class
@@ -36,6 +35,7 @@ server/commands/HelpCommand.class
 server/commands/InsertAtCommand.class
 client/network/AsyncNetworkReader.class
 client/Client.class
+server/manager/ClientHealthMonitor.class
 client/command/ExecuteScript.class
 server/commands/MinByMeleeWeaponCommand.class
 server/manager/CollectionManager.class

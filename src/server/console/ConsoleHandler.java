@@ -2,6 +2,7 @@ package server.console;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import server.manager.ClientRegistry;
 import server.manager.CollectionManager;
 import server.outputWorkers.CollectionSaver;
 
@@ -14,14 +15,17 @@ public class ConsoleHandler {
     private CollectionSaver collectionSaver;
     private String dataFile;
     private AtomicBoolean running;
+    private ClientRegistry clientRegistry;
     public ConsoleHandler(CollectionManager collectionManager,
                           CollectionSaver collectionSaver,
                           String dataFile,
-                          AtomicBoolean running){
+                          AtomicBoolean running,
+                          ClientRegistry clientRegistry){
         this.collectionManager = collectionManager;
         this.collectionSaver = collectionSaver;
         this.dataFile = dataFile;
         this.running = running;
+        this.clientRegistry = clientRegistry;
 
     }
     public void handleConsoleInput() {
@@ -56,6 +60,11 @@ public class ConsoleHandler {
                             System.out.println("  save - Save collection to file");
                             System.out.println("  exit - Stop server");
                             System.out.println("  help - Show this help");
+                            System.out.println("  status - Clients status");
+                            break;
+                        case "status":
+                            logger.info("Client status requested from console");
+                            clientRegistry.printStatusToConsole();
                             break;
                         case "":
                             break;
