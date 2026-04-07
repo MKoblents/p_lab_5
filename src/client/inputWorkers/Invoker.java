@@ -65,6 +65,7 @@ public class Invoker {
         registerCommand("update", new Update(inputManager, connection, context));
         registerCommand("spawn_client", new SpawnClient(context, connection, processManager));
         registerCommand("execute_script", new ExecuteScript(inputManager, runner));
+        registerCommand("kill_client", new KillClient(inputManager));
     }
 
     public CommandRequest runCommand(String commandName) {

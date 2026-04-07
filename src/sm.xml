@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <spaceMarines>
-    <updatingSpaceMarines>135640095</updatingSpaceMarines>
     <spaceMarine>
         <id>52908367</id>
         <name>wef</name>
@@ -33,5 +32,16 @@
         <creationDate/>
         <health>2.1341325E7</health>
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>2063342706</id>
+        <name>23</name>
+        <coordinates>
+            <x>211</x>
+            <y>12</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
 </spaceMarines>

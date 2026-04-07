@@ -131,4 +131,8 @@ public class InputManager {
             return scanner.getInputLong();
         }
     }
+
+    public String getLastString() {
+        return commandParser.getStringArg();
+    }
 }

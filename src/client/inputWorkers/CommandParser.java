@@ -25,6 +25,7 @@ public class CommandParser {
     /** Raw enum string for deferred parsing via {@link #getEnumValue(Class)}. */
     private String enumArg;
     private String targetClientId;
+    private String stringArg;
     /**
      * Joins array elements [start, finish) into lowercase string.
      * @param strings source array
@@ -119,6 +120,10 @@ public class CommandParser {
             enumArg = parts[1];
             return;
         }
+        if (commandName.equals("kill_client")){
+            stringArg = parts[1];
+            return;
+        }
         xmlArg = listToString(parts, 2, parts.length);
         reader.setLastXmlString(xmlArg);
 
@@ -179,5 +184,9 @@ public class CommandParser {
 
     public void setLastPath(String scriptPath) {
         this.pathArg = scriptPath;
+    }
+
+    public String getStringArg() {
+        return stringArg;
     }
 }

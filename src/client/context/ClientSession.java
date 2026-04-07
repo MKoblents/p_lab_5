@@ -8,7 +8,7 @@ import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
-import client.utils.DisconnectReason;
+import shared.enums.DisconnectReason;
 import client.utils.SideFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,6 @@ import shared.dto.HandshakeRequest;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -65,6 +64,8 @@ public class ClientSession implements AutoCloseable {
                 System.out.println("Parent exit. Exiting...");
                 running = false;
                 if (mainThread != null) mainThread.interrupt();
+                close();
+                System.exit(0);
             }
            });
         networkThread = new Thread(networkReader);
@@ -126,6 +127,15 @@ public class ClientSession implements AutoCloseable {
         while (running) {
             CommandResponse response = networkReader.getResponseQueue().poll();
             if (response != null) {
+                if (DisconnectReason.KILLED_BY_PARENT.name().equals(response.message())) {
+                    System.out.println(" Session terminated by server. Exiting...");
+                    running = false;
+                    connection.setConnected(false);
+                    if (mainThread != null) mainThread.interrupt();
+                    close();
+                    System.exit(0);
+                    continue;
+                }
                 if ("PARENT_TERMINATED".equals(response.message())) {
                     System.out.println("Parent exited. Exiting...");
                     running = false;

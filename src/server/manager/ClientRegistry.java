@@ -1,5 +1,6 @@
 package server.manager;
 
+import shared.enums.DisconnectReason;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.client.ConnectedClient;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,6 +41,20 @@ public class ClientRegistry {
             return;
         }
         logger.info("Unregistering client: {}", clientId);
+        OutputStream clientOut = clientStreams.get(clientId);
+        if (clientOut != null) {
+            try {
+                CommandResponse killedMsg = new CommandResponse(
+                        false, null, DisconnectReason.KILLED_BY_PARENT.name(), "SYSTEM", clientId
+                );
+                byte[] data = SerializationUtil.serialize(killedMsg);
+                ByteBuffer buffer = ByteBuffer.allocate(4 + data.length);
+                buffer.putInt(data.length);
+                buffer.put(data);
+                clientOut.write(buffer.array());
+                clientOut.flush();
+            } catch (IOException ignored) {}
+        }
         clientStreams.remove(clientId);
         Set<String> children = parentChildRelations.remove(clientId);
         if (children != null) {
