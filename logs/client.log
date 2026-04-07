@@ -2593,3 +2593,10 @@ java.net.ConnectException: Connection refused
 2026-04-07 12:20:50.044 [main] INFO  [] client.Client - Handshake sent successfully. Client=33ce923e, Parent=null
 2026-04-07 12:20:50.098 [main] INFO  [] client.Client - Using client ID: 33ce923e
 2026-04-07 12:20:50.102 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-07 12:26:12.051 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:26:12.061 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:26:12.066 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-07 12:26:12.071 [main] INFO  [] client.Client - Handshake sent successfully. Client=dd622d69, Parent=null
+2026-04-07 12:26:12.104 [main] INFO  [] client.Client - Using client ID: dd622d69
+2026-04-07 12:26:12.107 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-07 12:26:34.009 [Thread-1] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
