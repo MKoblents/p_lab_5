@@ -1,2 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<spaceMarines/>
+<spaceMarines>
+    <spaceMarine>
+        <id>2003496028</id>
+        <name>wef</name>
+        <coordinates>
+            <x>0</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>1776409896</id>
+        <name>asd</name>
+        <coordinates>
+            <x>21</x>
+            <y>23</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+</spaceMarines>

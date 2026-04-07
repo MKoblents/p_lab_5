@@ -22,12 +22,7 @@ public class ConsoleBufferedScanner implements Reader {
 
     @Override
     public String nextLine() throws IOException {
-        try {
-            return consoleInputReader.pollCommand();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return null;
-        }
+       return getTrimmedTextBlocking();
     }
     private String readLineBlocking() throws IOException {
         try {

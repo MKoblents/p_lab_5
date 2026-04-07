@@ -11,7 +11,7 @@ public class ConsoleInputReader implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ConsoleInputReader.class);
     private final BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     private volatile boolean running = true;
-    private final Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
 
     @Override
     public void run() {
@@ -24,7 +24,9 @@ public class ConsoleInputReader implements Runnable {
                         inputQueue.offer(line);
                     }
                 } else {
-                    Thread.sleep(100);
+                    System.out.println("EOF Detected, recreating scanner...");
+                    scanner = new Scanner(System.in);
+                    try { Thread.sleep(500); } catch (InterruptedException ie) {}
                 }
             } catch (Exception e) {
                 logger.error("Error reading console input: {}", e.getMessage());

@@ -50,44 +50,8 @@ public class ClientProcessManager {
         pb.redirectError(ProcessBuilder.Redirect.DISCARD);
         Process process = pb.start();
 
-//        childProcesses.put(childClientId, process);
         logger.info("Child process started with PID: {}", process.pid());
 
-//        monitorProcess(childClientId, process);
     }
 
-//    private void monitorProcess(String clientId, Process process) {
-//        CompletableFuture.runAsync(() -> {
-//            try {
-//                int exitCode = process.waitFor();
-//                logger.info("Child client {} exited with code {}", clientId, exitCode);
-//                childProcesses.remove(clientId);
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//                logger.error("Process monitoring interrupted for {}", clientId);
-//            }
-//        });
-//    }
-//
-//    public void destroyAllChildren() {
-//        logger.info("Destroying {} child processes", childProcesses.size());
-//        for (Map.Entry<String, Process> entry : childProcesses.entrySet()) {
-//            try {
-//                logger.info("Destroying child process: {}", entry.getKey());
-//                entry.getValue().destroy();
-//                if (!entry.getValue().waitFor(5, java.util.concurrent.TimeUnit.SECONDS)) {
-//                    entry.getValue().destroyForcibly();
-//                }
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//                logger.error("Interrupted while destroying child {}", entry.getKey());
-//            }
-//        }
-//        childProcesses.clear();
-//    }
-//
-//    public boolean isChildAlive(String clientId) {
-//        Process process = childProcesses.get(clientId);
-//        return process != null && process.isAlive();
-//    }
 }
