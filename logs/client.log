@@ -2600,3 +2600,49 @@ java.net.ConnectException: Connection refused
 2026-04-07 12:26:12.104 [main] INFO  [] client.Client - Using client ID: dd622d69
 2026-04-07 12:26:12.107 [main] INFO  [] client.Client - Successfully connected to server
 2026-04-07 12:26:34.009 [Thread-1] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-07 12:33:48.027 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:33:48.041 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:33:48.052 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-07 12:33:48.065 [main] INFO  [] client.Client - Handshake sent successfully. Client=f3718059, Parent=null
+2026-04-07 12:33:48.117 [main] INFO  [] client.Client - Using client ID: f3718059
+2026-04-07 12:33:48.121 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-07 12:33:57.280 [Thread-2] INFO  [] client.command.SpawnClient - Received spawn response, childId=0756aad3
+2026-04-07 12:33:57.280 [Thread-2] INFO  [] client.process.ClientProcessManager - Spawning child client: 0756aad3 (parent: f3718059)
+2026-04-07 12:33:57.293 [Thread-2] INFO  [] client.process.ClientProcessManager - Child process started with PID: 21200
+2026-04-07 12:33:57.293 [Thread-2] INFO  [] client.command.SpawnClient - Child 0756aad3 added to context
+2026-04-07 12:33:57.791 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:33:57.816 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:33:57.827 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-07 12:33:57.839 [main] INFO  [] client.Client - Handshake sent successfully. Client=0756aad3, Parent=f3718059
+2026-04-07 12:33:57.873 [main] INFO  [] client.Client - Using client ID: 0756aad3
+2026-04-07 12:33:57.881 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-07 12:34:02.912 [Thread-2] INFO  [] client.command.SpawnClient - Received spawn response, childId=445b6c79
+2026-04-07 12:34:02.913 [Thread-2] INFO  [] client.process.ClientProcessManager - Spawning child client: 445b6c79 (parent: 0756aad3)
+2026-04-07 12:34:02.927 [Thread-2] INFO  [] client.process.ClientProcessManager - Child process started with PID: 21235
+2026-04-07 12:34:02.927 [Thread-2] INFO  [] client.command.SpawnClient - Child 445b6c79 added to context
+2026-04-07 12:34:03.414 [main] INFO  [] client.Client - Client starting with log level: INFO
+2026-04-07 12:34:03.434 [main] INFO  [] client.Client - Connecting to localhost:12345
+2026-04-07 12:34:03.450 [main] INFO  [] client.network.ConnectionManager - Successfully connected to localhost:12345
+2026-04-07 12:34:03.469 [main] INFO  [] client.Client - Handshake sent successfully. Client=445b6c79, Parent=0756aad3
+2026-04-07 12:34:03.501 [main] INFO  [] client.Client - Using client ID: 445b6c79
+2026-04-07 12:34:03.508 [main] INFO  [] client.Client - Successfully connected to server
+2026-04-07 12:34:50.414 [Thread-1] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-07 12:34:50.432 [Thread-1] WARN  [] client.network.AsyncNetworkReader - Server disconnected (EOF detected)
+2026-04-07 12:34:52.923 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:34:53.555 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:34:57.924 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:34:58.556 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:35:02.926 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:35:03.558 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:35:07.928 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:35:08.559 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:35:12.930 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:35:13.561 [heatbeat-scheduler] WARN  [] client.context.ClientSession - Heartbeat failed: null
+2026-04-07 12:35:16.793 [main] INFO  [] client.Client - Disconnecting from server
+2026-04-07 12:35:16.794 [main] INFO  [] client.network.ConnectionManager - Disconnecting from server
+2026-04-07 12:35:16.794 [main] INFO  [] client.network.ConnectionManager - Disconnected from server
+2026-04-07 12:35:16.794 [main] INFO  [] client.Client - Client stopped
+2026-04-07 12:35:17.926 [main] INFO  [] client.Client - Disconnecting from server
+2026-04-07 12:35:17.927 [main] INFO  [] client.network.ConnectionManager - Disconnecting from server
+2026-04-07 12:35:17.927 [main] INFO  [] client.network.ConnectionManager - Disconnected from server
+2026-04-07 12:35:17.927 [main] INFO  [] client.Client - Client stopped

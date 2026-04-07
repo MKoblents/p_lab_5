@@ -1,5 +1,6 @@
 package server;
 
+import server.manager.ClientHealthMonitor;
 import server.manager.ClientRegistry;
 import shared.utils.LoggingConfigurator;
 import server.config.ServerConfig;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
@@ -32,6 +34,8 @@ public class Server {
             CollectionManager collectionManager = new CollectionManager();
             CollectionSaver collectionSaver = new CollectionSaver();
             ClientRegistry clientRegistry = new ClientRegistry();
+            ClientHealthMonitor healthMonitor = new ClientHealthMonitor(clientRegistry, 5, TimeUnit.SECONDS);
+            healthMonitor.start();
             logger.info("Loading collection from: {}", dataFile);
             collectionManager.loadFromFile(dataFile);
             logger.info("Loaded {} elements from {}",
@@ -42,6 +46,7 @@ public class Server {
                 logger.info("=== Shutdown hook triggered ===");
                 logger.info("Saving collection before shutdown...");
                 try {
+                    healthMonitor.stop();
                     collectionSaver.save(collectionManager, finalDataFile);
                     logger.info("Collection saved successfully to {}", finalDataFile);
                 } catch (Exception e) {

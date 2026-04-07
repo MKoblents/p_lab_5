@@ -3188,3 +3188,76 @@ java.net.BindException: Address already in use
 2026-04-07 12:26:33.643 [Thread-0] INFO  [] s.outputWorkers.CollectionSaver - Collection saved successfully: 3 elements
 2026-04-07 12:26:33.644 [Thread-0] INFO  [] server.Server - Collection saved successfully to /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
 2026-04-07 12:26:33.644 [Thread-0] INFO  [] server.Server - === Server shutdown complete ===
+2026-04-07 12:33:45.397 [main] INFO  [] server.Server - Log level set to: INFO
+2026-04-07 12:33:45.400 [main] INFO  [] server.Server - === SpaceMarine Server Starting ===
+2026-04-07 12:33:45.400 [main] INFO  [] server.Server - Configuration: port=12345, dataFile=/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-07 12:33:45.405 [main] INFO  [] server.manager.ClientHealthMonitor - ClientHealthMonitor started (timeout=PT15S, interval=PT15S)
+2026-04-07 12:33:45.405 [main] INFO  [] server.Server - Loading collection from: /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-07 12:33:45.413 [main] INFO  [] server.Server - Loaded 3 elements from /home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/src/sm.xml
+2026-04-07 12:33:45.417 [main] INFO  [] server.Server - === SpaceMarine Server Started ===
+2026-04-07 12:33:45.418 [main] INFO  [] server.Server - Server listening on port 12345
+2026-04-07 12:33:45.419 [main] INFO  [] server.Server - Console reader started
+2026-04-07 12:33:45.433 [Thread-1] INFO  [] server.console.ConsoleHandler - Console reader ready. Type 'save', 'exit', or 'help'.
+2026-04-07 12:33:48.053 [main] INFO  [] server.Server - Client connected: /127.0.0.1:41282
+2026-04-07 12:33:48.089 [Thread-2] INFO  [] server.manager.ClientRegistry - Root client f3718059 registered
+2026-04-07 12:33:48.090 [Thread-2] INFO  [] server.network.ClientHandler - Client f3718059 registered (parent: ROOT)
+2026-04-07 12:33:48.137 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 24bb9aa2
+2026-04-07 12:33:53.133 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: facfdf2c
+2026-04-07 12:33:57.204 [Thread-2] INFO  [] server.commands.SpawnClientCommand - Creating child client 0756aad3 for parent f3718059
+2026-04-07 12:33:57.206 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 98b3087f
+2026-04-07 12:33:57.828 [main] INFO  [] server.Server - Client connected: /127.0.0.1:48748
+2026-04-07 12:33:57.841 [Thread-3] INFO  [] server.manager.ClientRegistry - Client 0756aad3 registered as child of f3718059
+2026-04-07 12:33:57.842 [Thread-3] INFO  [] server.network.ClientHandler - Client 0756aad3 registered (parent: f3718059)
+2026-04-07 12:33:57.911 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: adf35980
+2026-04-07 12:33:58.134 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 0d102389
+2026-04-07 12:34:02.823 [Thread-3] INFO  [] server.commands.SpawnClientCommand - Creating child client 445b6c79 for parent 0756aad3
+2026-04-07 12:34:02.824 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 713e3bf8
+2026-04-07 12:34:02.912 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: b9bfcddf
+2026-04-07 12:34:03.136 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: a567d4e5
+2026-04-07 12:34:03.450 [main] INFO  [] server.Server - Client connected: /127.0.0.1:48752
+2026-04-07 12:34:03.469 [Thread-4] INFO  [] server.manager.ClientRegistry - Client 445b6c79 registered as child of 0756aad3
+2026-04-07 12:34:03.470 [Thread-4] INFO  [] server.network.ClientHandler - Client 445b6c79 registered (parent: 0756aad3)
+2026-04-07 12:34:03.545 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 83ca9e3a
+2026-04-07 12:34:05.065 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 448984ea
+2026-04-07 12:34:07.914 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 0d09d280
+2026-04-07 12:34:08.137 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: b12a62a2
+2026-04-07 12:34:08.547 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 73d78f1c
+2026-04-07 12:34:12.914 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: d725c9f4
+2026-04-07 12:34:13.138 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: a36fc458
+2026-04-07 12:34:13.548 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: c79c979f
+2026-04-07 12:34:17.915 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: e1f9f71a
+2026-04-07 12:34:18.139 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: ec705253
+2026-04-07 12:34:18.549 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: a2f49147
+2026-04-07 12:34:22.917 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 62d8f9ce
+2026-04-07 12:34:23.140 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: e0579853
+2026-04-07 12:34:23.549 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 6b740e2e
+2026-04-07 12:34:26.666 [Thread-1] INFO  [] server.console.ConsoleHandler - Client status requested from console
+2026-04-07 12:34:27.918 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 6ceedd9a
+2026-04-07 12:34:28.141 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 10366295
+2026-04-07 12:34:28.550 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 362fed50
+2026-04-07 12:34:32.919 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: f2b6b238
+2026-04-07 12:34:33.142 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 7a80e828
+2026-04-07 12:34:33.551 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: ae799a34
+2026-04-07 12:34:37.920 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 15a5c9d0
+2026-04-07 12:34:38.143 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 02cb10a7
+2026-04-07 12:34:38.552 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 4d04fe40
+2026-04-07 12:34:42.921 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: fba6c64d
+2026-04-07 12:34:43.145 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: ef00ee32
+2026-04-07 12:34:43.554 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 8ea738dd
+2026-04-07 12:34:47.922 [Thread-3] INFO  [] server.network.ClientHandler - Response sent for requestId: 5e88e446
+2026-04-07 12:34:48.146 [Thread-2] INFO  [] server.network.ClientHandler - Response sent for requestId: 5e31f7c4
+2026-04-07 12:34:48.555 [Thread-4] INFO  [] server.network.ClientHandler - Response sent for requestId: 9c7e27f6
+2026-04-07 12:34:50.399 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: f3718059
+2026-04-07 12:34:50.400 [Thread-2] INFO  [] server.manager.ClientRegistry - Forcing disconnect for child: 0756aad3
+2026-04-07 12:34:50.400 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: 0756aad3
+2026-04-07 12:34:50.400 [Thread-2] INFO  [] server.manager.ClientRegistry - Forcing disconnect for child: 445b6c79
+2026-04-07 12:34:50.400 [Thread-2] INFO  [] server.manager.ClientRegistry - Unregistering client: 445b6c79
+2026-04-07 12:34:50.400 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 445b6c79 and subtree fully unregistered
+2026-04-07 12:34:50.400 [Thread-2] INFO  [] server.manager.ClientRegistry - Client 0756aad3 and subtree fully unregistered
+2026-04-07 12:34:50.400 [Thread-2] INFO  [] server.manager.ClientRegistry - Client f3718059 and subtree fully unregistered
+2026-04-07 12:34:50.400 [Thread-3] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-07 12:34:50.400 [Thread-4] ERROR [] server.network.ClientHandler - IO error reading from client: Socket closed
+2026-04-07 12:34:50.400 [Thread-2] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:41282
+2026-04-07 12:34:50.401 [Thread-3] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:48748
+2026-04-07 12:34:50.401 [Thread-4] INFO  [] server.network.ClientHandler - Client disconnected: /127.0.0.1:48752
+2026-04-07 12:35:10.922 [Thread-1] INFO  [] server.console.ConsoleHandler - Client status requested from console
