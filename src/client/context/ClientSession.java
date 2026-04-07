@@ -26,8 +26,6 @@ import java.util.concurrent.TimeUnit;
 public class ClientSession implements AutoCloseable {
     private static final Logger logger = LoggerFactory.getLogger(ClientSession.class);
     private volatile ScheduledExecutorService heartbeatScheduler;
-    private static final int HEARTBEAT_INTERVAL_SEC = 5;
-    private static final String CMD_HEARTBEAT = "heartbeat";
     private final InputManager inputManager;
     private final ConnectionManager connection;
     private final ResponseHandler responseHandler;
@@ -128,7 +126,7 @@ public class ClientSession implements AutoCloseable {
             CommandResponse response = networkReader.getResponseQueue().poll();
             if (response != null) {
                 if (DisconnectReason.KILLED_BY_PARENT.name().equals(response.message())) {
-                    System.out.println(" Session terminated by server. Exiting...");
+                    System.out.println(" Session terminated by another client. Exiting...");
                     running = false;
                     connection.setConnected(false);
                     if (mainThread != null) mainThread.interrupt();

@@ -1,5 +1,6 @@
 package server;
 
+import server.client.ConnectionState;
 import server.config.ServerConfig;
 import server.console.ConsoleHandler;
 import server.manager.ClientRegistry;
@@ -23,7 +24,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -36,8 +36,6 @@ public class Server {
     private static Selector selector;
     private static ClientRegistry clientRegistry;
     private static Invoker invoker;
-
-    private enum ConnectionState { READ_LENGTH, READ_PAYLOAD, WRITE }
 
     private static class ClientConnection {
         final SocketChannel channel;

@@ -16,6 +16,8 @@ public class ClientContext {
     private final Instant createdAt;
     private final boolean isRoot;
     private volatile boolean active;
+    private volatile boolean awaitingForwardedInput = false;
+
     private final List<String> childClientIds = new CopyOnWriteArrayList<>();
     public ClientContext(String clientId,
                          String parentClientId,
@@ -86,4 +88,11 @@ public class ClientContext {
         childClientIds.clear();
     }
 
+    public boolean isAwaitingForwardedInput() {
+        return awaitingForwardedInput;
+    }
+
+    public void setAwaitingForwardedInput(boolean awaitingForwardedInput) {
+        this.awaitingForwardedInput = awaitingForwardedInput;
+    }
 }

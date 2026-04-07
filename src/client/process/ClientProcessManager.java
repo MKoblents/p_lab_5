@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientProcessManager {
     private static final Logger logger = LoggerFactory.getLogger(ClientProcessManager.class);
-    private final Map<String, Process> childProcesses = new ConcurrentHashMap<>();
     private final String host;
     private final int serverPort;
 

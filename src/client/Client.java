@@ -31,8 +31,7 @@ public class Client {
     private static ConnectionManager staticConnection;
     private static Invoker staticInvoker;
     private static ClientContext staticContext;
-    private static final AtomicBoolean processingForwardedCommand = new AtomicBoolean(false);
-    public static final Object inputLock = new Object();
+
 
     public static void main(String[] args) {
         ClientConfig clientConfig = ClientConfig.parse(args);
@@ -89,19 +88,6 @@ public class Client {
                     inputManager, connection, responseHandler,
                     scriptRunner, invoker, context, processManager
             );
-            invoker.registerCommand("reconnect", new Reconnect(connection,context,clientSession));
-//            try {
-////                HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
-////                connection.sendHandshake(handshake);
-////                logger.info("Handshake sent successfully. Client={}, Parent={}", clientId, parentClientId);
-////                CommandResponse handshakeResponse = connection.readResponse();
-//            } catch (IOException e) {
-//                logger.error("Failed to send handshake to server", e);
-//                System.err.println("Handshake failed: " + e.getMessage());
-////                connection.disconnect();
-//
-//                return;
-//            }
             try {
                 if (connection.isConnected()) {
                     HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
@@ -126,87 +112,4 @@ public class Client {
             e.printStackTrace();
         }
     }
-//    private static void handleForwardCommand(String message) {
-//        if (!processingForwardedCommand.compareAndSet(false, true)) {
-//            System.out.println("Another command is being processed, ignoring...");
-//            return;
-//        }
-//        String[] parts = message.split(":", 4);
-//        if (parts.length < 4) {
-//            logger.warn("Malformed FORWARD message: {}", message);
-//            processingForwardedCommand.set(false);
-//            return;
-//        }
-//
-//        String fromClientId = parts[1];
-//        String requestId = parts[2];
-//        String command = parts[3];
-//
-//        logger.info("Received forwarded command from {}: {}", fromClientId, command);
-//        System.out.println("\n Received command from client " + fromClientId + ": " + command);
-//       logger.debug("Starting to execute command...");
-//
-//        synchronized (inputLock) {
-//            try {
-//               logger.debug("Temp reader set");
-//               logger.debug("Parsed command name: " + command);
-//               logger.debug("Calling runServerCommand...");
-//                CommandRequest request = staticInvoker.runServerCommand(command);
-//               logger.debug("runServerCommand returned: " + (request != null ? request.commandType() : "null"));
-//
-//                CommandResponse response = null;
-//                String resultMsg;
-//                boolean success;
-//
-//                if (request != null) {
-//                   logger.debug("Sending request to server...");
-//                    staticConnection.sendRequest(request);
-//                   logger.debug("Waiting for response...");
-//                    response = staticConnection.readResponse();
-//                    success = response != null && response.success();
-//                    resultMsg = response != null ? response.message() : "No response from server";
-//                   logger.debug("Response received - success=" + success);
-//                } else {
-//                    success = false;
-//                    resultMsg = "Failed to build request for command: " + command;
-//                   logger.debug("Request is null, command failed");
-//                }
-//                if (success) {
-//                    System.out.println("\n✓ Command '" + command + "' executed successfully");
-//                    if (response != null && response.result() != null) {
-//                        System.out.println("  Result: " + response.result());
-//                    }
-//                } else {
-//                    System.err.println("\nCommand '" + command + "' failed: " + resultMsg);
-//                }
-//               logger.debug("Original reader restored");
-//
-//            } catch (Exception e) {
-//                System.err.println("✗ Failed to execute command: " + e.getMessage());
-//                e.printStackTrace();
-//            } finally {
-//                processingForwardedCommand.set(false);
-//            }
-//        }
-//    }
-//    private static void handleChildRegistration(String message) {
-//        String[] parts = message.split(":", 3);
-//        if (parts.length >= 3) {
-//            String childId = parts[1];
-//            int childPort = Integer.parseInt(parts[2]);
-//
-//            if (staticContext != null) {
-//                staticContext.addChild(childId);
-//                logger.info("Child client {} registered with port {}", childId, childPort);
-//                System.out.println("New child client connected: " + childId);
-//            } else {
-//                logger.warn("Context not initialized, cannot register child: {}", childId);
-//            }
-//        } else {
-//            logger.warn("Malformed REGISTER_CHILD message: {}", message);
-//        }
-//    }
-//    public static boolean isProcessingForwardedCommand() {
-//        return processingForwardedCommand.get();
-//    }
 }

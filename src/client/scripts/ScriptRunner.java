@@ -3,6 +3,7 @@ package client.scripts;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
 import client.inputWorkers.Invoker;
+import client.io.ConsoleBufferedScanner;
 import client.io.FileBufferedReader;
 import client.io.Reader;
 import shared.utils.XMLParser;
@@ -65,7 +66,7 @@ public class ScriptRunner {
             return false;
         } finally {
             try {
-                if (originalReader instanceof client.io.ConsoleBufferedScanner) {
+                if (originalReader instanceof ConsoleBufferedScanner) {
                     originalReader.clearBuffer();
                 }
                 inputManager.setReader(originalReader);
@@ -97,7 +98,7 @@ public class ScriptRunner {
      * Internal execution logic (after Reader is switched).
      * @return ExecutionResult with summary
      */
-    private ExecutionResult executeScriptInternal(String scriptPath) throws IOException, InterruptedException {
+    private ExecutionResult executeScriptInternal(String scriptPath) throws IOException {
         List<String> details = new ArrayList<>();
         int successCount = 0;
         int errorCount = 0;

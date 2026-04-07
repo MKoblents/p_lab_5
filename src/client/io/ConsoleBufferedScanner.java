@@ -90,6 +90,7 @@ public class ConsoleBufferedScanner implements Reader {
 
     public long getInputLong() throws IOException {
         System.out.print("(you should enter long type) ");
+        System.out.flush();
         try {
             return Long.parseLong(getTrimmedTextBlocking());
         } catch (NumberFormatException e) {
@@ -101,11 +102,13 @@ public class ConsoleBufferedScanner implements Reader {
 
     public String getInputString() throws IOException {
         System.out.print("(you should enter String type) ");
+        System.out.flush();
         return getTrimmedTextBlocking();
     }
 
     private boolean shouldRetryInput() throws IOException {
         System.out.print("Do you want to correct your data? (Enter 'y' or 'yes'): ");
+        System.out.flush();
         String answer = getTrimmedTextBlocking();
         return answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes");
     }
@@ -113,6 +116,7 @@ public class ConsoleBufferedScanner implements Reader {
     public <T extends Enum<T>> T getInputEnum(Class<T> enumType) throws IOException {
         System.out.println("(you should chose one option) ");
         System.out.println(Arrays.toString(enumType.getEnumConstants()));
+        System.out.flush();
         String value = getTrimmedTextBlocking();
         T[] constants = enumType.getEnumConstants();
         try {
@@ -131,6 +135,7 @@ public class ConsoleBufferedScanner implements Reader {
 
     public double getInputDouble() throws IOException {
         System.out.print("(you should enter double type) ");
+        System.out.flush();
         try {
             return Double.parseDouble(getTrimmedTextBlocking().replace(',', '.'));
         } catch (NumberFormatException e) {

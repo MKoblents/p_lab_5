@@ -72,6 +72,10 @@ public class ConsoleHandler {
                             logger.warn("Unknown server command: {}", command);
                             System.err.println("Unknown command: " + command + ". Type 'help' for list.");
                     }
+                }else {
+                    scanner = new Scanner(System.in);
+                    Thread.sleep(200);
+                    continue;
                 }
                 Thread.sleep(100);
             } catch (InterruptedException e) {

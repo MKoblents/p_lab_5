@@ -43,15 +43,15 @@ public class ResponseHandler {
      */
     private void handleResult(Object result) {
         if (result instanceof SpaceMarine marine) {
-            System.out.println("  → " + marine);
+            System.out.println("   " + marine);
         } else if (result instanceof List<?> list) {
             handleSpaceMarineList(list);
         } else if (result instanceof Double value) {
-            System.out.println("  → Value: " + String.format("%.2f", value));
+            System.out.println("   Value: " + String.format("%.2f", value));
         } else if (result instanceof Long id) {
-            System.out.println("  → ID: " + id);
+            System.out.println("   ID: " + id);
         } else if (result instanceof Integer count) {
-            System.out.println("  → Count: " + count);
+            System.out.println("   Count: " + count);
         } else if (result instanceof ScriptRunner.ExecutionResult scriptResult) {
             handleScriptResult(scriptResult);
 
@@ -68,12 +68,12 @@ public class ResponseHandler {
      */
     private void handleSpaceMarineList(List<?> list) {
         if (list.isEmpty()) {
-            System.out.println("  → Collection is empty");
+            System.out.println("   Collection is empty");
         } else {
-            System.out.println("  → Collection (" + list.size() + " elements, sorted by name):");
+            System.out.println("   Collection (" + list.size() + " elements, sorted by name):");
             for (Object item : list) {
                 if (item instanceof SpaceMarine marine) {
-                    System.out.println("    • " + marine);
+                    System.out.println("     " + marine);
                 }
             }
         }
@@ -83,9 +83,9 @@ public class ResponseHandler {
      * Handles script execution result.
      */
     private void handleScriptResult(ScriptRunner.ExecutionResult result) {
-        System.out.println("  → Script execution summary:");
-        System.out.println("    • Success: " + result.successCount());
-        System.out.println("    • Errors: " + result.errorCount());
+        System.out.println("   Script execution summary:");
+        System.out.println("     Success: " + result.successCount());
+        System.out.println("     Errors: " + result.errorCount());
         if (result.details().size() <= 10) {
             for (String detail : result.details()) {
                 System.out.println("    " + detail);

@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <spaceMarines>
     <spaceMarine>
-        <id>580871917</id>
-        <name>wef</name>
+        <id>837108062</id>
+        <name>asfqwe</name>
         <coordinates>
-            <x>0</x>
-            <y>0</y>
+            <x>23</x>
+            <y>13</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>580871917</id>
+        <name>kjh</name>
+        <coordinates>
+            <x>785</x>
+            <y>975</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
+    <spaceMarine>
+        <id>1159019648</id>
+        <name>SpaceMarine1159019648</name>
+        <coordinates>
+            <x>1</x>
+            <y>123</y>
         </coordinates>
         <creationDate/>
         <health>0.0</health>
@@ -13,68 +35,24 @@
     </spaceMarine>
     <spaceMarine>
         <id>1199262943</id>
-        <name>asd</name>
+        <name>werq</name>
         <coordinates>
-            <x>21</x>
-            <y>23</y>
+            <x>234</x>
+            <y>234</y>
         </coordinates>
         <creationDate/>
         <health>0.0</health>
         <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
     <spaceMarine>
-        <id>2009221452</id>
-        <name>dfsa</name>
+        <id>1431463320</id>
+        <name>wer</name>
         <coordinates>
-            <x>21</x>
-            <y>12</y>
+            <x>0</x>
+            <y>1345</y>
         </coordinates>
         <creationDate/>
-        <health>2.1341325E7</health>
+        <health>134.0</health>
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>590845366</id>
-        <name>23</name>
-        <coordinates>
-            <x>211</x>
-            <y>12</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>1052195003</id>
-        <name>SpaceMarine1991096635</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>2.131231231231231E25</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>6444850</id>
-        <name>1111111111111</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
-    </spaceMarine>
-    <spaceMarine>
-        <id>6444850</id>
-        <name>asdfqef</name>
-        <coordinates>
-            <x>0</x>
-            <y>0</y>
-        </coordinates>
-        <creationDate/>
-        <health>0.0</health>
-        <meleeWeapon>CHAIN_AXE</meleeWeapon>
     </spaceMarine>
 </spaceMarines>
