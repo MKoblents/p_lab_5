@@ -66,6 +66,7 @@ public class Invoker {
         registerCommand("spawn_client", new SpawnClientCommand());
         registerCommand("forward_command", new ForwardCommand(clientRegistry));
         registerCommand(CommandRequest.CMD_HEARTBEAT, new HeartbeatCommand(clientRegistry));
+        registerCommand("could_be_updated", new CouldBeUpdatedCommand(collectionManager));
         logger.debug("Registering commands with Invoker");
     }
     /**

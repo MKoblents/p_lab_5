@@ -62,7 +62,7 @@ public class Invoker {
         registerCommand("shuffle", new Shuffle());
         registerCommand("sum_of_health", new SumOfHealth());
         registerCommand("show", new Show());
-        registerCommand("update", new Update(inputManager));
+        registerCommand("update", new Update(inputManager, connection, context));
         registerCommand("spawn_client", new SpawnClient(context, connection, processManager));
         registerCommand("execute_script", new ExecuteScript(inputManager, runner));
     }

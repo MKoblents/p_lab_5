@@ -51,6 +51,7 @@ public class UpdateCommand implements Command {
         }
         spaceMarineInput.setId(id);
         collectionManager.update(id, spaceMarineInput);
+        collectionManager.removeUpdating(id);
         return new CommandResponse(true,
                 spaceMarineInput,
                 "SpaceMarine with ID " + id + " updated successfully",
