@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.dto.ForwardCommandObject;
+import shared.dto.HandshakeRequest;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -176,6 +177,59 @@ public class ClientSession implements AutoCloseable {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+        }
+    }
+    public void runOffline() throws IOException {
+        System.out.println("\n OFFLINE MODE: No server connection.");
+        System.out.println("   Available commands: help, exit, reconnect");
+        mainThread = Thread.currentThread();
+        while (running) {
+            String commandKey = inputManager.parseCommand();
+            if (commandKey != null && !commandKey.isEmpty()) {
+                if ("reconnect".equalsIgnoreCase(commandKey)) {
+                    if (attemptReconnect()) {
+                        run();
+                        return;
+                    }
+                } else if ("exit".equalsIgnoreCase(commandKey)) {
+                    running = false;
+                } else if ("help".equalsIgnoreCase(commandKey)) {
+                    System.out.println("Offline commands:");
+                    System.out.println("  reconnect – try to connect to server");
+                    System.out.println("  exit      – close the client");
+                    System.out.println("  help      – show this message");
+                } else {
+                    System.out.println("  Command '" + commandKey + "' requires server connection.");
+                    System.out.println("   Type 'reconnect' first, or 'help' for offline commands.");
+                }
+            } else {
+                try { Thread.sleep(50); } catch (InterruptedException e) { break; }
+            }
+        }
+    }
+
+    private boolean attemptReconnect() {
+        String host = connection.getHost();
+        int port = connection.getPort();
+        System.out.println(" Attempting to reconnect to " + host + ":" + port + "...");
+
+        if (connection.connect(host, port)) {
+            System.out.println(" Reconnected successfully!");
+            try {
+                String clientId = context.getClientId();
+                String parentClientId = context.getParentClientId();
+                HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
+                connection.sendHandshake(handshake);
+                CommandResponse handshakeResponse = connection.readResponse();
+                return true;
+            } catch (IOException e) {
+                System.err.println("  Handshake failed after reconnect: " + e.getMessage());
+                connection.disconnect();
+                return false;
+            }
+        } else {
+            System.err.println(" Reconnection failed. Check server status and try again.");
+            return false;
         }
     }
 }

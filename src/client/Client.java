@@ -53,22 +53,11 @@ public class Client {
             System.out.println("Connecting to " + host + ":" + port + "...");
             if (!connection.connect(host, port)) {
                 logger.error("Failed to connect to server at {}:{}", host, port);
-                System.err.println("Failed to connect. Exiting.");
-                return;
+                System.err.println("Failed to connect.");
+//                return;
             }
             String clientId = clientConfig.getClientId();
             String parentClientId = clientConfig.getParentClientId();
-            try {
-                HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
-                connection.sendHandshake(handshake);
-                logger.info("Handshake sent successfully. Client={}, Parent={}", clientId, parentClientId);
-                CommandResponse handshakeResponse = connection.readResponse();
-            } catch (IOException e) {
-                logger.error("Failed to send handshake to server", e);
-                System.err.println("Handshake failed: " + e.getMessage());
-                connection.disconnect();
-                return;
-            }
             RequestsFactory.setClientId(clientId);
             logger.info("Using client ID: {}", clientId);
             staticConnection = connection;
@@ -99,8 +88,29 @@ public class Client {
                     inputManager, connection, responseHandler,
                     scriptRunner, invoker, context, processManager
             );
+//            try {
+////                HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
+////                connection.sendHandshake(handshake);
+////                logger.info("Handshake sent successfully. Client={}, Parent={}", clientId, parentClientId);
+////                CommandResponse handshakeResponse = connection.readResponse();
+//            } catch (IOException e) {
+//                logger.error("Failed to send handshake to server", e);
+//                System.err.println("Handshake failed: " + e.getMessage());
+////                connection.disconnect();
+//
+//                return;
+//            }
             try {
-                clientSession.run();
+                if (connection.isConnected()) {
+                    HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
+                    connection.sendHandshake(handshake);
+                    logger.info("Handshake sent successfully. Client={}, Parent={}", clientId, parentClientId);
+                    CommandResponse handshakeResponse = connection.readResponse();
+
+                    clientSession.run();
+                } else {
+                    clientSession.runOffline();
+                }
             } catch (IOException e) {
                 logger.info("Client session ended: {}", e.getMessage());
             } finally {
