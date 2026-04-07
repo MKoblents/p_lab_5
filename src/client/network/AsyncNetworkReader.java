@@ -1,4 +1,5 @@
 package client.network;
+import client.utils.DisconnectReason;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import shared.dto.CommandRequest;
@@ -8,9 +9,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 public class AsyncNetworkReader implements Runnable {
-    private final Runnable onDisconnect;
+    private final Consumer<DisconnectReason> onDisconnect;
     private static final Logger logger = LoggerFactory.getLogger(AsyncNetworkReader.class);
     private final SocketChannel channel;
     private final ConcurrentLinkedQueue<CommandResponse> responseQueue = new ConcurrentLinkedQueue<>();
@@ -21,7 +23,7 @@ public class AsyncNetworkReader implements Runnable {
     private int expectedLength = -1;
     private ByteBuffer dataBuffer;
 
-    public AsyncNetworkReader(SocketChannel channel, Runnable onDisconnect) {
+    public AsyncNetworkReader(SocketChannel channel, Consumer<DisconnectReason> onDisconnect) {
         this.channel = channel;
         this.onDisconnect = onDisconnect;
     }
@@ -35,7 +37,7 @@ public class AsyncNetworkReader implements Runnable {
                         int read = channel.read(lengthBuffer);
                         if (read == -1) {
                             logger.warn("Server disconnected (EOF detected)");
-                            triggerDisconnect();
+                            triggerDisconnect(DisconnectReason.SERVER_DOWN);
                             close();
                             return; }
                         if (read == 0) {
@@ -71,9 +73,10 @@ public class AsyncNetworkReader implements Runnable {
             }
         } catch (IOException | ClassNotFoundException e) {
             logger.error("Reader thread terminated: {}", e.getMessage());
-            triggerDisconnect();
+            triggerDisconnect(DisconnectReason.NETWORK_ERROR);
+//TODO check
             close();
-            if (onDisconnect != null) onDisconnect.run();
+//            if (onDisconnect != null) onDisconnect.run();
         }
     }
 
@@ -81,9 +84,9 @@ public class AsyncNetworkReader implements Runnable {
     public ConcurrentLinkedQueue<CommandRequest> getForwardQueue() { return forwardQueue; }
     public void stop() { running = false; }
     private void close() { running = false; try { channel.close(); } catch (IOException ignored) {} }
-    private void triggerDisconnect() {
+    private void triggerDisconnect(DisconnectReason reason) {
         if (onDisconnect != null) {
-            onDisconnect.run();
+            onDisconnect.accept(reason);
         }
     }
 }

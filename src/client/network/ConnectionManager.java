@@ -20,6 +20,15 @@ public class ConnectionManager {
     private int port;
     private final Object writeLock = new Object();
     public boolean connect(String host, int port) {
+        if (socketChannel != null && socketChannel.isOpen()) {
+            try {
+                logger.debug("Closing existing socket before reconnect");
+                socketChannel.close();
+            } catch (IOException e) {
+                logger.warn("Error closing old socket: {}", e.getMessage());
+            }
+        }
+        this.connected = false;
         this.host = host;
         this.port = port;
         logger.debug("Attempting to connect to {}:{}", host, port);
@@ -103,6 +112,17 @@ public class ConnectionManager {
             }
             int length = buffer.getInt();
             logger.trace("Response length: {} bytes", length);
+            if (length == -1) {
+                logger.info("Received PARENT_TERMINATED signal");
+                connected = false;
+                return new CommandResponse(false, null, "PARENT_TERMINATED", "SYSTEM", "");
+            }
+
+            if (length < 0 || length > 10_000_000) {
+                logger.error("Invalid response length header: {} (possible corruption)", length);
+                connected = false;
+                return null;
+            }
             ByteBuffer dataBuffer = ByteBuffer.allocate(length);
             while (dataBuffer.hasRemaining()) {
                 int read = socketChannel.read(dataBuffer);

@@ -8,6 +8,7 @@ import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
+import client.utils.DisconnectReason;
 import client.utils.SideFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,14 +58,15 @@ public class ClientSession implements AutoCloseable {
     public void run() throws IOException {
         System.out.println("Connected! Type 'help' for commands, 'exit' to quit.");
         mainThread = Thread.currentThread();
-        networkReader = new AsyncNetworkReader(connection.getSocketChannel(), () -> {
-//            this.running = false;
-            System.out.println("Server connection lost!");
+        networkReader = new AsyncNetworkReader(connection.getSocketChannel(), reason -> {
+            System.out.println("  Connection lost: " + reason);
             connection.setConnected(false);
-//            if (mainThread != null) {
-//                mainThread.interrupt();
-//            }
-        });
+            if (reason == DisconnectReason.PARENT_DOWN) {
+                System.out.println("Parent exit. Exiting...");
+                running = false;
+                if (mainThread != null) mainThread.interrupt();
+            }
+           });
         networkThread = new Thread(networkReader);
         networkThread.setDaemon(true);
         networkThread.start();
@@ -124,6 +126,13 @@ public class ClientSession implements AutoCloseable {
         while (running) {
             CommandResponse response = networkReader.getResponseQueue().poll();
             if (response != null) {
+                if ("PARENT_TERMINATED".equals(response.message())) {
+                    System.out.println("Parent exited. Exiting...");
+                    running = false;
+                    connection.setConnected(false);
+                    if (mainThread != null) mainThread.interrupt();
+                    continue;
+                }
                 handleResponse(response);
             }
             CommandRequest forwarded = networkReader.getForwardQueue().poll();
@@ -210,6 +219,14 @@ public class ClientSession implements AutoCloseable {
     }
 
     public boolean attemptReconnect() {
+        if (networkReader != null) {
+            networkReader.stop();
+        }
+        if (networkThread != null && networkThread.isAlive()) {
+            try {
+                networkThread.join(1000);
+            } catch (InterruptedException ignored) {}
+        }
         String host = connection.getHost();
         int port = connection.getPort();
         System.out.println(" Attempting to reconnect to " + host + ":" + port + "...");
@@ -222,6 +239,9 @@ public class ClientSession implements AutoCloseable {
                 HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
                 connection.sendHandshake(handshake);
                 CommandResponse handshakeResponse = connection.readResponse();
+                if (handshakeResponse != null && handshakeResponse.success()){
+                    restartNetworkReader();
+                }
                 return true;
             } catch (IOException e) {
                 System.err.println("  Handshake failed after reconnect: " + e.getMessage());
@@ -238,9 +258,14 @@ public class ClientSession implements AutoCloseable {
         if (networkThread != null && networkThread.isAlive()) {
             try { networkThread.join(500); } catch (InterruptedException ignored) {}
         }
-        networkReader = new AsyncNetworkReader(connection.getSocketChannel(), () -> {
-            System.out.println("  Server connection lost!");
+        networkReader = new AsyncNetworkReader(connection.getSocketChannel(), reason -> {
+            System.out.println("  Connection lost: " + reason);
             connection.setConnected(false);
+            if (reason == DisconnectReason.PARENT_DOWN) {
+                System.out.println("Parent exit. Exiting...");
+                running = false;
+                if (mainThread != null) mainThread.interrupt();
+            }
         });
 
         networkThread = new Thread(networkReader);

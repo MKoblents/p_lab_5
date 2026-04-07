@@ -3,11 +3,14 @@ package server.manager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.client.ConnectedClient;
+import shared.dto.CommandResponse;
 import shared.enums.ClientState;
+import shared.utils.SerializationUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,6 +46,20 @@ public class ClientRegistry {
         if (children != null) {
             for (String childId : children) {
                 logger.info("Forcing disconnect for child: {}", childId);
+                OutputStream childOut = clientStreams.get(childId);
+                if (childOut != null) {
+                    try {
+                        CommandResponse parentDied = new CommandResponse(
+                                false, null, "PARENT_TERMINATED", "SYSTEM", childId
+                        );
+                        byte[] data = SerializationUtil.serialize(parentDied);
+                        ByteBuffer buffer = ByteBuffer.allocate(4 + data.length);
+                        buffer.putInt(data.length);
+                        buffer.put(data);
+                        childOut.write(buffer.array());
+                        childOut.flush();
+                    } catch (IOException ignored) {}
+                }
                 Socket childSocket = clientsSockets.remove(childId);
                 if (childSocket != null && !childSocket.isClosed()) {
                     try {

@@ -26,6 +26,7 @@ public class Reconnect implements  ClientCommand{
             System.out.println("Already connected to server.");
             return null;
         }
+        connectionManager.disconnect();
         String host = connectionManager.getHost();
         int port = connectionManager.getPort();
         if (connectionManager.connect(host, port)) {
@@ -41,7 +42,7 @@ public class Reconnect implements  ClientCommand{
                     System.out.println(" Reconnected & handshake confirmed!");
                     clientSession.restartNetworkReader();
                 } else {
-                    System.err.println("⚠️ Handshake rejected by server.");
+                    System.err.println(" Handshake rejected by server.");
                     connectionManager.disconnect();
                 }
             } catch (IOException e) {
