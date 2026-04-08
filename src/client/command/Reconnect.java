@@ -50,7 +50,7 @@ public class Reconnect implements  ClientCommand{
                 connectionManager.disconnect();
             }
         } else {
-            System.err.println("❌ Подключение не удалось. Сервер запущен?");
+            System.err.println(" Подключение не удалось. Сервер запущен?");
         }
         return null;
     }

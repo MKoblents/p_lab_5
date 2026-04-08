@@ -1,5 +1,6 @@
 package client;
 
+import client.command.KillClient;
 import client.command.Reconnect;
 import client.config.ClientConfig;
 import client.context.ClientContext;
@@ -88,6 +89,7 @@ public class Client {
                     inputManager, connection, responseHandler,
                     scriptRunner, invoker, context, processManager
             );
+            invoker.registerCommand("reconnect", new Reconnect(connection,context,clientSession));
             try {
                 if (connection.isConnected()) {
                     HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);

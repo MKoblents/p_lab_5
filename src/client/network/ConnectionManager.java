@@ -52,6 +52,7 @@ public class ConnectionManager {
                 logger.trace("finishConnect() completed");
             }
             this.connected = true;
+            logger.info("Local endpoint: {}", socketChannel.getLocalAddress());
             logger.info("Successfully connected to {}:{}", host, port);
             System.out.println("Connected to " + host + ":" + port);
             return true;

@@ -145,6 +145,7 @@ public class Server {
     private static void handleAccept(SelectionKey acceptKey) throws IOException {
         ServerSocketChannel server = (ServerSocketChannel) acceptKey.channel();
         SocketChannel client = server.accept();
+        logger.info("Accepted connection from remote: {}", client.getRemoteAddress());
         if (client != null) {
             client.configureBlocking(false);
             client.register(selector, SelectionKey.OP_READ, new ClientConnection(client));
