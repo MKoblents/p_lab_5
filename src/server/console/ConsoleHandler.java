@@ -28,62 +28,42 @@ public class ConsoleHandler {
         this.clientRegistry = clientRegistry;
 
     }
-    public void handleConsoleInput() {
-        Scanner scanner = new Scanner(System.in);
-        logger.info("Console reader ready. Type 'save', 'exit', or 'help'.");
-        while (running.get()) {
-            try {
-                if (scanner.hasNextLine()) {
-                    String command = scanner.nextLine().trim().toLowerCase();
-
-                    switch (command) {
-                        case "save":
-                            logger.info("Manual save triggered from console");
-                            try {
-                                collectionSaver.save(collectionManager, dataFile);
-                                logger.info("Collection saved to {}", dataFile);
-                                System.out.println("✓ Collection saved successfully!");
-                            } catch (Exception e) {
-                                logger.error("Save failed: {}", e.getMessage(), e);
-                                System.err.println("✗ Save failed: " + e.getMessage());
-                            }
-                            break;
-
-                        case "exit":
-                            logger.info("Exit command received from console");
-                            System.out.println("Shutting down server...");
-                            running.set(false);
-                            System.exit(0);
-                            return ;
-                        case "help":
-                            System.out.println("Available server commands:");
-                            System.out.println("  save - Save collection to file");
-                            System.out.println("  exit - Stop server");
-                            System.out.println("  help - Show this help");
-                            System.out.println("  status - Clients status");
-                            break;
-                        case "status":
-                            logger.info("Client status requested from console");
-                            clientRegistry.printStatusToConsole();
-                            break;
-                        case "":
-                            break;
-                        default:
-                            logger.warn("Unknown server command: {}", command);
-                            System.err.println("Unknown command: " + command + ". Type 'help' for list.");
-                    }
-                }else {
-                    scanner = new Scanner(System.in);
-                    Thread.sleep(200);
-                    continue;
+    public void handleConsoleInput(String command) {
+        switch (command) {
+            case "save":
+                logger.info("Manual save triggered from console");
+                try {
+                    collectionSaver.save(collectionManager, dataFile);
+                    logger.info("Collection saved to {}", dataFile);
+                    System.out.println("✓ Collection saved successfully!");
+                } catch (Exception e) {
+                    logger.error("Save failed: {}", e.getMessage(), e);
+                    System.err.println("✗ Save failed: " + e.getMessage());
                 }
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
                 break;
-            } catch (Exception e) {
-                logger.error("Error reading console: {}", e.getMessage());
-            }
+
+            case "exit":
+                logger.info("Exit command received from console");
+                System.out.println("Shutting down server...");
+                running.set(false);
+                System.exit(0);
+                return ;
+            case "help":
+                System.out.println("Available server commands:");
+                System.out.println("  save - Save collection to file");
+                System.out.println("  exit - Stop server");
+                System.out.println("  help - Show this help");
+                System.out.println("  status - Clients status");
+                break;
+            case "status":
+                logger.info("Client status requested from console");
+                clientRegistry.printStatusToConsole();
+                break;
+            case "":
+                break;
+            default:
+                logger.warn("Unknown server command: {}", command);
+                System.err.println("Unknown command: " + command + ". Type 'help' for list.");
         }
     }
 }

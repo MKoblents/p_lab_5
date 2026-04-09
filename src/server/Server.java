@@ -3,6 +3,7 @@ package server;
 import server.client.ConnectionState;
 import server.config.ServerConfig;
 import server.console.ConsoleHandler;
+import server.io.NonBlockingConsoleReader;
 import server.manager.ClientRegistry;
 import server.manager.CollectionManager;
 import server.manager.Invoker;
@@ -36,6 +37,7 @@ public class Server {
     private static Selector selector;
     private static ClientRegistry clientRegistry;
     private static Invoker invoker;
+    private static ConsoleHandler consoleHandler;
 
     private static class ClientConnection {
         final SocketChannel channel;
@@ -61,10 +63,11 @@ public class Server {
             CollectionSaver collectionSaver = new CollectionSaver();
             clientRegistry = new ClientRegistry();
             invoker = new Invoker(collectionManager, clientRegistry);
+            consoleHandler = new ConsoleHandler(collectionManager, collectionSaver, config.getFile(), running, clientRegistry);
 
             try { collectionManager.loadFromFile(config.getFile()); }
             catch (Exception e) { logger.error("Failed to load collection, starting empty: {}", e.getMessage()); }
-
+            NonBlockingConsoleReader consoleReader = new NonBlockingConsoleReader();
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
                     logger.info("Shutdown: saving collection...");
@@ -73,14 +76,15 @@ public class Server {
                 running.set(false);
             }));
 
-            Thread consoleThread = new Thread(() -> {
-                try {
-                    new ConsoleHandler(collectionManager, collectionSaver, config.getFile(), running, clientRegistry)
-                            .handleConsoleInput();
-                } catch (Exception e) { logger.error("Console crashed, server continues: {}", e.getMessage(), e); }
-            });
-            consoleThread.setDaemon(true);
-            consoleThread.start();
+
+//            Thread consoleThread = new Thread(() -> {
+//                try {
+//                    new ConsoleHandler(collectionManager, collectionSaver, config.getFile(), running, clientRegistry)
+//                            .handleConsoleInput();
+//                } catch (Exception e) { logger.error("Console crashed, server continues: {}", e.getMessage(), e); }
+//            });
+//            consoleThread.setDaemon(true);
+//            consoleThread.start();
 
             selector = Selector.open();
             ServerSocketChannel ssc = ServerSocketChannel.open();
@@ -94,6 +98,10 @@ public class Server {
                     selector.select(SELECT_TIMEOUT_MS);
                     checkHeartbeats();
                     processSelectedKeys();
+                    String consoleCommand = consoleReader.pollLine();
+                    if (consoleCommand != null){
+                        handleConsoleCommand(consoleCommand);
+                    }
                 } catch (Exception e) {
                     logger.error("Selector loop error, recovering: {}", e.getMessage(), e);
                     Thread.sleep(500);
@@ -108,6 +116,10 @@ public class Server {
             logger.error("Fatal startup error: {}", e.getMessage(), e);
             System.err.println("Server failed to start: " + e.getMessage());
         }
+    }
+
+    private static void handleConsoleCommand(String consoleCommand) {
+        consoleHandler.handleConsoleInput(consoleCommand);
     }
 
     private static void checkHeartbeats() {

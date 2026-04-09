@@ -1,6 +1,5 @@
 package client;
 
-import client.command.KillClient;
 import client.command.Reconnect;
 import client.config.ClientConfig;
 import client.context.ClientContext;
@@ -15,17 +14,13 @@ import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
 import client.context.ClientSession;
 import client.utils.RequestsFactory;
-import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.dto.HandshakeRequest;
-import shared.models.SpaceMarine;
 import shared.utils.LoggingConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
