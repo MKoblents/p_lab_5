@@ -68,13 +68,13 @@ public class Server {
             try { collectionManager.loadFromFile(config.getFile()); }
             catch (Exception e) { logger.error("Failed to load collection, starting empty: {}", e.getMessage()); }
             NonBlockingConsoleReader consoleReader = new NonBlockingConsoleReader();
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try {
-                    logger.info("Shutdown: saving collection...");
-                    collectionSaver.save(collectionManager, config.getFile());
-                } catch (Exception e) { logger.error("Shutdown save failed: {}", e.getMessage(), e); }
-                running.set(false);
-            }));
+//            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//                try {
+//                    logger.info("Shutdown: saving collection...");
+//                    collectionSaver.save(collectionManager, config.getFile());
+//                } catch (Exception e) { logger.error("Shutdown save failed: {}", e.getMessage(), e); }
+//                running.set(false);
+//            }));
 
 
 //            Thread consoleThread = new Thread(() -> {
@@ -107,7 +107,6 @@ public class Server {
                     Thread.sleep(500);
                 }
             }
-
             selector.close();
             ssc.close();
             logger.info("Server shut down cleanly.");

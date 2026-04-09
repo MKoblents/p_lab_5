@@ -66,4 +66,15 @@
         <health>12.0</health>
         <meleeWeapon>CHAIN_SWORD</meleeWeapon>
     </spaceMarine>
+    <spaceMarine>
+        <id>6444850</id>
+        <name>qwe</name>
+        <coordinates>
+            <x>0</x>
+            <y>0</y>
+        </coordinates>
+        <creationDate/>
+        <health>0.0</health>
+        <meleeWeapon>CHAIN_AXE</meleeWeapon>
+    </spaceMarine>
 </spaceMarines>

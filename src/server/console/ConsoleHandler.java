@@ -46,6 +46,7 @@ public class ConsoleHandler {
                 logger.info("Exit command received from console");
                 System.out.println("Shutting down server...");
                 running.set(false);
+                handleConsoleInput("save");
                 System.exit(0);
                 return ;
             case "help":
