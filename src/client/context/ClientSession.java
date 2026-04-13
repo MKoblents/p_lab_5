@@ -74,7 +74,7 @@ public class ClientSession implements AutoCloseable {
         responseThread.setDaemon(true);
         responseThread.start();
         heartbeatScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread t = new Thread(r, "heatbeat-scheduler");
+            Thread t = new Thread(r, "heartbeat-scheduler");
             t.setDaemon(true);
             return t;
         });

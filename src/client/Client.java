@@ -25,9 +25,6 @@ import java.io.IOException;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
-    private static ConnectionManager staticConnection;
-    private static Invoker staticInvoker;
-    private static ClientContext staticContext;
 
 
     public static void main(String[] args) {
@@ -57,8 +54,6 @@ public class Client {
             String parentClientId = clientConfig.getParentClientId();
             RequestsFactory.setClientId(clientId);
             logger.info("Using client ID: {}", clientId);
-            staticConnection = connection;
-            staticContext = null;
             boolean isRoot = (parentClientId == null);
             ClientContext context = new ClientContext(
                     clientId,
@@ -67,7 +62,6 @@ public class Client {
                     isRoot
             );
             ResponseHandler responseHandler = new ResponseHandler(context);
-            staticContext = context;
             ClientProcessManager processManager = new ClientProcessManager(host, port);
             ScriptRunner scriptRunner = new ScriptRunner(
                     inputManager, connection, responseHandler, null, new FileManager()
