@@ -35,10 +35,10 @@ public class ConsoleHandler {
                 try {
                     collectionSaver.save(collectionManager, dataFile);
                     logger.info("Collection saved to {}", dataFile);
-                    System.out.println("✓ Collection saved successfully!");
+                    System.out.println(" Collection saved successfully!");
                 } catch (Exception e) {
                     logger.error("Save failed: {}", e.getMessage(), e);
-                    System.err.println("✗ Save failed: " + e.getMessage());
+                    System.err.println(" Save failed: " + e.getMessage());
                 }
                 break;
 

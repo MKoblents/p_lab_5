@@ -3,6 +3,7 @@ package client.network;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.dto.HandshakeRequest;
+import shared.enums.DisconnectReason;
 import shared.utils.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,9 +115,9 @@ public class ConnectionManager {
             int length = buffer.getInt();
             logger.trace("Response length: {} bytes", length);
             if (length == -1) {
-                logger.info("Received PARENT_TERMINATED signal");
+                logger.info("Received PARENT_DOWN signal");
                 connected = false;
-                return new CommandResponse(false, null, "PARENT_TERMINATED", "SYSTEM", "");
+                return new CommandResponse(false, null, DisconnectReason.PARENT_DOWN.name(), "SYSTEM", "");
             }
 
             if (length < 0 || length > 10_000_000) {

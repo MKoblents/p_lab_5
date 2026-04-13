@@ -134,7 +134,7 @@ public class ClientSession implements AutoCloseable {
                     System.exit(0);
                     continue;
                 }
-                if ("PARENT_TERMINATED".equals(response.message())) {
+                if (DisconnectReason.PARENT_DOWN.name().equals(response.message())) {
                     System.out.println("Parent exited. Exiting...");
                     running = false;
                     connection.setConnected(false);

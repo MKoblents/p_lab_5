@@ -12,11 +12,13 @@ import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.dto.ForwardCommandObject;
 import shared.dto.HandshakeRequest;
+import shared.enums.DisconnectReason;
 import shared.utils.LoggingConfigurator;
 import shared.utils.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -145,10 +147,14 @@ public class Server {
                 if (key.isAcceptable()) handleAccept(key);
                 else if (key.isReadable()) handleRead(key);
                 else if (key.isWritable()) handleWrite(key);
-            } catch (Exception e) {
+            }catch (java.io.EOFException e) {
                 String cid = key.attachment() instanceof ClientConnection c ? c.clientId : "UNKNOWN";
-                logger.error("Key processing error for {}: {}", cid, e.getMessage(), e);
-                cascadeDisconnect(cid, "NETWORK_ERROR");
+                logger.info("Client {} disconnected gracefully (EOF/Ctrl+C)", cid);
+                cascadeDisconnect(cid, DisconnectReason.USER_REQUEST.name());
+            } catch (Exception e) {
+                    String cid = key.attachment() instanceof ClientConnection c ? c.clientId : "UNKNOWN";
+                    logger.error("Key processing error for {}: {}", cid, e.getMessage(), e);
+                    cascadeDisconnect(cid, "NETWORK_ERROR");
             }
         }
     }
@@ -192,7 +198,7 @@ public class Server {
     private static boolean readUntilFull(SocketChannel sc, ByteBuffer buf) throws IOException {
         while (buf.hasRemaining()) {
             int read = sc.read(buf);
-            if (read == -1) throw new ClosedChannelException();
+            if (read == -1) throw new EOFException("Client closed connection");
             if (read == 0) return false;
         }
         return true;
@@ -223,7 +229,7 @@ public class Server {
                 }
 
                 if ("kill_client".equals(req.commandType()) && resp.success() && req.args() instanceof String targetId) {
-                    cascadeDisconnect(targetId, "KILLED_BY_PARENT");
+                    cascadeDisconnect(targetId, DisconnectReason.KILLED_BY_PARENT.name());
                 }
             }
         } catch (Exception e) {
@@ -292,7 +298,7 @@ public class Server {
             Set<String> children = clientRegistry.getChildren(targetId);
             if (children != null) {
                 for (String childId : new ArrayList<>(children)) {
-                    cascadeDisconnect(childId, "PARENT_TERMINATED");
+                    cascadeDisconnect(childId, DisconnectReason.PARENT_DOWN.name());
                 }
             }
 

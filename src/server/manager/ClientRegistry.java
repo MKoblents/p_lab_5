@@ -21,7 +21,6 @@ public class ClientRegistry {
     private final Map<String, Set<String>> parentChildRelations = new ConcurrentHashMap<>();
     private PendingCommandQueue pendingCommandQueue = new PendingCommandQueue();
     private final Map<String, OutputStream> clientStreams = new ConcurrentHashMap<>();
-    private final  Map<String , Socket> clientsSockets = new HashMap<>();
 
     public void register(String clientId, String parentClientId) {
         ConnectedClient client = new ConnectedClient(clientId, ClientState.ONLINE);
@@ -64,7 +63,7 @@ public class ClientRegistry {
                 if (childOut != null) {
                     try {
                         CommandResponse parentDied = new CommandResponse(
-                                false, null, "PARENT_TERMINATED", "SYSTEM", childId
+                                false, null, DisconnectReason.PARENT_DOWN.name(), "SYSTEM", childId
                         );
                         byte[] data = SerializationUtil.serialize(parentDied);
                         ByteBuffer buffer = ByteBuffer.allocate(4 + data.length);
@@ -74,22 +73,12 @@ public class ClientRegistry {
                         childOut.flush();
                     } catch (IOException ignored) {}
                 }
-                Socket childSocket = clientsSockets.remove(childId);
-                if (childSocket != null && !childSocket.isClosed()) {
-                    try {
-                        childSocket.close();
-                    } catch (IOException ignored) {}
-                }
                 unregister(childId);
             }
         }
         clients.remove(clientId);
         for (Set<String> childSet : parentChildRelations.values()) {
             childSet.remove(clientId);
-        }
-        Socket socket = clientsSockets.remove(clientId);
-        if (socket != null && !socket.isClosed()) {
-            try { socket.close(); } catch (IOException ignored) {}
         }
         logger.info("Client {} and subtree fully unregistered", clientId);
     }
@@ -135,22 +124,20 @@ public class ClientRegistry {
     public void removeStream(String clientId) {
         clientStreams.remove(clientId);
     }
-    public  void  registerSocket(String clientId, Socket socketChannel){
-        clientsSockets.put(clientId, socketChannel);
-    }
+
     public Collection<ConnectedClient> getAllClients() {
         return clients.values();
     }
     public void printStatusToConsole() {
         System.out.println("\n=== Connected Clients ===");
-        System.out.printf("%-10s %-10s %-25s %-10s%n", "ID", "STATE", "LAST_HEARTBEAT", "UPTIME");
+        System.out.printf("%-10s %-10s %-35s %-10s%n", "ID", "STATE", "LAST_HEARTBEAT", "UPTIME");
         System.out.println("------------------------------------------------------------");
         for (ConnectedClient client : clients.values()) {
             var status = client.getClientStatus();
             String uptime = java.time.Duration.between(
                     status.lastHeartbeat(), java.time.Instant.now()
             ).toString().replaceAll("(\\d[HMS])(?!$)", "$1 ");
-            System.out.printf("%-10s %-10s %-25s %-10s%n",
+            System.out.printf("%-10s %-10s %-35s %-10s%n",
                     status.clientId(),
                     status.clientState(),
                     status.lastHeartbeat(),
