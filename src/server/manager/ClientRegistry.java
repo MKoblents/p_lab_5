@@ -20,7 +20,6 @@ public class ClientRegistry {
     private final Map<String, ConnectedClient> clients = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> parentChildRelations = new ConcurrentHashMap<>();
     private PendingCommandQueue pendingCommandQueue = new PendingCommandQueue();
-    private final Map<String, OutputStream> clientStreams = new ConcurrentHashMap<>();
 
     public void register(String clientId, String parentClientId) {
         ConnectedClient client = new ConnectedClient(clientId, ClientState.ONLINE);
@@ -40,39 +39,10 @@ public class ClientRegistry {
             return;
         }
         logger.info("Unregistering client: {}", clientId);
-        OutputStream clientOut = clientStreams.get(clientId);
-        if (clientOut != null) {
-            try {
-                CommandResponse killedMsg = new CommandResponse(
-                        false, null, DisconnectReason.KILLED_BY_PARENT.name(), "SYSTEM", clientId
-                );
-                byte[] data = SerializationUtil.serialize(killedMsg);
-                ByteBuffer buffer = ByteBuffer.allocate(4 + data.length);
-                buffer.putInt(data.length);
-                buffer.put(data);
-                clientOut.write(buffer.array());
-                clientOut.flush();
-            } catch (IOException ignored) {}
-        }
-        clientStreams.remove(clientId);
         Set<String> children = parentChildRelations.remove(clientId);
         if (children != null) {
             for (String childId : children) {
                 logger.info("Forcing disconnect for child: {}", childId);
-                OutputStream childOut = clientStreams.get(childId);
-                if (childOut != null) {
-                    try {
-                        CommandResponse parentDied = new CommandResponse(
-                                false, null, DisconnectReason.PARENT_DOWN.name(), "SYSTEM", childId
-                        );
-                        byte[] data = SerializationUtil.serialize(parentDied);
-                        ByteBuffer buffer = ByteBuffer.allocate(4 + data.length);
-                        buffer.putInt(data.length);
-                        buffer.put(data);
-                        childOut.write(buffer.array());
-                        childOut.flush();
-                    } catch (IOException ignored) {}
-                }
                 unregister(childId);
             }
         }
@@ -114,15 +84,6 @@ public class ClientRegistry {
 
     public PendingCommandQueue getPendingCommandQueue() {
         return pendingCommandQueue;
-    }
-    public void registerStream(String clientId, OutputStream out) {
-        clientStreams.put(clientId, out);
-    }
-    public OutputStream getStream(String clientId) {
-        return clientStreams.get(clientId);
-    }
-    public void removeStream(String clientId) {
-        clientStreams.remove(clientId);
     }
 
     public Collection<ConnectedClient> getAllClients() {
