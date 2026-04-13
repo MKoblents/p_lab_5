@@ -11,6 +11,7 @@ import client.io.ConsoleBufferedScanner;
 import client.io.Reader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
+import client.scripts.FileManager;
 import client.scripts.ScriptRunner;
 import client.context.ClientSession;
 import client.utils.RequestsFactory;
@@ -69,7 +70,7 @@ public class Client {
             staticContext = context;
             ClientProcessManager processManager = new ClientProcessManager(host, port);
             ScriptRunner scriptRunner = new ScriptRunner(
-                    inputManager, connection, responseHandler, null
+                    inputManager, connection, responseHandler, null, new FileManager()
             );
             logger.info("Successfully connected to server");
             System.out.println("Connected to server! Client ID: " + clientId);

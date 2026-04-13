@@ -39,7 +39,6 @@ public class Invoker {
         }
         try {
             CommandResponse response = command.execute(request);
-            // After command.execute(request) succeeds:
             clientRegistry.getClient(request.clientId()).ifPresent(ConnectedClient::markOnline);
             logger.debug("Command {} completed: success={}", commandType, response.success());
             return response;

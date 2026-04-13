@@ -1,4 +1,4 @@
-package server.manager;
+package client.scripts;
 
 import java.io.File;
 /**

@@ -19,18 +19,20 @@ public class ScriptRunner {
     private final ConnectionManager connectionManager;
     private final ResponseHandler responseHandler;
     private Invoker invoker;
-//    private final XMLParser xmlParser;
+    private final FileManager fileManager;
     private static final ThreadLocal<Deque<String>> executingScripts =
             ThreadLocal.withInitial(ArrayDeque::new);
     private static final int MAX_SCRIPT_DEPTH = 5;
 
     public ScriptRunner(InputManager inputManager,
                         ConnectionManager connectionManager,
-                        ResponseHandler responseHandler, Invoker invoker) {
+                        ResponseHandler responseHandler, Invoker invoker,
+                        FileManager fileManager) {
         this.inputManager = inputManager;
         this.connectionManager = connectionManager;
         this.responseHandler = responseHandler;
         this.invoker = invoker;
+        this.fileManager= fileManager;
     }
 
     /**
@@ -40,6 +42,9 @@ public class ScriptRunner {
      */
     public boolean executeScript(String scriptPath) {
         String normalizedPath = normalizePath(scriptPath);
+        if (!fileManager.validate(normalizedPath, FileManager.Operation.READ)) {
+            System.err.println("File is not available");
+        }
         if (executingScripts.get().contains(normalizedPath)) {
             System.err.println("Circular script inclusion detected: " + scriptPath);
             return false;

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @XmlRootElement(name = "spaceMarines")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CollectionManager {
+    @XmlTransient
     private ArrayList<Long>  updatingSpaceMarines = new ArrayList<>();
 
     /** Collection of SpaceMarine objects. */
