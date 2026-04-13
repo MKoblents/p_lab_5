@@ -10,7 +10,6 @@ public class ConnectedClient {
     private final String clientId;
     private ClientState clientState;
     private Instant lastHeartbeat;
-    private int commandsExecuted;
     public ConnectedClient(String clientId, ClientState clientState){
         this.clientId = clientId;
         this.clientState = clientState;
@@ -20,7 +19,7 @@ public class ConnectedClient {
         this.lastHeartbeat = Instant.now();
     }
     public ClientStatus getClientStatus(){
-        return new ClientStatus(clientId,clientState,lastHeartbeat,commandsExecuted, Optional.empty());
+        return new ClientStatus(clientId,clientState,lastHeartbeat, Optional.empty());
     }
     public void markOffline(){
         this.clientState = ClientState.OFFLINE;
