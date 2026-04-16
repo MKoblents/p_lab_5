@@ -177,7 +177,6 @@ public class CommandParser {
         return str; }
     /** @return script path argument or null */
     public String getPathArg() {
-//        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+pathArg);
         return pathArg; }
     /** @return raw enum string for deferred parsing */
     public String getEnumArg() { return enumArg; }

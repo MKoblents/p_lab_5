@@ -97,9 +97,10 @@ public class ClientSession implements AutoCloseable {
                 try { Thread.sleep(50); } catch (InterruptedException e) { break; }
                 continue;
             }
-            String commandKey = inputManager.parseCommand();
-            if (commandKey != null && !commandKey.isEmpty()) {
-                synchronized (inputLock) {
+            String commandKey;
+            synchronized (inputLock) {
+                commandKey = inputManager.parseCommand();
+                if (commandKey != null && !commandKey.isEmpty()) {
                     CommandRequest request = invoker.runCommand(commandKey);
                     if (request != null) {
                         try {
@@ -115,7 +116,7 @@ public class ClientSession implements AutoCloseable {
                         }
                     }
                 }
-            } else {
+            } if (commandKey == null || commandKey.isEmpty()) {
                 try { Thread.sleep(50); } catch (InterruptedException e) { break; }
             }
         }

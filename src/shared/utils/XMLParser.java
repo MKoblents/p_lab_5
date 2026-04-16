@@ -70,7 +70,7 @@ public class XMLParser {
         return marines;
     }
     /**
-     * Parses a single <spaceMarine></spaceMarine> element from current stream position.
+     * Parses a single {@code <spaceMarine></spaceMarine>} element from current stream position.
      * @return fully populated SpaceMarine instance
      * @throws XMLStreamException if XML structure is invalid
      */
