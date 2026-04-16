@@ -19,7 +19,15 @@ public class ConsoleBufferedScanner implements Reader {
         t.setDaemon(true);
         t.start();
     }
-
+    public String pollNextLine(long timeoutMs) throws IOException {
+        try {
+            String line = consoleInputReader.pollCommand(timeoutMs);
+            return line != null ? line.trim() : null;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Console input interrupted", e);
+        }
+    }
     @Override
     public String nextLine() throws IOException {
        return getTrimmedTextBlocking();
