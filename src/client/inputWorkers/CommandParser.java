@@ -47,15 +47,20 @@ public class CommandParser {
             return null;
         }
     }
+    public void parse(Reader reader) throws IOException {
+        String line = reader.nextLine();
+        parse(line);
+        if (xmlArg != null) {
+            reader.setLastXmlString(xmlArg);
+        }
+    }
     /**
      * Parses next line from Reader and populates argument fields.
      * Handles comments (#), empty lines, and command-specific argument extraction.
-     * @param reader input source to read from
      * @throws IOException if read operation fails
      * @implNote Sets fields directly; use getters to retrieve values after parse
      */
-    public void parse(Reader reader) throws IOException {
-        String line = reader.nextLine();
+    public void parse(String line){
         if (line == null || line.trim().isEmpty()) {
             commandName = null;
             return;
@@ -77,7 +82,8 @@ public class CommandParser {
                     targetClientId = parts[i + 1];
                     i++;
                 } else {
-                    throw new IOException("CLient Id already entered!");
+                    System.err.println("CLient Id already entered!");
+                    break;
                 }
             }else {
                 filteredParts.add(parts[i]);
@@ -93,7 +99,6 @@ public class CommandParser {
         commandName = parts[0];
         if (commandName.equals("add") || commandName.equals("remove_greater")){
             xmlArg = listToString(parts, 1, parts.length);
-            reader.setLastXmlString(xmlArg);
             return;
         }
         if (commandName.equals("update")|| commandName.equals("remove_by_id")){
@@ -125,7 +130,6 @@ public class CommandParser {
             return;
         }
         xmlArg = listToString(parts, 2, parts.length);
-        reader.setLastXmlString(xmlArg);
 
     }
 

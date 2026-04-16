@@ -57,6 +57,12 @@ public class InputManager {
     public String getLastXmlString(){
         return commandParser.getXmlArg();
     }
+    public void parseLine(String line) {
+        commandParser.parse(line);
+    }
+    public String getCurrentCommandName() {
+        return commandParser.getCommandName();
+    }
     /**
      * Parses next command from current Reader and extracts its name.
      * @return lowercase command name, or null if input was empty/comment

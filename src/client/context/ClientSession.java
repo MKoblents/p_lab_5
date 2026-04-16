@@ -4,6 +4,7 @@ import client.command.SpawnClient;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.InputManager;
 import client.inputWorkers.Invoker;
+import client.io.ConsoleBufferedScanner;
 import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
@@ -65,7 +66,7 @@ public class ClientSession implements AutoCloseable {
                 close();
                 System.exit(0);
             }
-           });
+        });
         networkThread = new Thread(networkReader);
         networkThread.setDaemon(true);
         networkThread.start();
@@ -93,30 +94,43 @@ public class ClientSession implements AutoCloseable {
         heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask,0, 5, TimeUnit.SECONDS);
 
         while (running) {
+            if (context.isAwaitingForwardedInput()) {
+                try { Thread.sleep(20); } catch (InterruptedException e) { break; }
+                continue;
+            }
             if (!networkReader.getForwardQueue().isEmpty()) {
                 try { Thread.sleep(50); } catch (InterruptedException e) { break; }
                 continue;
             }
-            String commandKey;
-            synchronized (inputLock) {
-                commandKey = inputManager.parseCommand();
-                if (commandKey != null && !commandKey.isEmpty()) {
-                    CommandRequest request = invoker.runCommand(commandKey);
-                    if (request != null) {
-                        try {
-                            if (!connection.isConnected()){
-                                System.out.println("Not connected to server. Can't send request.");
+            String commandKey = null;
+            try {
+                String line = ((ConsoleBufferedScanner) inputManager.getReader()).pollNextLine(50);
+                if (line != null && !line.trim().isEmpty() && !line.trim().startsWith("#")) {
+                    inputManager.parseLine(line);
+                    commandKey = inputManager.getCurrentCommandName();
+                }
+            } catch (IOException e) {
+                logger.warn("Console poll error: {}", e.getMessage());
+                break;
+            }
+            if (commandKey != null && !commandKey.isEmpty()) {
+                synchronized (inputLock) {
+                    if (!context.isAwaitingForwardedInput() && networkReader.getForwardQueue().isEmpty()) {
+                        CommandRequest request = invoker.runCommand(commandKey);
+                        if (request != null) {
+                            try {
+                                if (!connection.isConnected()) {
+                                    System.out.println("Not connected to server. Can't send request.");
+                                } else {
+                                    connection.sendRequest(request);
+                                }
+                            } catch (IOException e) {
+                                System.err.println("Network error while sending request: " + e.getMessage());
                             }
-                            else {
-                                connection.sendRequest(request);
-                            }
-                        }catch (IOException e){
-                            System.err.println("Network error while sending request: " + e.getMessage());
-
                         }
                     }
                 }
-            } if (commandKey == null || commandKey.isEmpty()) {
+            } else {
                 try { Thread.sleep(50); } catch (InterruptedException e) { break; }
             }
         }

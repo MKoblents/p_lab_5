@@ -34,8 +34,8 @@ public class ConsoleInputReader implements Runnable {
         }
     }
 
-    public String pollCommand() throws InterruptedException {
-        return inputQueue.poll(100, TimeUnit.MILLISECONDS);
+    public String pollCommand(long time) throws InterruptedException {
+        return inputQueue.poll(time, TimeUnit.MILLISECONDS);
     }
 
      public String takeCommand() throws InterruptedException {
