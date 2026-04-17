@@ -7,13 +7,14 @@ import shared.dto.CommandResponse;
 
 public class KillClientCommand implements Command{
     private ClientRegistry clientRegistry;
+    private String helpInformation = "kill_client: завершить процесс дочернего клиента";
     public KillClientCommand(ClientRegistry clientRegistry){
         this.clientRegistry = clientRegistry;
     }
 
     @Override
     public String getHelpInformation() {
-        return "";
+        return helpInformation;
     }
 
     @Override
