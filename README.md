@@ -89,6 +89,13 @@ Console output can be toggled in `src/logback.xml` via the `LOG_CONSOLE` propert
 - `-DLOG_FILE=false` → disables file output
 - `-DLOG_LEVEL=DEBUG` → changes log verbosity (defaults to INFO)
 
+## Command Forwarding & Parent-Child Control
+The system supports hierarchical client management. A root client can execute commands on its child processes using the `-c` flag:
+```bash
+show -c a1b2c3d4
+add -c x9y8z7w1 <space_marine_xml>
+```
+
 ## Available Commands
 
   | Command | Description |
