@@ -24,6 +24,10 @@ public class ClientProcessManager {
     public void spawnChild(String childClientId,
                            String parentClientId) throws IOException {
         logger.info("Spawning child client: {} (parent: {})", childClientId, parentClientId);
+        String jarPath = System.getProperty("java.class.path");
+        if (jarPath == null || jarPath.isEmpty()) {
+            jarPath = "target/p_lab_5-client.jar";
+        }
 
         List<String> command = new ArrayList<>();
         command.add("tmux");
@@ -33,7 +37,7 @@ public class ClientProcessManager {
         command.add("-P");
         command.add("java");
         command.add("-jar");
-        command.add("/home/mkoblents/Yandex.Disk/maria/ITMO/progaaaaaaa/p_lab_5/target/p_lab_5-client.jar");
+        command.add(jarPath);
         command.add("--host");
         command.add(host);
         command.add("--port");
