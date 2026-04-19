@@ -74,9 +74,7 @@ public class AsyncNetworkReader implements Runnable {
         } catch (IOException | ClassNotFoundException e) {
             logger.error("Reader thread terminated: {}", e.getMessage());
             triggerDisconnect(DisconnectReason.NETWORK_ERROR);
-//TODO check
             close();
-//            if (onDisconnect != null) onDisconnect.run();
         }
     }
 

@@ -6,15 +6,18 @@ import client.inputWorkers.Invoker;
 import client.io.ConsoleBufferedScanner;
 import client.io.FileBufferedReader;
 import client.io.Reader;
-import shared.utils.XMLParser;
 import client.network.ConnectionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.utils.XMLParser;
 
 import java.io.IOException;
 import java.util.*;
 
 public class ScriptRunner {
+    private static final Logger logger = LoggerFactory.getLogger(ScriptRunner.class);
     private final InputManager inputManager;
     private final ConnectionManager connectionManager;
     private final ResponseHandler responseHandler;
@@ -32,7 +35,7 @@ public class ScriptRunner {
         this.connectionManager = connectionManager;
         this.responseHandler = responseHandler;
         this.invoker = invoker;
-        this.fileManager= fileManager;
+        this.fileManager = fileManager;
     }
 
     /**
@@ -43,31 +46,38 @@ public class ScriptRunner {
     public boolean executeScript(String scriptPath) {
         String normalizedPath = normalizePath(scriptPath);
         if (!fileManager.validate(normalizedPath, FileManager.Operation.READ)) {
-            System.err.println("File is not available");
+            System.err.println("Error: Script file is not accessible. Please check the path and file permissions.");
+            logger.warn("Script access denied: {}", normalizedPath);
+            return false;
         }
         if (executingScripts.get().contains(normalizedPath)) {
-            System.err.println("Circular script inclusion detected: " + scriptPath);
+            System.err.println("Error: Circular script inclusion detected: " + scriptPath);
+            logger.error("Circular dependency in script execution: {}", normalizedPath);
             return false;
         }
         if (executingScripts.get().size() >= MAX_SCRIPT_DEPTH) {
-            System.err.println("Maximum script nesting depth exceeded (" + MAX_SCRIPT_DEPTH + ")");
+            System.err.println("Error: Maximum script nesting depth exceeded (" + MAX_SCRIPT_DEPTH + ").");
+            logger.error("Script nesting limit reached for: {}", scriptPath);
             return false;
         }
         executingScripts.get().push(normalizedPath);
-        System.out.println(" Entering script: " + scriptPath + " (depth: " + executingScripts.get().size() + ")");
+        logger.info("Executing script: {} (depth: {})", scriptPath, executingScripts.get().size());
+        System.out.println("Executing script: " + scriptPath + " (depth: " + executingScripts.get().size() + ")");
         Reader originalReader = inputManager.getReader();
         try {
             FileBufferedReader scriptReader = new FileBufferedReader(scriptPath, new XMLParser(scriptPath));
             inputManager.setReader(scriptReader);
+            logger.debug("Reader switched to file: {}", scriptPath);
             ExecutionResult result = executeScriptInternal(scriptPath);
             printExecutionSummary(result);
             return result.success();
         } catch (IOException e) {
-            System.err.println("Error reading script: " + e.getMessage());
+            logger.error("IO error while reading script {}: {}", scriptPath, e.getMessage());
+            System.err.println("Error: Could not read script file. Details: " + e.getMessage());
             return false;
         } catch (Exception e) {
-            System.err.println("Error executing script: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Unexpected error while executing script {}: {}", scriptPath, e.getMessage(), e);
+            System.err.println("Error: Script execution failed. Details: " + e.getMessage());
             return false;
         } finally {
             try {
@@ -75,11 +85,13 @@ public class ScriptRunner {
                     originalReader.clearBuffer();
                 }
                 inputManager.setReader(originalReader);
+                logger.debug("Reader restored to original source");
             } catch (IOException e) {
-                System.err.println("Error restoring reader: " + e.getMessage());
+                logger.warn("Failed to restore original reader: {}", e.getMessage());
+                System.err.println("Warning: Could not restore input reader: " + e.getMessage());
             }
             executingScripts.get().pop();
-            System.out.println("Exiting script: " + scriptPath);
+            logger.info("Finished executing script: {}", scriptPath);
         }
     }
 
@@ -87,17 +99,18 @@ public class ScriptRunner {
      * Prints execution summary to console.
      */
     private void printExecutionSummary(ExecutionResult result) {
-        System.out.println("\n Script completed: " +
+        System.out.println("Script completed: " +
                 result.successCount() + " succeeded, " +
                 result.errorCount() + " failed");
         if (!result.details().isEmpty() && result.details().size() <= 10) {
-            System.out.println("  Details:");
+            System.out.println("Details:");
             for (String detail : result.details()) {
-                System.out.println("    " + detail);
+                System.out.println("  " + detail);
             }
         } else if (!result.details().isEmpty()) {
-            System.out.println("  (details omitted - " + result.details().size() + " lines)");
+            System.out.println("(details omitted - " + result.details().size() + " lines)");
         }
+        logger.debug("Script execution summary: {} success, {} errors", result.successCount(), result.errorCount());
     }
     /**
      * Internal execution logic (after Reader is switched).
@@ -114,28 +127,33 @@ public class ScriptRunner {
                     continue;
                 }
                 System.out.println("  " + commandName);
+                logger.debug("Processing script command: {}", commandName);
                 if (commandName.equals("execute_script")) {
                     String nestedPath = inputManager.getLastPath();
                     if (nestedPath != null && !nestedPath.isEmpty()) {
-                         if (executeScript(nestedPath)){
-                             successCount ++;
-                             details.add("execute_script "+ nestedPath+" done");
-                         }else {
-                             errorCount++;
-                             details.add("execute_script "+ nestedPath+" failed");
-                         }
+                        if (executeScript(nestedPath)) {
+                            successCount++;
+                            details.add("execute_script " + nestedPath + " done");
+                        } else {
+                            errorCount++;
+                            details.add("execute_script " + nestedPath + " failed");
+                        }
                     } else {
                         errorCount++;
-                        details.add("Script path required");
-                        System.err.println("     Script path required");
+                        String msg = "Script path required for execute_script command";
+                        details.add(msg);
+                        System.err.println("Error: " + msg);
+                        logger.debug("Script command failed: {}", msg);
                     }
                     continue;
                 }
                 CommandRequest request = invoker.runCommand(commandName);
                 if (request == null) {
                     errorCount++;
-                    details.add("Line: Failed to build request for " + commandName);
-                    System.err.println("     Failed to build request");
+                    String msg = "Failed to build request for command: " + commandName;
+                    details.add(msg);
+                    System.err.println("Error: " + msg);
+                    logger.debug("Request build failed: {}", commandName);
                     continue;
                 }
                 connectionManager.sendRequest(request);
@@ -146,22 +164,33 @@ public class ScriptRunner {
                         invoker.getCommand("spawn_client").handleResponse(response, invoker.getContext());
                     }
                     successCount++;
-                    String detail = commandName + " - " + response.message();
+                    String responseMsg = response.message();
+                    if (responseMsg == null || responseMsg.trim().isEmpty()) {
+                        responseMsg = "Operation completed successfully";
+                    }
+                    String detail = commandName + " - " + responseMsg;
                     if (response.result() != null) {
-                        detail += " | Result: " + response.result().toString();
+                        detail += " | Result: " + safeToString(response.result());
                     }
                     details.add(detail);
-//                    System.out.println("    " + response.message());
                 } else {
                     errorCount++;
-                    String msg = response != null ? response.message() : "No response";
+                    String msg = response != null ? response.message() : "No response received";
+                    if (msg == null || msg.trim().isEmpty()) {
+                        msg = response != null && !response.success()
+                                ? "Operation failed with no details"
+                                : "Server returned no response";
+                    }
                     details.add(commandName + " - " + msg);
-                    System.err.println("    Error: " + msg);
+                    System.err.println("Error: " + msg);
+                    logger.debug("Command failed in script: {} - {}", commandName, msg);
                 }
             } catch (Exception e) {
                 errorCount++;
-                details.add("Exception: " + e.getMessage());
-                System.err.println("  " + e.getMessage());
+                String msg = "Exception during command execution: " + e.getMessage();
+                details.add(msg);
+                System.err.println("Error: " + e.getMessage());
+                logger.warn("Exception in script execution", e);
             }
         }
         return ExecutionResult.of(
@@ -171,6 +200,20 @@ public class ScriptRunner {
                 details
         );
     }
+
+    /**
+     * Safely converts an object to string, handling nulls and avoiding exceptions.
+     */
+    private String safeToString(Object obj) {
+        if (obj == null) return "null";
+        try {
+            return obj.toString();
+        } catch (Exception e) {
+            logger.debug("Failed to convert result to string: {}", e.getMessage());
+            return "[unable to display result]";
+        }
+    }
+
     /**
      * Normalizes path for consistent comparison.
      */
@@ -178,9 +221,11 @@ public class ScriptRunner {
         try {
             return java.nio.file.Paths.get(scriptPath).toAbsolutePath().normalize().toString();
         } catch (Exception e) {
+            logger.debug("Path normalization failed for '{}', using original: {}", scriptPath, e.getMessage());
             return scriptPath;
         }
     }
+
     /**
      * Record for script execution summary.
      * Immutable, serializable, with auto-generated getters.
