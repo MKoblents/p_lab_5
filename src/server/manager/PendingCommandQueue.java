@@ -16,7 +16,6 @@ public class PendingCommandQueue {
 
     public boolean addPendingCommand(String clientId, CommandRequest commandRequest){
         logger.info(clientId + " added new comandRequest"+ commandRequest);
-//        TODO remove extra log
         return pendingMap.computeIfAbsent(clientId, k -> new ConcurrentLinkedQueue<CommandRequest>()).add(commandRequest);
     }
     public CommandRequest poll(String clientId){
