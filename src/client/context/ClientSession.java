@@ -50,7 +50,7 @@ public class ClientSession implements AutoCloseable {
         scriptRunner.setInvoker(invoker);
         this.invoker = invoker;
         this.context = context;
-        this.spawnClientCommand = new SpawnClient(context, connection, processManager);
+        this.spawnClientCommand = new SpawnClient(context, processManager);
     }
 
     public void run() throws IOException {
