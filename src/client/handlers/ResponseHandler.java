@@ -1,17 +1,20 @@
 package client.handlers;
 
-
 import client.context.ClientContext;
 import client.scripts.ScriptRunner;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ResponseHandler {
-    private ClientContext context;
-    public ResponseHandler(ClientContext context){
-        this.context=context;
+    private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
+    private final ClientContext context;
+
+    public ResponseHandler(ClientContext context) {
+        this.context = context;
     }
 
     /**
@@ -20,17 +23,27 @@ public class ResponseHandler {
      */
     public void handle(CommandResponse response) {
         if (response == null) {
-            System.err.println("Error: Null response from server");
+            System.err.println("Error: No response received from server.");
+            logger.debug("Received null response from server queue.");
             return;
         }
         if (response.result() == null && "ok".equals(response.message())) {
+            logger.debug("Silent success response received (message='ok', result=null)");
             return;
         }
-        System.out.println("\n[Client: "+ context.getClientId()+"]");
+        String displayMessage = response.message();
+        if (displayMessage == null || displayMessage.trim().isEmpty()) {
+            displayMessage = response.success()
+                    ? "Operation completed successfully."
+                    : "Operation failed. Server returned no details.";
+        }
+        System.out.println("\n[Client: " + context.getClientId() + "]");
         if (response.success()) {
-            System.out.println(response.message());
+            System.out.println(displayMessage);
+            logger.info("Command succeeded");
         } else {
-            System.err.println("Error: " + response.message());
+            System.err.println("Error: " + displayMessage);
+            logger.warn("Command failed | Reason: {}", displayMessage);
         }
         if (response.result() != null) {
             handleResult(response.result());
@@ -54,10 +67,8 @@ public class ResponseHandler {
             System.out.println("   Count: " + count);
         } else if (result instanceof ScriptRunner.ExecutionResult scriptResult) {
             handleScriptResult(scriptResult);
-
         } else if (result instanceof String text) {
             System.out.println("  → " + text);
-
         } else {
             System.out.println("  → Result: " + result);
         }
