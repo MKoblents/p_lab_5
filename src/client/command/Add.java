@@ -14,6 +14,7 @@ public class Add implements ClientCommand{
     }
     @Override
     public CommandRequest execute(SideFlag flag) {
+        System.out.println("Please, enter Space Marine");
         SpaceMarine spaceMarine = inputManager.getInputSpaceMarine();
         if (spaceMarine == null) {
             System.err.println("Error: Failed to parse SpaceMarine from XML");

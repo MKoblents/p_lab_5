@@ -18,7 +18,7 @@ public class CouldBeUpdatedCommand implements Command{
     public CommandResponse execute(CommandRequest commandRequest) {
         long id = (long) commandRequest.args();
         if (collectionManager.getUpdatingSpaceMarines().contains(id)){
-            return new CommandResponse(true, false,"can't update right now", commandRequest.requestId(), commandRequest.clientId());
+            return new CommandResponse(true, false,"can't update right now: another client's updating it", commandRequest.requestId(), commandRequest.clientId());
         }
         collectionManager.addUpdating(id);
         return  new CommandResponse(true, true,"can update right now", commandRequest.requestId(), commandRequest.clientId());
