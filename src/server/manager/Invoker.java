@@ -2,6 +2,7 @@ package server.manager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import server.client.ConnectedClient;
 import server.commands.*;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -16,6 +17,7 @@ public class Invoker {
     private static final Logger logger = LoggerFactory.getLogger(Invoker.class);
     /** Registry of available commands by name. */
     private Map<String, Command> commandMap = new HashMap<>();
+    private ClientRegistry clientRegistry;
     /**
      * Registers a command under the specified name.
      * @param name the command name/key
@@ -33,18 +35,20 @@ public class Invoker {
         Command command = commandMap.get(commandType);
         if (command == null) {
             logger.warn("Unknown command requested: {}", commandType);
-            return new CommandResponse(false, null, "Unknown command: " + commandType, request.requestId());
+            return new CommandResponse(false, null, "Unknown command: " + commandType, request.requestId(), request.clientId());
         }
         try {
             CommandResponse response = command.execute(request);
+            clientRegistry.getClient(request.clientId()).ifPresent(ConnectedClient::markOnline);
             logger.debug("Command {} completed: success={}", commandType, response.success());
             return response;
         } catch (Exception e) {
             logger.error("Error executing command {}: {}", commandType, e.getMessage(), e);
-            return new CommandResponse(false, null, "Internal error", request.requestId());
+            return new CommandResponse(false, null, "Internal error", request.requestId(), request.clientId());
         }
     }
-    public Invoker(CollectionManager collectionManager){
+    public Invoker(CollectionManager collectionManager, ClientRegistry clientRegistry){
+        this.clientRegistry = clientRegistry;
         registerCommand("add", new AddCommand(collectionManager));
         registerCommand("clear", new ClearCommand(collectionManager));
         registerCommand("filter_less_than_melee_weapon", new FilterLessThanMeleeWeaponCommand(collectionManager));
@@ -58,6 +62,11 @@ public class Invoker {
         registerCommand("sum_of_health", new SumOfHealthCommand(collectionManager));
         registerCommand("update", new UpdateCommand(collectionManager));
         registerCommand("help", new HelpCommand(this));
+        registerCommand("spawn_client", new SpawnClientCommand());
+        registerCommand("forward_command", new ForwardCommand(clientRegistry));
+        registerCommand(CommandRequest.CMD_HEARTBEAT, new HeartbeatCommand(clientRegistry));
+        registerCommand("could_be_updated", new CouldBeUpdatedCommand(collectionManager));
+        registerCommand("kill_client", new KillClientCommand(clientRegistry));
         logger.debug("Registering commands with Invoker");
     }
     /**

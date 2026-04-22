@@ -1,6 +1,11 @@
 package client.inputWorkers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+
 import client.io.Reader;
 /**
  * Parses command-line input into structured arguments.
@@ -21,6 +26,8 @@ public class CommandParser {
     private String pathArg;
     /** Raw enum string for deferred parsing via {@link #getEnumValue(Class)}. */
     private String enumArg;
+    private String targetClientId;
+    private String stringArg;
     /**
      * Joins array elements [start, finish) into lowercase string.
      * @param strings source array
@@ -42,15 +49,20 @@ public class CommandParser {
             return null;
         }
     }
+    public void parse(Reader reader) throws IOException {
+        String line = reader.nextLine();
+        parse(line);
+        if (xmlArg != null) {
+            reader.setLastXmlString(xmlArg);
+        }
+    }
     /**
      * Parses next line from Reader and populates argument fields.
      * Handles comments (#), empty lines, and command-specific argument extraction.
-     * @param reader input source to read from
      * @throws IOException if read operation fails
      * @implNote Sets fields directly; use getters to retrieve values after parse
      */
-    public void parse(Reader reader) throws IOException {
-        String line = reader.nextLine();
+    public void parse(String line){
         if (line == null || line.trim().isEmpty()) {
             commandName = null;
             return;
@@ -64,10 +76,31 @@ public class CommandParser {
             commandName = line.trim().toLowerCase();
             return;
         }
+        targetClientId = null;
+        List<String> filteredParts = new ArrayList<>();
+        for (int i = 0; i < parts.length; i++){
+            if (parts[i].equals("-c") && i+1<parts.length){
+                if (targetClientId == null) {
+                    targetClientId = parts[i + 1];
+                    i++;
+                } else {
+                    System.err.println("CLient Id already entered!");
+                    break;
+                }
+            }else {
+                filteredParts.add(parts[i]);
+            }
+        }
+
+        parts = filteredParts.toArray(new String[0]);
+        if (targetClientId!=null){
+            commandName = parts[0];
+            return;
+        }
+
         commandName = parts[0];
         if (commandName.equals("add") || commandName.equals("remove_greater")){
             xmlArg = listToString(parts, 1, parts.length);
-            reader.setLastXmlString(xmlArg);
             return;
         }
         if (commandName.equals("update")|| commandName.equals("remove_by_id")){
@@ -92,13 +125,22 @@ public class CommandParser {
         if (commandName.equals("filter_less_than_melee_weapon")){
 
             enumArg = parts[1];
-            System.out.println(enumArg+" in command parser");
+            return;
+        }
+        if (commandName.equals("kill_client")){
+            stringArg = parts[1];
             return;
         }
         xmlArg = listToString(parts, 2, parts.length);
-        reader.setLastXmlString(xmlArg);
 
     }
+
+    public String getTargetClientId() {
+        String id = targetClientId;
+        targetClientId = null;
+        return id;
+    }
+
     /**
      * Converts cached enum string to typed enum constant.
      * @param enumType target enum class
@@ -107,20 +149,33 @@ public class CommandParser {
      */
     public <T extends Enum<T>> T getEnumValue(Class<T> enumType) {
         if (enumArg == null) return null;
-        System.out.println("1");
-        T[] constants = enumType.getEnumConstants();
-        try {
-            int index = Integer.parseInt(enumArg);
-            if (index >= 1 && index <= constants.length) {
-                return constants[index - 1];
+        List<Function<String, T>> functions = Arrays.asList(
+                value -> getEnumByIndex(value, enumType),
+                value -> getEnumByName(value, enumType));
+        for (Function<String, T> function: functions){
+            T result = function.apply(enumArg);
+            if (result != null){
+                return  result;
             }
-        } catch (NumberFormatException e) {
         }
+        return null;
+    }
+    private <T extends Enum<T>>  T getEnumByName(String value, Class<T> enumType){
         try {
-            return Enum.valueOf(enumType, enumArg.toUpperCase());
+            return Enum.valueOf(enumType, value.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+    private <T extends Enum<T>>  T getEnumByIndex(String value, Class<T> enumType){
+        try {
+            int index = Integer.parseInt(value);
+            T[] constants = enumType.getEnumConstants();
+            if (index >= 1 && index <= constants.length) {
+                return constants[index - 1];
+            }
+        } catch (NumberFormatException ignored) {}
+        return null;
     }
     /** @return parsed command name or null */
     public String getCommandName() { return commandName; }
@@ -140,11 +195,16 @@ public class CommandParser {
 //        TODO везде сделать стирание
         return str; }
     /** @return script path argument or null */
-    public String getPathArg() { return pathArg; }
+    public String getPathArg() {
+        return pathArg; }
     /** @return raw enum string for deferred parsing */
     public String getEnumArg() { return enumArg; }
 
     public void setLastPath(String scriptPath) {
         this.pathArg = scriptPath;
+    }
+
+    public String getStringArg() {
+        return stringArg;
     }
 }

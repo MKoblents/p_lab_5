@@ -1,5 +1,6 @@
 package client.io;
 
+import client.inputWorkers.ConsoleInputReader;
 import shared.enums.AstartesCategory;
 import shared.enums.MeleeWeapon;
 import shared.enums.Weapon;
@@ -9,49 +10,63 @@ import shared.models.SpaceMarine;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Scanner;
 
-/**
- * Console-based implementation of {@link Reader} for interactive input.
- * Wraps System.in with BufferedReader and provides typed input helpers.
- */
 public class ConsoleBufferedScanner implements Reader {
-    /** Buffered reader for System.in input stream. */
-    private Scanner reader;
-    /**
-     * Initializes console reader with standard input stream.
-     */
-    public ConsoleBufferedScanner() {
-        this.reader = new Scanner(System.in);
-    }
+    private final ConsoleInputReader consoleInputReader = new ConsoleInputReader();
 
+    public ConsoleBufferedScanner() {
+        Thread t = new Thread(consoleInputReader);
+        t.setDaemon(true);
+        t.start();
+    }
+    public String pollNextLine(long timeoutMs) throws IOException {
+        try {
+            String line = consoleInputReader.pollCommand(timeoutMs);
+            return line != null ? line.trim() : null;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Console input interrupted", e);
+        }
+    }
     @Override
     public String nextLine() throws IOException {
-        String line = "";
+       return getTrimmedTextBlocking();
+    }
+    private String readLineBlocking() throws IOException {
         try {
-            line = reader.nextLine();
+            return consoleInputReader.takeCommand();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Input interrupted", e);
         }
-        catch (Exception e) {
-            System.out.println("-----------");
-            reader = new Scanner(System.in);
-        }
-        return line;
+    }
+
+    private String getTrimmedText() throws IOException {
+        String line = nextLine();
+        return line != null ? line.trim() : "";
+    }
+
+    private String getTrimmedTextBlocking() throws IOException {
+        String line = readLineBlocking();
+        return line != null ? line.trim() : "";
     }
 
     @Override
     public boolean hasNextLine() throws IOException {
-        return reader.hasNextLine();
+        return true;
     }
+
+    @Override
     public void clearBuffer() throws IOException {
-        this.reader = new Scanner(System.in);
     }
+
     @Override
     public SpaceMarine getInputSpaceMarine() {
         try {
             SpaceMarine spaceMarine = new SpaceMarine();
             System.out.print("Enter name: ");
-            String name = getInputString();
-            spaceMarine.setName(name);
+            spaceMarine.setName(getInputString());
+
             System.out.print("Enter x coordinate: ");
             long x = getInputLong();
             System.out.print("Enter y coordinate: ");
@@ -60,121 +75,84 @@ public class ConsoleBufferedScanner implements Reader {
             coordinates.setX(x);
             coordinates.setY(y);
             spaceMarine.setCoordinates(coordinates);
+
             System.out.print("Enter meleeWeapon: ");
-            MeleeWeapon meleeWeapon = getInputEnum(MeleeWeapon.class);
-            spaceMarine.setMeleeWeapon(meleeWeapon);
+            spaceMarine.setMeleeWeapon(getInputEnum(MeleeWeapon.class));
+
             System.out.print("Enter health: ");
-            double health = getInputDouble();
-            spaceMarine.setHealth(health);
+            spaceMarine.setHealth(getInputDouble());
+
             System.out.print("Enter weapon: ");
-            Weapon weapon = getInputEnum(Weapon.class);
-            spaceMarine.setWeaponType(weapon);
+            spaceMarine.setWeaponType(getInputEnum(Weapon.class));
+
             System.out.print("Enter AstartesCategory: ");
-            AstartesCategory astartesCategory = getInputEnum(AstartesCategory.class);
-            spaceMarine.setCategory(astartesCategory);
+            spaceMarine.setCategory(getInputEnum(AstartesCategory.class));
+
             System.out.println("Enter Chapter:");
-            Chapter chapter = getInputChapter();
-            spaceMarine.setChapter(chapter);
+            spaceMarine.setChapter(getInputChapter());
             return spaceMarine;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    /**
-     * Prompts and reads a validated long value with retry on error.
-     * @return parsed long, or 0 if user declines retry
-     * @throws IOException if read fails
-     */
-    public long getInputLong() throws IOException{
+
+    public long getInputLong() throws IOException {
         System.out.print("(you should enter long type) ");
+        System.out.flush();
         try {
-            return Long.parseLong(getTrimmedText());
-        }catch (NumberFormatException e){
+            return Long.parseLong(getTrimmedTextBlocking());
+        } catch (NumberFormatException e) {
             System.err.println("You had to enter long.");
-            if (shouldRetryInput()){
-                return getInputLong();
-            }return 0;
+            if (shouldRetryInput()) return getInputLong();
+            return 0;
         }
     }
-    /**
-        * Prompts and reads a string value (trimmed).
-            * @return trimmed input string
-     * @throws IOException if read fails
-     */
+
     public String getInputString() throws IOException {
         System.out.print("(you should enter String type) ");
-        return getTrimmedText();
+        System.out.flush();
+        return getTrimmedTextBlocking();
     }
-    /**
-     * Prompts user to retry input after error.
-     * @return true if user enters 'y' or 'yes'
-     * @throws IOException if read fails
-     */
+
     private boolean shouldRetryInput() throws IOException {
-        System.out.println("Do you want to correct your data? (Enter 'y' or 'yes'): ");
-        String answer = getTrimmedText();
+        System.out.print("Do you want to correct your data? (Enter 'y' or 'yes'): ");
+        System.out.flush();
+        String answer = getTrimmedTextBlocking();
         return answer.equalsIgnoreCase("y") || answer.equalsIgnoreCase("yes");
     }
-    /**
-     * Reads and trims the next line of input.
-     * @return trimmed line content
-     * @throws IOException if read fails
-     */
-    public String getTrimmedText() throws IOException {
-        return nextLine().trim();
-    }
-    /**
-     * Prompts and reads a validated enum value with retry on error.
-     * @param enumType the enum class to parse
-     * @return parsed enum constant, or null if user declines retry
-     * @throws IOException if read fails
-     */
+
     public <T extends Enum<T>> T getInputEnum(Class<T> enumType) throws IOException {
         System.out.println("(you should chose one option) ");
         System.out.println(Arrays.toString(enumType.getEnumConstants()));
-        String value = getTrimmedText();
+        System.out.flush();
+        String value = getTrimmedTextBlocking();
         T[] constants = enumType.getEnumConstants();
         try {
             int index = Integer.parseInt(value);
             if (index >= 1 && index <= constants.length) {
                 return constants[index - 1];
             }
-        } catch (NumberFormatException e) {
-            if (shouldRetryInput()){
-                return getInputEnum(enumType);
-            }
-            return null;
-        }
+        } catch (NumberFormatException ignored) {}
         try {
             return Enum.valueOf(enumType, value.toUpperCase());
         } catch (IllegalArgumentException e) {
-            if (shouldRetryInput()){
-                return getInputEnum(enumType);
-            }
+            if (shouldRetryInput()) return getInputEnum(enumType);
             return null;
         }
     }
-    /**
-     * Prompts and reads a validated double value with retry on error.
-     * @return parsed double, or 0.0 if user declines retry
-     * @throws IOException if read fails
-     */
+
     public double getInputDouble() throws IOException {
         System.out.print("(you should enter double type) ");
+        System.out.flush();
         try {
-            return Double.parseDouble(getTrimmedText().replace(',','.'));
-        }catch (NumberFormatException e){
+            return Double.parseDouble(getTrimmedTextBlocking().replace(',', '.'));
+        } catch (NumberFormatException e) {
             System.err.println("You had to enter double.");
-            if (shouldRetryInput()){
-                return getInputDouble();
-            }return 0.0;
+            if (shouldRetryInput()) return getInputDouble();
+            return 0.0;
         }
     }
-    /**
-     * Prompts and reads Chapter fields interactively.
-     * @return new Chapter instance, or null if all fields empty
-     * @throws IOException if read fails
-     */
+
     public Chapter getInputChapter() throws IOException {
         System.out.print("Enter name: ");
         String name = getInputString();
@@ -182,27 +160,20 @@ public class ConsoleBufferedScanner implements Reader {
         String parentLegion = getInputString();
         System.out.print("Enter world: ");
         String world = getInputString();
-        if (name.isEmpty() && parentLegion.isEmpty() && world.isEmpty()){
-            return null;
-        }
+        if (name.isEmpty() && parentLegion.isEmpty() && world.isEmpty()) return null;
         Chapter chapter = new Chapter();
         chapter.setName(name);
         chapter.setWorld(world);
         chapter.setParentLegion(parentLegion);
         return chapter;
     }
-    /**
-     * Prompts and reads MeleeWeapon with fallback to default.
-     * @return selected MeleeWeapon or CHAIN_AXE as default
-     */
+
     public MeleeWeapon getInputMeleeWeapon() {
         try {
             MeleeWeapon meleeWeapon = getInputEnum(MeleeWeapon.class);
             if (meleeWeapon == null) {
                 System.out.println("You have to chose one option. If you want chose default version, press enter.");
-                if (shouldRetryInput()) {
-                    return getInputMeleeWeapon();
-                }
+                if (shouldRetryInput()) return getInputMeleeWeapon();
                 return MeleeWeapon.CHAIN_AXE;
             }
             return meleeWeapon;
@@ -212,7 +183,5 @@ public class ConsoleBufferedScanner implements Reader {
     }
 
     @Override
-    public void setLastXmlString(String lastXmlString) {
-
-    }
+    public void setLastXmlString(String lastXmlString) {}
 }

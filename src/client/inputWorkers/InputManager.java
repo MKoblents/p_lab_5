@@ -1,5 +1,6 @@
 package client.inputWorkers;
 
+import client.io.ConsoleBufferedScanner;
 import shared.enums.MeleeWeapon;
 import client.io.Reader;
 import shared.models.SpaceMarine;
@@ -22,6 +23,9 @@ public class InputManager {
     public InputManager(Reader reader, CommandParser commandParser){
         this.reader= reader;
         this.commandParser = commandParser;
+    }
+    public String getTargetClientId(){
+        return commandParser.getTargetClientId();
     }
     /**
      * Returns the last parsed long argument from command input.
@@ -53,6 +57,12 @@ public class InputManager {
     public String getLastXmlString(){
         return commandParser.getXmlArg();
     }
+    public void parseLine(String line) {
+        commandParser.parse(line);
+    }
+    public String getCurrentCommandName() {
+        return commandParser.getCommandName();
+    }
     /**
      * Parses next command from current Reader and extracts its name.
      * @return lowercase command name, or null if input was empty/comment
@@ -80,9 +90,7 @@ public class InputManager {
      * Returns parsed MeleeWeapon enum from command argument.
      * @return enum value or null if invalid/not provided
      */
-    public MeleeWeapon getInputMeleeWeapon() {
-        System.out.println("2");
-        System.out.println(commandParser.getEnumValue(MeleeWeapon.class));
+    public MeleeWeapon getLastInputMeleeWeapon() {
         return commandParser.getEnumValue(MeleeWeapon.class);
     }
     /**
@@ -103,5 +111,34 @@ public class InputManager {
 
     public void setLastPath(String scriptPath) {
         commandParser.setLastPath(scriptPath);
+    }
+    public <T extends Enum<T>> T getNewEnumType(Class<T> enumType) throws IOException {
+        synchronized (this) {
+            ConsoleBufferedScanner scanner = (ConsoleBufferedScanner) reader;
+            return scanner.getInputEnum(enumType);
+        }
+    }
+    public int getNewInt() throws IOException {
+        synchronized (this) {
+            ConsoleBufferedScanner scanner = (ConsoleBufferedScanner) reader;
+            return (int) scanner.getInputLong();
+        }
+    }
+    public String getNewString() throws IOException {
+        synchronized (this) {
+            ConsoleBufferedScanner scanner = (ConsoleBufferedScanner) reader;
+            return scanner.getInputString();
+        }
+    }
+
+    public long getNewLong() throws IOException {
+        synchronized (this) {
+            ConsoleBufferedScanner scanner = (ConsoleBufferedScanner) reader;
+            return scanner.getInputLong();
+        }
+    }
+
+    public String getLastString() {
+        return commandParser.getStringArg();
     }
 }

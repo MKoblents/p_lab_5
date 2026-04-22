@@ -17,6 +17,6 @@ public class MinByMeleeWeaponCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        return new CommandResponse(true, collectionManager.getMinByMeleeWeapon(), "Min element found", commandRequest.requestId());
+        return new CommandResponse(true, collectionManager.getMinByMeleeWeapon(), "Min element found", commandRequest.requestId(), commandRequest.clientId());
     }
 }

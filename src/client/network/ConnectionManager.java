@@ -2,6 +2,8 @@ package client.network;
 
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.dto.HandshakeRequest;
+import shared.enums.DisconnectReason;
 import shared.utils.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,21 @@ public class ConnectionManager {
     private static final Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
     private SocketChannel socketChannel;
     private boolean connected = false;
+    private String host;
+    private int port;
+    private final Object writeLock = new Object();
     public boolean connect(String host, int port) {
+        if (socketChannel != null && socketChannel.isOpen()) {
+            try {
+                logger.debug("Closing existing socket before reconnect");
+                socketChannel.close();
+            } catch (IOException e) {
+                logger.warn("Error closing old socket: {}", e.getMessage());
+            }
+        }
+        this.connected = false;
+        this.host = host;
+        this.port = port;
         logger.debug("Attempting to connect to {}:{}", host, port);
         try {
             socketChannel = SocketChannel.open();
@@ -37,6 +53,7 @@ public class ConnectionManager {
                 logger.trace("finishConnect() completed");
             }
             this.connected = true;
+            logger.info("Local endpoint: {}", socketChannel.getLocalAddress());
             logger.info("Successfully connected to {}:{}", host, port);
             System.out.println("Connected to " + host + ":" + port);
             return true;
@@ -67,8 +84,10 @@ public class ConnectionManager {
         buffer.put(data);
         buffer.flip();
         logger.trace("Writing {} bytes to channel", buffer.remaining());
-        while (buffer.hasRemaining()) {
-            socketChannel.write(buffer);
+        synchronized (writeLock) {
+            while (buffer.hasRemaining()) {
+                socketChannel.write(buffer);
+            }
         }
         logger.debug("Request sent successfully: requestId={}", requestId);
     }
@@ -95,6 +114,17 @@ public class ConnectionManager {
             }
             int length = buffer.getInt();
             logger.trace("Response length: {} bytes", length);
+            if (length == -1) {
+                logger.info("Received PARENT_DOWN signal");
+                connected = false;
+                return new CommandResponse(false, null, DisconnectReason.PARENT_DOWN.name(), "SYSTEM", "");
+            }
+
+            if (length < 0 || length > 10_000_000) {
+                logger.error("Invalid response length header: {} (possible corruption)", length);
+                connected = false;
+                return null;
+            }
             ByteBuffer dataBuffer = ByteBuffer.allocate(length);
             while (dataBuffer.hasRemaining()) {
                 int read = socketChannel.read(dataBuffer);
@@ -149,5 +179,37 @@ public class ConnectionManager {
     }
     public boolean isConnected() {
         return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
+    public String getHost() {
+        return host;
+    }
+    public int getPort(){
+        return port;
+    }
+    public boolean sendHandshake(HandshakeRequest handshake) throws IOException {
+        if (!connected || socketChannel == null) {
+            throw new IOException("Not connected to server");
+        }
+        logger.debug("Sending handshake for client: {}", handshake.clientId());
+        byte[] data = SerializationUtil.serialize(handshake);
+        ByteBuffer buffer = ByteBuffer.allocate(4 + data.length);
+        buffer.putInt(data.length);
+        buffer.put(data);
+        buffer.flip();
+        synchronized (writeLock) {
+            while (buffer.hasRemaining()) {
+                socketChannel.write(buffer);
+            }
+        }
+        return true;
+    }
+
+    public SocketChannel getSocketChannel() {
+        return socketChannel;
     }
 }

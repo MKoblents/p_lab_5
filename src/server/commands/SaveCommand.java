@@ -25,7 +25,8 @@ public class SaveCommand implements Command{
                     true,
                     null,
                     "Collection saved to " + System.getenv("PLAB5"),
-                    commandRequest.requestId()
+                    commandRequest.requestId(),
+                    commandRequest.clientId()
             );
 
         } catch (Exception e) {
@@ -33,7 +34,8 @@ public class SaveCommand implements Command{
                     false,
                     null,
                     "Error saving collection: " + e.getMessage(),
-                    commandRequest.requestId()
+                    commandRequest.requestId(),
+                    commandRequest.clientId()
             );
         }
 

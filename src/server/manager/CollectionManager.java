@@ -1,6 +1,6 @@
 package server.manager;
 import shared.enums.MeleeWeapon;
-import client.validator.Validator;
+import client.utils.Validator;
 import shared.models.SpaceMarine;
 import shared.utils.XMLParser;
 import javax.xml.bind.annotation.*;
@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 @XmlRootElement(name = "spaceMarines")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CollectionManager {
+    @XmlTransient
+    private ArrayList<Long>  updatingSpaceMarines = new ArrayList<>();
 
     /** Collection of SpaceMarine objects. */
     @XmlElement(name = "spaceMarine")
@@ -200,5 +202,15 @@ public class CollectionManager {
         SpaceMarine spaceMarine = getSpaceMarineById(id);
         replace(spaceMarine, spaceMarineInput);
 //        TODO normal update
+    }
+    public boolean addUpdating(Long id){
+        return updatingSpaceMarines.add(id);
+    }
+    public boolean removeUpdating(Long id){
+        return updatingSpaceMarines.remove(id);
+    }
+
+    public ArrayList<Long> getUpdatingSpaceMarines() {
+        return updatingSpaceMarines;
     }
 }

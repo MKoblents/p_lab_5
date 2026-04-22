@@ -28,6 +28,6 @@ public class ShowCommand implements Command{
                 .collect(Collectors.toList());
         return new CommandResponse(
                 true,sortedMarines,
-                "Showing " + sortedMarines.size() + " SpaceMarine(s)", commandRequest.requestId());
+                "Showing " + sortedMarines.size() + " SpaceMarine(s)", commandRequest.requestId(), commandRequest.clientId());
     }
 }

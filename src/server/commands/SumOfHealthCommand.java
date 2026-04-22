@@ -23,6 +23,6 @@ public class SumOfHealthCommand implements Command{
         return new CommandResponse(true,
                 sum,
                 "Sum of health: " + sum,
-                commandRequest.requestId());
+                commandRequest.requestId(), commandRequest.clientId());
     }
 }

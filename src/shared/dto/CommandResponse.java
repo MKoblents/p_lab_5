@@ -2,7 +2,7 @@ package shared.dto;
 
 import java.io.Serializable;
 
-public record CommandResponse(boolean success, Object result, String message, String requestId) implements Serializable {
+public record CommandResponse(boolean success, Object result, String message, String requestId, String clientId) implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Override

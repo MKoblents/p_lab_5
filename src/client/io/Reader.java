@@ -22,7 +22,6 @@ public interface Reader {
     boolean hasNextLine() throws IOException;
     /**
      * Prompts user to fill/modify SpaceMarine fields via input.
-     * @param spaceMarine the object to populate (may be partially filled)
      * @return the same instance with updated fields
      */
     SpaceMarine getInputSpaceMarine();
