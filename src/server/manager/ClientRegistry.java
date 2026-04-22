@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 public class ClientRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ClientRegistry.class);
@@ -71,13 +72,12 @@ public class ClientRegistry {
         }
     }
     public boolean isParentOf(String parentId, String childId){
-        if (getChildren(parentId).contains(childId)){
-            return  true;
-        }
-        for (String directChild : getChildren(parentId)) {
-            if (isParentOf(directChild, childId)) {
-                return true;
-            }
+        return existsInSubtree(parentId,childId::equals);
+    }
+    private boolean existsInSubtree(String parentId, Predicate<String> condition) {
+        if (condition.test(parentId)) return true;
+        for (String child : getChildren(parentId)) {
+            if (existsInSubtree(child, condition)) return true;
         }
         return false;
     }

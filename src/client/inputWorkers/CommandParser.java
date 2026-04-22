@@ -2,7 +2,9 @@ package client.inputWorkers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import client.io.Reader;
 /**
@@ -147,20 +149,33 @@ public class CommandParser {
      */
     public <T extends Enum<T>> T getEnumValue(Class<T> enumType) {
         if (enumArg == null) return null;
-        System.out.println("1");
-        T[] constants = enumType.getEnumConstants();
-        try {
-            int index = Integer.parseInt(enumArg);
-            if (index >= 1 && index <= constants.length) {
-                return constants[index - 1];
+        List<Function<String, T>> functions = Arrays.asList(
+                value -> getEnumByIndex(value, enumType),
+                value -> getEnumByName(value, enumType));
+        for (Function<String, T> function: functions){
+            T result = function.apply(enumArg);
+            if (result != null){
+                return  result;
             }
-        } catch (NumberFormatException e) {
         }
+        return null;
+    }
+    private <T extends Enum<T>>  T getEnumByName(String value, Class<T> enumType){
         try {
-            return Enum.valueOf(enumType, enumArg.toUpperCase());
+            return Enum.valueOf(enumType, value.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+    private <T extends Enum<T>>  T getEnumByIndex(String value, Class<T> enumType){
+        try {
+            int index = Integer.parseInt(value);
+            T[] constants = enumType.getEnumConstants();
+            if (index >= 1 && index <= constants.length) {
+                return constants[index - 1];
+            }
+        } catch (NumberFormatException ignored) {}
+        return null;
     }
     /** @return parsed command name or null */
     public String getCommandName() { return commandName; }
