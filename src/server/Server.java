@@ -3,6 +3,8 @@ package server;
 import server.client.ConnectionState;
 import server.config.ServerConfig;
 import server.console.ConsoleHandler;
+import server.db.DbInitializer;
+import server.db.config.DbConfig;
 import server.io.NonBlockingConsoleReader;
 import server.manager.ClientRegistry;
 import server.manager.CollectionManager;
@@ -18,11 +20,17 @@ import shared.utils.SerializationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import server.db.provider.*;
+
 import java.io.EOFException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -57,6 +65,15 @@ public class Server {
 
     public static void main(String[] args) {
         try {
+            Path dbConfigPath = Paths.get("src/server/db.properties");
+            if (!Files.exists(dbConfigPath)) {
+                throw new FileNotFoundException("db.properties not found at: " + dbConfigPath);
+            }
+            DbConfig dbConfig = DbConfig.loadFromProperties(dbConfigPath);
+            DbProvider dbProvider = new HikariDbProvider(dbConfig);
+            DbInitializer dbInitializer = new DbInitializer(dbProvider);
+            dbInitializer.start();
+
             ServerConfig config = ServerConfig.parse(args);
             LoggingConfigurator.configure(config.getLogLevel());
             logger.info("=== Single-Threaded NIO Server Starting ===");
