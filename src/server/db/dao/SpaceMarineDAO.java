@@ -173,8 +173,23 @@ public class SpaceMarineDAO {
                 }
             }
         }
+        logger.info("{} is not the owner of {}", owner,spaceMarine);
         return false;
 
+    }
+    public boolean deleteSpaceMarine(SpaceMarine spaceMarine, String owner) throws SQLException{
+        String sql = "delete space_marines from Space_marines s join Users u on s.owner = u.id where u.name = ?";
+        try (Connection connection = provider.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, owner);
+            ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()){
+                if (keys.next()){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private SpaceMarine mapRow(ResultSet resultSet) throws SQLException {
