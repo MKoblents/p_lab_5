@@ -25,7 +25,7 @@ public class SpaceMarineDAO {
     }
     public List<SpaceMarine> selectAll() throws SQLException {
         List<SpaceMarine> res = new ArrayList<>();
-        String sql = "select * from Space_marines s left join Coordinates coor on s.coordinates = coor.id" +
+        String sql = "select * from Space_marines s left join Coordinates coor on s.coordinates = coor.id " +
                 "left join Chapters ch on s.chapter = ch.id;";
         try (Connection connection = provider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -58,7 +58,7 @@ public class SpaceMarineDAO {
                         psInsert.setLong(1, coordinates.getX());
                         psInsert.setLong(2, coordinates.getY());
                         psInsert.executeUpdate();
-                        try (ResultSet keys = psCheck.getGeneratedKeys()) {
+                        try (ResultSet keys = psInsert.getGeneratedKeys()) {
                             if (keys.next()) {
                                 coordId = keys.getLong(1);
                             } else throw new SQLException("Failed to retrieve chapter ID");
@@ -159,15 +159,15 @@ public class SpaceMarineDAO {
             if (realOwner.get("name").equals(owner)){
                 Long ownerId = getOwnerId(id);
                 String sql = "update  collection  set name = ?," +
-                        "set creation_date = ?," +
-                        "set health = ?," +
-                        "set astartes_category = ?," +
-                        "set weapon = ?," +
-                        "set melee_weapon = ?," +
-                        "set coordinates_id = ?," +
-                        "set chapter_id = ?," +
-                        "set owner_id = ?) " +
-                        "where owner = ?";
+                        " creation_date = ?," +
+                        " health = ?," +
+                        " astartes_category = ?," +
+                        " weapon = ?," +
+                        " melee_weapon = ?," +
+                        " coordinates_id = ?," +
+                        " chapter_id = ?," +
+                        " owner_id = ?) " +
+                        " owner = ?";
                 try (Connection connection = provider.getConnection()){
                     return sendIURequest(connection, spaceMarine, realOwner,sql,RequestType.UPDATE);
                 }
@@ -178,7 +178,7 @@ public class SpaceMarineDAO {
 
     }
     public boolean deleteSpaceMarine(SpaceMarine spaceMarine, String owner) throws SQLException{
-        String sql = "delete space_marines from Space_marines s join Users u on s.owner = u.id where u.name = ?";
+        String sql = "DELETE FROM Space_marines WHERE id = ? AND owner = (SELECT id FROM users WHERE name = ?)";
         try (Connection connection = provider.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, owner);
