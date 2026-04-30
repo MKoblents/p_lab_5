@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public interface CollectionService {
 
@@ -15,8 +16,8 @@ public interface CollectionService {
     ZonedDateTime getCreationData();
     List<SpaceMarine> filterLessThanMeleeWeapon(MeleeWeapon weapon);
     int size();
-    boolean isIdInCollection(long id);
-    void remove(SpaceMarine spaceMarine, String owner);
+    boolean isIdInCollection(long id)  throws SQLException;
+    boolean remove(SpaceMarine spaceMarine, String owner) throws SQLException;
     void shuffle();
 
     SpaceMarine getSpaceMarineById(long id);
@@ -29,5 +30,5 @@ public interface CollectionService {
     void clear(String ownerUsername) throws SQLException;
     boolean addUpdating(Long id);
     boolean removeUpdating(Long id);
-    ArrayList<Long> getUpdatingSpaceMarines();
+    Set<Long> getUpdatingSpaceMarines();
 }

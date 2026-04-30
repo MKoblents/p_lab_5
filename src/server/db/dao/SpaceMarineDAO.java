@@ -94,14 +94,7 @@ public class SpaceMarineDAO {
             chapterId = chapterInsertion(connection, chapter);
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, spaceMarine.getName());
-            preparedStatement.setTimestamp(2, Timestamp.valueOf(spaceMarine.getCreationDate().toLocalDateTime()));
-            preparedStatement.setDouble(3, spaceMarine.getHealth());
-            preparedStatement.setString(4, spaceMarine.getCategory() != null ? spaceMarine.getCategory().name() : null);
-            preparedStatement.setString(5, spaceMarine.getWeaponType() != null ? spaceMarine.getWeaponType().name() : null);
-            preparedStatement.setString(6, spaceMarine.getMeleeWeapon() != null ? spaceMarine.getMeleeWeapon().name() : null);
-            preparedStatement.setLong(7, coordId);
-            preparedStatement.setLong(8, chapterId);
+            setSpaceMarineParametrs(spaceMarine,coordId,chapterId,preparedStatement);
             if (type.equals(RequestType.INSERTION)){
                 preparedStatement.setString(9, (String) ownerInfo.get("name"));
             } else if (type.equals(RequestType.UPDATE)) {
@@ -166,8 +159,7 @@ public class SpaceMarineDAO {
                         " melee_weapon = ?," +
                         " coordinates_id = ?," +
                         " chapter_id = ?," +
-                        " owner_id = ?) " +
-                        " owner = ?";
+                        " owner_id = ? ";
                 try (Connection connection = provider.getConnection()){
                     return sendIURequest(connection, spaceMarine, realOwner,sql,RequestType.UPDATE);
                 }
@@ -178,10 +170,15 @@ public class SpaceMarineDAO {
 
     }
     public boolean deleteSpaceMarine(SpaceMarine spaceMarine, String owner) throws SQLException{
+        Long id = getSpaceMarineId(spaceMarine);
+        return deleteSpaceMarineById(id, owner);
+    }
+    public boolean deleteSpaceMarineById(long id, String owner) throws SQLException{
         String sql = "DELETE FROM Space_marines WHERE id = ? AND owner = (SELECT id FROM users WHERE name = ?)";
         try (Connection connection = provider.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql)){
-            ps.setString(1, owner);
+             PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setLong(1,id);
+            ps.setString(2, owner);
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()){
                 if (keys.next()){
@@ -190,6 +187,36 @@ public class SpaceMarineDAO {
             }
         }
         return false;
+
+    }
+    private Long getSpaceMarineId(SpaceMarine spaceMarine) throws  SQLException{
+        String sql = "select id from Space_marines where name = ? and"+
+                " creation_date = ? and" +
+                " health = ? and" +
+                " astartes_category = ? and" +
+                " weapon = ? and" +
+                " melee_weapon = ? and" +
+                " coordinates_id = ? and" +
+                " chapter_id = ? ";
+        try (Connection connection = provider.getConnection()){
+            long coordId = coordinatesCheck(connection, spaceMarine.getCoordinates());
+            Chapter chapter = spaceMarine.getChapter();
+            Long chapterId = null;
+            if (chapter != null){
+                chapterId = chapterInsertion(connection, chapter);
+            }
+            try (PreparedStatement ps = connection.prepareStatement(sql)){
+                setSpaceMarineParametrs(spaceMarine,coordId,chapterId,ps);
+                try (ResultSet rs = ps.executeQuery()){
+                    if (rs.next()){
+                        return rs.getLong("id");
+                    } return null;
+
+                }
+            }
+
+        }
+
     }
 
     private SpaceMarine mapRow(ResultSet resultSet) throws SQLException {
@@ -217,6 +244,30 @@ public class SpaceMarineDAO {
         return spaceMarine;
 
     }
+
+    public boolean isIdInCollection(long id)  throws SQLException{
+        String sql = "select * from Space_marines where id = ?";
+        try (Connection connection = provider.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setLong(1, id);
+            try (ResultSet rs = ps.executeQuery()){
+                if (rs.next()){
+                    return true;
+                } return false;
+            }
+        }
+    }
+    private void setSpaceMarineParametrs(SpaceMarine spaceMarine, long coordId, Long chapterId,PreparedStatement preparedStatement) throws SQLException{
+        preparedStatement.setString(1, spaceMarine.getName());
+        preparedStatement.setTimestamp(2, Timestamp.valueOf(spaceMarine.getCreationDate().toLocalDateTime()));
+        preparedStatement.setDouble(3, spaceMarine.getHealth());
+        preparedStatement.setString(4, spaceMarine.getCategory() != null ? spaceMarine.getCategory().name() : null);
+        preparedStatement.setString(5, spaceMarine.getWeaponType() != null ? spaceMarine.getWeaponType().name() : null);
+        preparedStatement.setString(6, spaceMarine.getMeleeWeapon() != null ? spaceMarine.getMeleeWeapon().name() : null);
+        preparedStatement.setLong(7, coordId);
+        preparedStatement.setLong(8, chapterId);
+    }
+
     enum RequestType {
         INSERTION,
         UPDATE;

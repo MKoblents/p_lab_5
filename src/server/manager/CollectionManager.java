@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CollectionManager  implements CollectionService{
     @XmlTransient
-    private ArrayList<Long>  updatingSpaceMarines = new ArrayList<>();
+    private Set<Long>  updatingSpaceMarines = new HashSet<>();
 
     /** Collection of SpaceMarine objects. */
     @XmlElement(name = "spaceMarine")
@@ -126,8 +126,8 @@ public class CollectionManager  implements CollectionService{
      * @param spaceMarine the element to remove
      */
     @Override
-    public void remove(SpaceMarine spaceMarine, String owner){
-    spaceMarines.remove(spaceMarine);
+    public boolean remove(SpaceMarine spaceMarine, String owner){
+    return spaceMarines.remove(spaceMarine);
     }
     /**
      * Clears all elements from the collection.
@@ -228,7 +228,7 @@ public class CollectionManager  implements CollectionService{
         return updatingSpaceMarines.remove(id);
     }
     @Override
-    public ArrayList<Long> getUpdatingSpaceMarines() {
+    public Set<Long> getUpdatingSpaceMarines() {
         return updatingSpaceMarines;
     }
 
