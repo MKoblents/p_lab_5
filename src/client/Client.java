@@ -59,7 +59,8 @@ public class Client {
                     clientId,
                     parentClientId,
                     connection,
-                    isRoot
+                    isRoot,
+                    null
             );
             ResponseHandler responseHandler = new ResponseHandler(context);
             ClientProcessManager processManager = new ClientProcessManager(host, port);

@@ -41,7 +41,6 @@ public class Invoker {
                 return new CommandResponse(false, null, "Authentication failed: invalid credentials",
                         request.requestId(), request.clientId());
             }
-//            return executeCommandSafely(commandType, request, validatedUser.get());
         } catch (Exception e) {
             logger.error("Auth error for user {}: {}", userInfo.name(), e.getMessage(), e);
             return new CommandResponse(false, null, "Authentication error",
