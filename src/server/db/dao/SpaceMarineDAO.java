@@ -40,7 +40,7 @@ public class SpaceMarineDAO {
         String sqlMarineInsert = "INSERT INTO collection (name, creation_date, health, astartes_category, weapon, melee_weapon, coordinates_id, chapter_id, owner_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE name = ?))";
         try (Connection connection = provider.getConnection()){
-            return sendIURequest(connection,spaceMarine, (Map<String, Object>) (new HashMap<>()).put("name", ownerName), sqlMarineInsert, RequestType.INSERTION);
+            return sendIURequest(connection,spaceMarine,0, (Map<String, Object>) (new HashMap<>()).put("name", ownerName), sqlMarineInsert, RequestType.INSERTION);
         }
     }
     private long coordinatesCheck(Connection connection, Coordinates coordinates)throws SQLException{
@@ -84,7 +84,7 @@ public class SpaceMarineDAO {
         return chapterId;
 
     }
-    private boolean sendIURequest(Connection connection, SpaceMarine spaceMarine, Map<String, Object> ownerInfo, String sql, RequestType type) throws SQLException {
+    private boolean sendIURequest(Connection connection, SpaceMarine spaceMarine,long spaceMarineId, Map<String, Object> ownerInfo, String sql, RequestType type) throws SQLException {
         connection.setAutoCommit(false);
         connection.setAutoCommit(false);
         long coordId = coordinatesCheck(connection, spaceMarine.getCoordinates());
@@ -98,7 +98,8 @@ public class SpaceMarineDAO {
             if (type.equals(RequestType.INSERTION)){
                 preparedStatement.setString(9, (String) ownerInfo.get("name"));
             } else if (type.equals(RequestType.UPDATE)) {
-                preparedStatement.setLong(9, (Long) ownerInfo.get("id"));
+                preparedStatement.setLong(9, spaceMarineId);
+                preparedStatement.setLong(10, (Long) ownerInfo.get("id"));
             }
             preparedStatement.executeUpdate();
             try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
@@ -159,9 +160,9 @@ public class SpaceMarineDAO {
                         " melee_weapon = ?," +
                         " coordinates_id = ?," +
                         " chapter_id = ?," +
-                        " owner_id = ? ";
+                        " WHERE id = ? AND owner_id = ?";
                 try (Connection connection = provider.getConnection()){
-                    return sendIURequest(connection, spaceMarine, realOwner,sql,RequestType.UPDATE);
+                    return sendIURequest(connection, spaceMarine,id, realOwner,sql,RequestType.UPDATE);
                 }
             }
         }
@@ -179,14 +180,8 @@ public class SpaceMarineDAO {
              PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setLong(1,id);
             ps.setString(2, owner);
-            ps.executeUpdate();
-            try (ResultSet keys = ps.getGeneratedKeys()){
-                if (keys.next()){
-                    return true;
-                }
-            }
+            int affected = ps.executeUpdate(); return affected > 0;
         }
-        return false;
 
     }
     private Long getSpaceMarineId(SpaceMarine spaceMarine) throws  SQLException{
@@ -265,7 +260,16 @@ public class SpaceMarineDAO {
         preparedStatement.setString(5, spaceMarine.getWeaponType() != null ? spaceMarine.getWeaponType().name() : null);
         preparedStatement.setString(6, spaceMarine.getMeleeWeapon() != null ? spaceMarine.getMeleeWeapon().name() : null);
         preparedStatement.setLong(7, coordId);
-        preparedStatement.setLong(8, chapterId);
+        preparedStatement.setObject(8, chapterId);
+    }
+
+    public void clear(String ownerUsername) throws SQLException{
+        String sql = "delete from space_marines where owner = (select id from users where name = ?)";
+        try (Connection connection = provider.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, ownerUsername);
+            ps.executeUpdate();
+        }
     }
 
     enum RequestType {

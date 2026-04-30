@@ -19,7 +19,7 @@ public class CollectionCache implements CollectionService {
     private ZonedDateTime creationData;
     public CollectionCache(SpaceMarineDAO spaceMarineDAO) throws SQLException {
         this.spaceMarineDAO = spaceMarineDAO;
-        this.spaceMarines = (List<SpaceMarine>) Collections.synchronizedCollection(new ArrayList<>(spaceMarineDAO.selectAll()));
+        this.spaceMarines = (List<SpaceMarine>) Collections.synchronizedList(new ArrayList<>(spaceMarineDAO.selectAll()));
         creationData = ZonedDateTime.now();
     }
     @Override
@@ -124,9 +124,7 @@ public class CollectionCache implements CollectionService {
 
     @Override
     public void clear(String ownerUsername) throws SQLException {
-        for (SpaceMarine spaceMarine: spaceMarines){
-            spaceMarineDAO.deleteSpaceMarine(spaceMarine, ownerUsername);
-        }
+        spaceMarineDAO.clear(ownerUsername);
     }
 
     @Override
