@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.client.ConnectedClient;
 import server.commands.*;
+import server.service.AuthService;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.dto.UserInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +17,7 @@ import java.util.Map;
  */
 public class Invoker {
     private static final Logger logger = LoggerFactory.getLogger(Invoker.class);
+    private final AuthService authService;
     /** Registry of available commands by name. */
     private Map<String, Command> commandMap = new HashMap<>();
     private ClientRegistry clientRegistry;
@@ -30,6 +33,21 @@ public class Invoker {
      * Executes the command registered under the given key.
      */
     public CommandResponse runCommand(CommandRequest request) {
+        UserInfo userInfo = request.userInfo();
+        try {
+            var validatedUser = authService.validate(userInfo);
+            if (validatedUser.isEmpty()) {
+                logger.warn("Auth failed for user: {}", userInfo.name());
+                return new CommandResponse(false, null, "Authentication failed: invalid credentials",
+                        request.requestId(), request.clientId());
+            }
+//            return executeCommandSafely(commandType, request, validatedUser.get());
+        } catch (Exception e) {
+            logger.error("Auth error for user {}: {}", userInfo.name(), e.getMessage(), e);
+            return new CommandResponse(false, null, "Authentication error",
+                    request.requestId(), request.clientId());
+        }
+
         String commandType = request.commandType();
         logger.debug("Executing command: {}", commandType);
         Command command = commandMap.get(commandType);
@@ -47,7 +65,8 @@ public class Invoker {
             return new CommandResponse(false, null, "Internal error", request.requestId(), request.clientId());
         }
     }
-    public Invoker(CollectionManager collectionManager, ClientRegistry clientRegistry){
+    public Invoker(CollectionManager collectionManager, ClientRegistry clientRegistry, AuthService authService){
+        this.authService = authService;
         this.clientRegistry = clientRegistry;
         registerCommand("add", new AddCommand(collectionManager));
         registerCommand("clear", new ClearCommand(collectionManager));

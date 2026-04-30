@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 @XmlRootElement(name = "spaceMarines")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CollectionManager {
+public class CollectionManager  implements CollectionService{
     @XmlTransient
     private ArrayList<Long>  updatingSpaceMarines = new ArrayList<>();
 
@@ -38,6 +38,7 @@ public class CollectionManager {
      * @param id the ID to search for
      * @return matching SpaceMarine, or null if not found
      */
+    @Override
     public SpaceMarine getSpaceMarineById(long id) {
         return spaceMarines.stream()
                 .filter(marine -> marine.getId() == id)
@@ -49,7 +50,8 @@ public class CollectionManager {
      * @param spaceMarine the element to add
      * @return true if added successfully
      */
-    public boolean addItem(SpaceMarine spaceMarine){
+    @Override
+    public boolean addItem(SpaceMarine spaceMarine, String owner){
         return this.spaceMarines.add(spaceMarine);
     }
     /**
@@ -57,13 +59,14 @@ public class CollectionManager {
      * @param index insertion position
      * @param spaceMarine the element to insert
      */
-    public void addItem(int index, SpaceMarine spaceMarine){
+    @Override
+    public boolean addItem(int index, SpaceMarine spaceMarine, String owner){
         if (index>spaceMarines.size()){
-            addItem(spaceMarine);
             System.err.println("Your index was out of range, so element added to the end of collection.");
-            return;
+            return  addItem(spaceMarine, owner);
         }
         this.spaceMarines.add(index, spaceMarine);
+        return true;
     }
     /**
      * Loads collection from XML file with validation.
@@ -96,6 +99,7 @@ public class CollectionManager {
      * Gets the collection creation timestamp.
      * @return creation date
      */
+    @Override
     public ZonedDateTime getCreationData() {
         return creationData;
     }
@@ -103,8 +107,9 @@ public class CollectionManager {
      * Removes SpaceMarine by ID.
      * @param id the ID to remove
      */
-    public void remove(long id){
-        spaceMarines.removeIf(spaceMarine -> spaceMarine.getId() == id);
+    @Override
+    public boolean remove(long id, String owner){
+        return spaceMarines.removeIf(spaceMarine -> spaceMarine.getId() == id);
     }
     /**
      * Filters marines with melee weapon less than specified.
@@ -120,18 +125,21 @@ public class CollectionManager {
      * Removes specific SpaceMarine instance from collection.
      * @param spaceMarine the element to remove
      */
-    public void remove(SpaceMarine spaceMarine){
+    @Override
+    public void remove(SpaceMarine spaceMarine, String owner){
     spaceMarines.remove(spaceMarine);
     }
     /**
      * Clears all elements from the collection.
      */
-    public void clear(){
+    @Override
+    public void clear(String owner){
         spaceMarines.clear();
     }
     /**
      * Randomly shuffles the collection order.
      */
+    @Override
     public void shuffle(){
         Collections.shuffle(spaceMarines);
     }
@@ -139,6 +147,7 @@ public class CollectionManager {
      * Calculates sum of all health values (null treated as 0).
      * @return total health sum
      */
+    @Override
     public double getSumOfHealth() {
         return spaceMarines.stream()
                 .mapToDouble(SpaceMarine::getHealth)
@@ -148,6 +157,7 @@ public class CollectionManager {
      * Finds SpaceMarine with minimum melee weapon value.
      * @return marine with min weapon, or null if collection empty
      */
+    @Override
     public SpaceMarine getMinByMeleeWeapon() {
         if (spaceMarines.isEmpty()) {
             return null;
@@ -161,34 +171,40 @@ public class CollectionManager {
      * @param spaceMarineOld element to replace
      * @param spaceMarineNew replacement element
      */
-    public void replace(SpaceMarine spaceMarineOld, SpaceMarine spaceMarineNew){
+    private boolean replace(SpaceMarine spaceMarineOld, SpaceMarine spaceMarineNew){
         int index = spaceMarines.indexOf(spaceMarineOld);
         if (index==-1){
-            return;
+            return false;
         }
         spaceMarines.set(index, spaceMarineNew);
+        return true;
     }
     /**
      * Removes all elements greater than specified (by health comparison).
      * @param spaceMarine the threshold element
      */
-    public void removeGreater(SpaceMarine spaceMarine) {
+    @Override
+    public boolean removeGreater(SpaceMarine spaceMarine, String owner) {
         ArrayList<SpaceMarine> haveToBeRemoved = new ArrayList<>();
         for (SpaceMarine spaceMarineR:spaceMarines){
             if (spaceMarine.compareTo(spaceMarineR)<0){
                 haveToBeRemoved.add(spaceMarineR);
             }
-        }for (SpaceMarine spaceMarineR: haveToBeRemoved){
-            spaceMarines.remove(spaceMarineR);
-        }
+        } if(haveToBeRemoved.isEmpty()){
+            return false;}
+        for (SpaceMarine spaceMarineR: haveToBeRemoved){
+                spaceMarines.remove(spaceMarineR);
+        } return true;
     }
     /**
      * Returns current collection size.
      * @return number of elements
      */
+    @Override
     public int size() {
         return spaceMarines.size();
     }
+    @Override
     public boolean isIdInCollection(long id){
         for (SpaceMarine spaceMarine: spaceMarines){
             if (spaceMarine.getId() == id){
@@ -196,21 +212,28 @@ public class CollectionManager {
             }
         }return false;
     }
-
-    public void update(Long id, SpaceMarine spaceMarineInput) {
+    @Override
+    public boolean update(long id, SpaceMarine spaceMarineInput, String owner) {
         spaceMarineInput.setId(id);
         SpaceMarine spaceMarine = getSpaceMarineById(id);
-        replace(spaceMarine, spaceMarineInput);
+        return replace(spaceMarine, spaceMarineInput);
 //        TODO normal update
     }
+    @Override
     public boolean addUpdating(Long id){
         return updatingSpaceMarines.add(id);
     }
+    @Override
     public boolean removeUpdating(Long id){
         return updatingSpaceMarines.remove(id);
     }
-
+    @Override
     public ArrayList<Long> getUpdatingSpaceMarines() {
         return updatingSpaceMarines;
+    }
+
+    @Override
+    public List<SpaceMarine> getAll() {
+        return spaceMarines;
     }
 }
