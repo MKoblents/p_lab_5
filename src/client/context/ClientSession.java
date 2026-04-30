@@ -88,7 +88,8 @@ public class ClientSession implements AutoCloseable {
                         CommandRequest.CMD_HEARTBEAT,
                         null,
                         UUID.randomUUID().toString().substring(0, 8),
-                        context.getClientId());
+                        context.getClientId(),
+                        context.getUserInfo());
                 connection.sendRequest(request);
                 logger.trace("Heartbeat sent for client: {}", context.getClientId());
             } catch (IOException | RuntimeException e) {
@@ -97,6 +98,8 @@ public class ClientSession implements AutoCloseable {
         };
         heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask, 0, 5, TimeUnit.SECONDS);
         logger.debug("Heartbeat scheduler started for client: {}", context.getClientId());
+        System.out.println("You should log in to execute any command. In any time you can relogin to another user using command 'log_in'.");
+        invoker.runCommand("log_in");
 
         while (running) {
             if (context.isAwaitingForwardedInput()) {

@@ -1,6 +1,7 @@
 package client.context;
 
 import client.network.ConnectionManager;
+import shared.dto.UserInfo;
 
 import java.time.Instant;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ClientContext {
     private final String clientId;
     private final String parentClientId;
+    private final UserInfo userInfo;
     private final ConnectionManager connection;
     private final Instant createdAt;
     private final boolean isRoot;
@@ -19,13 +21,14 @@ public class ClientContext {
     public ClientContext(String clientId,
                          String parentClientId,
                          ConnectionManager connection,
-                         boolean isRoot) {
+                         boolean isRoot, UserInfo userInfo) {
         this.clientId = clientId;
         this.parentClientId = parentClientId;
         this.connection = connection;
         this.createdAt = Instant.now();
         this.isRoot = isRoot;
         this.active = true;
+        this.userInfo = userInfo;
     }
     public String getClientId() {
         return clientId;
@@ -91,5 +94,9 @@ public class ClientContext {
 
     public void setAwaitingForwardedInput(boolean awaitingForwardedInput) {
         this.awaitingForwardedInput = awaitingForwardedInput;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 }

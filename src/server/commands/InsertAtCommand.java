@@ -1,17 +1,18 @@
 package server.commands;
 
-import server.manager.CollectionManager;
+import server.manager.CollectionService;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public class InsertAtCommand implements Command{
-    private CollectionManager collectionManager;
+    private CollectionService collectionService;
     private String helpInformation = "insert_at index {element} : добавить новый элемент в заданную позицию";
-    public InsertAtCommand(CollectionManager collectionManager){
-        this.collectionManager = collectionManager;
+    public InsertAtCommand(CollectionService collectionService){
+        this.collectionService = collectionService;
     }
 
     @Override
@@ -30,23 +31,28 @@ public class InsertAtCommand implements Command{
         Map<String, Object> args = (Map<String, Object>) data;
         if (!args.containsKey("index") || !args.containsKey("marine")) {
             return new CommandResponse(false, null,
-                    "Error: Insert at requires both 'id' and 'marine' arguments", commandRequest.requestId(), commandRequest.clientId());
+                    "Error: Insert at requires both 'index' and 'marine' arguments", commandRequest.requestId(), commandRequest.clientId());
         }
         int index = (int) args.get("index");
         if (index < 0) {
             return new CommandResponse(false, null,
-                    "Error: Valid ID required for insert at", commandRequest.requestId(), commandRequest.clientId());
+                    "Error: Valid index required for insert at", commandRequest.requestId(), commandRequest.clientId());
         }
         SpaceMarine spaceMarineInput = (SpaceMarine) args.get("marine");
         if (spaceMarineInput == null) {
             return new CommandResponse(false, null,
                     "Error: Invalid SpaceMarine data", commandRequest.requestId(), commandRequest.clientId());
         }
-        collectionManager.addItem(index, spaceMarineInput);
-        return new CommandResponse(true,
-                spaceMarineInput.toString(),
-                "SpaceMarine with ID " + index + " inserted successfully", commandRequest.requestId(), commandRequest.clientId()
-                );
+        try {
+            collectionService.addItem(index, spaceMarineInput, commandRequest.userInfo().name());
+            return new CommandResponse(true,
+                    spaceMarineInput.toString(),
+                    "SpaceMarine with " + index + " inserted successfully", commandRequest.requestId(), commandRequest.clientId()
+            );
+        } catch (SQLException e){
+            return new CommandResponse(false,spaceMarineInput,"SpaceMarine addition failed because of db access" + e.getMessage(), commandRequest.requestId(),commandRequest.clientId());
+
+        }
 
     }
 }

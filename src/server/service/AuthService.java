@@ -1,6 +1,7 @@
 package server.service;
 
 import server.db.dao.UserDAO;
+import shared.dto.UserInfo;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -19,7 +20,9 @@ public class AuthService {
         userDAO.register(user, hashPassword);
 
     }
-    public Optional<String> validate(String user, String password) throws SQLException {
+    public Optional<String> validate(UserInfo userInfo) throws SQLException {
+        String user = userInfo.name();
+        String password = userInfo.password();
         String storedPassword = userDAO.getHashPassword(user);
         if (storedPassword == null){
             return Optional.empty();

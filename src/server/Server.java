@@ -5,11 +5,15 @@ import server.config.ServerConfig;
 import server.console.ConsoleHandler;
 import server.db.DbInitializer;
 import server.db.config.DbConfig;
+import server.db.dao.SpaceMarineDAO;
+import server.db.dao.UserDAO;
 import server.io.NonBlockingConsoleReader;
 import server.manager.ClientRegistry;
+import server.manager.CollectionCache;
 import server.manager.CollectionManager;
 import server.manager.Invoker;
 import server.outputWorkers.CollectionSaver;
+import server.service.AuthService;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.dto.ForwardCommandObject;
@@ -77,11 +81,14 @@ public class Server {
             ServerConfig config = ServerConfig.parse(args);
             LoggingConfigurator.configure(config.getLogLevel());
             logger.info("=== Single-Threaded NIO Server Starting ===");
-
+            UserDAO userDAO = new UserDAO(dbProvider);
+            SpaceMarineDAO spaceMarineDAO = new SpaceMarineDAO(dbProvider);
+            AuthService authService = new AuthService(userDAO);
+            CollectionCache collectionCache = new CollectionCache(spaceMarineDAO);
             CollectionManager collectionManager = new CollectionManager();
             CollectionSaver collectionSaver = new CollectionSaver();
             clientRegistry = new ClientRegistry();
-            invoker = new Invoker(collectionManager, clientRegistry);
+            invoker = new Invoker(collectionCache, clientRegistry, authService);
             consoleHandler = new ConsoleHandler(collectionManager, collectionSaver, config.getFile(), running, clientRegistry);
 
             try { collectionManager.loadFromFile(config.getFile()); }

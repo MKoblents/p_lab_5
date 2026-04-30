@@ -1,6 +1,6 @@
 package server.commands;
 
-import server.manager.CollectionManager;
+import server.manager.CollectionService;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 public class ShowCommand implements Command{
     private String helpInformation = "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении";
-    private CollectionManager collectionManager;
-    public ShowCommand(CollectionManager collectionManager){
-        this.collectionManager=collectionManager;
+    private CollectionService collectionService;
+    public ShowCommand(CollectionService collectionService){
+        this.collectionService=collectionService;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ShowCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        List<SpaceMarine> sortedMarines = collectionManager.getSpaceMarines().stream()
+        List<SpaceMarine> sortedMarines = collectionService.getSpaceMarines().stream()
                 .sorted(Comparator.comparing(SpaceMarine::getName))
                 .collect(Collectors.toList());
         return new CommandResponse(
