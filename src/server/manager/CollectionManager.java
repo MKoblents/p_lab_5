@@ -88,13 +88,7 @@ public class CollectionManager  implements CollectionService{
     public void sort(){
         Collections.sort(spaceMarines);
     }
-    /**
-     * Returns the collection (note: mutable reference).
-     * @return list of SpaceMarine objects
-     */
-    public ArrayList<SpaceMarine> getSpaceMarines() {
-        return spaceMarines;
-    }
+
     /**
      * Gets the collection creation timestamp.
      * @return creation date
@@ -233,7 +227,7 @@ public class CollectionManager  implements CollectionService{
     }
 
     @Override
-    public List<SpaceMarine> getAll() {
+    public List<SpaceMarine> getSpaceMarines() {
         return spaceMarines;
     }
 }

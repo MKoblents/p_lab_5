@@ -1,20 +1,21 @@
 package server.commands;
 
-import server.manager.CollectionManager;
+import server.manager.CollectionService;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public class UpdateCommand implements Command {
     private static final String HELP_INFO =
             "update id {element} : обновить значение элемента коллекции, id которого равен заданному";
 
-    private final CollectionManager collectionManager;
+    private final CollectionService collectionService;
 
-    public UpdateCommand(CollectionManager collectionManager) {
-        this.collectionManager = collectionManager;
+    public UpdateCommand(CollectionService collectionService) {
+        this.collectionService = collectionService;
     }
 
     @Override
@@ -40,23 +41,27 @@ public class UpdateCommand implements Command {
             return new CommandResponse(false, null,
                     "Error: Valid ID required for update", commandRequest.requestId(), commandRequest.clientId());
         }
-        if (!collectionManager.isIdInCollection(id)) {
-            return new CommandResponse(false,  null,
-                    "Error: No element found with ID " + id, commandRequest.requestId(), commandRequest.clientId());
+        try {
+            if (!collectionService.isIdInCollection(id)) {
+                return new CommandResponse(false,  null,
+                        "Error: No element found with ID " + id, commandRequest.requestId(), commandRequest.clientId());
+            }
+            SpaceMarine spaceMarineInput = (SpaceMarine) args.get("marine");
+            if (spaceMarineInput == null) {
+                return new CommandResponse(false, null,
+                        "Error: Invalid SpaceMarine data", commandRequest.requestId(), commandRequest.clientId());
+            }
+            spaceMarineInput.setId(id);
+            collectionService.update(id, spaceMarineInput, commandRequest.userInfo().name());
+            collectionService.removeUpdating(id);
+            return new CommandResponse(true,
+                    spaceMarineInput,
+                    "SpaceMarine with ID " + id + " updated successfully",
+                    commandRequest.requestId(), commandRequest.clientId()
+            );
+        }catch (SQLException e){
+            return new CommandResponse(false,(SpaceMarine) args.get("marine"),"SpaceMarine updating failed because of db access "+e.getMessage(), commandRequest.requestId(),commandRequest.clientId());
         }
-        SpaceMarine spaceMarineInput = (SpaceMarine) args.get("marine");
-        if (spaceMarineInput == null) {
-            return new CommandResponse(false, null,
-                    "Error: Invalid SpaceMarine data", commandRequest.requestId(), commandRequest.clientId());
-        }
-        spaceMarineInput.setId(id);
-        collectionManager.update(id, spaceMarineInput);
-        collectionManager.removeUpdating(id);
-        return new CommandResponse(true,
-                spaceMarineInput,
-                "SpaceMarine with ID " + id + " updated successfully",
-                commandRequest.requestId(), commandRequest.clientId()
-                );
 
     }
 }

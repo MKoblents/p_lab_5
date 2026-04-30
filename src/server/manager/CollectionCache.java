@@ -23,7 +23,7 @@ public class CollectionCache implements CollectionService {
         creationData = ZonedDateTime.now();
     }
     @Override
-    public List<SpaceMarine> getAll(){
+    public List<SpaceMarine> getSpaceMarines(){
         return List.copyOf(spaceMarines);
     }
     @Override
@@ -154,9 +154,6 @@ public class CollectionCache implements CollectionService {
                 .orElse(null);
     }
 
-    public List<SpaceMarine> getSpaceMarines() {
-        return spaceMarines;
-    }
 
     @Override
     public Set<Long> getUpdatingSpaceMarines() {

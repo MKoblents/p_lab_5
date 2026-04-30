@@ -4,13 +4,12 @@ import shared.enums.MeleeWeapon;
 import shared.models.SpaceMarine;
 import java.sql.SQLException;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public interface CollectionService {
 
-    List<SpaceMarine> getAll();
+    List<SpaceMarine> getSpaceMarines();
     double getSumOfHealth();
     SpaceMarine getMinByMeleeWeapon();
     ZonedDateTime getCreationData();
