@@ -37,8 +37,8 @@ public class SpaceMarineDAO {
         return res;
     }
     public boolean insertSpaceMarine(SpaceMarine spaceMarine, String ownerName)throws SQLException{
-        String sqlMarineInsert = "INSERT INTO collection (name, creation_date, health, astartes_category, weapon, melee_weapon, coordinates_id, chapter_id, owner_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE name = ?))";
+        String sqlMarineInsert = "INSERT INTO space_marines (name, creation_date, health, astartes_category, weapon, melee_weapon, coordinates, chapter, owner) " +
+                "VALUES (?, ?, ?, CAST(? AS astartes_category), CAST(? AS weapon), CAST(? AS melee_weapon), ?, ?, (SELECT id FROM users WHERE name = ?))";
         Map<String, Object> ownerInfo = new HashMap<>();
         ownerInfo.put("name", ownerName);
         try (Connection connection = provider.getConnection()){
@@ -55,17 +55,17 @@ public class SpaceMarineDAO {
             try (ResultSet rs = psCheck.executeQuery()) {
                 if (rs.next()) {
                     coordId = rs.getLong("id");
-                } else {
-                    try (PreparedStatement psInsert = connection.prepareStatement(sqlCoordsInsert, Statement.RETURN_GENERATED_KEYS)) {
-                        psInsert.setLong(1, coordinates.getX());
-                        psInsert.setLong(2, coordinates.getY());
-                        psInsert.executeUpdate();
-                        try (ResultSet keys = psInsert.getGeneratedKeys()) {
-                            if (keys.next()) {
-                                coordId = keys.getLong(1);
-                            } else throw new SQLException("Failed to retrieve chapter ID");
-                        }
-                    }
+                    return coordId;
+                }
+            }
+            try (PreparedStatement psInsert = connection.prepareStatement(sqlCoordsInsert, Statement.RETURN_GENERATED_KEYS)) {
+                psInsert.setLong(1, coordinates.getX());
+                psInsert.setLong(2, coordinates.getY());
+                psInsert.executeUpdate();
+                try (ResultSet keys = psInsert.getGeneratedKeys()) {
+                    if (keys.next()) {
+                        coordId = keys.getLong(1);
+                    } else throw new SQLException("Failed to retrieve chapter ID");
                 }
             }
         } return coordId;
@@ -113,6 +113,7 @@ public class SpaceMarineDAO {
             }
         } catch (SQLException e) {
             connection.rollback();
+            throw e;
         } finally {
             connection.setAutoCommit(true);
         }
@@ -141,7 +142,7 @@ public class SpaceMarineDAO {
                 if (rs.next()){
                     Map<String, Object> mapa = new HashMap<>();
                     mapa.put("id", rs.getLong("id"));
-                    mapa.put("name", rs.getString("owner"));
+                    mapa.put("name", rs.getString("name"));
                     return mapa;
                 }
             }
@@ -154,15 +155,15 @@ public class SpaceMarineDAO {
         if (realOwner!= null && !realOwner.isEmpty()){
             if (realOwner.get("name").equals(owner)){
                 Long ownerId = getOwnerId(id);
-                String sql = "update  collection  set name = ?," +
+                String sql = "update  space_marines  set name = ?," +
                         " creation_date = ?," +
                         " health = ?," +
-                        " astartes_category = ?," +
-                        " weapon = ?," +
-                        " melee_weapon = ?," +
-                        " coordinates_id = ?," +
-                        " chapter_id = ?," +
-                        " WHERE id = ? AND owner_id = ?";
+                        " astartes_category = CAST(? AS astartes_category)," +
+                        " weapon = CAST(? AS weapon)," +
+                        " melee_weapon = CAST(? AS melee_weapon)," +
+                        " coordinates = ?," +
+                        " chapter = ?" +
+                        " WHERE id = ? AND owner = ?";
                 try (Connection connection = provider.getConnection()){
                     return sendIURequest(connection, spaceMarine,id, realOwner,sql,RequestType.UPDATE);
                 }
@@ -193,8 +194,8 @@ public class SpaceMarineDAO {
                 " astartes_category = ? and" +
                 " weapon = ? and" +
                 " melee_weapon = ? and" +
-                " coordinates_id = ? and" +
-                " chapter_id = ? ";
+                " coordinates = ? and" +
+                " chapter = ? ";
         try (Connection connection = provider.getConnection()){
             long coordId = coordinatesCheck(connection, spaceMarine.getCoordinates());
             Chapter chapter = spaceMarine.getChapter();
@@ -234,7 +235,7 @@ public class SpaceMarineDAO {
         coords.setY(resultSet.getLong("y"));
         spaceMarine.setCoordinates(coords);
         Chapter chapter = new Chapter();
-        chapter.setName(resultSet.getString("ch_name"));
+        chapter.setName(resultSet.getString("name"));
         chapter.setParentLegion(resultSet.getString("parent_legion"));
         chapter.setWorld(resultSet.getString("world"));
         spaceMarine.setChapter(chapter);

@@ -17,7 +17,15 @@ public class AuthService {
     }
     public void register(String user, String password) throws SQLException {
         String hashPassword =  Base64.getEncoder().encodeToString(hashPassword(password));
-        userDAO.register(user, hashPassword);
+        try {
+            userDAO.register(user, hashPassword);
+        } catch (SQLException e) {
+            // SQLState 23505 = unique_violation в PostgreSQL
+            if ("23505".equals(e.getSQLState())) {
+                throw new SQLException("Registration failed: username '" + user + "' is already taken. Please choose another.");
+            }
+            throw e;
+        }
 
     }
     public Optional<String> validate(UserInfo userInfo) throws SQLException {
