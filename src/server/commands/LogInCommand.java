@@ -8,6 +8,7 @@ import shared.dto.CommandResponse;
 import shared.dto.UserInfo;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class LogInCommand implements Command{
     private final AuthService authService;
@@ -16,15 +17,25 @@ public class LogInCommand implements Command{
     }
     @Override
     public String getHelpInformation() {
-        return "";
+        return "log_in <username> <password> : войти в систему";
     }
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
         UserInfo userInfo = (UserInfo)commandRequest.args();
+        if (userInfo == null || userInfo.name() == null || userInfo.password() == null) {
+            return new CommandResponse(false, null, "Log in failed: credentials missing", commandRequest.requestId(), commandRequest.clientId());
+        }
         try {
-            authService.register(userInfo.name(), userInfo.password());
-            return new CommandResponse(true,userInfo,"Log in  success", commandRequest.requestId(),commandRequest.clientId());
+            Optional<String> validUser = authService.validate(userInfo);
+            if (validUser.isPresent()) {
+                return new CommandResponse(true, userInfo, "Log in success", commandRequest.requestId(), commandRequest.clientId());
+            } else {
+//                return new CommandResponse(false, null, "Log in failed: invalid username or password", commandRequest.requestId(), commandRequest.clientId());
+//                TODO sign_in
+                authService.register(userInfo.name(), userInfo.password());
+                return new CommandResponse(true,userInfo,"Log in  success", commandRequest.requestId(),commandRequest.clientId());
+            }
         } catch (SQLException e){
             return new CommandResponse(false,userInfo,"Log in failed because of db access "+e.getMessage(), commandRequest.requestId(),commandRequest.clientId());
 
