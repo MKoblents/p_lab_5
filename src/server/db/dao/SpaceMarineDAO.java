@@ -39,8 +39,10 @@ public class SpaceMarineDAO {
     public boolean insertSpaceMarine(SpaceMarine spaceMarine, String ownerName)throws SQLException{
         String sqlMarineInsert = "INSERT INTO collection (name, creation_date, health, astartes_category, weapon, melee_weapon, coordinates_id, chapter_id, owner_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE name = ?))";
+        Map<String, Object> ownerInfo = new HashMap<>();
+        ownerInfo.put("name", ownerName);
         try (Connection connection = provider.getConnection()){
-            return sendIURequest(connection,spaceMarine,0, (Map<String, Object>) (new HashMap<>()).put("name", ownerName), sqlMarineInsert, RequestType.INSERTION);
+            return sendIURequest(connection,spaceMarine,0, ownerInfo, sqlMarineInsert, RequestType.INSERTION);
         }
     }
     private long coordinatesCheck(Connection connection, Coordinates coordinates)throws SQLException{
@@ -54,7 +56,7 @@ public class SpaceMarineDAO {
                 if (rs.next()) {
                     coordId = rs.getLong("id");
                 } else {
-                    try (PreparedStatement psInsert = connection.prepareStatement(sqlCoordsInsert)) {
+                    try (PreparedStatement psInsert = connection.prepareStatement(sqlCoordsInsert, Statement.RETURN_GENERATED_KEYS)) {
                         psInsert.setLong(1, coordinates.getX());
                         psInsert.setLong(2, coordinates.getY());
                         psInsert.executeUpdate();
@@ -71,7 +73,7 @@ public class SpaceMarineDAO {
     private long chapterInsertion(Connection connection, Chapter chapter) throws SQLException{
         String sqlChapterInsert = "INSERT INTO Chapters (name, parent_legion, world) VALUES (?, ?, ?)";
         long chapterId;
-        try (PreparedStatement ps = connection.prepareStatement(sqlChapterInsert)){
+        try (PreparedStatement ps = connection.prepareStatement(sqlChapterInsert, Statement.RETURN_GENERATED_KEYS)){
             ps.setString(1, chapter.getName());
             ps.setString(2, chapter.getParentLegion());
             ps.setString(3, chapter.getWorld());
@@ -93,7 +95,7 @@ public class SpaceMarineDAO {
         if (chapter != null){
             chapterId = chapterInsertion(connection, chapter);
         }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             setSpaceMarineParametrs(spaceMarine,coordId,chapterId,preparedStatement);
             if (type.equals(RequestType.INSERTION)){
                 preparedStatement.setString(9, (String) ownerInfo.get("name"));
