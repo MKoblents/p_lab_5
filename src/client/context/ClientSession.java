@@ -198,7 +198,7 @@ public class ClientSession implements AutoCloseable {
                         continue;
                     }
                 }
-                handleLoginResponse(response);
+                handleResponse(response);
             }
             CommandRequest forwarded = networkReader.getForwardQueue().poll();
             if (forwarded != null) {

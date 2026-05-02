@@ -33,7 +33,12 @@ public class LogInCommand implements Command{
             } else {
 //                return new CommandResponse(false, null, "Log in failed: invalid username or password", commandRequest.requestId(), commandRequest.clientId());
 //                TODO sign_in
-                authService.register(userInfo.name(), userInfo.password());
+                UserInfo ui = commandRequest.userInfo();
+                String parentName = null;
+                if (ui != null && ui.name() != null){
+                    parentName = ui.name();
+                }
+                authService.register(userInfo.name(), userInfo.password(), parentName);
                 return new CommandResponse(true,userInfo,"Log in  success", commandRequest.requestId(),commandRequest.clientId());
             }
         } catch (SQLException e){

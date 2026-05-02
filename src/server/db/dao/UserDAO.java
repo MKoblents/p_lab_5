@@ -12,12 +12,13 @@ public class UserDAO {
     public UserDAO(DbProvider provider){
         this.provider = provider;
     }
-    public void register(String user, String password) throws SQLException {
-        String sql = "insert into Users (name, password) values (?,?);";
+    public void register(String user, String password, String parentName) throws SQLException {
+        String sql = "insert into Users (name, password, parent) values (?,?, (select id from users where name = ?));";
         try (Connection connection = provider.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, user);
             preparedStatement.setString(2, password);
+            preparedStatement.setObject(3, parentName);
             preparedStatement.executeUpdate();
         }
     }
