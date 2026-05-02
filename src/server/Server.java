@@ -83,7 +83,7 @@ public class Server {
             DbConfig dbConfig = DbConfig.loadFromProperties(dbConfigPath);
             DbProvider dbProvider = new HikariDbProvider(dbConfig);
             DbInitializer dbInitializer = new DbInitializer(dbProvider);
-            dbInitializer.start();
+            dbInitializer.start(Path.of("./sql/"));
 
             ServerConfig config = ServerConfig.parse(args);
             LoggingConfigurator.configure(config.getLogLevel());
