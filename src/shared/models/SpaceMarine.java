@@ -56,8 +56,10 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
     private MeleeWeapon meleeWeapon; //Поле не может быть null
     @XmlElement
     private Chapter chapter; //Поле может быть null
+    @XmlElement
+    private long owner;
     public SpaceMarine(){
-        this.id = generateId(this);
+//        this.id = generateId(this);
     }
     /**
      * Compares this Space Marine to another by health value.
@@ -88,7 +90,7 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
         this.name = name;
         this.coordinates = coordinates;
         this.meleeWeapon=meleeWeapon;
-        this.id = generateId(this);
+//        this.id = generateId(this);
     }
     /**
      * Generates unique ID for new elements.
@@ -110,7 +112,8 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
                 "\n   Health: "+this.health+
                 "\n   Coordinates: " + this.coordinates +
                 "\n   MeleeWeapon: "+this.meleeWeapon+
-                "\n   Chapter: "+ this.chapter                ;
+                "\n   Chapter: "+ this.chapter  +
+                "\n   Owner: "+ this.owner;
     }
 
     public long getId() {
@@ -212,4 +215,7 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
         return creationDate;
     }
 
+    public void setOwner(long owner) {
+        this.owner = owner;
+    }
 }

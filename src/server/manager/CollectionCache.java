@@ -125,6 +125,7 @@ public class CollectionCache implements CollectionService {
     @Override
     public void clear(String ownerUsername) throws SQLException {
         spaceMarineDAO.clear(ownerUsername);
+        spaceMarines.removeAll(spaceMarines);
     }
 
     @Override

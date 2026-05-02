@@ -40,15 +40,6 @@ public class LogIn implements ClientCommand {
                 System.err.println("Error: Could not communicate with server. Please check your connection.");
                 return null;
             }
-            CommandResponse response = connection.readResponse();
-            if (response == null) {
-                logger.warn("No response received for log_in");
-                return null;
-            }
-            if (response.success()){
-                context.setUserInfo(userInfo);
-                return null;
-            }
         }catch (IOException e){
             return null;
         }

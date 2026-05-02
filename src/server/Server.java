@@ -10,7 +10,6 @@ import server.db.dao.UserDAO;
 import server.io.NonBlockingConsoleReader;
 import server.manager.ClientRegistry;
 import server.manager.CollectionCache;
-import server.manager.CollectionManager;
 import server.manager.Invoker;
 import server.outputWorkers.CollectionSaver;
 import server.service.AuthService;
@@ -40,6 +39,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
@@ -47,6 +50,10 @@ public class Server {
     private static final AtomicBoolean running = new AtomicBoolean(true);
     private static final long HEARTBEAT_TIMEOUT_MS = 30_000L;
     private static final long SELECT_TIMEOUT_MS = 1_000L;
+
+    private static ExecutorService readParsePool = new ForkJoinPool();
+    private static ExecutorService commandPool = new ForkJoinPool();
+    private static ExecutorService writePool = Executors.newCachedThreadPool();
 
     private static Selector selector;
     private static ClientRegistry clientRegistry;
@@ -85,14 +92,11 @@ public class Server {
             SpaceMarineDAO spaceMarineDAO = new SpaceMarineDAO(dbProvider);
             AuthService authService = new AuthService(userDAO);
             CollectionCache collectionCache = new CollectionCache(spaceMarineDAO);
-            CollectionManager collectionManager = new CollectionManager();
             CollectionSaver collectionSaver = new CollectionSaver();
             clientRegistry = new ClientRegistry();
             invoker = new Invoker(collectionCache, clientRegistry, authService);
-            consoleHandler = new ConsoleHandler(collectionManager, collectionSaver, config.getFile(), running, clientRegistry);
+            consoleHandler = new ConsoleHandler(collectionCache, collectionSaver, config.getFile(), running, clientRegistry);
 
-            try { collectionManager.loadFromFile(config.getFile()); }
-            catch (Exception e) { logger.error("Failed to load collection, starting empty: {}", e.getMessage()); }
             NonBlockingConsoleReader consoleReader = new NonBlockingConsoleReader();
 //            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 //                try {
@@ -118,6 +122,17 @@ public class Server {
             ssc.bind(new InetSocketAddress(config.getPort()));
             ssc.register(selector, SelectionKey.OP_ACCEPT);
             logger.info("Server listening on port {}", config.getPort());
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                logger.info("Shutting down thread pools...");
+                readParsePool.shutdown(); commandPool.shutdown(); writePool.shutdown();
+                try {
+                    readParsePool.awaitTermination(5, TimeUnit.SECONDS);
+                    commandPool.awaitTermination(5, TimeUnit.SECONDS);
+                    writePool.awaitTermination(5, TimeUnit.SECONDS);
+                } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                logger.info("All pools terminated.");
+            }));
 
             while (running.get()) {
                 try {
@@ -152,7 +167,7 @@ public class Server {
             Instant now = Instant.now();
             for (SelectionKey key : selector.keys()) {
                 if (!key.isValid() || !(key.attachment() instanceof ClientConnection conn)) continue;
-                if (Duration.between(conn.lastHeartbeat, now).toMillis() > HEARTBEAT_TIMEOUT_MS) {
+                if (conn.clientId != null && Duration.between(conn.lastHeartbeat, now).toMillis() > HEARTBEAT_TIMEOUT_MS) {
                     logger.warn("Client {} timed out", conn.clientId != null ? conn.clientId : "UNKNOWN");
                     cascadeDisconnect(conn.clientId, "TIMEOUT");
                 }
@@ -196,58 +211,99 @@ public class Server {
 
     private static void handleRead(SelectionKey key) throws IOException {
         ClientConnection conn = (ClientConnection) key.attachment();
-        SocketChannel sc = conn.channel;
+        if (!key.isValid()) return;
+        int ops = key.interestOps();
+        key.interestOps(ops & ~SelectionKey.OP_READ);
+        readParsePool.submit(()-> {
+            try {
+                SocketChannel sc = conn.channel;
+                if (conn.state == ConnectionState.READ_LENGTH) {
+                    if (!readUntilFull(sc, conn.lengthBuffer)) return;
+                    conn.lengthBuffer.flip();
+                    conn.expectedLength = conn.lengthBuffer.getInt();
+                    conn.payloadBuffer = ByteBuffer.allocate(conn.expectedLength);
+                    conn.lengthBuffer.clear();
+                    synchronized (conn) {
+                        conn.state = ConnectionState.READ_PAYLOAD;
+                    }
+                }
 
-        if (conn.state == ConnectionState.READ_LENGTH) {
-            if (!readUntilFull(sc, conn.lengthBuffer)) return;
-            conn.lengthBuffer.flip();
-            conn.expectedLength = conn.lengthBuffer.getInt();
-            conn.payloadBuffer = ByteBuffer.allocate(conn.expectedLength);
-            conn.lengthBuffer.clear();
-            conn.state = ConnectionState.READ_PAYLOAD;
-        }
-
-        if (conn.state == ConnectionState.READ_PAYLOAD) {
-            if (!readUntilFull(sc, conn.payloadBuffer)) return;
-            conn.payloadBuffer.flip();
-            byte[] data = new byte[conn.expectedLength];
-            conn.payloadBuffer.get(data);
-            conn.payloadBuffer.clear();
-            conn.expectedLength = -1;
-            conn.state = ConnectionState.READ_LENGTH;
-            processMessage(conn, data, key);
-        }
+                if (conn.state == ConnectionState.READ_PAYLOAD) {
+                    if (!readUntilFull(sc, conn.payloadBuffer)) return;
+                    conn.payloadBuffer.flip();
+                    byte[] data = new byte[conn.expectedLength];
+                    conn.payloadBuffer.get(data);
+                    conn.payloadBuffer.clear();
+                    conn.expectedLength = -1;
+                    synchronized (conn) {
+                        conn.state = ConnectionState.READ_LENGTH;
+                    }
+                    processMessage(conn, data, key);
+                }
+            }catch (EOFException e) {
+                String cid = conn.clientId != null ? conn.clientId : "UNKNOWN";
+                logger.info("Client {} disconnected gracefully (EOF)", cid);
+                cascadeDisconnect(cid, DisconnectReason.USER_REQUEST.name());
+            } catch (Exception e) {
+                logger.error("Read/Parse failed for {}: {}", conn.clientId, e.getMessage());
+                cascadeDisconnect(conn.clientId, "NETWORK_ERROR");
+            } finally {
+                if (key.isValid() && conn.channel.isOpen()) {
+                    key.interestOps(key.interestOps() | SelectionKey.OP_READ);
+                    selector.wakeup();
+                }
+            }
+        });
     }
 
     private static boolean readUntilFull(SocketChannel sc, ByteBuffer buf) throws IOException {
         while (buf.hasRemaining()) {
             int read = sc.read(buf);
             if (read == -1) throw new EOFException("Client closed connection");
-            if (read == 0) return false;
+            if (read == 0) try { Thread.sleep(1); } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
         }
         return true;
     }
 
     private static void processMessage(ClientConnection conn, byte[] data, SelectionKey key) {
+        commandPool.submit(()->{
         try {
             Object obj = SerializationUtil.deserialize(data);
             conn.lastHeartbeat = Instant.now();
 
             if (obj instanceof HandshakeRequest hs) {
-                conn.clientId = hs.clientId();
-                conn.handshakeComplete = true;
+                synchronized (conn){
+                    conn.clientId = hs.clientId();
+                    conn.handshakeComplete = true;
+                }
                 clientRegistry.register(hs.clientId(), hs.parentClientId());
                 logger.info("Handshake OK: {} (parent: {})", hs.clientId(), hs.parentClientId());
-                writeResponse(conn, new CommandResponse(true, null, "Handshake OK", "0", hs.clientId()));
-                return;
+                CommandResponse response =new CommandResponse(true, null, "Handshake OK", "0", hs.clientId());
+                writePool.submit(() -> {
+                    try {
+                        writeResponse(conn, response);
+                    } catch (IOException e) {
+                        logger.error("Write failed for {}: {}", conn.clientId, e.getMessage());
+                        cascadeDisconnect(conn.clientId, "WRITE_ERROR");
+                    }
+                });return;
             }
 
             if (!conn.handshakeComplete) { logger.warn("Data before handshake, ignoring."); return; }
 
             if (obj instanceof CommandRequest req) {
                 CommandResponse resp = invoker.runCommand(req);
-                writeResponse(conn, resp);
-
+                writePool.submit(() -> {
+                    try {
+                        writeResponse(conn, resp);
+                    } catch (IOException e) {
+                        logger.error("Write failed for {}: {}", conn.clientId, e.getMessage());
+                        cascadeDisconnect(conn.clientId, "WRITE_ERROR");
+                    }
+                });
                 if ("forward_command".equals(req.commandType()) && req.args() instanceof ForwardCommandObject fco) {
                     schedulePendingWrite(fco.childId());
                 }
@@ -259,6 +315,7 @@ public class Server {
         } catch (Exception e) {
             logger.error("Message processing failed for {}: {}", conn.clientId, e.getMessage(), e);
         }
+    });
     }
 
     private static void writeResponse(ClientConnection conn, CommandResponse resp) throws IOException {
@@ -267,9 +324,17 @@ public class Server {
         buf.putInt(data.length);
         buf.put(data);
         buf.flip();
-        conn.writeBuffer = buf;
-        conn.state = ConnectionState.WRITE;
-        conn.channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, conn);
+        SocketChannel sc = conn.channel;
+        if (!sc.isOpen()) return;
+        try {
+            while (buf.hasRemaining()){
+                int written = sc.write(buf);
+                if (written == 0) Thread.sleep(50);
+            }
+        } catch (InterruptedException |IOException e) {
+            logger.warn("Failed to send response to {}: {}", conn.clientId, e.getMessage());
+            cascadeDisconnect(conn.clientId, "WRITE_ERROR");
+        }
     }
 
     private static void handleWrite(SelectionKey key) throws IOException {
@@ -282,8 +347,10 @@ public class Server {
             if (written == -1) throw new ClosedChannelException();
         }
 
-        conn.writeBuffer = null;
-        conn.state = ConnectionState.READ_LENGTH;
+        synchronized (conn) {
+            conn.writeBuffer = null;
+            conn.state = ConnectionState.READ_LENGTH;
+        }
         checkAndSendPendingCommands(conn, key);
         conn.channel.register(selector, SelectionKey.OP_READ, conn);
     }

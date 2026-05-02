@@ -3,7 +3,7 @@ package server.console;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.manager.ClientRegistry;
-import server.manager.CollectionManager;
+import server.manager.CollectionService;
 import server.outputWorkers.CollectionSaver;
 
 import java.util.Scanner;
@@ -11,17 +11,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ConsoleHandler {
     private static final Logger logger = LoggerFactory.getLogger(ConsoleHandler.class);
-    private CollectionManager collectionManager;
+    private CollectionService collectionService;
     private CollectionSaver collectionSaver;
     private String dataFile;
     private AtomicBoolean running;
     private ClientRegistry clientRegistry;
-    public ConsoleHandler(CollectionManager collectionManager,
+    public ConsoleHandler(CollectionService collectionService,
                           CollectionSaver collectionSaver,
                           String dataFile,
                           AtomicBoolean running,
                           ClientRegistry clientRegistry){
-        this.collectionManager = collectionManager;
+        this.collectionService = collectionService;
         this.collectionSaver = collectionSaver;
         this.dataFile = dataFile;
         this.running = running;
@@ -33,7 +33,7 @@ public class ConsoleHandler {
             case "save":
                 logger.info("Manual save triggered from console");
                 try {
-                    collectionSaver.save(collectionManager, dataFile);
+                    collectionSaver.save(collectionService.getSpaceMarines(), dataFile);
                     logger.info("Collection saved to {}", dataFile);
                     System.out.println(" Collection saved successfully!");
                 } catch (Exception e) {

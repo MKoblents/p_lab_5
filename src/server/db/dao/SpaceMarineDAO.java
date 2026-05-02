@@ -38,13 +38,27 @@ public class SpaceMarineDAO {
     }
     public boolean insertSpaceMarine(SpaceMarine spaceMarine, String ownerName)throws SQLException{
         String sqlMarineInsert = "INSERT INTO space_marines (name, creation_date, health, astartes_category, weapon, melee_weapon, coordinates, chapter, owner) " +
-                "VALUES (?, ?, ?, CAST(? AS astartes_category), CAST(? AS weapon), CAST(? AS melee_weapon), ?, ?, (SELECT id FROM users WHERE name = ?))";
-        Map<String, Object> ownerInfo = new HashMap<>();
-        ownerInfo.put("name", ownerName);
+                "VALUES (?, ?, ?, CAST(? AS astartes_category), CAST(? AS weapon), CAST(? AS melee_weapon), ?, ?, ?)";
+        long ownerId =getUserId(ownerName);
         try (Connection connection = provider.getConnection()){
-            return sendIURequest(connection,spaceMarine,0, ownerInfo, sqlMarineInsert, RequestType.INSERTION);
+            return sendIURequest(connection,spaceMarine,0, ownerId, sqlMarineInsert, RequestType.INSERTION);
         }
     }
+
+    private long getUserId(String ownerName)  throws  SQLException{
+        String sql = "select  id from users where name = ?";
+        try (Connection connection = provider.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, ownerName);
+            try (ResultSet rs = ps.executeQuery()){
+                if (rs.next()){
+                    return rs.getLong("id");
+                } return 0;
+            }
+
+        }
+    }
+
     private long coordinatesCheck(Connection connection, Coordinates coordinates)throws SQLException{
         String sqlCoordsCheck = "SELECT id FROM coordinates WHERE x = ? AND y = ?";
         String sqlCoordsInsert = "INSERT INTO coordinates (x, y) VALUES (?, ?)";
@@ -86,7 +100,7 @@ public class SpaceMarineDAO {
         return chapterId;
 
     }
-    private boolean sendIURequest(Connection connection, SpaceMarine spaceMarine,long spaceMarineId, Map<String, Object> ownerInfo, String sql, RequestType type) throws SQLException {
+    private boolean sendIURequest(Connection connection, SpaceMarine spaceMarine,long spaceMarineId, long ownerId, String sql, RequestType type) throws SQLException {
         connection.setAutoCommit(false);
         connection.setAutoCommit(false);
         long coordId = coordinatesCheck(connection, spaceMarine.getCoordinates());
@@ -98,15 +112,16 @@ public class SpaceMarineDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             setSpaceMarineParametrs(spaceMarine,coordId,chapterId,preparedStatement);
             if (type.equals(RequestType.INSERTION)){
-                preparedStatement.setString(9, (String) ownerInfo.get("name"));
+                preparedStatement.setLong(9, ownerId);
             } else if (type.equals(RequestType.UPDATE)) {
                 preparedStatement.setLong(9, spaceMarineId);
-                preparedStatement.setLong(10, (Long) ownerInfo.get("id"));
+                preparedStatement.setLong(10, ownerId);
             }
             preparedStatement.executeUpdate();
             try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
                 if (keys.next()){
                     spaceMarine.setId(keys.getLong(1));
+                    spaceMarine.setOwner(ownerId);
                     connection.commit();
                     return true;
                 }
@@ -165,7 +180,7 @@ public class SpaceMarineDAO {
                         " chapter = ?" +
                         " WHERE id = ? AND owner = ?";
                 try (Connection connection = provider.getConnection()){
-                    return sendIURequest(connection, spaceMarine,id, realOwner,sql,RequestType.UPDATE);
+                    return sendIURequest(connection, spaceMarine,id, ownerId,sql,RequestType.UPDATE);
                 }
             }
         }
@@ -239,6 +254,7 @@ public class SpaceMarineDAO {
         chapter.setParentLegion(resultSet.getString("parent_legion"));
         chapter.setWorld(resultSet.getString("world"));
         spaceMarine.setChapter(chapter);
+        spaceMarine.setOwner(resultSet.getLong("owner"));
         return spaceMarine;
 
     }
