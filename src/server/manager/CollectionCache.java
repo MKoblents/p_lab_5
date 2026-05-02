@@ -126,6 +126,10 @@ public class CollectionCache implements CollectionService {
     public void clear(String ownerUsername) throws SQLException {
         spaceMarineDAO.clear(ownerUsername);
         spaceMarines.removeAll(spaceMarines);
+        List<SpaceMarine> spaceMarinesNew = (List<SpaceMarine>) Collections.synchronizedList(new ArrayList<>(spaceMarineDAO.selectAll()));
+        for (SpaceMarine s: spaceMarinesNew){
+            spaceMarines.add(s);
+        }
     }
 
     @Override

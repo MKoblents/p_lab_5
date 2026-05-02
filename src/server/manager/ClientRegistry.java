@@ -21,6 +21,7 @@ public class ClientRegistry {
     private final Map<String, ConnectedClient> clients = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> parentChildRelations = new ConcurrentHashMap<>();
     private PendingCommandQueue pendingCommandQueue = new PendingCommandQueue();
+    private final Map<String, String> clientToUsername= new ConcurrentHashMap<>();
 
     public void register(String clientId, String parentClientId) {
         ConnectedClient client = new ConnectedClient(clientId, ClientState.ONLINE);

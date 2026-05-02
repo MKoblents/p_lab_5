@@ -22,6 +22,32 @@ public class UserDAO {
             preparedStatement.executeUpdate();
         }
     }
+    private String getParentName(String username) throws SQLException {
+        String sql = "SELECT p.name FROM Users u JOIN Users p ON u.parent = p.id WHERE u.name = ?";
+        try (Connection conn = provider.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString("name") : null;
+            }
+        }
+    }
+
+    /**
+     * Checks if potentialAncestor is an ancestor (parent, grandparent, etc.)
+     * or the same user as descendant.
+     */
+    public boolean isAncestorOrSelf(String potentialAncestor, String descendant) throws SQLException {
+        if (potentialAncestor == null || descendant == null) return false;
+        if (potentialAncestor.equals(descendant)) return true;
+
+        String current = descendant;
+        while (current != null) {
+            current = getParentName(current);
+            if (potentialAncestor.equals(current)) return true;
+        }
+        return false;
+    }
     public String getHashPassword(String user) throws  SQLException{
         try (Connection connection = provider.getConnection();
             PreparedStatement ps = connection.prepareStatement("select password from Users where name = ?")){
