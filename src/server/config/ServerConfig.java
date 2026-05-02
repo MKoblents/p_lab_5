@@ -2,7 +2,9 @@ package server.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import server.db.config.DbConfig;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +19,10 @@ public class ServerConfig {
     private final int port;
     private final String file;
     private final String logLevel;
+    private final String dbUrl;
+    private final String dbUser;
+    private final String dbPassword;
+    private final int dbPoolSize;
 
     public static ServerConfig parse(String[] args) {
         logger.debug("Parsing server startup arguments: {}", Arrays.toString(args));
@@ -28,6 +34,11 @@ public class ServerConfig {
         if (System.getenv("PLAB5") != null) {
             logger.info("Using PLAB5 environment variable for data file path: {}", dataFile);
         }
+
+        String dbUrl = System.getenv("DB_URL");
+        String dbUser = System.getenv("DB_USER");
+        String dbPassword = System.getenv("DB_PASSWORD");
+        int dbPoolSize = 10;
         for (int i = 0; i < args.length; i++) {
             try {
                 if (args[i].equals("--port") && i + 1 < args.length) {
@@ -49,24 +60,38 @@ public class ServerConfig {
                         logLevel = DEFAULT_LOG_LEVEL;
                     }
                     logger.debug("Log level configured: {}", logLevel);
-                }
+                } else if (args[i].equals("--db-url") && i+1 < args.length) dbUrl = args[++i];
+                else if (args[i].equals("--db-user") && i+1 < args.length) dbUser = args[++i];
+                else if (args[i].equals("--db-password") && i+1 < args.length) dbPassword = args[++i];
+                else if (args[i].equals("--db-pool-size") && i+1 < args.length) dbPoolSize = Integer.parseInt(args[++i]);
+
             } catch (NumberFormatException e) {
                 System.err.println("Error: Invalid numeric value for argument '" + args[i] + "'. Please provide a valid integer.");
                 logger.error("Failed to parse numeric argument: {} | Error: {}", args[i], e.getMessage());
                 return null;
             }
         }
+        if (dbUrl == null || dbUser == null || dbPassword == null) {
+            try {
+                DbConfig props = DbConfig.loadFromProperties(Paths.get("src/server/db.properties"));
+                dbUrl = props.getUrl(); dbUser = props.getUser(); dbPassword = props.getPassword();
+            } catch (Exception ignored) {}
+        }
 
-        ServerConfig config = new ServerConfig(port, dataFile, logLevel);
+        ServerConfig config = new ServerConfig(port, dataFile, logLevel, dbUrl, dbUser, dbPassword, dbPoolSize);
         logger.info("Server configuration loaded successfully: port={}, file={}, logLevel={}",
                 port, dataFile, logLevel);
         return config;
     }
 
-    public ServerConfig(int port, String file, String logLevel) {
+    public ServerConfig(int port, String file, String logLevel, String dbUrl, String dbUser, String dbPassword, int dbPoolSize) {
         this.port = port;
         this.file = file;
         this.logLevel = logLevel;
+        this.dbUrl = dbUrl;
+        this.dbUser = dbUser;
+        this.dbPassword = dbPassword;
+        this.dbPoolSize= dbPoolSize;
     }
 
     public int getPort() {
