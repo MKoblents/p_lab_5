@@ -109,15 +109,16 @@ public class ClientRegistry {
     }
     public void printStatusToConsole() {
         System.out.println("\n=== Connected Clients ===");
-        System.out.printf("%-10s %-10s %-35s %-10s%n", "ID", "STATE", "LAST_HEARTBEAT", "UPTIME");
+        System.out.printf("%-10s  %-10s %-10s %-35s %-10s%n", "ID","NAME", "STATE", "LAST_HEARTBEAT", "UPTIME");
         System.out.println("------------------------------------------------------------");
         for (ConnectedClient client : clients.values()) {
             var status = client.getClientStatus();
             String uptime = java.time.Duration.between(
                     status.lastHeartbeat(), java.time.Instant.now()
             ).toString().replaceAll("(\\d[HMS])(?!$)", "$1 ");
-            System.out.printf("%-10s %-10s %-35s %-10s%n",
+            System.out.printf("%-10s  %-10s %-10s %-35s %-10s%n",
                     status.clientId(),
+                    getUsernameByClientId(status.clientId()),
                     status.clientState(),
                     status.lastHeartbeat(),
                     uptime

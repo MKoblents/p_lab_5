@@ -30,17 +30,17 @@ public class ConsoleHandler {
     }
     public void handleConsoleInput(String command) {
         switch (command) {
-            case "save":
-                logger.info("Manual save triggered from console");
-                try {
-                    collectionSaver.save(collectionService.getSpaceMarines(), dataFile);
-                    logger.info("Collection saved to {}", dataFile);
-                    System.out.println(" Collection saved successfully!");
-                } catch (Exception e) {
-                    logger.error("Save failed: {}", e.getMessage(), e);
-                    System.err.println(" Save failed: " + e.getMessage());
-                }
-                break;
+//            case "save":
+//                logger.info("Manual save triggered from console");
+//                try {
+//                    collectionSaver.save(collectionService.getSpaceMarines(), dataFile);
+//                    logger.info("Collection saved to {}", dataFile);
+//                    System.out.println(" Collection saved successfully!");
+//                } catch (Exception e) {
+//                    logger.error("Save failed: {}", e.getMessage(), e);
+//                    System.err.println(" Save failed: " + e.getMessage());
+//                }
+//                break;
 
             case "exit":
                 logger.info("Exit command received from console");
@@ -51,7 +51,7 @@ public class ConsoleHandler {
                 return ;
             case "help":
                 System.out.println("Available server commands:");
-                System.out.println("  save - Save collection to file");
+//                System.out.println("  save - Save collection to file");
                 System.out.println("  exit - Stop server");
                 System.out.println("  help - Show this help");
                 System.out.println("  status - Clients status");
