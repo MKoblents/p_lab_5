@@ -4,6 +4,7 @@ import client.utils.Validator;
 import shared.models.SpaceMarine;
 import shared.utils.XMLParser;
 import javax.xml.bind.annotation.*;
+import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -229,5 +230,10 @@ public class CollectionManager  implements CollectionService{
     @Override
     public List<SpaceMarine> getSpaceMarines() {
         return spaceMarines;
+    }
+
+    @Override
+    public String getOwnerName(long spaceMarineId) throws SQLException {
+        return "";
     }
 }

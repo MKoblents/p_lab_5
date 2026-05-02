@@ -30,4 +30,5 @@ public interface CollectionService {
     boolean addUpdating(Long id);
     boolean removeUpdating(Long id);
     Set<Long> getUpdatingSpaceMarines();
+    String getOwnerName(long spaceMarineId) throws SQLException;
 }

@@ -4,6 +4,8 @@ import server.manager.CollectionService;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 
+import java.sql.SQLException;
+
 public class CouldBeUpdatedCommand implements Command{
     private CollectionService collectionService;
     public CouldBeUpdatedCommand(CollectionService collectionService){
@@ -17,10 +19,19 @@ public class CouldBeUpdatedCommand implements Command{
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
         long id = (long) commandRequest.args();
-        if (collectionService.getUpdatingSpaceMarines().contains(id)){
-            return new CommandResponse(true, false,"can't update right now: another client's updating it", commandRequest.requestId(), commandRequest.clientId());
+        String name = commandRequest.userInfo().name();
+        try {
+
+            if (collectionService.getOwnerName(id).equals(name)) {
+                if (!collectionService.getUpdatingSpaceMarines().contains(id)) {
+                    collectionService.addUpdating(id);
+                    return new CommandResponse(true, true, "can update right now", commandRequest.requestId(), commandRequest.clientId());
+                }
+                return new CommandResponse(true, false, "can't update right now: another client's updating it", commandRequest.requestId(), commandRequest.clientId());
+            }
+            return new CommandResponse(true, false, "can't update. You are not the owner", commandRequest.requestId(), commandRequest.clientId());
+        }catch (SQLException e){
+            return new CommandResponse(false, false, e.getMessage(), commandRequest.requestId(), commandRequest.clientId());
         }
-        collectionService.addUpdating(id);
-        return  new CommandResponse(true, true,"can update right now", commandRequest.requestId(), commandRequest.clientId());
     }
 }
