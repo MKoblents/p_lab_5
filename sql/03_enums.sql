@@ -14,4 +14,4 @@ create type melee_weapon as enum (
     'CHAIN_AXE',
     'MANREAPER',
     'POWER_BLADE'
-)
+);

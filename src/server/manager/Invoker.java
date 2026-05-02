@@ -33,6 +33,10 @@ public class Invoker {
      * Executes the command registered under the given key.
      */
     public CommandResponse runCommand(CommandRequest request) {
+        String commandType = request.commandType();
+        if (commandType.equals("log_in")){
+            return commandMap.get(commandType).execute(request);
+        }
         UserInfo userInfo = request.userInfo();
         try {
             var validatedUser = authService.validate(userInfo);
@@ -42,12 +46,11 @@ public class Invoker {
                         request.requestId(), request.clientId());
             }
         } catch (Exception e) {
-            logger.error("Auth error for user {}: {}", userInfo.name(), e.getMessage(), e);
+            logger.error("Auth error for user : {}", e.getMessage(), e);
             return new CommandResponse(false, null, "Authentication error",
                     request.requestId(), request.clientId());
         }
 
-        String commandType = request.commandType();
         logger.debug("Executing command: {}", commandType);
         Command command = commandMap.get(commandType);
         if (command == null) {
@@ -85,6 +88,7 @@ public class Invoker {
         registerCommand(CommandRequest.CMD_HEARTBEAT, new HeartbeatCommand(clientRegistry));
         registerCommand("could_be_updated", new CouldBeUpdatedCommand(collectionService));
         registerCommand("kill_client", new KillClientCommand(clientRegistry));
+        registerCommand("log_in", new LogInCommand(authService));
         logger.debug("Registering commands with Invoker");
     }
     /**

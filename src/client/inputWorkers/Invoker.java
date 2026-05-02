@@ -2,7 +2,6 @@ package client.inputWorkers;
 
 import client.command.*;
 import client.context.ClientContext;
-import client.context.ClientSession;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
@@ -66,7 +65,8 @@ public class Invoker {
         registerCommand("spawn_client", new SpawnClient(context, processManager));
         registerCommand("execute_script", new ExecuteScript(inputManager, runner));
         registerCommand("kill_client", new KillClient(inputManager));
-        registerCommand("log_in", new LogIn(inputManager));
+        registerCommand("log_in", new LogIn(inputManager, connection, context));
+        registerCommand("log_out", new LogOut(context));
     }
 
     public CommandRequest runCommand(String commandName) {

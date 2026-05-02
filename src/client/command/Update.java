@@ -88,7 +88,7 @@ public class Update implements ClientCommand {
             return RequestsFactory.createTwoArgs("update", id, marine);
         } else {
             logger.debug("Update check returned unexpected result: {}", result);
-            System.err.println("Error: Server returned an unexpected response during update check.");
+            System.err.println("Error: Server returned an unexpected response during update check. "+response.message());
             return null;
         }
     }

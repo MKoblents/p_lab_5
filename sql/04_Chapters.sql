@@ -3,4 +3,4 @@ create table if not exists Chapters (
     name varchar(255),
     parent_legion varchar(255),
     world varchar(255)
-)
+);

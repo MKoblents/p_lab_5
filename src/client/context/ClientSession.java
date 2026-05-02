@@ -126,17 +126,21 @@ public class ClientSession implements AutoCloseable {
                     if (!context.isAwaitingForwardedInput() && networkReader.getForwardQueue().isEmpty()) {
                         CommandRequest request = invoker.runCommand(commandKey);
                         if (request != null) {
-                            try {
-                                if (!connection.isConnected()) {
-                                    System.out.println("Not connected to server. Cannot send request.");
-                                    logger.debug("Command '{}' skipped: client not connected", commandKey);
-                                } else {
-                                    connection.sendRequest(request);
-                                    logger.debug("Request sent for command '{}'", commandKey);
+                            if (request.userInfo() != null || commandKey.equals("log_in")){
+                                try {
+                                    if (!connection.isConnected()) {
+                                        System.out.println("Not connected to server. Cannot send request.");
+                                        logger.debug("Command '{}' skipped: client not connected", commandKey);
+                                    } else {
+                                        connection.sendRequest(request);
+                                        logger.debug("Request sent for command '{}'", commandKey);
+                                    }
+                                } catch (IOException e) {
+                                    System.err.println("Network error while sending request: " + e.getMessage());
+                                    logger.error("Failed to send request for command '{}': {}", commandKey, e.getMessage());
                                 }
-                            } catch (IOException e) {
-                                System.err.println("Network error while sending request: " + e.getMessage());
-                                logger.error("Failed to send request for command '{}': {}", commandKey, e.getMessage());
+                            }else {
+                                System.out.println("You should log in before execute any command");
                             }
                         }
                     }

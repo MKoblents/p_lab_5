@@ -22,10 +22,17 @@ public class AddCommand implements Command {
     public CommandResponse execute(CommandRequest commandRequest) {
         SpaceMarine spaceMarine = (SpaceMarine) commandRequest.args();
         try {
-            collectionService.addItem(spaceMarine, commandRequest.userInfo().name());
-            return  new CommandResponse(true, spaceMarine, "Added successfully", commandRequest.requestId(), commandRequest.clientId());
+            boolean success = collectionService.addItem(spaceMarine, commandRequest.userInfo().name());
+            if (success) {
+                return new CommandResponse(true, spaceMarine, "Added successfully",
+                        commandRequest.requestId(), commandRequest.clientId());
+            } else {
+                return new CommandResponse(false, spaceMarine, "Database rejected insert (constraint violation or missing owner)",
+                        commandRequest.requestId(), commandRequest.clientId());
+            }
         } catch (SQLException e) {
-            return new CommandResponse(false,spaceMarine,"SpaceMarine addition failed because of db access "+e.getMessage(), commandRequest.requestId(),commandRequest.clientId());
+            return new CommandResponse(false, spaceMarine, "SpaceMarine addition failed because of db access: " + e.getMessage(),
+                    commandRequest.requestId(), commandRequest.clientId());
         }
     }
 }

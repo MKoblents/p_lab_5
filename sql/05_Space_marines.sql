@@ -8,7 +8,7 @@ create table if not exists Space_marines (
     weapon weapon,
     melee_weapon melee_weapon,
     chapter int,
-    owner int,
+    owner int not null,
     foreign key (owner) references Users(id),
     foreign key (chapter) references Chapters(id),
     foreign key (coordinates) references Coordinates(id)

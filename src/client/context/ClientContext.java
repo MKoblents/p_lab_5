@@ -1,6 +1,7 @@
 package client.context;
 
 import client.network.ConnectionManager;
+import client.utils.RequestsFactory;
 import shared.dto.UserInfo;
 
 import java.time.Instant;
@@ -10,7 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ClientContext {
     private final String clientId;
     private final String parentClientId;
-    private final UserInfo userInfo;
+    private UserInfo userInfo;
     private final ConnectionManager connection;
     private final Instant createdAt;
     private final boolean isRoot;
@@ -29,6 +30,10 @@ public class ClientContext {
         this.isRoot = isRoot;
         this.active = true;
         this.userInfo = userInfo;
+    }
+    public void setUserInfo(UserInfo userInfo){
+        this.userInfo = userInfo;
+        RequestsFactory.setUserInfo(userInfo);
     }
     public String getClientId() {
         return clientId;

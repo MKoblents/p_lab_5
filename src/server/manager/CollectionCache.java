@@ -157,4 +157,9 @@ public class CollectionCache implements CollectionService {
     public Set<Long> getUpdatingSpaceMarines() {
         return updatingSpaceMarines;
     }
+
+    @Override
+    public String getOwnerName(long spaceMarineId) throws SQLException {
+        return spaceMarineDAO.getOwnerInfoBySpaceMarineId(spaceMarineId).get("name").toString();
+    }
 }
