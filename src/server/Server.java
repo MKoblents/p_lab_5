@@ -167,7 +167,7 @@ public class Server {
             Instant now = Instant.now();
             for (SelectionKey key : selector.keys()) {
                 if (!key.isValid() || !(key.attachment() instanceof ClientConnection conn)) continue;
-                if (Duration.between(conn.lastHeartbeat, now).toMillis() > HEARTBEAT_TIMEOUT_MS) {
+                if (conn.clientId != null && Duration.between(conn.lastHeartbeat, now).toMillis() > HEARTBEAT_TIMEOUT_MS) {
                     logger.warn("Client {} timed out", conn.clientId != null ? conn.clientId : "UNKNOWN");
                     cascadeDisconnect(conn.clientId, "TIMEOUT");
                 }
@@ -211,34 +211,59 @@ public class Server {
 
     private static void handleRead(SelectionKey key) throws IOException {
         ClientConnection conn = (ClientConnection) key.attachment();
-        SocketChannel sc = conn.channel;
+        if (!key.isValid()) return;
+        int ops = key.interestOps();
+        key.interestOps(ops & ~SelectionKey.OP_READ);
+        readParsePool.submit(()-> {
+            try {
+                SocketChannel sc = conn.channel;
+                if (conn.state == ConnectionState.READ_LENGTH) {
+                    if (!readUntilFull(sc, conn.lengthBuffer)) return;
+                    conn.lengthBuffer.flip();
+                    conn.expectedLength = conn.lengthBuffer.getInt();
+                    conn.payloadBuffer = ByteBuffer.allocate(conn.expectedLength);
+                    conn.lengthBuffer.clear();
+                    synchronized (conn) {
+                        conn.state = ConnectionState.READ_PAYLOAD;
+                    }
+                }
 
-        if (conn.state == ConnectionState.READ_LENGTH) {
-            if (!readUntilFull(sc, conn.lengthBuffer)) return;
-            conn.lengthBuffer.flip();
-            conn.expectedLength = conn.lengthBuffer.getInt();
-            conn.payloadBuffer = ByteBuffer.allocate(conn.expectedLength);
-            conn.lengthBuffer.clear();
-            synchronized (conn) { conn.state = ConnectionState.READ_PAYLOAD; }
-        }
-
-        if (conn.state == ConnectionState.READ_PAYLOAD) {
-            if (!readUntilFull(sc, conn.payloadBuffer)) return;
-            conn.payloadBuffer.flip();
-            byte[] data = new byte[conn.expectedLength];
-            conn.payloadBuffer.get(data);
-            conn.payloadBuffer.clear();
-            conn.expectedLength = -1;
-            synchronized (conn) { conn.state = ConnectionState.READ_LENGTH; }
-            processMessage(conn, data, key);
-        }
+                if (conn.state == ConnectionState.READ_PAYLOAD) {
+                    if (!readUntilFull(sc, conn.payloadBuffer)) return;
+                    conn.payloadBuffer.flip();
+                    byte[] data = new byte[conn.expectedLength];
+                    conn.payloadBuffer.get(data);
+                    conn.payloadBuffer.clear();
+                    conn.expectedLength = -1;
+                    synchronized (conn) {
+                        conn.state = ConnectionState.READ_LENGTH;
+                    }
+                    processMessage(conn, data, key);
+                }
+            }catch (EOFException e) {
+                String cid = conn.clientId != null ? conn.clientId : "UNKNOWN";
+                logger.info("Client {} disconnected gracefully (EOF)", cid);
+                cascadeDisconnect(cid, DisconnectReason.USER_REQUEST.name());
+            } catch (Exception e) {
+                logger.error("Read/Parse failed for {}: {}", conn.clientId, e.getMessage());
+                cascadeDisconnect(conn.clientId, "NETWORK_ERROR");
+            } finally {
+                if (key.isValid() && conn.channel.isOpen()) {
+                    key.interestOps(key.interestOps() | SelectionKey.OP_READ);
+                    selector.wakeup();
+                }
+            }
+        });
     }
 
     private static boolean readUntilFull(SocketChannel sc, ByteBuffer buf) throws IOException {
         while (buf.hasRemaining()) {
             int read = sc.read(buf);
             if (read == -1) throw new EOFException("Client closed connection");
-            if (read == 0) return false;
+            if (read == 0) try { Thread.sleep(1); } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
         }
         return true;
     }

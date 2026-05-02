@@ -9,14 +9,11 @@ import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
+import shared.dto.*;
 import shared.enums.DisconnectReason;
 import client.utils.SideFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import shared.dto.CommandRequest;
-import shared.dto.CommandResponse;
-import shared.dto.ForwardCommandObject;
-import shared.dto.HandshakeRequest;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -39,6 +36,7 @@ public class ClientSession implements AutoCloseable {
     private AsyncNetworkReader networkReader;
     private Thread networkThread;
     private volatile Thread mainThread;
+    private volatile boolean awaitingLogin = true;
 
     public ClientSession(InputManager im, ConnectionManager conn, ResponseHandler rh,
                          ScriptRunner sr, Invoker invoker, ClientContext context,
@@ -150,6 +148,29 @@ public class ClientSession implements AutoCloseable {
             }
         }
     }
+    private void handleLoginResponse(CommandResponse response) {
+        if (response == null) return;
+
+        if (response.message() != null && response.message().contains("Log in success") && response.success()) {
+            context.setUserInfo((UserInfo) response.result());
+            System.out.println("Login successful.");
+            awaitingLogin = false;
+        } else if (response.message() != null && response.message().contains("Log in")) {
+            System.out.println("Login failed: " + response.message());
+            System.out.print("Retry? (y/n): ");
+            try {
+                String retry = ((ConsoleBufferedScanner) inputManager.getReader()).getInputString();
+                if ("y".equalsIgnoreCase(retry)) {
+                    awaitingLogin = true;
+                    invoker.runCommand("log_in");
+                } else {
+                    awaitingLogin = false;
+                }
+            } catch (IOException e) { awaitingLogin = false; }
+        } else {
+            handleResponse(response);
+        }
+    }
 
     private void processResponsesLoop() {
         while (running) {
@@ -176,7 +197,7 @@ public class ClientSession implements AutoCloseable {
                         continue;
                     }
                 }
-                handleResponse(response);
+                handleLoginResponse(response);
             }
             CommandRequest forwarded = networkReader.getForwardQueue().poll();
             if (forwarded != null) {
