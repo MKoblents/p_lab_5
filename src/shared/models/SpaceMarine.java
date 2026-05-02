@@ -59,7 +59,7 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
     @XmlElement
     private long owner;
     public SpaceMarine(){
-        this.id = generateId(this);
+//        this.id = generateId(this);
     }
     /**
      * Compares this Space Marine to another by health value.
@@ -90,7 +90,7 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
         this.name = name;
         this.coordinates = coordinates;
         this.meleeWeapon=meleeWeapon;
-        this.id = generateId(this);
+//        this.id = generateId(this);
     }
     /**
      * Generates unique ID for new elements.
