@@ -1,7 +1,5 @@
 package server.commands;
 
-import client.context.ClientContext;
-import client.network.ConnectionManager;
 import server.manager.ClientRegistry;
 import server.service.AuthService;
 import shared.dto.CommandRequest;

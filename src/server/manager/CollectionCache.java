@@ -167,4 +167,7 @@ public class CollectionCache implements CollectionService {
     public String getOwnerName(long spaceMarineId) throws SQLException {
         return spaceMarineDAO.getOwnerInfoBySpaceMarineId(spaceMarineId).get("name").toString();
     }
+    public boolean isAncestorOrSelf(String potentialAncestor, String descendant) throws SQLException{
+        return spaceMarineDAO.isAncestorOrSelf(potentialAncestor, descendant);
+    }
 }
