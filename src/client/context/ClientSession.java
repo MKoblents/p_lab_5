@@ -112,6 +112,7 @@ public class ClientSession implements AutoCloseable {
             try {
                 String line = ((ConsoleBufferedScanner) inputManager.getReader()).pollNextLine(50);
                 if (line != null && !line.trim().isEmpty() && !line.trim().startsWith("#")) {
+//                    System.out.println(line);
                     inputManager.parseLine(line);
                     commandKey = inputManager.getCurrentCommandName();
                 }
