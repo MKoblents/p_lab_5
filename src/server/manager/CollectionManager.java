@@ -236,4 +236,9 @@ public class CollectionManager  implements CollectionService{
     public String getOwnerName(long spaceMarineId) throws SQLException {
         return "";
     }
+
+    @Override
+    public boolean isAncestorOrSelf(String potentialAncestor, String descendant) throws SQLException {
+        return true;
+    }
 }

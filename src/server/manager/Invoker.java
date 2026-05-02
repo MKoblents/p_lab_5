@@ -88,7 +88,7 @@ public class Invoker {
         registerCommand(CommandRequest.CMD_HEARTBEAT, new HeartbeatCommand(clientRegistry));
         registerCommand("could_be_updated", new CouldBeUpdatedCommand(collectionService));
         registerCommand("kill_client", new KillClientCommand(clientRegistry));
-        registerCommand("log_in", new LogInCommand(authService));
+        registerCommand("log_in", new LogInCommand(authService, clientRegistry));
         logger.debug("Registering commands with Invoker");
     }
     /**

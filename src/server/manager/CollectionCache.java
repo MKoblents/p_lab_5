@@ -126,6 +126,10 @@ public class CollectionCache implements CollectionService {
     public void clear(String ownerUsername) throws SQLException {
         spaceMarineDAO.clear(ownerUsername);
         spaceMarines.removeAll(spaceMarines);
+        List<SpaceMarine> spaceMarinesNew = (List<SpaceMarine>) Collections.synchronizedList(new ArrayList<>(spaceMarineDAO.selectAll()));
+        for (SpaceMarine s: spaceMarinesNew){
+            spaceMarines.add(s);
+        }
     }
 
     @Override
@@ -162,5 +166,8 @@ public class CollectionCache implements CollectionService {
     @Override
     public String getOwnerName(long spaceMarineId) throws SQLException {
         return spaceMarineDAO.getOwnerInfoBySpaceMarineId(spaceMarineId).get("name").toString();
+    }
+    public boolean isAncestorOrSelf(String potentialAncestor, String descendant) throws SQLException{
+        return spaceMarineDAO.isAncestorOrSelf(potentialAncestor, descendant);
     }
 }

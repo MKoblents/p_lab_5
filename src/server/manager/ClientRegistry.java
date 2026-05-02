@@ -21,6 +21,7 @@ public class ClientRegistry {
     private final Map<String, ConnectedClient> clients = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> parentChildRelations = new ConcurrentHashMap<>();
     private PendingCommandQueue pendingCommandQueue = new PendingCommandQueue();
+    private final Map<String, String> clientToUser = new ConcurrentHashMap<>();
 
     public void register(String clientId, String parentClientId) {
         ConnectedClient client = new ConnectedClient(clientId, ClientState.ONLINE);
@@ -35,6 +36,16 @@ public class ClientRegistry {
             logger.info("Root client {} registered", clientId);
         }
     }
+
+    public Optional<String> findParentByChild(String childClientId) {
+        for (Map.Entry<String, Set<String>> entry : parentChildRelations.entrySet()) {
+            if (entry.getValue().contains(childClientId)) {
+                return Optional.of(entry.getKey());
+            }
+        }
+        return Optional.empty();
+    }
+
     public synchronized void unregister(String clientId) {
         if (!clients.containsKey(clientId)) {
             return;
@@ -52,6 +63,13 @@ public class ClientRegistry {
             childSet.remove(clientId);
         }
         logger.info("Client {} and subtree fully unregistered", clientId);
+    }
+    public void bindUserToClient(String clientId, String username) {
+        clientToUser.put(clientId, username);
+    }
+
+    public String getUsernameByClientId(String clientId) {
+        return clientToUser.get(clientId);
     }
     public boolean exists(String clientId) {
         return clients.containsKey(clientId);

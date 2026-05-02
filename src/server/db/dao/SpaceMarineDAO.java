@@ -168,7 +168,7 @@ public class SpaceMarineDAO {
     public boolean updateSpaceMarine(long id, SpaceMarine spaceMarine, String owner) throws SQLException {
         Map<String, Object> realOwner = getOwnerInfoBySpaceMarineId(id);
         if (realOwner!= null && !realOwner.isEmpty()){
-            if (realOwner.get("name").equals(owner)){
+            if (isAncestorOrSelf(owner, realOwner.get("name").toString())){
                 Long ownerId = getOwnerId(id);
                 String sql = "update  space_marines  set name = ?," +
                         " creation_date = ?," +
@@ -193,13 +193,19 @@ public class SpaceMarineDAO {
         return deleteSpaceMarineById(id, owner);
     }
     public boolean deleteSpaceMarineById(long id, String owner) throws SQLException{
-        String sql = "DELETE FROM Space_marines WHERE id = ? AND owner = (SELECT id FROM users WHERE name = ?)";
-        try (Connection connection = provider.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)){
-            ps.setLong(1,id);
-            ps.setString(2, owner);
-            int affected = ps.executeUpdate(); return affected > 0;
+        Map<String, Object> ro =getOwnerInfoBySpaceMarineId(id);
+        String realOwner = ro.get("name").toString();
+        if (isAncestorOrSelf(owner, realOwner)) {
+            String sql = "DELETE FROM Space_marines WHERE id = ? AND owner = ?";
+            try (Connection connection = provider.getConnection();
+                 PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setLong(1, id);
+                ps.setLong(2, (long) ro.get("id"));
+                int affected = ps.executeUpdate();
+                return affected > 0;
+            }
         }
+        return false;
 
     }
     private Long getSpaceMarineId(SpaceMarine spaceMarine) throws  SQLException{
@@ -289,6 +295,33 @@ public class SpaceMarineDAO {
             ps.setString(1, ownerUsername);
             ps.executeUpdate();
         }
+    }
+
+    private String getParentName(String username) throws SQLException {
+        String sql = "SELECT p.name FROM Users u JOIN Users p ON u.parent = p.id WHERE u.name = ?";
+        try (Connection conn = provider.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString("name") : null;
+            }
+        }
+    }
+
+    /**
+     * Checks if potentialAncestor is an ancestor (parent, grandparent, etc.)
+     * or the same user as descendant.
+     */
+    public boolean isAncestorOrSelf(String potentialAncestor, String descendant) throws SQLException {
+        if (potentialAncestor == null || descendant == null) return false;
+        if (potentialAncestor.equals(descendant)) return true;
+
+        String current = descendant;
+        while (current != null) {
+            current = getParentName(current);
+            if (potentialAncestor.equals(current)) return true;
+        }
+        return false;
     }
 
     enum RequestType {

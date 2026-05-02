@@ -21,8 +21,8 @@ public class CouldBeUpdatedCommand implements Command{
         long id = (long) commandRequest.args();
         String name = commandRequest.userInfo().name();
         try {
-
-            if (collectionService.getOwnerName(id).equals(name)) {
+            String realOwner = collectionService.getOwnerName(id);
+            if (collectionService.isAncestorOrSelf(name,realOwner)) {
                 if (!collectionService.getUpdatingSpaceMarines().contains(id)) {
                     collectionService.addUpdating(id);
                     return new CommandResponse(true, true, "can update right now", commandRequest.requestId(), commandRequest.clientId());

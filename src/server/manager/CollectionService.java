@@ -31,4 +31,5 @@ public interface CollectionService {
     boolean removeUpdating(Long id);
     Set<Long> getUpdatingSpaceMarines();
     String getOwnerName(long spaceMarineId) throws SQLException;
+    boolean isAncestorOrSelf(String potentialAncestor, String descendant) throws SQLException;
 }
