@@ -2,6 +2,7 @@ package server.commands;
 
 import client.context.ClientContext;
 import client.network.ConnectionManager;
+import server.manager.ClientRegistry;
 import server.service.AuthService;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -12,8 +13,10 @@ import java.util.Optional;
 
 public class LogInCommand implements Command{
     private final AuthService authService;
-    public LogInCommand(AuthService authService){
+    private final ClientRegistry clientRegistry;
+    public LogInCommand(AuthService authService, ClientRegistry clientRegistry){
         this.authService = authService;
+        this.clientRegistry =clientRegistry;
     }
     @Override
     public String getHelpInformation() {
@@ -29,16 +32,19 @@ public class LogInCommand implements Command{
         try {
             Optional<String> validUser = authService.validate(userInfo);
             if (validUser.isPresent()) {
+                clientRegistry.bindUserToClient(commandRequest.clientId(), userInfo.name());
                 return new CommandResponse(true, userInfo, "Log in success", commandRequest.requestId(), commandRequest.clientId());
             } else {
 //                return new CommandResponse(false, null, "Log in failed: invalid username or password", commandRequest.requestId(), commandRequest.clientId());
 //                TODO sign_in
-                UserInfo ui = commandRequest.userInfo();
-                String parentName = null;
-                if (ui != null && ui.name() != null){
-                    parentName = ui.name();
+                clientRegistry.bindUserToClient(commandRequest.clientId(), userInfo.name());
+                Optional<String> parentName = null;
+                parentName = clientRegistry.findParentByChild(commandRequest.clientId());
+                String pn = null;
+                if (parentName.isPresent()){
+                    pn = clientRegistry.getUsernameByClientId(parentName.get());
                 }
-                authService.register(userInfo.name(), userInfo.password(), parentName);
+                authService.register(userInfo.name(), userInfo.password(), pn);
                 return new CommandResponse(true,userInfo,"Log in  success", commandRequest.requestId(),commandRequest.clientId());
             }
         } catch (SQLException e){

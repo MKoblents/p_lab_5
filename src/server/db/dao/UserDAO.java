@@ -18,7 +18,7 @@ public class UserDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, user);
             preparedStatement.setString(2, password);
-            preparedStatement.setObject(3, parentName);
+            preparedStatement.setString(3, parentName);
             preparedStatement.executeUpdate();
         }
     }
