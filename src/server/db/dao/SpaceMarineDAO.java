@@ -254,6 +254,7 @@ public class SpaceMarineDAO {
         chapter.setParentLegion(resultSet.getString("parent_legion"));
         chapter.setWorld(resultSet.getString("world"));
         spaceMarine.setChapter(chapter);
+        spaceMarine.setOwner(resultSet.getLong("owner"));
         return spaceMarine;
 
     }

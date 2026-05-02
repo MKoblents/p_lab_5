@@ -10,7 +10,6 @@ import server.db.dao.UserDAO;
 import server.io.NonBlockingConsoleReader;
 import server.manager.ClientRegistry;
 import server.manager.CollectionCache;
-import server.manager.CollectionManager;
 import server.manager.Invoker;
 import server.outputWorkers.CollectionSaver;
 import server.service.AuthService;
@@ -93,14 +92,11 @@ public class Server {
             SpaceMarineDAO spaceMarineDAO = new SpaceMarineDAO(dbProvider);
             AuthService authService = new AuthService(userDAO);
             CollectionCache collectionCache = new CollectionCache(spaceMarineDAO);
-            CollectionManager collectionManager = new CollectionManager();
             CollectionSaver collectionSaver = new CollectionSaver();
             clientRegistry = new ClientRegistry();
             invoker = new Invoker(collectionCache, clientRegistry, authService);
-            consoleHandler = new ConsoleHandler(collectionManager, collectionSaver, config.getFile(), running, clientRegistry);
+            consoleHandler = new ConsoleHandler(collectionCache, collectionSaver, config.getFile(), running, clientRegistry);
 
-            try { collectionManager.loadFromFile(config.getFile()); }
-            catch (Exception e) { logger.error("Failed to load collection, starting empty: {}", e.getMessage()); }
             NonBlockingConsoleReader consoleReader = new NonBlockingConsoleReader();
 //            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 //                try {
