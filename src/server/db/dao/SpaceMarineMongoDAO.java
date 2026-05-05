@@ -50,6 +50,7 @@ public class SpaceMarineMongoDAO implements SMDAO {
             marine.setId(idCounter.incrementAndGet());
         }
         collection.insertOne(toDocument(marine, owner));
+        marine.setOwner(owner);
         return true;
     }
     @Override
@@ -123,11 +124,7 @@ public class SpaceMarineMongoDAO implements SMDAO {
         if (wt != null) spaceMarine.setWeaponType(Weapon.valueOf(wt));
         String cat = doc.getString("category");
         if (cat != null) spaceMarine.setCategory(AstartesCategory.valueOf(cat));
-        Object ownerObj = doc.get("owner");
-        if (ownerObj != null) {
-            try { spaceMarine.setOwner(Long.parseLong(ownerObj.toString())); }
-            catch (NumberFormatException ignored) { spaceMarine.setOwner(0L); }
-        }
+        spaceMarine.setOwner(doc.getString("owner"));
 
         Document coords = (Document) doc.get("coordinates");
         if (coords != null) {

@@ -57,7 +57,7 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
     @XmlElement
     private Chapter chapter; //Поле может быть null
     @XmlElement
-    private long owner;
+    private String owner;
     public SpaceMarine(){
 //        this.id = generateId(this);
     }
@@ -215,7 +215,7 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
         return creationDate;
     }
 
-    public void setOwner(long owner) {
+    public void setOwner(String  owner) {
         this.owner = owner;
     }
 }

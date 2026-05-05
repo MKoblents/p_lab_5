@@ -5,7 +5,6 @@ import server.config.ServerConfig;
 import server.console.ConsoleHandler;
 import server.db.DbInitializer;
 import server.db.config.DbConfig;
-import server.db.dao.SpaceMarineDAO;
 import server.db.dao.SpaceMarineMongoDAO;
 import server.db.dao.UserDAO;
 import server.io.NonBlockingConsoleReader;

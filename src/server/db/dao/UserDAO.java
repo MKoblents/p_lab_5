@@ -79,4 +79,18 @@ public class UserDAO {
         }
         return null;
     }
+    public long getId(String userName) throws SQLException{
+        String sql = "SELECT u.id FROM Users u  WHERE u.name = ?";
+        try (Connection connection = provider.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, userName);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()){
+
+                    return rs.getLong("id");
+                }
+            }
+        }
+        return 0;
+    }
 }
