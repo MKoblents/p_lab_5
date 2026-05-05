@@ -8,4 +8,5 @@ public interface MongoProvider {
     void start();
     MongoDatabase getDb();
     MongoClient getClient();
+    void shutdown();
 }
