@@ -3,6 +3,7 @@ package server.manager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.db.dao.SMDAO;
+import server.db.dao.SpaceMarineMongoDAO;
 import server.db.dao.UserDAO;
 import shared.enums.MeleeWeapon;
 import shared.models.SpaceMarine;
@@ -40,7 +41,7 @@ public class CollectionCache implements CollectionService {
     }
     @Override
     public boolean update(long id, SpaceMarine spaceMarine, String owner) throws SQLException {
-        String realOwner = userDAO.getOwnerInfoBySpaceMarineId(id).get("name").toString();
+        String realOwner = smdao.getOwnerInfoBySpaceMarineId(id).get("name").toString();
         boolean isAns = userDAO.isAncestorOrSelf(owner, realOwner);
         if (isAns){
             boolean updated =  smdao.updateSpaceMarine(id,spaceMarine,realOwner);
@@ -58,7 +59,7 @@ public class CollectionCache implements CollectionService {
     @Override
     public boolean remove(SpaceMarine spaceMarine, String owner) throws SQLException {
         long id = smdao.getSpaceMarineId(spaceMarine);
-        String realOwner = userDAO.getOwnerInfoBySpaceMarineId(id).get("name").toString();
+        String realOwner = smdao.getOwnerInfoBySpaceMarineId(id).get("name").toString();
         boolean isAns = userDAO.isAncestorOrSelf(owner, realOwner);
         if (isAns) {
             boolean removed = smdao.deleteSpaceMarine(spaceMarine, owner);
@@ -108,10 +109,19 @@ public class CollectionCache implements CollectionService {
 
     @Override
     public boolean remove(long id, String ownerUsername) throws SQLException {
-        String realOwner = userDAO.getOwnerInfoBySpaceMarineId(id).get("name").toString();
+        String realOwner = smdao.getOwnerInfoBySpaceMarineId(id).get("name").toString();
         boolean isAns = userDAO.isAncestorOrSelf(ownerUsername, realOwner);
         if (isAns) {
-            return smdao.deleteSpaceMarineById(id, realOwner);
+            if ( smdao.deleteSpaceMarineById(id, realOwner));
+            {
+                spaceMarines.clear();
+                java.util.List<SpaceMarine> sm = smdao.selectAll();
+                for (SpaceMarine m : sm) {
+                    spaceMarines.add(m);
+                }
+                return true;
+            }
+
         }
         return false;
     }
@@ -186,6 +196,6 @@ public class CollectionCache implements CollectionService {
         return smdao.getOwnerInfoBySpaceMarineId(spaceMarineId).get("name").toString();
     }
     public boolean isAncestorOrSelf(String potentialAncestor, String descendant) throws SQLException{
-        return smdao.isAncestorOrSelf(potentialAncestor, descendant);
+        return userDAO.isAncestorOrSelf(potentialAncestor, descendant);
     }
 }

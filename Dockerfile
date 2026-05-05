@@ -8,7 +8,6 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
-# Copy db.properties to the expected location INSIDE the container
 COPY src/server/db.properties src/server/db.properties
 EXPOSE 12345
 ENTRYPOINT ["java", "-jar", "app.jar", "--port", "12345"]

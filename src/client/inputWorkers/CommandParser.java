@@ -196,7 +196,6 @@ public class CommandParser {
     public String getXmlArg() {
         String str = xmlArg;
         xmlArg = null;
-//        TODO везде сделать стирание
         return str; }
     /** @return script path argument or null */
     public String getPathArg() {
