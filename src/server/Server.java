@@ -6,6 +6,7 @@ import server.console.ConsoleHandler;
 import server.db.DbInitializer;
 import server.db.config.DbConfig;
 import server.db.dao.SpaceMarineDAO;
+import server.db.dao.SpaceMarineMongoDAO;
 import server.db.dao.UserDAO;
 import server.io.NonBlockingConsoleReader;
 import server.manager.ClientRegistry;
@@ -90,14 +91,15 @@ public class Server {
             MongoProvider mongoProvider = new MongoDbProvider(mongoUri, mongoDb);
             mongoProvider.initialize();
             mongoProvider.start();
+            SpaceMarineMongoDAO spaceMarineMongoDAO = new SpaceMarineMongoDAO(mongoProvider);
 
             ServerConfig config = ServerConfig.parse(args);
             LoggingConfigurator.configure(config.getLogLevel());
             logger.info("=== Single-Threaded NIO Server Starting ===");
             UserDAO userDAO = new UserDAO(dbProvider);
-            SpaceMarineDAO spaceMarineDAO = new SpaceMarineDAO(dbProvider);
+//            SpaceMarineDAO spaceMarineDAO = new SpaceMarineDAO(dbProvider);
             AuthService authService = new AuthService(userDAO);
-            CollectionCache collectionCache = new CollectionCache(spaceMarineDAO);
+            CollectionCache collectionCache = new CollectionCache(userDAO, spaceMarineMongoDAO);
             CollectionSaver collectionSaver = new CollectionSaver();
             clientRegistry = new ClientRegistry();
             invoker = new Invoker(collectionCache, clientRegistry, authService);

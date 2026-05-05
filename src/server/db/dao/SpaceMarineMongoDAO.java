@@ -5,6 +5,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import server.db.provider.MongoProvider;
 import shared.models.*;
 import shared.enums.*;
@@ -155,5 +156,30 @@ public class SpaceMarineMongoDAO implements SMDAO {
     @Override
     public Map<String, Object> getOwnerInfoBySpaceMarineId(long spaceMarineId) throws SQLException {
         return Map.of();
+    }
+    @Override
+    public long getSpaceMarineId(SpaceMarine spaceMarine) throws SQLException {
+        List<Bson> filters = new ArrayList<>();
+        if (spaceMarine.getName() != null) filters.add(Filters.eq("name", spaceMarine.getName()));
+        if (spaceMarine.getHealth() != null) filters.add(Filters.eq("health", spaceMarine.getHealth()));
+        if (spaceMarine.getCategory() != null) filters.add(Filters.eq("category", spaceMarine.getCategory().name()));
+        if (spaceMarine.getWeaponType() != null) filters.add(Filters.eq("weapon_type", spaceMarine.getWeaponType().name()));
+        if (spaceMarine.getMeleeWeapon() != null) filters.add(Filters.eq("melee_weapon", spaceMarine.getMeleeWeapon().name()));
+        if (spaceMarine.getCreationDate() != null) {
+            filters.add(Filters.eq("creation_date", Date.from(spaceMarine.getCreationDate().toInstant())));
+        }
+        if (spaceMarine.getCoordinates() != null) {
+            filters.add(Filters.eq("coordinates.x", spaceMarine.getCoordinates().getX()));
+            filters.add(Filters.eq("coordinates.y", spaceMarine.getCoordinates().getY()));
+        }
+        if (spaceMarine.getChapter() != null) {
+            filters.add(Filters.eq("chapter.name", spaceMarine.getChapter().getName()));
+            filters.add(Filters.eq("chapter.parent_legion", spaceMarine.getChapter().getParentLegion()));
+            filters.add(Filters.eq("chapter.world", spaceMarine.getChapter().getWorld()));
+        }
+
+        if (filters.isEmpty()) return 0;
+        Document found = collection.find(Filters.and(filters)).first();
+        return found != null ? found.getLong("id") : 0;
     }
 }

@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserDAO {
     private final DbProvider provider;
@@ -60,5 +62,21 @@ public class UserDAO {
 
             }
         }
+    }
+    public Map<String, Object> getOwnerInfoBySpaceMarineId(long spaceMarineId) throws SQLException{
+        String sql = "SELECT u.id,u.name FROM Space_marines s join Users u on s.owner = u.id WHERE s.id = ?";
+        try (Connection connection = provider.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, spaceMarineId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()){
+                    Map<String, Object> mapa = new HashMap<>();
+                    mapa.put("id", rs.getLong("id"));
+                    mapa.put("name", rs.getString("name"));
+                    return mapa;
+                }
+            }
+        }
+        return null;
     }
 }

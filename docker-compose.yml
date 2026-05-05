@@ -1,0 +1,66 @@
+services:
+  postgres:
+    container_name: p_lab_7-postgres
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports: ["5433:5432"]
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pg_data:/var/lib/postgresql/data
+    networks: [p_lab_7_net]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  mongo:
+    container_name: p_lab_7-mongo
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${POSTGRES_PASSWORD}
+    ports: ["27018:27017"]
+    volumes:
+      - mongo_data:/data/db
+    networks: [p_lab_7_net]
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  server:
+    container_name: p_lab_7-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports: ["${SERVER_PORT}:${SERVER_PORT}"]
+    environment:
+      DB_URL: jdbc:postgresql://p_lab_7-postgres:5432/${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_POOL_SIZE: "10"
+      MONGO_URI: mongodb://root:${POSTGRES_PASSWORD}@p_lab_7-mongo:27017/admin
+      MONGO_DB: ${MONGO_DB}
+      PLAB5: /app/collection.xml
+      LOG_LEVEL: ${LOG_LEVEL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    networks: [p_lab_7_net]
+    restart: on-failure
+
+volumes:
+  pg_data:
+  mongo_data:
+
+networks:
+  p_lab_7_net:
+    driver: bridge

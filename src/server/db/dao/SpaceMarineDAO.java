@@ -208,7 +208,7 @@ public class SpaceMarineDAO implements SMDAO {
         return false;
 
     }
-    private Long getSpaceMarineId(SpaceMarine spaceMarine) throws  SQLException{
+    public long getSpaceMarineId(SpaceMarine spaceMarine) throws  SQLException{
         String sql = "select id from Space_marines where name = ? and"+
                 " creation_date = ? and" +
                 " health = ? and" +
@@ -229,7 +229,7 @@ public class SpaceMarineDAO implements SMDAO {
                 try (ResultSet rs = ps.executeQuery()){
                     if (rs.next()){
                         return rs.getLong("id");
-                    } return null;
+                    } return 0;
 
                 }
             }

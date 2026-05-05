@@ -23,4 +23,6 @@ public interface SMDAO {//SpaceMarineDataAccessObject
     boolean isAncestorOrSelf(String potentialAncestor, String descendant)  throws SQLException;
 
     boolean deleteSpaceMarine(SpaceMarine spaceMarine, String owner)  throws SQLException;
+
+    long getSpaceMarineId(SpaceMarine spaceMarine) throws SQLException;
 }
