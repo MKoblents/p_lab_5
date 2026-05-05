@@ -34,7 +34,7 @@ public class Invoker {
      */
     public CommandResponse runCommand(CommandRequest request) {
         String commandType = request.commandType();
-        if (commandType.equals("log_in")){
+        if (commandType.equals("log_in")|| commandType.equals("sign_in")){
             return commandMap.get(commandType).execute(request);
         }
         UserInfo userInfo = request.userInfo();
@@ -89,6 +89,7 @@ public class Invoker {
         registerCommand("could_be_updated", new CouldBeUpdatedCommand(collectionService));
         registerCommand("kill_client", new KillClientCommand(clientRegistry));
         registerCommand("log_in", new LogInCommand(authService, clientRegistry));
+        registerCommand("sign_in", new SignInCommand(authService,clientRegistry));
         logger.debug("Registering commands with Invoker");
     }
     /**

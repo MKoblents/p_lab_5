@@ -152,7 +152,7 @@ public class ClientSession implements AutoCloseable {
     private void handleLoginResponse(CommandResponse response) {
         if (response == null) return;
 
-        if (response.message() != null && response.message().contains("Log in success") && response.success()) {
+        if (response.message() != null && (response.message().contains("Log in success") || response.message().contains("Sign in success")) && response.success()) {
             context.setUserInfo((UserInfo) response.result());
             System.out.println("Login successful.");
             awaitingLogin = false;
@@ -165,7 +165,18 @@ public class ClientSession implements AutoCloseable {
                     awaitingLogin = true;
                     invoker.runCommand("log_in");
                 } else {
-                    awaitingLogin = false;
+                    System.out.print("Do you want to sign in? (y/n): ");
+                    try {
+                        String sign_in = ((ConsoleBufferedScanner) inputManager.getReader()).getInputString();
+                        if ("y".equalsIgnoreCase(sign_in)) {
+                            awaitingLogin = true;
+                            invoker.runCommand("sign_in");
+                        } else {
+                            awaitingLogin = false;
+                        }
+                    } catch (IOException e) {
+                        awaitingLogin = false;
+                    }
                 }
             } catch (IOException e) { awaitingLogin = false; }
         } else {
@@ -198,7 +209,7 @@ public class ClientSession implements AutoCloseable {
                         continue;
                     }
                 }
-                handleResponse(response);
+                handleLoginResponse(response);
             }
             CommandRequest forwarded = networkReader.getForwardQueue().poll();
             if (forwarded != null) {

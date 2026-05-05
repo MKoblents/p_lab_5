@@ -67,6 +67,7 @@ public class Invoker {
         registerCommand("kill_client", new KillClient(inputManager));
         registerCommand("log_in", new LogIn(inputManager, connection, context));
         registerCommand("log_out", new LogOut(context));
+        registerCommand("sign_in", new SignIn(inputManager,connection, context));
     }
 
     public CommandRequest runCommand(String commandName) {

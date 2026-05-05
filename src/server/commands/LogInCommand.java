@@ -33,17 +33,7 @@ public class LogInCommand implements Command{
                 clientRegistry.bindUserToClient(commandRequest.clientId(), userInfo.name());
                 return new CommandResponse(true, userInfo, "Log in success", commandRequest.requestId(), commandRequest.clientId());
             } else {
-//                return new CommandResponse(false, null, "Log in failed: invalid username or password", commandRequest.requestId(), commandRequest.clientId());
-//                TODO sign_in
-                clientRegistry.bindUserToClient(commandRequest.clientId(), userInfo.name());
-                Optional<String> parentName = null;
-                parentName = clientRegistry.findParentByChild(commandRequest.clientId());
-                String pn = null;
-                if (parentName.isPresent()){
-                    pn = clientRegistry.getUsernameByClientId(parentName.get());
-                }
-                authService.register(userInfo.name(), userInfo.password(), pn);
-                return new CommandResponse(true,userInfo,"Log in  success", commandRequest.requestId(),commandRequest.clientId());
+                return new CommandResponse(false, null, "Log in failed: invalid username or password", commandRequest.requestId(), commandRequest.clientId());
             }
         } catch (SQLException e){
             return new CommandResponse(false,userInfo,"Log in failed because of db access "+e.getMessage(), commandRequest.requestId(),commandRequest.clientId());
