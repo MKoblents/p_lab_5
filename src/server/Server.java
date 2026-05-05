@@ -84,6 +84,12 @@ public class Server {
             DbProvider dbProvider = new HikariDbProvider(dbConfig);
             DbInitializer dbInitializer = new DbInitializer(dbProvider);
             dbInitializer.start(Path.of("./sql/"));
+            String mongoUri = System.getenv("MONGO_URI") != null ? System.getenv("MONGO_URI") : "mongodb://localhost:27017";
+            String mongoDb = "studs_db";
+
+            MongoProvider mongoProvider = new MongoDbProvider(mongoUri, mongoDb);
+            mongoProvider.initialize();
+            mongoProvider.start();
 
             ServerConfig config = ServerConfig.parse(args);
             LoggingConfigurator.configure(config.getLogLevel());
@@ -133,6 +139,7 @@ public class Server {
                 } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
                 logger.info("All pools terminated.");
             }));
+            Runtime.getRuntime().addShutdownHook(new Thread(mongoProvider::shutdown));
 
             while (running.get()) {
                 try {
