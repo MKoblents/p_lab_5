@@ -2,7 +2,7 @@ package server.manager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import server.db.dao.SpaceMarineDAO;
+import server.db.dao.SMDAO;
 import shared.enums.MeleeWeapon;
 import shared.models.SpaceMarine;
 
@@ -15,11 +15,11 @@ public class CollectionCache implements CollectionService {
     private static final Logger logger = LoggerFactory.getLogger(CollectionCache.class);
     private final List<SpaceMarine> spaceMarines;
     private final Set<Long> updatingSpaceMarines = Collections.synchronizedSet(new HashSet<>());
-    private final SpaceMarineDAO spaceMarineDAO;
+    private final SMDAO spaceMarineDAO;
     private ZonedDateTime creationData;
-    public CollectionCache(SpaceMarineDAO spaceMarineDAO) throws SQLException {
+    public CollectionCache(SMDAO spaceMarineDAO) throws SQLException {
         this.spaceMarineDAO = spaceMarineDAO;
-        this.spaceMarines = (List<SpaceMarine>) Collections.synchronizedList(new ArrayList<>(spaceMarineDAO.selectAll()));
+        this.spaceMarines = Collections.synchronizedList(new ArrayList<>(spaceMarineDAO.selectAll()));
         creationData = ZonedDateTime.now();
     }
     @Override
@@ -126,7 +126,7 @@ public class CollectionCache implements CollectionService {
     public void clear(String ownerUsername) throws SQLException {
         spaceMarineDAO.clear(ownerUsername);
         spaceMarines.removeAll(spaceMarines);
-        List<SpaceMarine> spaceMarinesNew = (List<SpaceMarine>) Collections.synchronizedList(new ArrayList<>(spaceMarineDAO.selectAll()));
+        List<SpaceMarine> spaceMarinesNew = Collections.synchronizedList(new ArrayList<>(spaceMarineDAO.selectAll()));
         for (SpaceMarine s: spaceMarinesNew){
             spaceMarines.add(s);
         }

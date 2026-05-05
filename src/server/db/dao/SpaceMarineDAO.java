@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SpaceMarineDAO {
+public class SpaceMarineDAO implements SMDAO {
     private static final Logger logger = LoggerFactory.getLogger(SpaceMarineDAO.class);
     private final DbProvider provider;
     public SpaceMarineDAO(DbProvider provider){

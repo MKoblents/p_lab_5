@@ -8,12 +8,15 @@ import org.bson.Document;
 import server.db.provider.MongoProvider;
 import shared.models.*;
 import shared.enums.*;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class SpaceMarineMongoDAO {
+public class SpaceMarineMongoDAO implements SMDAO {
     private final MongoCollection<Document> collection;
     private static final AtomicLong idCounter = new AtomicLong(System.currentTimeMillis());
 
@@ -21,7 +24,18 @@ public class SpaceMarineMongoDAO {
         this.collection = provider.getDb().getCollection("space_marines");
     }
 
-    public List<SpaceMarine> findAll() {
+    @Override
+    public boolean isAncestorOrSelf(String potentialAncestor, String descendant) throws SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean deleteSpaceMarine(SpaceMarine spaceMarine, String owner) throws SQLException {
+        return false;
+    }
+
+    @Override
+    public List<SpaceMarine> selectAll() {
         List<SpaceMarine> result = new ArrayList<>();
         for (Document doc : collection.find()) {
             result.add(fromDocument(doc));
@@ -29,15 +43,16 @@ public class SpaceMarineMongoDAO {
         return result;
     }
 
-    public boolean insert(SpaceMarine marine, String owner) {
+    @Override
+    public boolean insertSpaceMarine(SpaceMarine marine, String owner) {
         if (marine.getId() <= 0) {
             marine.setId(idCounter.incrementAndGet());
         }
         collection.insertOne(toDocument(marine, owner));
         return true;
     }
-
-    public boolean update(long id, SpaceMarine marine, String owner) {
+    @Override
+    public boolean updateSpaceMarine(long id, SpaceMarine marine, String owner) {
         UpdateResult result = collection.replaceOne(
                 Filters.and(Filters.eq("id", id), Filters.eq("owner", owner)),
                 toDocument(marine, owner)
@@ -45,14 +60,15 @@ public class SpaceMarineMongoDAO {
         return result.getModifiedCount() > 0;
     }
 
-    public boolean deleteById(long id, String owner) {
+    public boolean deleteSpaceMarineById(long id, String owner) {
         DeleteResult result = collection.deleteOne(
                 Filters.and(Filters.eq("id", id), Filters.eq("owner", owner))
         );
         return result.getDeletedCount() > 0;
     }
 
-    public void clearByOwner(String owner) {
+    @Override
+    public void clear(String owner) {
         collection.deleteMany(Filters.eq("owner", owner));
     }
 
@@ -129,5 +145,15 @@ public class SpaceMarineMongoDAO {
             spaceMarine.setChapter(chapter);
         }
         return spaceMarine;
+    }
+
+    @Override
+    public boolean isIdInCollection(long id) throws SQLException {
+        return collection.countDocuments(Filters.eq("id", id)) > 0;
+    }
+
+    @Override
+    public Map<String, Object> getOwnerInfoBySpaceMarineId(long spaceMarineId) throws SQLException {
+        return Map.of();
     }
 }
