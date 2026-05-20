@@ -13,8 +13,18 @@ public class GuiClientApp {
     }
     private static void createAndShowGui() {
        MainWindow mainWindow = new MainWindow();
+        String username = mainWindow.showLoginDialog();
+
+        if (username != null) {
+            mainWindow.setUserName(username);
+            mainWindow.setStatus("Подключено как " + username);
+        } else {
+            mainWindow.setStatus("Ошибка авторизации");
+            // Можно закрыть приложение или показать диалог снова
+        }
 
         System.out.println("GUI Client started on EDT: " +
                 SwingUtilities.isEventDispatchThread());
+
     }
 }

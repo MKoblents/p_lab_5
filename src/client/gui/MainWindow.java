@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class MainWindow {
     private  final JFrame frame;
-    private final JLabel label;
+    private final JLabel statusLabel;
     private final JLabel userLabel;
     private final JComboBox<LocaleOption> localeCombo;
     public record LocaleOption(String code, String displayName){
@@ -21,13 +21,13 @@ public class MainWindow {
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout(5,5));
 
-        label = new JLabel("Status: connecting...");
+        statusLabel = new JLabel("Status: connecting...");
         userLabel = new JLabel("User: guest"); //todo name
         localeCombo =new JComboBox<>(createLocaleOptions());
         localeCombo.setMaximumSize(new Dimension(150,25));
 
         JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,10,2));
-        statusPanel.add(label);
+        statusPanel.add(statusLabel);
         statusPanel.add(Box.createHorizontalGlue());
         statusPanel.add(userLabel);
         statusPanel.add(Box.createRigidArea(new Dimension(20,0)));
@@ -66,5 +66,58 @@ public class MainWindow {
                 new LocaleOption("sv_SE", "Svenska"),
                 new LocaleOption("es_ES", "Español")
         };
+    }
+    public String showLoginDialog() {
+        LoginDialog loginDialog = new LoginDialog(frame);
+        loginDialog.setVisible(true);
+
+        if (loginDialog.isSuccess()) {
+            return loginDialog.getAuthenticatedUser();
+        }
+        return null;
+    }
+    public void setStatus(String message) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            statusLabel.setText("Статус: " + message);
+        } else {
+            SwingUtilities.invokeLater(() -> statusLabel.setText("Статус: " + message));
+        }
+    }
+    public void setUserName(String name) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            userLabel.setText("Пользователь: " + (name != null ? name : "Гость"));
+        } else {
+            SwingUtilities.invokeLater(() ->
+                    userLabel.setText("Пользователь: " + (name != null ? name : "Гость")));
+        }
+    }
+
+    /**
+     * Возвращает выбранную локаль.
+     */
+    public LocaleOption getSelectedLocale() {
+        return (LocaleOption) localeCombo.getSelectedItem();
+    }
+
+    /**
+     * Добавляет слушатель смены локали.
+     */
+    public void addLocaleChangeListener(java.util.function.Consumer<LocaleOption> listener) {
+        localeCombo.addActionListener(e -> {
+            LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
+            if (selected != null) {
+                listener.accept(selected);
+            }
+        });
+    }
+
+    /**
+     * Закрывает окно.
+     */
+    public void close() {
+        frame.dispose();
+    }
+    public JFrame getFrame() {
+        return frame;
     }
 }
