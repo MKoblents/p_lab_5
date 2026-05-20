@@ -34,15 +34,13 @@ import java.nio.channels.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
@@ -99,6 +97,18 @@ public class Server {
 //            SpaceMarineDAO spaceMarineDAO = new SpaceMarineDAO(dbProvider);
             AuthService authService = new AuthService(userDAO);
             CollectionCache collectionCache = new CollectionCache(userDAO, spaceMarineMongoDAO);
+            ScheduledExecutorService reloadScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "db-reloader");
+                t.setDaemon(true);
+                return t;
+            });
+            reloadScheduler.scheduleAtFixedRate(()->{
+                try {
+                    collectionCache.reload();
+                } catch (SQLException e) {
+                   logger.error("Failed to reload collection from BD: {}", e.getMessage());
+                }
+            }, 0, 5, TimeUnit.SECONDS);
             CollectionSaver collectionSaver = new CollectionSaver();
             clientRegistry = new ClientRegistry();
             invoker = new Invoker(collectionCache, clientRegistry, authService);
@@ -137,6 +147,7 @@ public class Server {
                     readParsePool.awaitTermination(5, TimeUnit.SECONDS);
                     commandPool.awaitTermination(5, TimeUnit.SECONDS);
                     writePool.awaitTermination(5, TimeUnit.SECONDS);
+                    reloadScheduler.awaitTermination(5, TimeUnit.SECONDS);
                 } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
                 logger.info("All pools terminated.");
             }));

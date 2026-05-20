@@ -42,6 +42,8 @@ services:
       context: .
       dockerfile: Dockerfile
     ports: ["${SERVER_PORT}:${SERVER_PORT}"]
+    stdin_open: true
+    tty: true
     environment:
       DB_URL: jdbc:postgresql://p_lab_7-postgres:5432/${POSTGRES_DB}
       DB_USER: ${POSTGRES_USER}

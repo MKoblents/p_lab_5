@@ -3,7 +3,6 @@ package server.manager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.db.dao.SMDAO;
-import server.db.dao.SpaceMarineMongoDAO;
 import server.db.dao.UserDAO;
 import shared.enums.MeleeWeapon;
 import shared.models.SpaceMarine;
@@ -39,6 +38,16 @@ public class CollectionCache implements CollectionService {
         }
         return false;
     }
+
+    @Override
+    public void reload() throws SQLException {
+        spaceMarines.clear();
+        java.util.List<SpaceMarine> sm = smdao.selectAll();
+        for (SpaceMarine m : sm) {
+            spaceMarines.add(m);
+        }
+    }
+
     @Override
     public boolean update(long id, SpaceMarine spaceMarine, String owner) throws SQLException {
         String realOwner = smdao.getOwnerInfoBySpaceMarineId(id).get("name").toString();
@@ -114,11 +123,7 @@ public class CollectionCache implements CollectionService {
         if (isAns) {
             if ( smdao.deleteSpaceMarineById(id, realOwner));
             {
-                spaceMarines.clear();
-                java.util.List<SpaceMarine> sm = smdao.selectAll();
-                for (SpaceMarine m : sm) {
-                    spaceMarines.add(m);
-                }
+                reload();
                 return true;
             }
 
@@ -153,11 +158,8 @@ public class CollectionCache implements CollectionService {
     @Override
     public void clear(String ownerUsername) throws SQLException {
         smdao.clear(ownerUsername);
-        spaceMarines.removeAll(spaceMarines);
-        List<SpaceMarine> spaceMarinesNew = Collections.synchronizedList(new ArrayList<>(smdao.selectAll()));
-        for (SpaceMarine s: spaceMarinesNew){
-            spaceMarines.add(s);
-        }
+//        spaceMarines.removeAll(spaceMarines);
+        reload();
     }
 
     @Override
