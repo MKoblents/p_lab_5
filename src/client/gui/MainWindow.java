@@ -6,33 +6,46 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow {
-    private  final JFrame frame;
+    private final JFrame frame;
     private final JLabel statusLabel;
     private final JLabel userLabel;
     private final JComboBox<LocaleOption> localeCombo;
-    public record LocaleOption(String code, String displayName){
+    private JMenu commandsMenu;
+    private JMenuItem addMenuItem;
+
+    public record LocaleOption(String code, String displayName) {
         @Override
         public String toString() {
             return displayName + " (" + code + ")";
         }
     }
-    public MainWindow(){
+
+    public MainWindow() {
         frame = new JFrame(LocaleManager.getAppTitle());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1200,800);
+        frame.setSize(1200, 800);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout(5,5));
+        frame.setLayout(new BorderLayout(5, 5));
 
         statusLabel = new JLabel(LocaleManager.get("main.status.connecting"));
         userLabel = new JLabel(LocaleManager.get("main.user.guest")); //todo name
-        localeCombo =new JComboBox<>(createLocaleOptions());
-        localeCombo.setMaximumSize(new Dimension(150,25));
+        localeCombo = new JComboBox<>(createLocaleOptions());
+        localeCombo.setMaximumSize(new Dimension(150, 25));
 
-        JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,10,2));
+        localeCombo.addActionListener(e -> {
+            LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
+            if (selected != null) {
+                String[] parts = selected.code().split("_");
+                LocaleManager.setLocale(parts[0], parts[1]);
+                updateUITexts();
+            }
+        });
+
+        JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 2));
         statusPanel.add(statusLabel);
         statusPanel.add(Box.createHorizontalGlue());
         statusPanel.add(userLabel);
-        statusPanel.add(Box.createRigidArea(new Dimension(20,0)));
+        statusPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         statusPanel.add(localeCombo);
 
         JMenuBar menuBar = createMenuBar();
@@ -40,23 +53,20 @@ public class MainWindow {
         //todo
 
         JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         contentPanel.add(new JLabel(LocaleManager.get("gui.loading"), SwingConstants.CENTER), BorderLayout.CENTER);
 
         frame.add(contentPanel, BorderLayout.CENTER);
-        frame.add(statusPanel,BorderLayout.SOUTH);
-
+        frame.add(statusPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
-
-
-
     }
 
     private JMenuBar createMenuBar() {
         //todo
         JMenuBar menuBar = new JMenuBar();
-        JMenu commandsMenu = new JMenu(LocaleManager.get("menu.commands"));
-        commandsMenu.add(new JMenuItem(LocaleManager.get("menu.add")));
+        commandsMenu = new JMenu(LocaleManager.get("menu.commands"));
+        addMenuItem = new JMenuItem(LocaleManager.get("menu.add"));
+        commandsMenu.add(addMenuItem);
         menuBar.add(commandsMenu);
         return menuBar;
     }
@@ -70,15 +80,26 @@ public class MainWindow {
                 new LocaleOption("en_US", LocaleManager.get("locale.en"))
         };
     }
+
+    public void updateUITexts() {
+        frame.setTitle(LocaleManager.getAppTitle());
+        statusLabel.setText(LocaleManager.get("main.status.connecting"));
+        userLabel.setText(LocaleManager.get("main.user.guest"));
+        if (commandsMenu != null) commandsMenu.setText(LocaleManager.get("menu.commands"));
+        if (addMenuItem != null) addMenuItem.setText(LocaleManager.get("menu.add"));
+        frame.revalidate();
+        frame.repaint();
+    }
+
     public String showLoginDialog() {
         LoginDialog loginDialog = new LoginDialog(frame);
         loginDialog.setVisible(true);
-
         if (loginDialog.isSuccess()) {
             return loginDialog.getAuthenticatedUser();
         }
         return null;
     }
+
     public void setStatus(String message) {
         if (SwingUtilities.isEventDispatchThread()) {
             statusLabel.setText(LocaleManager.get("main.status") + ": " + message);
@@ -86,6 +107,7 @@ public class MainWindow {
             SwingUtilities.invokeLater(() -> statusLabel.setText(LocaleManager.get("main.status") + ": " + message));
         }
     }
+
     public void setUserName(String name) {
         if (SwingUtilities.isEventDispatchThread()) {
             userLabel.setText(LocaleManager.get("main.user") + ": " + (name != null ? name : LocaleManager.get("main.user.guest")));
@@ -111,6 +133,7 @@ public class MainWindow {
     public void close() {
         frame.dispose();
     }
+
     public JFrame getFrame() {
         return frame;
     }
