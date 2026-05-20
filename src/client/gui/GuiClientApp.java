@@ -12,12 +12,8 @@ public class GuiClientApp {
         SwingUtilities.invokeLater(GuiClientApp::createAndShowGui);
     }
     private static void createAndShowGui() {
-        JFrame frame = new JFrame("spaceMarine Client");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1024, 768);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(true);
-        frame.setVisible(true);
+       MainWindow mainWindow = new MainWindow();
+
         System.out.println("GUI Client started on EDT: " +
                 SwingUtilities.isEventDispatchThread());
     }
