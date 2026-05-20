@@ -12,6 +12,10 @@ public class MainWindow {
     private final JComboBox<LocaleOption> localeCombo;
     private JMenu commandsMenu;
     private JMenuItem addMenuItem;
+    private JMenuBar menuBar;
+
+    private SpaceMarineTable tableModel;
+    private JTable tableView;
 
     public record LocaleOption(String code, String displayName) {
         @Override
@@ -28,7 +32,7 @@ public class MainWindow {
         frame.setLayout(new BorderLayout(5, 5));
 
         statusLabel = new JLabel(LocaleManager.get("main.status.connecting"));
-        userLabel = new JLabel(LocaleManager.get("main.user.guest")); //todo name
+        userLabel = new JLabel(LocaleManager.get("main.user.guest"));
         localeCombo = new JComboBox<>(createLocaleOptions());
         localeCombo.setMaximumSize(new Dimension(150, 25));
 
@@ -36,8 +40,10 @@ public class MainWindow {
             LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
             if (selected != null) {
                 String[] parts = selected.code().split("_");
-                LocaleManager.setLocale(parts[0], parts[1]);
-                updateUITexts();
+                if (parts.length == 2) {
+                    LocaleManager.setLocale(parts[0], parts[1]);
+                    updateUITexts();
+                }
             }
         });
 
@@ -48,13 +54,18 @@ public class MainWindow {
         statusPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         statusPanel.add(localeCombo);
 
-        JMenuBar menuBar = createMenuBar();
+        menuBar = createMenuBar();
         frame.setJMenuBar(menuBar);
         //todo
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        contentPanel.add(new JLabel(LocaleManager.get("gui.loading"), SwingConstants.CENTER), BorderLayout.CENTER);
+
+        tableModel = new SpaceMarineTable();
+        tableView = new JTable(tableModel);
+        JScrollPane tableScroll = new JScrollPane(tableView);
+
+        contentPanel.add(tableScroll, BorderLayout.CENTER);
 
         frame.add(contentPanel, BorderLayout.CENTER);
         frame.add(statusPanel, BorderLayout.SOUTH);
@@ -85,10 +96,40 @@ public class MainWindow {
         frame.setTitle(LocaleManager.getAppTitle());
         statusLabel.setText(LocaleManager.get("main.status.connecting"));
         userLabel.setText(LocaleManager.get("main.user.guest"));
-        if (commandsMenu != null) commandsMenu.setText(LocaleManager.get("menu.commands"));
-        if (addMenuItem != null) addMenuItem.setText(LocaleManager.get("menu.add"));
+
+        if (commandsMenu != null) {
+            commandsMenu.setText(LocaleManager.get("menu.commands"));
+        }
+        if (addMenuItem != null) {
+            addMenuItem.setText(LocaleManager.get("menu.add"));
+        }
+
+        LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
+        String selectedCode = selected != null ? selected.code() : "ru_RU";
+        localeCombo.removeAllItems();
+        for (LocaleOption option : createLocaleOptions()) {
+            localeCombo.addItem(option);
+        }
+
+        for (int i = 0; i < localeCombo.getItemCount(); i++) {
+            LocaleOption option = localeCombo.getItemAt(i);
+            if (option.code().equals(selectedCode)) {
+                localeCombo.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        if (tableModel != null) {
+            tableModel.fireTableStructureChanged();
+        }
+
         frame.revalidate();
         frame.repaint();
+
+        if (menuBar != null) {
+            menuBar.revalidate();
+            menuBar.repaint();
+        }
     }
 
     public String showLoginDialog() {
@@ -136,5 +177,9 @@ public class MainWindow {
 
     public JFrame getFrame() {
         return frame;
+    }
+
+    public SpaceMarineTable getTableModel() {
+        return tableModel;
     }
 }
