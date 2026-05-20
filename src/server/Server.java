@@ -49,9 +49,9 @@ public class Server {
     private static final long HEARTBEAT_TIMEOUT_MS = 30_000L;
     private static final long SELECT_TIMEOUT_MS = 1_000L;
 
-    private static ExecutorService readParsePool = new ForkJoinPool();
-    private static ExecutorService commandPool = new ForkJoinPool();
-    private static ExecutorService writePool = Executors.newCachedThreadPool();
+    private static ExecutorService readParsePool =Executors.newVirtualThreadPerTaskExecutor();
+    private static ExecutorService commandPool = Executors.newVirtualThreadPerTaskExecutor();
+    private static ExecutorService writePool = Executors.newVirtualThreadPerTaskExecutor();
 
     private static Selector selector;
     private static ClientRegistry clientRegistry;
@@ -142,14 +142,24 @@ public class Server {
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 logger.info("Shutting down thread pools...");
-                readParsePool.shutdown(); commandPool.shutdown(); writePool.shutdown();
+                readParsePool.shutdownNow();
+                commandPool.shutdownNow();
+                writePool.shutdownNow();
+
                 try {
-                    readParsePool.awaitTermination(5, TimeUnit.SECONDS);
-                    commandPool.awaitTermination(5, TimeUnit.SECONDS);
-                    writePool.awaitTermination(5, TimeUnit.SECONDS);
                     reloadScheduler.awaitTermination(5, TimeUnit.SECONDS);
-                } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
-                logger.info("All pools terminated.");
+                    boolean terminated1 = readParsePool.awaitTermination(5, TimeUnit.SECONDS);
+                    boolean terminated2 = commandPool.awaitTermination(5, TimeUnit.SECONDS);
+                    boolean terminated3 = writePool.awaitTermination(5, TimeUnit.SECONDS);
+
+                    if (!terminated1 || !terminated2 || !terminated3) {
+                        logger.warn("Some thread pools did not terminate gracefully");
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    logger.warn("Interrupted while waiting for thread pool termination");
+                }
+                logger.info("All pools shutdown initiated.");
             }));
             Runtime.getRuntime().addShutdownHook(new Thread(mongoProvider::shutdown));
 
