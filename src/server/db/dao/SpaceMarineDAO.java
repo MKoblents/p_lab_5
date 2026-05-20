@@ -17,41 +17,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SpaceMarineDAO {
+public class SpaceMarineDAO implements SMDAO {
     private static final Logger logger = LoggerFactory.getLogger(SpaceMarineDAO.class);
     private final DbProvider provider;
-    public SpaceMarineDAO(DbProvider provider){
+
+    public SpaceMarineDAO(DbProvider provider) {
         this.provider = provider;
     }
+
     public List<SpaceMarine> selectAll() throws SQLException {
         List<SpaceMarine> res = new ArrayList<>();
         String sql = "select * from Space_marines s left join Coordinates coor on s.coordinates = coor.id " +
                 "left join Chapters ch on s.chapter = ch.id;";
         try (Connection connection = provider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()){
-                while (resultSet.next()){
-                    res.add(mapRow(resultSet));
-                }
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                res.add(mapRow(resultSet));
+            }
         }
         return res;
     }
-    public boolean insertSpaceMarine(SpaceMarine spaceMarine, String ownerName)throws SQLException{
+
+    public boolean insertSpaceMarine(SpaceMarine spaceMarine, String ownerName) throws SQLException {
         String sqlMarineInsert = "INSERT INTO space_marines (name, creation_date, health, astartes_category, weapon, melee_weapon, coordinates, chapter, owner) " +
                 "VALUES (?, ?, ?, CAST(? AS astartes_category), CAST(? AS weapon), CAST(? AS melee_weapon), ?, ?, ?)";
-        long ownerId =getUserId(ownerName);
-        try (Connection connection = provider.getConnection()){
-            return sendIURequest(connection,spaceMarine,0, ownerId, sqlMarineInsert, RequestType.INSERTION);
+        long ownerId = getUserId(ownerName);
+        try (Connection connection = provider.getConnection()) {
+            return sendIURequest(connection, spaceMarine, 0, ownerId, sqlMarineInsert, RequestType.INSERTION);
         }
     }
 
-    private long getUserId(String ownerName)  throws  SQLException{
+    private long getUserId(String ownerName) throws SQLException {
         String sql = "select  id from users where name = ?";
         try (Connection connection = provider.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql)){
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, ownerName);
-            try (ResultSet rs = ps.executeQuery()){
-                if (rs.next()){
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
                     return rs.getLong("id");
                 } return 0;
             }
@@ -121,7 +124,7 @@ public class SpaceMarineDAO {
             try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
                 if (keys.next()){
                     spaceMarine.setId(keys.getLong(1));
-                    spaceMarine.setOwner(ownerId);
+                    spaceMarine.setOwner(String.valueOf(ownerId));
                     connection.commit();
                     return true;
                 }
@@ -208,7 +211,7 @@ public class SpaceMarineDAO {
         return false;
 
     }
-    private Long getSpaceMarineId(SpaceMarine spaceMarine) throws  SQLException{
+    public long getSpaceMarineId(SpaceMarine spaceMarine) throws  SQLException{
         String sql = "select id from Space_marines where name = ? and"+
                 " creation_date = ? and" +
                 " health = ? and" +
@@ -229,7 +232,7 @@ public class SpaceMarineDAO {
                 try (ResultSet rs = ps.executeQuery()){
                     if (rs.next()){
                         return rs.getLong("id");
-                    } return null;
+                    } return 0;
 
                 }
             }
@@ -260,7 +263,7 @@ public class SpaceMarineDAO {
         chapter.setParentLegion(resultSet.getString("parent_legion"));
         chapter.setWorld(resultSet.getString("world"));
         spaceMarine.setChapter(chapter);
-        spaceMarine.setOwner(resultSet.getLong("owner"));
+        spaceMarine.setOwner(resultSet.getString("owner"));
         return spaceMarine;
 
     }

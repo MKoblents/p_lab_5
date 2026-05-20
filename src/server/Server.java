@@ -5,7 +5,7 @@ import server.config.ServerConfig;
 import server.console.ConsoleHandler;
 import server.db.DbInitializer;
 import server.db.config.DbConfig;
-import server.db.dao.SpaceMarineDAO;
+import server.db.dao.SpaceMarineMongoDAO;
 import server.db.dao.UserDAO;
 import server.io.NonBlockingConsoleReader;
 import server.manager.ClientRegistry;
@@ -34,15 +34,13 @@ import java.nio.channels.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
@@ -84,14 +82,33 @@ public class Server {
             DbProvider dbProvider = new HikariDbProvider(dbConfig);
             DbInitializer dbInitializer = new DbInitializer(dbProvider);
             dbInitializer.start(Path.of("./sql/"));
+            String mongoUri = System.getenv("MONGO_URI") != null ? System.getenv("MONGO_URI") : "mongodb://localhost:27017";
+            String mongoDb = "studs_db";
+
+            MongoProvider mongoProvider = new MongoDbProvider(mongoUri, mongoDb);
+            mongoProvider.initialize();
+            mongoProvider.start();
+            SpaceMarineMongoDAO spaceMarineMongoDAO = new SpaceMarineMongoDAO(mongoProvider);
 
             ServerConfig config = ServerConfig.parse(args);
             LoggingConfigurator.configure(config.getLogLevel());
             logger.info("=== Single-Threaded NIO Server Starting ===");
             UserDAO userDAO = new UserDAO(dbProvider);
-            SpaceMarineDAO spaceMarineDAO = new SpaceMarineDAO(dbProvider);
+//            SpaceMarineDAO spaceMarineDAO = new SpaceMarineDAO(dbProvider);
             AuthService authService = new AuthService(userDAO);
-            CollectionCache collectionCache = new CollectionCache(spaceMarineDAO);
+            CollectionCache collectionCache = new CollectionCache(userDAO, spaceMarineMongoDAO);
+            ScheduledExecutorService reloadScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "db-reloader");
+                t.setDaemon(true);
+                return t;
+            });
+            reloadScheduler.scheduleAtFixedRate(()->{
+                try {
+                    collectionCache.reload();
+                } catch (SQLException e) {
+                   logger.error("Failed to reload collection from BD: {}", e.getMessage());
+                }
+            }, 0, 5, TimeUnit.SECONDS);
             CollectionSaver collectionSaver = new CollectionSaver();
             clientRegistry = new ClientRegistry();
             invoker = new Invoker(collectionCache, clientRegistry, authService);
@@ -130,9 +147,11 @@ public class Server {
                     readParsePool.awaitTermination(5, TimeUnit.SECONDS);
                     commandPool.awaitTermination(5, TimeUnit.SECONDS);
                     writePool.awaitTermination(5, TimeUnit.SECONDS);
+                    reloadScheduler.awaitTermination(5, TimeUnit.SECONDS);
                 } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
                 logger.info("All pools terminated.");
             }));
+            Runtime.getRuntime().addShutdownHook(new Thread(mongoProvider::shutdown));
 
             while (running.get()) {
                 try {

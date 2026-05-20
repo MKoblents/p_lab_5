@@ -241,4 +241,9 @@ public class CollectionManager  implements CollectionService{
     public boolean isAncestorOrSelf(String potentialAncestor, String descendant) throws SQLException {
         return true;
     }
+
+    @Override
+    public void reload() throws SQLException {
+//        TODO
+    }
 }

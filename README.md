@@ -5,7 +5,41 @@ A distributed client-server application for managing a collection of `SpaceMarin
 
 
 ## Build and Installation
-1. Clone the repository:
+
+
+
+to start
+```bash
+
+# 1. Clone & enter project
+git clone <repo-url> && cd p_lab_7
+
+# 2. Build & launch all services
+docker compose up -d --build
+
+# 3. Run client locally
+java -jar target/p_lab_7-client.jar --host localhost --port 12345
+```
+
+to send new version of jar to docker
+```bush
+mvn clean package -DskipTests
+docker compose build --no-cache server
+docker compose down
+docker compose up -d
+```
+
+to send new version without cache clean
+```
+mvn clean package -DskipTests
+docker compose build server
+docker compose down
+docker compose up -d
+
+```
+
+
+(1. Clone the repository:
    ```bash
      git clone <repository_url>
      cd <repository_directory>
@@ -14,6 +48,8 @@ A distributed client-server application for managing a collection of `SpaceMarin
    ```bash
    mvn clean package
    ```
+   )
+
   This generates two executable JAR files in the `target/` directory:
      - `p_lab_5-server.jar`
      - `p_lab_5-client.jar`
