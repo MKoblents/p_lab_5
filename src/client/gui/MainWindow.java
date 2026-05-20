@@ -1,5 +1,7 @@
 package client.gui;
 
+import client.utils.LocaleManager;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -15,14 +17,14 @@ public class MainWindow {
         }
     }
     public MainWindow(){
-        frame = new JFrame("SpaceMarine Client");
+        frame = new JFrame(LocaleManager.getAppTitle());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1200,800);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout(5,5));
 
-        statusLabel = new JLabel("Status: connecting...");
-        userLabel = new JLabel("User: guest"); //todo name
+        statusLabel = new JLabel(LocaleManager.get("main.status.connecting"));
+        userLabel = new JLabel(LocaleManager.get("main.user.guest")); //todo name
         localeCombo =new JComboBox<>(createLocaleOptions());
         localeCombo.setMaximumSize(new Dimension(150,25));
 
@@ -39,7 +41,7 @@ public class MainWindow {
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        contentPanel.add(new JLabel("GUI loading", SwingConstants.CENTER), BorderLayout.CENTER);
+        contentPanel.add(new JLabel(LocaleManager.get("gui.loading"), SwingConstants.CENTER), BorderLayout.CENTER);
 
         frame.add(contentPanel, BorderLayout.CENTER);
         frame.add(statusPanel,BorderLayout.SOUTH);
@@ -53,18 +55,19 @@ public class MainWindow {
     private JMenuBar createMenuBar() {
         //todo
         JMenuBar menuBar = new JMenuBar();
-        JMenu commandsMenu = new JMenu("Commands");
-        commandsMenu.add(new JMenuItem("ADD"));
+        JMenu commandsMenu = new JMenu(LocaleManager.get("menu.commands"));
+        commandsMenu.add(new JMenuItem(LocaleManager.get("menu.add")));
         menuBar.add(commandsMenu);
         return menuBar;
     }
 
     private LocaleOption[] createLocaleOptions() {
         return new LocaleOption[]{
-                new LocaleOption("ru_RU", "Русский"),
-                new LocaleOption("de_DE", "Deutsch"),
-                new LocaleOption("sv_SE", "Svenska"),
-                new LocaleOption("es_ES", "Español")
+                new LocaleOption("ru_RU", LocaleManager.get("locale.ru")),
+                new LocaleOption("de_DE", LocaleManager.get("locale.de")),
+                new LocaleOption("sv_SE", LocaleManager.get("locale.sv")),
+                new LocaleOption("es_ES", LocaleManager.get("locale.es")),
+                new LocaleOption("en_US", LocaleManager.get("locale.en"))
         };
     }
     public String showLoginDialog() {
@@ -78,30 +81,24 @@ public class MainWindow {
     }
     public void setStatus(String message) {
         if (SwingUtilities.isEventDispatchThread()) {
-            statusLabel.setText("Статус: " + message);
+            statusLabel.setText(LocaleManager.get("main.status") + ": " + message);
         } else {
-            SwingUtilities.invokeLater(() -> statusLabel.setText("Статус: " + message));
+            SwingUtilities.invokeLater(() -> statusLabel.setText(LocaleManager.get("main.status") + ": " + message));
         }
     }
     public void setUserName(String name) {
         if (SwingUtilities.isEventDispatchThread()) {
-            userLabel.setText("Пользователь: " + (name != null ? name : "Гость"));
+            userLabel.setText(LocaleManager.get("main.user") + ": " + (name != null ? name : LocaleManager.get("main.user.guest")));
         } else {
             SwingUtilities.invokeLater(() ->
-                    userLabel.setText("Пользователь: " + (name != null ? name : "Гость")));
+                    userLabel.setText(LocaleManager.get("main.user") + ": " + (name != null ? name : LocaleManager.get("main.user.guest"))));
         }
     }
 
-    /**
-     * Возвращает выбранную локаль.
-     */
     public LocaleOption getSelectedLocale() {
         return (LocaleOption) localeCombo.getSelectedItem();
     }
 
-    /**
-     * Добавляет слушатель смены локали.
-     */
     public void addLocaleChangeListener(java.util.function.Consumer<LocaleOption> listener) {
         localeCombo.addActionListener(e -> {
             LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
@@ -111,9 +108,6 @@ public class MainWindow {
         });
     }
 
-    /**
-     * Закрывает окно.
-     */
     public void close() {
         frame.dispose();
     }
