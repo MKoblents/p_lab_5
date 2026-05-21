@@ -3,6 +3,7 @@ package client.gui;
 import client.config.ClientConfig;
 import client.context.ClientContext;
 import client.network.ConnectionManager;
+import client.network.PollingService;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -106,6 +107,8 @@ public class GuiClientApp {
                 }
             };
             heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask, 0, 5, TimeUnit.SECONDS);
+            PollingService polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow);
+            polling.start();
         } else {
             mainWindow.setStatus("Login cancelled or failed");
             System.out.println("Login flow finished without success.");
