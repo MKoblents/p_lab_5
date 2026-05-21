@@ -14,6 +14,10 @@ public class MainWindow {
     private SpaceMarineTable tableModel;
     private JTable tableView;
 
+    private SpaceMarineCanvas canvas;
+    private CardLayout cardLayout;
+    private JButton switchButton;
+
     private JButton btnAdd;
     private JButton btnRemove;
     private JButton btnExecuteScript;
@@ -67,15 +71,30 @@ public class MainWindow {
         controlPanel = createControlPanel();
         frame.add(controlPanel, BorderLayout.WEST);
 
-        contentPanel = new JPanel(new BorderLayout());
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         tableModel = new SpaceMarineTable();
         tableView = new JTable(tableModel);
         JScrollPane tableScroll = new JScrollPane(tableView);
-        contentPanel.add(tableScroll, BorderLayout.CENTER);
+        contentPanel.add(tableScroll, "TABLE");
+
+        canvas = new SpaceMarineCanvas();
+        JScrollPane canvasScroll = new JScrollPane(canvas);
+        contentPanel.add(canvasScroll, "CANVAS");
 
         frame.add(contentPanel, BorderLayout.CENTER);
+        switchButton = new JButton("Switch to Map");
+        switchButton.addActionListener(e -> {
+            if (cardLayout instanceof CardLayout) {
+                // Переключаем между TABLE и CANVAS
+                // Это нужно реализовать через проверку текущего вида
+            }
+        });
+
+        statusPanel.add(switchButton);
+
         frame.setVisible(true);
     }
 
