@@ -1,7 +1,6 @@
 package client.gui;
 
 import client.utils.LocaleManager;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,7 +12,6 @@ public class MainWindow {
     private JMenu commandsMenu;
     private JMenuItem addMenuItem;
     private JMenuBar menuBar;
-
     private SpaceMarineTable tableModel;
     private JTable tableView;
 
@@ -64,7 +62,6 @@ public class MainWindow {
         tableModel = new SpaceMarineTable();
         tableView = new JTable(tableModel);
         JScrollPane tableScroll = new JScrollPane(tableView);
-
         contentPanel.add(tableScroll, BorderLayout.CENTER);
 
         frame.add(contentPanel, BorderLayout.CENTER);
@@ -97,49 +94,24 @@ public class MainWindow {
         statusLabel.setText(LocaleManager.get("main.status.connecting"));
         userLabel.setText(LocaleManager.get("main.user.guest"));
 
-        if (commandsMenu != null) {
-            commandsMenu.setText(LocaleManager.get("menu.commands"));
-        }
-        if (addMenuItem != null) {
-            addMenuItem.setText(LocaleManager.get("menu.add"));
-        }
+        if (commandsMenu != null) commandsMenu.setText(LocaleManager.get("menu.commands"));
+        if (addMenuItem != null) addMenuItem.setText(LocaleManager.get("menu.add"));
 
-        LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
-        String selectedCode = selected != null ? selected.code() : "ru_RU";
-        localeCombo.removeAllItems();
-        for (LocaleOption option : createLocaleOptions()) {
-            localeCombo.addItem(option);
-        }
-
-        for (int i = 0; i < localeCombo.getItemCount(); i++) {
-            LocaleOption option = localeCombo.getItemAt(i);
-            if (option.code().equals(selectedCode)) {
-                localeCombo.setSelectedIndex(i);
-                break;
-            }
-        }
-
-        if (tableModel != null) {
-            tableModel.fireTableStructureChanged();
-        }
+        if (tableModel != null) tableModel.fireTableStructureChanged();
 
         frame.revalidate();
         frame.repaint();
-
         if (menuBar != null) {
             menuBar.revalidate();
             menuBar.repaint();
         }
     }
 
-    public String showLoginDialog() {
-        LoginDialog loginDialog = new LoginDialog(frame);
-        loginDialog.setVisible(true);
-        if (loginDialog.isSuccess()) {
-            return loginDialog.getAuthenticatedUser();
-        }
-        return null;
-    }
+//    public String showLoginDialog(ConnectionManager connection) {
+//        LoginDialog loginDialog = new LoginDialog(frame, connection);
+//        loginDialog.setVisible(true);
+//        return loginDialog.isSuccess() ? loginDialog.getLoggedInUser() : null;
+//    }
 
     public void setStatus(String message) {
         if (SwingUtilities.isEventDispatchThread()) {
