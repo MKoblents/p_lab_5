@@ -1,6 +1,9 @@
 package client.gui;
 
 import client.utils.LocaleManager;
+import shared.models.SpaceMarine;
+import java.util.List;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -85,17 +88,67 @@ public class MainWindow {
         contentPanel.add(canvasScroll, "CANVAS");
 
         frame.add(contentPanel, BorderLayout.CENTER);
-        switchButton = new JButton("Switch to Map");
-        switchButton.addActionListener(e -> {
-            if (cardLayout instanceof CardLayout) {
-                // Переключаем между TABLE и CANVAS
-                // Это нужно реализовать через проверку текущего вида
-            }
-        });
-
+        switchButton = new JButton(LocaleManager.get("view.switch.to_map"));
+        switchButton.setActionCommand("btn.switch_view");
+        switchButton.addActionListener(e -> toggleView());
         statusPanel.add(switchButton);
 
+        cardLayout.show(contentPanel, "TABLE");
+
         frame.setVisible(true);
+    }
+    private void toggleView() {
+        if (cardLayout != null) {
+            String currentText = switchButton.getText();
+            String mapText = LocaleManager.get("view.switch.to_table");
+
+            if (currentText.equals(mapText) || currentText.contains("Table")) {
+                cardLayout.show(contentPanel, "TABLE");
+                switchButton.setText(LocaleManager.get("view.switch.to_map"));
+                setStatus("Table view");
+            } else {
+                cardLayout.show(contentPanel, "CANVAS");
+                switchButton.setText(LocaleManager.get("view.switch.to_table"));
+                setStatus("Map view");
+            }
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        }
+    }
+
+    public void switchToTableView() {
+        if (cardLayout != null) {
+            cardLayout.show(contentPanel, "TABLE");
+            switchButton.setText(LocaleManager.get("view.switch.to_map"));
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        }
+    }
+
+    public void switchToMapView() {
+        if (cardLayout != null) {
+            cardLayout.show(contentPanel, "CANVAS");
+            switchButton.setText(LocaleManager.get("view.switch.to_table"));
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        }
+    }
+
+    public void updateMapView(List<SpaceMarine> marines) {
+        if (canvas != null) {
+            SwingUtilities.invokeLater(() -> {
+                canvas.setMarines(marines);
+            });
+        }
+    }
+
+    public void updateAllViews(List<SpaceMarine> marines) {
+        if (tableModel != null) {
+            SwingUtilities.invokeLater(() -> {
+                tableModel.setData(marines);
+                if (canvas != null) canvas.setMarines(marines);
+            });
+        }
     }
 
     private JPanel createButton(String localeKey, Runnable action) {
@@ -166,6 +219,14 @@ public class MainWindow {
         statusLabel.setText(LocaleManager.get("main.status.connecting"));
         userLabel.setText(LocaleManager.get("main.user.guest"));
 
+        if (switchButton != null) {
+            String currentView = cardLayout != null ?
+                    (contentPanel.isShowing() ? "map" : "table") : "table";
+            boolean isMapView = switchButton.getText().contains(LocaleManager.get("view.switch.to_table").substring(0, 3));
+            switchButton.setText(isMapView ?
+                    LocaleManager.get("view.switch.to_table") :
+                    LocaleManager.get("view.switch.to_map"));
+        }
         updateButtonTexts(controlPanel);
 
         if (tableModel != null) tableModel.fireTableStructureChanged();
