@@ -9,11 +9,22 @@ public class MainWindow {
     private final JLabel statusLabel;
     private final JLabel userLabel;
     private final JComboBox<LocaleOption> localeCombo;
-    private JMenu commandsMenu;
-    private JMenuItem addMenuItem;
-    private JMenuBar menuBar;
+    private JPanel controlPanel;
+    private JPanel contentPanel;
     private SpaceMarineTable tableModel;
     private JTable tableView;
+
+    private JButton btnAdd;
+    private JButton btnRemove;
+    private JButton btnExecuteScript;
+    private JButton btnRemoveAll;
+    private JButton btnShowMine;
+    private JButton btnUpdate;
+    private JButton btnInfo;
+    private JButton btnSpawnClient;
+    private JButton btnKillClient;
+    private JButton btnHelp;
+    private JButton btnExit;
 
     public record LocaleOption(String code, String displayName) {
         @Override
@@ -51,12 +62,12 @@ public class MainWindow {
         statusPanel.add(userLabel);
         statusPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         statusPanel.add(localeCombo);
+        frame.add(statusPanel, BorderLayout.NORTH);
 
-        menuBar = createMenuBar();
-        frame.setJMenuBar(menuBar);
-        //todo
+        controlPanel = createControlPanel();
+        frame.add(controlPanel, BorderLayout.WEST);
 
-        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         tableModel = new SpaceMarineTable();
@@ -65,18 +76,61 @@ public class MainWindow {
         contentPanel.add(tableScroll, BorderLayout.CENTER);
 
         frame.add(contentPanel, BorderLayout.CENTER);
-        frame.add(statusPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
 
-    private JMenuBar createMenuBar() {
-        //todo
-        JMenuBar menuBar = new JMenuBar();
-        commandsMenu = new JMenu(LocaleManager.get("menu.commands"));
-        addMenuItem = new JMenuItem(LocaleManager.get("menu.add"));
-        commandsMenu.add(addMenuItem);
-        menuBar.add(commandsMenu);
-        return menuBar;
+    private JPanel createButton(String localeKey, Runnable action) {
+        JButton button = new JButton(LocaleManager.get(localeKey));
+        button.setActionCommand(localeKey);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setMaximumSize(new Dimension(160, 40));
+        button.setBackground(Color.WHITE);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.addActionListener(e -> action.run());
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 4));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(button);
+
+        switch (localeKey) {
+            case "btn.add" -> btnAdd = button;
+            case "btn.remove" -> btnRemove = button;
+            case "btn.execute_script" -> btnExecuteScript = button;
+            case "btn.remove_all" -> btnRemoveAll = button;
+            case "btn.show_mine" -> btnShowMine = button;
+            case "btn.update" -> btnUpdate = button;
+            case "btn.info" -> btnInfo = button;
+            case "btn.spawn_client" -> btnSpawnClient = button;
+            case "btn.kill_client" -> btnKillClient = button;
+            case "btn.help" -> btnHelp = button;
+            case "btn.exit" -> btnExit = button;
+        }
+
+        return buttonPanel;
+    }
+
+    private JPanel createControlPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(new Color(255, 105, 180));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setPreferredSize(new Dimension(200, 600));
+
+        panel.add(createButton("btn.add", () -> System.out.println("Add clicked")));
+        panel.add(createButton("btn.remove", () -> System.out.println("Remove clicked")));
+        panel.add(createButton("btn.execute_script", () -> System.out.println("Script clicked")));
+        panel.add(createButton("btn.remove_all", () -> System.out.println("Clear clicked")));
+        panel.add(createButton("btn.show_mine", () -> System.out.println("Show mine clicked")));
+        panel.add(createButton("btn.update", () -> System.out.println("Update clicked")));
+        panel.add(createButton("btn.info", () -> System.out.println("Info clicked")));
+        panel.add(createButton("btn.spawn_client", () -> System.out.println("Spawn clicked")));
+        panel.add(createButton("btn.kill_client", () -> System.out.println("Kill clicked")));
+        panel.add(createButton("btn.help", () -> System.out.println("Help clicked")));
+
+        panel.add(Box.createVerticalGlue()); // Прижать кнопку выхода вниз
+        panel.add(createButton("btn.exit", () -> System.exit(0)));
+
+        return panel;
     }
 
     private LocaleOption[] createLocaleOptions() {
@@ -84,8 +138,7 @@ public class MainWindow {
                 new LocaleOption("ru_RU", LocaleManager.get("locale.ru")),
                 new LocaleOption("de_DE", LocaleManager.get("locale.de")),
                 new LocaleOption("sv_SE", LocaleManager.get("locale.sv")),
-                new LocaleOption("es_ES", LocaleManager.get("locale.es")),
-                new LocaleOption("en_US", LocaleManager.get("locale.en"))
+                new LocaleOption("es_ES", LocaleManager.get("locale.es"))
         };
     }
 
@@ -94,39 +147,92 @@ public class MainWindow {
         statusLabel.setText(LocaleManager.get("main.status.connecting"));
         userLabel.setText(LocaleManager.get("main.user.guest"));
 
-        if (commandsMenu != null) commandsMenu.setText(LocaleManager.get("menu.commands"));
-        if (addMenuItem != null) addMenuItem.setText(LocaleManager.get("menu.add"));
+        updateButtonTexts(controlPanel);
 
         if (tableModel != null) tableModel.fireTableStructureChanged();
 
         frame.revalidate();
         frame.repaint();
-        if (menuBar != null) {
-            menuBar.revalidate();
-            menuBar.repaint();
+    }
+
+    private void updateButtonTexts(Container container) {
+        for (Component c : container.getComponents()) {
+            if (c instanceof JButton btn) {
+                String key = btn.getActionCommand();
+                if (key != null && !key.isEmpty()) {
+                    String text = LocaleManager.get(key);
+                    if (!text.startsWith("!")) {
+                        btn.setText(text);
+                    }
+                }
+            } else if (c instanceof Container subContainer) {
+                updateButtonTexts(subContainer);
+            }
         }
     }
 
-//    public String showLoginDialog(ConnectionManager connection) {
-//        LoginDialog loginDialog = new LoginDialog(frame, connection);
-//        loginDialog.setVisible(true);
-//        return loginDialog.isSuccess() ? loginDialog.getLoggedInUser() : null;
-//    }
+    public void setAddAction(Runnable action) { setButtonAction("btn.add", action); }
+    public void setRemoveAction(Runnable action) { setButtonAction("btn.remove", action); }
+    public void setScriptAction(Runnable action) { setButtonAction("btn.execute_script", action); }
+    public void setClearAction(Runnable action) { setButtonAction("btn.remove_all", action); }
+    public void setShowMineAction(Runnable action) { setButtonAction("btn.show_mine", action); }
+    public void setUpdateAction(Runnable action) { setButtonAction("btn.update", action); }
+    public void setInfoAction(Runnable action) { setButtonAction("btn.info", action); }
+    public void setSpawnAction(Runnable action) { setButtonAction("btn.spawn_client", action); }
+    public void setKillAction(Runnable action) { setButtonAction("btn.kill_client", action); }
+    public void setHelpAction(Runnable action) { setButtonAction("btn.help", action); }
+
+    private void setButtonAction(String localeKey, Runnable action) {
+        JButton btn = findButtonByKey(controlPanel, localeKey);
+        if (btn != null) {
+            for (var listener : btn.getActionListeners()) {
+                btn.removeActionListener(listener);
+            }
+            btn.addActionListener(e -> action.run());
+        }
+    }
+
+    private JButton findButtonByKey(Container container, String key) {
+        for (Component c : container.getComponents()) {
+            if (c instanceof JButton btn && key.equals(btn.getActionCommand())) {
+                return btn;
+            } else if (c instanceof Container sub) {
+                JButton found = findButtonByKey(sub, key);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    public JButton getBtnAdd() { return btnAdd; }
+    public JButton getBtnRemove() { return btnRemove; }
+    public JButton getBtnExecuteScript() { return btnExecuteScript; }
+    public JButton getBtnRemoveAll() { return btnRemoveAll; }
+    public JButton getBtnShowMine() { return btnShowMine; }
+    public JButton getBtnUpdate() { return btnUpdate; }
+    public JButton getBtnInfo() { return btnInfo; }
+    public JButton getBtnSpawnClient() { return btnSpawnClient; }
+    public JButton getBtnKillClient() { return btnKillClient; }
+    public JButton getBtnHelp() { return btnHelp; }
+    public JButton getBtnExit() { return btnExit; }
 
     public void setStatus(String message) {
         if (SwingUtilities.isEventDispatchThread()) {
             statusLabel.setText(LocaleManager.get("main.status") + ": " + message);
         } else {
-            SwingUtilities.invokeLater(() -> statusLabel.setText(LocaleManager.get("main.status") + ": " + message));
+            SwingUtilities.invokeLater(() ->
+                    statusLabel.setText(LocaleManager.get("main.status") + ": " + message));
         }
     }
 
     public void setUserName(String name) {
         if (SwingUtilities.isEventDispatchThread()) {
-            userLabel.setText(LocaleManager.get("main.user") + ": " + (name != null ? name : LocaleManager.get("main.user.guest")));
+            userLabel.setText(LocaleManager.get("main.user") + ": " +
+                    (name != null ? name : LocaleManager.get("main.user.guest")));
         } else {
             SwingUtilities.invokeLater(() ->
-                    userLabel.setText(LocaleManager.get("main.user") + ": " + (name != null ? name : LocaleManager.get("main.user.guest"))));
+                    userLabel.setText(LocaleManager.get("main.user") + ": " +
+                            (name != null ? name : LocaleManager.get("main.user.guest"))));
         }
     }
 
@@ -137,21 +243,11 @@ public class MainWindow {
     public void addLocaleChangeListener(java.util.function.Consumer<LocaleOption> listener) {
         localeCombo.addActionListener(e -> {
             LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
-            if (selected != null) {
-                listener.accept(selected);
-            }
+            if (selected != null) listener.accept(selected);
         });
     }
 
-    public void close() {
-        frame.dispose();
-    }
-
-    public JFrame getFrame() {
-        return frame;
-    }
-
-    public SpaceMarineTable getTableModel() {
-        return tableModel;
-    }
+    public void close() { frame.dispose(); }
+    public JFrame getFrame() { return frame; }
+    public SpaceMarineTable getTableModel() { return tableModel; }
 }
