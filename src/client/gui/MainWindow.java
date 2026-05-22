@@ -107,7 +107,7 @@ public class MainWindow {
         statusPanel.add(switchButton);
 
         cardLayout.show(contentPanel, "TABLE");
-        buttonsHandler = new ButtonsHandler(connection,frame);
+        buttonsHandler = new ButtonsHandler(connection,this);
 
         frame.setVisible(true);
     }
@@ -216,6 +216,7 @@ public class MainWindow {
         panel.add(Box.createVerticalGlue()); // Прижать кнопку выхода вниз
         panel.add(createButton("btn.exit", () -> System.exit(0)));
         btnAdd.addActionListener(e -> buttonsHandler.handleAdd());
+        btnRemove.addActionListener(e -> buttonsHandler.handleRemove());
 
         return panel;
     }
