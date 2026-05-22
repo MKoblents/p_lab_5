@@ -1,4 +1,4 @@
-package client.gui;
+package client.gui.buttons;
 
 import shared.enums.AstartesCategory;
 import shared.enums.MeleeWeapon;

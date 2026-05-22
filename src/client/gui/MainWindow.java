@@ -1,5 +1,9 @@
 package client.gui;
 
+import client.gui.buttons.ButtonsHandler;
+import client.gui.buttons.SpaceMarineInputDialog;
+import client.gui.window.SpaceMarineCanvas;
+import client.gui.window.SpaceMarineTable;
 import client.network.ConnectionManager;
 import client.utils.LocaleManager;
 import client.utils.RequestsFactory;
@@ -22,6 +26,7 @@ public class MainWindow {
     private JPanel contentPanel;
     private SpaceMarineTable tableModel;
     private JTable tableView;
+    private ButtonsHandler buttonsHandler;
 
     private SpaceMarineCanvas canvas;
     private CardLayout cardLayout;
@@ -102,6 +107,7 @@ public class MainWindow {
         statusPanel.add(switchButton);
 
         cardLayout.show(contentPanel, "TABLE");
+        buttonsHandler = new ButtonsHandler(connection,frame);
 
         frame.setVisible(true);
     }
@@ -209,7 +215,7 @@ public class MainWindow {
 
         panel.add(Box.createVerticalGlue()); // Прижать кнопку выхода вниз
         panel.add(createButton("btn.exit", () -> System.exit(0)));
-        btnAdd.addActionListener(e -> handleAdd());
+        btnAdd.addActionListener(e -> buttonsHandler.handleAdd());
 
         return panel;
     }
@@ -335,38 +341,7 @@ public class MainWindow {
             if (selected != null) listener.accept(selected);
         });
     }
-    private void handleAdd() {
-        SpaceMarineInputDialog dialog = new SpaceMarineInputDialog(frame);
-        dialog.setVisible(true);
 
-        SpaceMarine marine = dialog.getSpaceMarine();
-        if (marine != null) {
-            CommandRequest request = RequestsFactory.withMarine("add", marine);
-
-            try {
-                connection.sendRequest(request);
-                CommandResponse response = connection.readResponse();
-
-                if (response.success()) {
-                    JOptionPane.showMessageDialog(frame,
-                            "Space Marine added successfully!",
-                            "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-//                    refreshTable(); // Обновить таблицу
-                } else {
-                    JOptionPane.showMessageDialog(frame,
-                            "Error: " + response.message(),
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(frame,
-                        "Network error: " + ex.getMessage(),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
 
     public void close() { frame.dispose(); }
     public JFrame getFrame() { return frame; }

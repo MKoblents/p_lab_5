@@ -1,4 +1,4 @@
-package client.gui;
+package client.gui.window;
 
 import client.utils.LocaleManager;
 import shared.models.SpaceMarine;
