@@ -1,7 +1,13 @@
 package client.gui;
 
+import client.network.ConnectionManager;
 import client.utils.LocaleManager;
+import client.utils.RequestsFactory;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
+
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.*;
@@ -32,6 +38,7 @@ public class MainWindow {
     private JButton btnKillClient;
     private JButton btnHelp;
     private JButton btnExit;
+    private ConnectionManager connection;
 
     public record LocaleOption(String code, String displayName) {
         @Override
@@ -40,7 +47,8 @@ public class MainWindow {
         }
     }
 
-    public MainWindow() {
+    public MainWindow(ConnectionManager connection) {
+        this.connection = connection;
         frame = new JFrame(LocaleManager.getAppTitle());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1200, 800);
@@ -201,6 +209,7 @@ public class MainWindow {
 
         panel.add(Box.createVerticalGlue()); // Прижать кнопку выхода вниз
         panel.add(createButton("btn.exit", () -> System.exit(0)));
+        btnAdd.addActionListener(e -> handleAdd());
 
         return panel;
     }
@@ -325,6 +334,38 @@ public class MainWindow {
             LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
             if (selected != null) listener.accept(selected);
         });
+    }
+    private void handleAdd() {
+        SpaceMarineInputDialog dialog = new SpaceMarineInputDialog(frame);
+        dialog.setVisible(true);
+
+        SpaceMarine marine = dialog.getSpaceMarine();
+        if (marine != null) {
+            CommandRequest request = RequestsFactory.withMarine("add", marine);
+
+            try {
+                connection.sendRequest(request);
+                CommandResponse response = connection.readResponse();
+
+                if (response.success()) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Space Marine added successfully!",
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+//                    refreshTable(); // Обновить таблицу
+                } else {
+                    JOptionPane.showMessageDialog(frame,
+                            "Error: " + response.message(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(frame,
+                        "Network error: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     public void close() { frame.dispose(); }

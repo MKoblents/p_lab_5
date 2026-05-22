@@ -52,7 +52,7 @@ public class GuiClientApp {
 
         System.out.println("Handshake successful");
 
-        MainWindow mainWindow = new MainWindow();
+        MainWindow mainWindow = new MainWindow(connection);
 
         LoginDialog loginDialog = new LoginDialog(mainWindow.getFrame(), connection);
         loginDialog.setVisible(true);
