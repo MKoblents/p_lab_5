@@ -98,4 +98,32 @@ public class ButtonsHandler {
         File scriptFile = ExecuteScriptDialog.showScriptFileChooser(mainWindow.getFrame());
         //TODO
     }
+    public void handleClear(){
+        //TODO спрашивать пользователя точно ли он это хочет
+        CommandRequest request = RequestsFactory.createSimple("clear");
+
+        try {
+            connection.sendRequest(request);
+            CommandResponse response = connection.readResponse();
+
+            if (response.success()) {
+                JOptionPane.showMessageDialog(mainWindow.getFrame(),
+                        "Space Marine cleared successfully!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+                //todo
+//                    refreshTable(); // Обновить таблицу
+            } else {
+                JOptionPane.showMessageDialog(mainWindow.getFrame(),
+                        "Error: " + response.message(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(mainWindow.getFrame(),
+                    "Network error: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

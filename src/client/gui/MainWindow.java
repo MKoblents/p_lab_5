@@ -218,6 +218,7 @@ public class MainWindow {
         btnAdd.addActionListener(e -> buttonsHandler.handleAdd());
         btnRemove.addActionListener(e -> buttonsHandler.handleRemove());
         btnExecuteScript.addActionListener(e->buttonsHandler.handleExecuteScript());
+        btnRemoveAll.addActionListener(e->buttonsHandler.handleClear());
 
         return panel;
     }
