@@ -1,11 +1,6 @@
 package client.gui.buttons;
 
 import client.gui.MainWindow;
-import client.handlers.ResponseHandler;
-import client.inputWorkers.CommandParser;
-import client.inputWorkers.InputManager;
-import client.inputWorkers.Invoker;
-import client.io.ConsoleBufferedScanner;
 import client.network.ConnectionManager;
 import client.scripts.ScriptRunner;
 import client.utils.RequestsFactory;
@@ -33,30 +28,7 @@ public class ButtonsHandler {
         SpaceMarine marine = dialog.getSpaceMarine();
         if (marine != null) {
             CommandRequest request = RequestsFactory.withMarine("add", marine);
-
-            try {
-                connection.sendRequest(request);
-                CommandResponse response = connection.readResponse();
-
-                if (response.success()) {
-                    JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                            "Space Marine added successfully!",
-                            "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    //todo
-//                    refreshTable(); // Обновить таблицу
-                } else {
-                    JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                            "Error: " + response.message(),
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                        "Network error: " + ex.getMessage(),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
+            handleRequest(request, "Space Marine added successfully!");
         }
     }
     public void handleRemove(){
@@ -66,29 +38,7 @@ public class ButtonsHandler {
         if (dialog.isSuccess()) {
             SpaceMarine marineToRemove = dialog.getSelectedSpaceMarine();
             CommandRequest request = RequestsFactory.withLongArg("remove_by_id", marineToRemove.getId());
-            try{
-                connection.sendRequest(request);
-                CommandResponse response = connection.readResponse();
-
-                if (response.success()) {
-                    JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                            "Space Marine deleted successfully!",
-                            "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    //todo
-//                    refreshTable(); // Обновить таблицу
-                } else {
-                    JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                            "Error: " + response.message(),
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            }catch (IOException ex) {
-                JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                        "Network error: " + ex.getMessage(),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
+            handleRequest(request, "Space Marine deleted successfully!");
 
             System.out.println("Запрос на удаление ID: " + marineToRemove.getId());
         }
@@ -99,16 +49,26 @@ public class ButtonsHandler {
         //TODO
     }
     public void handleClear(){
-        //TODO спрашивать пользователя точно ли он это хочет
+        int confirm = JOptionPane.showConfirmDialog(null,
+                "Вы уверены, что хотите удалить все свои объекты?",
+                "Подтверждение", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.NO_OPTION) {
+            return;
+        }
         CommandRequest request = RequestsFactory.createSimple("clear");
 
+       handleRequest(request,"Space Marine cleared successfully!");
+    }
+
+    private void handleRequest(CommandRequest request, String successMessage){
         try {
             connection.sendRequest(request);
             CommandResponse response = connection.readResponse();
 
             if (response.success()) {
                 JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                        "Space Marine cleared successfully!",
+                        successMessage,
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE);
                 //todo
