@@ -1,6 +1,7 @@
 package client.gui;
 
 import client.gui.buttons.ButtonsHandler;
+import client.gui.utils.GuiUtils;
 import client.gui.window.SpaceMarineCanvas;
 import client.gui.window.SpaceMarineTable;
 import client.network.ConnectionManager;
@@ -18,7 +19,7 @@ public class MainWindow {
     private JFrame frame;
     private JLabel statusLabel;
     private JLabel userLabel;
-    private JComboBox<LocaleOption> localeCombo;
+    private JComboBox<GuiUtils.LocaleOption> localeCombo;
     private JPanel controlPanel;
     private JPanel contentPanel;
     private SpaceMarineTable tableModel;
@@ -41,30 +42,8 @@ public class MainWindow {
     private JButton btnHelp;
     private JButton btnExit;
 
-    // Original sizes for proportional scaling
     private Dimension originalSize;
     private double scaleFactor = 1.0;
-
-    // Base font sizes
-    private static final float BASE_FONT_SIZE = 12.0f;
-    private static final float BASE_TITLE_FONT_SIZE = 16.0f;
-    private static final float BASE_BUTTON_FONT_SIZE = 12.0f;
-
-    // Colors
-    private static final Color PRIMARY_COLOR = new Color(255, 105, 180);
-    private static final Color PRIMARY_DARK = new Color(255, 20, 147);
-    private static final Color PRIMARY_LIGHT = new Color(255, 182, 193);
-    private static final Color BACKGROUND_COLOR = new Color(255, 240, 248);
-    private static final Color BUTTON_COLOR = Color.WHITE;
-    private static final Color TEXT_COLOR = new Color(33, 33, 33);
-    private static final Color PANEL_COLOR = new Color(255, 105, 180);
-
-    public record LocaleOption(String code, String displayName) {
-        @Override
-        public String toString() {
-            return displayName + " (" + code + ")";
-        }
-    }
 
     public MainWindow(ConnectionManager connection) {
         this.connection = connection;
@@ -73,21 +52,18 @@ public class MainWindow {
         setupLayout();
         buttonsHandler = new ButtonsHandler(connection, this);
 
-        // Set original size and add resize listener
         originalSize = new Dimension(1200, 800);
         frame.setSize(originalSize);
         frame.setLocationRelativeTo(null);
 
-        // Add resize listener for proportional scaling
-        frame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                scaleFactor = (double) frame.getWidth() / originalSize.width;
-                resizeComponents();
-            }
-        });
+        GuiUtils.addResizeListener(frame.getContentPane(), originalSize, this::onResize);
 
         frame.setVisible(true);
+    }
+
+    private void onResize(double newScaleFactor) {
+        this.scaleFactor = newScaleFactor;
+        resizeComponents();
     }
 
     public double getScaleFactor() {
@@ -95,32 +71,27 @@ public class MainWindow {
     }
 
     private void resizeComponents() {
-        // Scale fonts
-        float scaledFontSize = (float) (BASE_FONT_SIZE * scaleFactor);
-        float scaledTitleFontSize = (float) (BASE_TITLE_FONT_SIZE * scaleFactor);
-        float scaledButtonFontSize = (float) (BASE_BUTTON_FONT_SIZE * scaleFactor);
+        float scaledFontSize = (float) (GuiUtils.BASE_FONT_SIZE * scaleFactor);
+        float scaledTitleFontSize = (float) (GuiUtils.BASE_TITLE_FONT_SIZE * scaleFactor);
+        float scaledButtonFontSize = (float) (GuiUtils.BASE_BUTTON_FONT_SIZE * scaleFactor);
 
         Font regularFont = new Font("Segoe UI", Font.PLAIN, (int) scaledFontSize);
         Font boldFont = new Font("Segoe UI", Font.BOLD, (int) scaledFontSize);
         Font titleFont = new Font("Segoe UI", Font.BOLD, (int) scaledTitleFontSize);
         Font buttonFont = new Font("Segoe UI", Font.BOLD, (int) scaledButtonFontSize);
 
-        // Update status bar fonts
         statusLabel.setFont(regularFont);
         userLabel.setFont(regularFont);
         localeCombo.setFont(regularFont);
 
-        // Update table fonts and row height
         if (tableView != null) {
             tableView.setFont(regularFont);
             tableView.setRowHeight((int) (28 * scaleFactor));
             tableView.getTableHeader().setFont(boldFont);
         }
 
-        // Update button fonts
         updateButtonFonts(controlPanel, buttonFont);
 
-        // Update component sizes
         int scaledButtonWidth = (int) (190 * scaleFactor);
         int scaledButtonHeight = (int) (40 * scaleFactor);
         int scaledPanelWidth = (int) (220 * scaleFactor);
@@ -128,11 +99,9 @@ public class MainWindow {
         int scaledButtonGap = (int) (8 * scaleFactor);
         int scaledBorderInset = (int) (15 * scaleFactor);
 
-        // Update control panel width
         controlPanel.setPreferredSize(new Dimension(scaledPanelWidth, 0));
         controlPanel.setMaximumSize(new Dimension(scaledPanelWidth, Integer.MAX_VALUE));
 
-        // Update top panel height
         Component[] components = frame.getContentPane().getComponents();
         for (Component comp : components) {
             if (comp instanceof JPanel && comp.getName() != null && comp.getName().equals("topPanel")) {
@@ -140,21 +109,17 @@ public class MainWindow {
             }
         }
 
-        // Update button sizes
         updateButtonSizes(controlPanel, scaledButtonWidth, scaledButtonHeight, scaledButtonGap);
 
-        // Update switch button
         if (switchButton != null) {
             switchButton.setPreferredSize(new Dimension((int) (140 * scaleFactor), (int) (28 * scaleFactor)));
             switchButton.setFont(buttonFont);
         }
 
-        // Update content panel border
         contentPanel.setBorder(BorderFactory.createEmptyBorder(
                 scaledBorderInset, scaledBorderInset, scaledBorderInset, scaledBorderInset
         ));
 
-        // Repaint
         frame.revalidate();
         frame.repaint();
     }
@@ -191,63 +156,49 @@ public class MainWindow {
         frame = new JFrame(LocaleManager.getAppTitle());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout(0, 0));
-        frame.setBackground(BACKGROUND_COLOR);
-        frame.getContentPane().setBackground(BACKGROUND_COLOR);
+        frame.setBackground(GuiUtils.BACKGROUND_COLOR);
+        frame.getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
     }
 
     private void initializeComponents() {
-        // Status bar components
         statusLabel = new JLabel(LocaleManager.get("main.status.connecting"));
-        statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_FONT_SIZE));
+        statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_FONT_SIZE));
 
         userLabel = new JLabel(LocaleManager.get("main.user.guest"));
-        userLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_FONT_SIZE));
+        userLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_FONT_SIZE));
 
-        localeCombo = new JComboBox<>(createLocaleOptions());
-        localeCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_FONT_SIZE));
-        localeCombo.setMaximumSize(new Dimension(150, 28));
-        localeCombo.setPreferredSize(new Dimension(150, 28));
-
-        // Locale change listener
-        localeCombo.addActionListener(e -> {
-            LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
-            if (selected != null) {
-                String[] parts = selected.code().split("_");
-                if (parts.length == 2) {
-                    LocaleManager.setLocale(parts[0], parts[1]);
-                    updateUITexts();
-                }
+        localeCombo = GuiUtils.createLocaleComboBox(selected -> {
+            String[] parts = selected.code().split("_");
+            if (parts.length == 2) {
+                LocaleManager.setLocale(parts[0], parts[1]);
+                updateUITexts();
             }
         });
 
-        // Card layout for switching views
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        contentPanel.setBackground(BACKGROUND_COLOR);
+        contentPanel.setBackground(GuiUtils.BACKGROUND_COLOR);
 
-        // Table view
         tableModel = new SpaceMarineTable();
         tableView = new JTable(tableModel);
         tableView.setFillsViewportHeight(true);
         tableView.setRowHeight(28);
-        tableView.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_FONT_SIZE));
-        tableView.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_FONT_SIZE));
-        tableView.setSelectionBackground(PRIMARY_LIGHT);
+        tableView.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_FONT_SIZE));
+        tableView.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, (int) GuiUtils.BASE_FONT_SIZE));
+        tableView.setSelectionBackground(GuiUtils.PRIMARY_LIGHT);
         JScrollPane tableScroll = new JScrollPane(tableView);
-        tableScroll.setBorder(BorderFactory.createLineBorder(PRIMARY_LIGHT, 1));
+        tableScroll.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
         contentPanel.add(tableScroll, "TABLE");
 
-        // Canvas view
         canvas = new SpaceMarineCanvas();
         JScrollPane canvasScroll = new JScrollPane(canvas);
-        canvasScroll.setBorder(BorderFactory.createLineBorder(PRIMARY_LIGHT, 1));
+        canvasScroll.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
         contentPanel.add(canvasScroll, "CANVAS");
 
-        // Switch button
         switchButton = new JButton(LocaleManager.get("view.switch.to_map"));
-        switchButton.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_BUTTON_FONT_SIZE));
-        switchButton.setBackground(PRIMARY_COLOR);
+        switchButton.setFont(new Font("Segoe UI", Font.BOLD, (int) GuiUtils.BASE_BUTTON_FONT_SIZE));
+        switchButton.setBackground(GuiUtils.PRIMARY_COLOR);
         switchButton.setForeground(Color.WHITE);
         switchButton.setFocusPainted(false);
         switchButton.setBorderPainted(false);
@@ -257,44 +208,36 @@ public class MainWindow {
     }
 
     private void setupLayout() {
-        // Top panel (status bar)
         JPanel topPanel = createTopPanel();
         topPanel.setName("topPanel");
         frame.add(topPanel, BorderLayout.NORTH);
 
-        // Control panel (sidebar)
         controlPanel = createControlPanel();
         frame.add(controlPanel, BorderLayout.WEST);
 
-        // Content panel (center)
         frame.add(contentPanel, BorderLayout.CENTER);
 
-        // Show table by default
         cardLayout.show(contentPanel, "TABLE");
     }
 
     private JPanel createTopPanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 0));
-        panel.setBackground(PRIMARY_COLOR);
+        panel.setBackground(GuiUtils.PRIMARY_COLOR);
         panel.setBorder(new EmptyBorder(10, 15, 10, 15));
         panel.setPreferredSize(new Dimension(0, 50));
 
-        // Left section - status
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         leftPanel.setOpaque(false);
         leftPanel.add(statusLabel);
         statusLabel.setForeground(Color.WHITE);
 
-        // Center section - user info
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         centerPanel.setOpaque(false);
         centerPanel.add(userLabel);
         userLabel.setForeground(Color.WHITE);
 
-        // Right section - locale and switch
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         rightPanel.setOpaque(false);
-        localeCombo.setBackground(Color.WHITE);
         rightPanel.add(localeCombo);
         rightPanel.add(switchButton);
 
@@ -308,20 +251,18 @@ public class MainWindow {
     private JPanel createControlPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(PANEL_COLOR);
+        panel.setBackground(GuiUtils.PANEL_COLOR);
         panel.setBorder(new EmptyBorder(20, 15, 20, 15));
         panel.setPreferredSize(new Dimension(220, 0));
         panel.setMaximumSize(new Dimension(220, Integer.MAX_VALUE));
 
-        // Title
         JLabel titleLabel = new JLabel("Commands", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_TITLE_FONT_SIZE));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) GuiUtils.BASE_TITLE_FONT_SIZE));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setBorder(new EmptyBorder(0, 0, 20, 0));
         panel.add(titleLabel);
 
-        // Create buttons with consistent styling
         int buttonWidth = 190;
         int buttonHeight = 40;
 
@@ -339,7 +280,6 @@ public class MainWindow {
         panel.add(Box.createVerticalGlue());
         panel.add(createStyledButton("btn.exit", buttonWidth, buttonHeight, () -> System.exit(0)));
 
-        // Add specific action listeners
         btnAdd.addActionListener(e -> buttonsHandler.handleAdd());
         btnRemove.addActionListener(e -> buttonsHandler.handleRemove());
         btnExecuteScript.addActionListener(e -> buttonsHandler.handleExecuteScript());
@@ -352,40 +292,15 @@ public class MainWindow {
     }
 
     private JPanel createStyledButton(String localeKey, int width, int height, Runnable defaultAction) {
-        JButton button = new JButton(LocaleManager.get(localeKey));
+        JButton button = GuiUtils.createStyledButton(LocaleManager.get(localeKey), width, height, defaultAction);
         button.setActionCommand(localeKey);
-        button.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_BUTTON_FONT_SIZE));
-        button.setBackground(BUTTON_COLOR);
-        button.setForeground(TEXT_COLOR);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setPreferredSize(new Dimension(width, height));
-        button.setMaximumSize(new Dimension(width, height));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(PRIMARY_DARK, 1),
-                BorderFactory.createEmptyBorder(5, 15, 5, 15)
-        ));
-
-        // Hover effect
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(PRIMARY_LIGHT);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(BUTTON_COLOR);
-            }
-        });
-
-        button.addActionListener(e -> defaultAction.run());
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 8));
         buttonPanel.setOpaque(false);
         buttonPanel.setMaximumSize(new Dimension(width, height + 16));
         buttonPanel.add(button);
 
-        // Store button references
         switch (localeKey) {
             case "btn.add" -> btnAdd = button;
             case "btn.remove" -> btnRemove = button;
@@ -453,15 +368,6 @@ public class MainWindow {
                 if (canvas != null) canvas.setMarines(marines);
             });
         }
-    }
-
-    private LocaleOption[] createLocaleOptions() {
-        return new LocaleOption[]{
-                new LocaleOption("ru_RU", LocaleManager.get("locale.ru")),
-                new LocaleOption("de_DE", LocaleManager.get("locale.de")),
-                new LocaleOption("sv_SE", LocaleManager.get("locale.sv")),
-                new LocaleOption("es_ES", LocaleManager.get("locale.es"))
-        };
     }
 
     public void updateUITexts() {
@@ -564,13 +470,13 @@ public class MainWindow {
         }
     }
 
-    public LocaleOption getSelectedLocale() {
-        return (LocaleOption) localeCombo.getSelectedItem();
+    public GuiUtils.LocaleOption getSelectedLocale() {
+        return (GuiUtils.LocaleOption) localeCombo.getSelectedItem();
     }
 
-    public void addLocaleChangeListener(java.util.function.Consumer<LocaleOption> listener) {
+    public void addLocaleChangeListener(java.util.function.Consumer<GuiUtils.LocaleOption> listener) {
         localeCombo.addActionListener(e -> {
-            LocaleOption selected = (LocaleOption) localeCombo.getSelectedItem();
+            GuiUtils.LocaleOption selected = (GuiUtils.LocaleOption) localeCombo.getSelectedItem();
             if (selected != null) listener.accept(selected);
         });
     }
