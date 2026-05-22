@@ -1,21 +1,30 @@
 package client.gui.buttons;
 
 import client.gui.MainWindow;
+import client.handlers.ResponseHandler;
+import client.inputWorkers.CommandParser;
+import client.inputWorkers.InputManager;
+import client.inputWorkers.Invoker;
+import client.io.ConsoleBufferedScanner;
 import client.network.ConnectionManager;
+import client.scripts.ScriptRunner;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 
 public class ButtonsHandler {
     private ConnectionManager connection;
     private MainWindow mainWindow;
+    private ScriptRunner scriptRunner;
     public ButtonsHandler(ConnectionManager connection, MainWindow mainWindow){
         this.connection = connection;
         this.mainWindow=mainWindow;
+//        scriptRunner = new ScriptRunner(inputManager,connection,null,new Invoker(null,RequestsFactory.))
     }
     public void handleAdd() {
         SpaceMarineInputDialog dialog = new SpaceMarineInputDialog(mainWindow.getFrame());
@@ -83,5 +92,10 @@ public class ButtonsHandler {
 
             System.out.println("Запрос на удаление ID: " + marineToRemove.getId());
         }
+    }
+
+    public void handleExecuteScript(){
+        File scriptFile = ExecuteScriptDialog.showScriptFileChooser(mainWindow.getFrame());
+        //TODO
     }
 }

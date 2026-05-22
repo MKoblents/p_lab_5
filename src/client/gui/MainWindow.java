@@ -217,6 +217,7 @@ public class MainWindow {
         panel.add(createButton("btn.exit", () -> System.exit(0)));
         btnAdd.addActionListener(e -> buttonsHandler.handleAdd());
         btnRemove.addActionListener(e -> buttonsHandler.handleRemove());
+        btnExecuteScript.addActionListener(e->buttonsHandler.handleExecuteScript());
 
         return panel;
     }
