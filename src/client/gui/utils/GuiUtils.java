@@ -157,4 +157,36 @@ public class GuiUtils {
         });
         return field;
     }
+    /**
+     * Creates a generically-styled JComboBox with pink theme.
+     * @param <T> the type of items in the combo box
+     * @return styled JComboBox instance
+     */
+    public static <T> JComboBox<T> createStyledComboBox() {
+        JComboBox<T> combo = new JComboBox<>();
+        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_FONT_SIZE));
+        combo.setBackground(Color.WHITE);
+        combo.setForeground(TEXT_COLOR);
+        combo.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
+        combo.setPreferredSize(new Dimension(300, 30));
+        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
+
+        // Default renderer with selection styling
+        combo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (isSelected) {
+                    setBackground(PRIMARY_COLOR);
+                    setForeground(Color.WHITE);
+                } else {
+                    setBackground(Color.WHITE);
+                    setForeground(TEXT_COLOR);
+                }
+                return this;
+            }
+        });
+
+        return combo;
+    }
 }
