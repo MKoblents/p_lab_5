@@ -219,6 +219,7 @@ public class MainWindow {
         btnRemove.addActionListener(e -> buttonsHandler.handleRemove());
         btnExecuteScript.addActionListener(e->buttonsHandler.handleExecuteScript());
         btnRemoveAll.addActionListener(e->buttonsHandler.handleClear());
+        btnUpdate.addActionListener(e->buttonsHandler.handleUpdate());
 
         return panel;
     }

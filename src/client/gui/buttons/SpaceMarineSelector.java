@@ -64,4 +64,7 @@ public class SpaceMarineSelector extends JPanel {
             return this;
         }
     }
+    public JComboBox<SpaceMarine> getComboBox() {
+        return comboBox;
+    }
 }

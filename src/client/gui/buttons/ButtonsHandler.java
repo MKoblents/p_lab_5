@@ -86,4 +86,13 @@ public class ButtonsHandler {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
+    public void handleUpdate(){
+        SpaceMarineUpdateDialog updateDialog = new SpaceMarineUpdateDialog(mainWindow.getFrame(),mainWindow.getTableModel());
+        updateDialog.setVisible(true);
+        SpaceMarine updateMarine = updateDialog.getUpdatedSpaceMarine();
+        if (updateMarine != null){
+            CommandRequest request = RequestsFactory.createTwoArgs("update", updateMarine.getId(), updateMarine);
+            handleRequest(request, "SpaceMarine updated successfully!");
+        }
+    }
 }
