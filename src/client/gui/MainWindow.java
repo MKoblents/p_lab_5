@@ -220,6 +220,8 @@ public class MainWindow {
         btnExecuteScript.addActionListener(e->buttonsHandler.handleExecuteScript());
         btnRemoveAll.addActionListener(e->buttonsHandler.handleClear());
         btnUpdate.addActionListener(e->buttonsHandler.handleUpdate());
+        btnHelp.addActionListener(e->buttonsHandler.handleHelp());
+        btnInfo.addActionListener(e-> buttonsHandler.handleInfo());
 
         return panel;
     }

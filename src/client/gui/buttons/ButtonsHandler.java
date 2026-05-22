@@ -95,4 +95,29 @@ public class ButtonsHandler {
             handleRequest(request, "SpaceMarine updated successfully!");
         }
     }
+    public void handleInfo(){
+        showSimple("info");
+    }
+    public void handleHelp(){
+        showSimple("help");
+    }
+    private void showSimple(String commandKey){
+        CommandRequest request = RequestsFactory.createSimple(commandKey);
+        try {
+            connection.sendRequest(request);
+            CommandResponse response = connection.readResponse();
+            System.out.println(request);
+            System.out.println(response);
+
+            JOptionPane.showMessageDialog(mainWindow.getFrame(),
+                   response.result(),
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(mainWindow.getFrame(),
+                    "Network error: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
