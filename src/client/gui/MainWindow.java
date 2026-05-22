@@ -1,7 +1,17 @@
 package client.gui;
 
+import client.gui.buttons.ButtonsHandler;
+import client.gui.buttons.SpaceMarineInputDialog;
+import client.gui.window.SpaceMarineCanvas;
+import client.gui.window.SpaceMarineTable;
+import client.network.ConnectionManager;
 import client.utils.LocaleManager;
+import client.utils.RequestsFactory;
+import shared.dto.CommandRequest;
+import shared.dto.CommandResponse;
 import shared.models.SpaceMarine;
+
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.*;
@@ -16,6 +26,7 @@ public class MainWindow {
     private JPanel contentPanel;
     private SpaceMarineTable tableModel;
     private JTable tableView;
+    private ButtonsHandler buttonsHandler;
 
     private SpaceMarineCanvas canvas;
     private CardLayout cardLayout;
@@ -32,6 +43,7 @@ public class MainWindow {
     private JButton btnKillClient;
     private JButton btnHelp;
     private JButton btnExit;
+    private ConnectionManager connection;
 
     public record LocaleOption(String code, String displayName) {
         @Override
@@ -40,7 +52,8 @@ public class MainWindow {
         }
     }
 
-    public MainWindow() {
+    public MainWindow(ConnectionManager connection) {
+        this.connection = connection;
         frame = new JFrame(LocaleManager.getAppTitle());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1200, 800);
@@ -94,6 +107,7 @@ public class MainWindow {
         statusPanel.add(switchButton);
 
         cardLayout.show(contentPanel, "TABLE");
+        buttonsHandler = new ButtonsHandler(connection,this);
 
         frame.setVisible(true);
     }
@@ -201,6 +215,13 @@ public class MainWindow {
 
         panel.add(Box.createVerticalGlue()); // Прижать кнопку выхода вниз
         panel.add(createButton("btn.exit", () -> System.exit(0)));
+        btnAdd.addActionListener(e -> buttonsHandler.handleAdd());
+        btnRemove.addActionListener(e -> buttonsHandler.handleRemove());
+        btnExecuteScript.addActionListener(e->buttonsHandler.handleExecuteScript());
+        btnRemoveAll.addActionListener(e->buttonsHandler.handleClear());
+        btnUpdate.addActionListener(e->buttonsHandler.handleUpdate());
+        btnHelp.addActionListener(e->buttonsHandler.handleHelp());
+        btnInfo.addActionListener(e-> buttonsHandler.handleInfo());
 
         return panel;
     }
@@ -326,6 +347,7 @@ public class MainWindow {
             if (selected != null) listener.accept(selected);
         });
     }
+
 
     public void close() { frame.dispose(); }
     public JFrame getFrame() { return frame; }

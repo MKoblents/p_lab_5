@@ -1,4 +1,4 @@
-package client.gui;
+package client.gui.window;
 
 import shared.models.SpaceMarine;
 

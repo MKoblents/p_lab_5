@@ -2,6 +2,7 @@ package client.gui;
 
 import client.config.ClientConfig;
 import client.context.ClientContext;
+import client.gui.auth.LoginDialog;
 import client.network.ConnectionManager;
 import client.network.PollingService;
 import client.utils.RequestsFactory;
@@ -13,7 +14,6 @@ import shared.dto.UserInfo;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +52,7 @@ public class GuiClientApp {
 
         System.out.println("Handshake successful");
 
-        MainWindow mainWindow = new MainWindow();
+        MainWindow mainWindow = new MainWindow(connection);
 
         LoginDialog loginDialog = new LoginDialog(mainWindow.getFrame(), connection);
         loginDialog.setVisible(true);

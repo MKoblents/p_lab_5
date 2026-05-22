@@ -324,6 +324,7 @@ public class Server {
             if (!conn.handshakeComplete) { logger.warn("Data before handshake, ignoring."); return; }
 
             if (obj instanceof CommandRequest req) {
+                System.out.println(req);
                 CommandResponse resp = invoker.runCommand(req);
                 writePool.submit(() -> {
                     try {

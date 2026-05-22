@@ -1,7 +1,7 @@
 package client.network;
 
 import client.gui.MainWindow;
-import client.gui.SpaceMarineTable;
+import client.gui.window.SpaceMarineTable;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;

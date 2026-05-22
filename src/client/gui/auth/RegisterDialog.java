@@ -1,4 +1,4 @@
-package client.gui;
+package client.gui.auth;
 
 import client.network.ConnectionManager;
 import client.utils.LocaleManager;
