@@ -1,7 +1,13 @@
 package client.gui.buttons;
 
 import client.gui.MainWindow;
+import client.handlers.ResponseHandler;
+import client.inputWorkers.CommandParser;
+import client.inputWorkers.InputManager;
+import client.inputWorkers.Invoker;
 import client.network.ConnectionManager;
+import client.process.ClientProcessManager;
+import client.scripts.FileManager;
 import client.scripts.ScriptRunner;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
@@ -48,6 +54,12 @@ public class ButtonsHandler {
 
     public void handleExecuteScript(){
         File scriptFile = ExecuteScriptDialog.showScriptFileChooser(mainWindow.getFrame());
+        InputManager inputManager = new InputManager(null, new CommandParser());
+        ScriptRunner scriptRunner = new ScriptRunner(inputManager,connection,new ResponseHandler(mainWindow.getContext()),null, new FileManager());
+        Invoker invoker =  new Invoker(inputManager,mainWindow.getContext(), connection,new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort()),scriptRunner);
+        scriptRunner.setInvoker(invoker);
+        scriptRunner.executeScript(scriptFile.getPath());
+
         //TODO
     }
     public void handleClear(){
