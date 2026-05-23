@@ -5,6 +5,7 @@ import client.utils.LocaleManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -15,17 +16,19 @@ public class ExecuteScriptDialog extends JDialog {
     private JTextField filePathField;
     private JLabel titleLabel, infoLabel, fileLabel;
     private JButton browseButton, executeButton, cancelButton;
+    private JFrame parent;
 
-    private final Dimension originalSize = new Dimension(600, 280);
+    private final Dimension originalSize = new Dimension(650, 320);
 
     public ExecuteScriptDialog(JFrame parent) {
         super(parent, true);
+        this.parent = parent;
         initComponents();
         layoutComponents();
         applyTheme();
         setSize(originalSize);
         setLocationRelativeTo(parent);
-        setMinimumSize(new Dimension(500, 250));
+        setMinimumSize(new Dimension(500, 280));
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -52,28 +55,34 @@ public class ExecuteScriptDialog extends JDialog {
         filePathField.setEditable(false);
         filePathField.setBackground(Color.WHITE);
         filePathField.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
+        filePathField.setPreferredSize(new Dimension(0, 40));
 
         browseButton = GuiUtils.createStyledButton(LocaleManager.get("dialog.script.browse"), 0, 0, this::openFileChooser);
-        browseButton.setPreferredSize(new Dimension(100, 40));
-        browseButton.setMaximumSize(new Dimension(100, 40));
+        browseButton.setPreferredSize(new Dimension(120, 40));
+        browseButton.setMaximumSize(new Dimension(120, 40));
 
         executeButton = GuiUtils.createStyledButton(LocaleManager.get("dialog.script.execute"), 0, 0, () -> {
             if (selectedFile == null) {
-                JOptionPane.showMessageDialog(this, LocaleManager.get("dialog.script.no_file"), LocaleManager.get("dialog.script.title_error"), JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        LocaleManager.get("dialog.script.no_file"),
+                        LocaleManager.get("dialog.script.title_error"),
+                        JOptionPane.WARNING_MESSAGE);
             } else {
                 dispose();
             }
         });
-        executeButton.setPreferredSize(new Dimension(120, 45));
-        executeButton.setMaximumSize(new Dimension(120, 45));
+        executeButton.setPreferredSize(new Dimension(130, 45));
+        executeButton.setMaximumSize(new Dimension(130, 45));
 
         cancelButton = GuiUtils.createStyledButton(LocaleManager.get("dialog.script.cancel"), 0, 0, this::dispose);
-        cancelButton.setPreferredSize(new Dimension(120, 45));
-        cancelButton.setMaximumSize(new Dimension(120, 45));
+        cancelButton.setPreferredSize(new Dimension(130, 45));
+        cancelButton.setMaximumSize(new Dimension(130, 45));
     }
 
     private void layoutComponents() {
         setLayout(new BorderLayout(15, 15));
+        getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
+
         // Title Panel
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setOpaque(false);
@@ -91,24 +100,31 @@ public class ExecuteScriptDialog extends JDialog {
         filePanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 20, 10, 20);
+        gbc.insets = new Insets(10, 25, 10, 25);
 
         gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
         filePanel.add(fileLabel, gbc);
 
         gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.gridwidth = 1;
         gbc.weightx = 1.0;
         filePanel.add(filePathField, gbc);
 
-        gbc.gridy = 2;
+        gbc.gridy = 1;
+        gbc.gridx = 1;
+        gbc.gridwidth = 1;
         gbc.weightx = 0.0;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(10, 10, 10, 25);
         filePanel.add(browseButton, gbc);
 
         add(filePanel, BorderLayout.CENTER);
 
         // Buttons Panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
         buttonPanel.setOpaque(false);
         buttonPanel.add(executeButton);
         buttonPanel.add(cancelButton);
@@ -124,27 +140,226 @@ public class ExecuteScriptDialog extends JDialog {
         float titleSize = (float) (24 * scaleFactor);
         float infoSize = (float) (14 * scaleFactor);
         float fieldSize = (float) (14 * scaleFactor);
+        float labelSize = (float) (12 * scaleFactor);
 
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) titleSize));
         infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) infoSize));
+        fileLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) labelSize));
         filePathField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
         browseButton.setFont(new Font("Segoe UI", Font.BOLD, (int) (12 * scaleFactor)));
         executeButton.setFont(new Font("Segoe UI", Font.BOLD, (int) (14 * scaleFactor)));
         cancelButton.setFont(new Font("Segoe UI", Font.BOLD, (int) (14 * scaleFactor)));
+
+        int scaledFieldHeight = (int) (40 * scaleFactor);
+        int scaledButtonWidth = (int) (120 * scaleFactor);
+        int scaledButtonHeight = (int) (40 * scaleFactor);
+
+        filePathField.setPreferredSize(new Dimension(0, scaledFieldHeight));
+        filePathField.setMaximumSize(new Dimension(Short.MAX_VALUE, scaledFieldHeight));
+        browseButton.setPreferredSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+        browseButton.setMaximumSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+        executeButton.setPreferredSize(new Dimension((int)(130 * scaleFactor), scaledButtonHeight + 5));
+        executeButton.setMaximumSize(new Dimension((int)(130 * scaleFactor), scaledButtonHeight + 5));
+        cancelButton.setPreferredSize(new Dimension((int)(130 * scaleFactor), scaledButtonHeight + 5));
+        cancelButton.setMaximumSize(new Dimension((int)(130 * scaleFactor), scaledButtonHeight + 5));
     }
 
     private void openFileChooser() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle(LocaleManager.get("dialog.script.chooser_title"));
-        // No extension filter, as scripts might have no extension or custom ones
-
-        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        StyledFileChooser fileChooser = new StyledFileChooser(null);
+        if (fileChooser.showDialog() == JFileChooser.APPROVE_OPTION) {
             selectedFile = fileChooser.getSelectedFile();
-            filePathField.setText(selectedFile.getAbsolutePath());
+            if (selectedFile != null) {
+                filePathField.setText(selectedFile.getAbsolutePath());
+            }
         }
     }
 
     public File getSelectedFile() {
         return selectedFile;
+    }
+
+    /**
+     * Custom styled file chooser dialog that matches the app theme
+     * and supports resizing.
+     */
+    private static class StyledFileChooser {
+        private final JDialog dialog;
+        private JFileChooser fileChooser;
+        private File selectedFile;
+        private int result = JFileChooser.CANCEL_OPTION;
+
+        public StyledFileChooser(Frame parent) {
+            dialog = new JDialog(parent, LocaleManager.get("dialog.script.chooser_title"), true);
+            initFileChooser();
+            buildDialog();
+        }
+
+        private void initFileChooser() {
+            fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.addChoosableFileFilter(new NoExtensionFileFilter());
+            fileChooser.setFileFilter(new NoExtensionFileFilter());
+
+            // Apply custom UI to file chooser components
+            applyFileChooserStyling(fileChooser);
+        }
+
+        private void applyFileChooserStyling(JFileChooser fc) {
+            fc.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            fc.setBackground(GuiUtils.BACKGROUND_COLOR);
+            fc.setForeground(GuiUtils.TEXT_COLOR);
+
+            // Style the approve/cancel buttons if accessible
+            for (Component comp : fc.getComponents()) {
+                if (comp instanceof JPanel) {
+                    stylePanel((JPanel) comp);
+                }
+            }
+        }
+
+        private void stylePanel(JPanel panel) {
+            panel.setBackground(GuiUtils.BACKGROUND_COLOR);
+            for (Component comp : panel.getComponents()) {
+                if (comp instanceof JButton btn) {
+                    btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+                    btn.setBackground(GuiUtils.PRIMARY_COLOR);
+                    btn.setForeground(Color.WHITE);
+                    btn.setFocusPainted(false);
+                    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                } else if (comp instanceof JComboBox<?> combo) {
+                    combo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+                    combo.setBackground(Color.WHITE);
+                } else if (comp instanceof JTextField field) {
+                    field.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+                    field.setBackground(Color.WHITE);
+                } else if (comp instanceof JPanel subPanel) {
+                    stylePanel(subPanel);
+                }
+            }
+        }
+
+        private void buildDialog() {
+            dialog.setLayout(new BorderLayout(10, 10));
+            dialog.getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
+            dialog.setMinimumSize(new Dimension(700, 500));
+            dialog.setSize(800, 600);
+            dialog.setLocationRelativeTo(null);
+
+            // Add file chooser to center
+            dialog.add(fileChooser, BorderLayout.CENTER);
+
+            // Add custom styled buttons panel at bottom
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
+            buttonPanel.setOpaque(false);
+
+            JButton openButton = createDialogButton(LocaleManager.get("dialog.script.open"));
+            JButton cancelButton = createDialogButton(LocaleManager.get("dialog.script.cancel"));
+
+            openButton.addActionListener(e -> {
+                selectedFile = fileChooser.getSelectedFile();
+                result = JFileChooser.APPROVE_OPTION;
+                dialog.dispose();
+            });
+            cancelButton.addActionListener(e -> {
+                result = JFileChooser.CANCEL_OPTION;
+                dialog.dispose();
+            });
+
+            buttonPanel.add(openButton);
+            buttonPanel.add(cancelButton);
+            dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+            // Add resize listener
+            dialog.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    resizeFileChooser();
+                }
+            });
+        }
+
+        private JButton createDialogButton(String text) {
+            JButton btn = new JButton(text);
+            btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            btn.setBackground(GuiUtils.PRIMARY_COLOR);
+            btn.setForeground(Color.WHITE);
+            btn.setFocusPainted(false);
+            btn.setBorderPainted(false);
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            btn.setPreferredSize(new Dimension(100, 35));
+            btn.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    btn.setBackground(GuiUtils.PRIMARY_DARK);
+                }
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    btn.setBackground(GuiUtils.PRIMARY_COLOR);
+                }
+            });
+            return btn;
+        }
+
+        private void resizeFileChooser() {
+            double scaleFactor = (double) dialog.getWidth() / 800.0;
+            float scaledFont = (float) (13 * scaleFactor);
+
+            fileChooser.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledFont));
+
+            // Recursively resize components in file chooser
+            resizeComponent(fileChooser, scaleFactor);
+        }
+
+        private void resizeComponent(Component comp, double scaleFactor) {
+            if (comp instanceof Container container) {
+                for (Component child : container.getComponents()) {
+                    if (child instanceof JButton btn) {
+                        btn.setFont(new Font("Segoe UI", Font.BOLD, (int) (12 * scaleFactor)));
+                    } else if (child instanceof JTextField field) {
+                        field.setFont(new Font("Segoe UI", Font.PLAIN, (int) (12 * scaleFactor)));
+                    } else if (child instanceof JComboBox<?> combo) {
+                        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) (12 * scaleFactor)));
+                    } else if (child instanceof JLabel label) {
+                        label.setFont(new Font("Segoe UI", Font.PLAIN, (int) (12 * scaleFactor)));
+                    }
+                    if (child instanceof Container) {
+                        resizeComponent(child, scaleFactor);
+                    }
+                }
+            }
+        }
+
+        public int showDialog() {
+            dialog.setVisible(true);
+            return result;
+        }
+
+        public File getSelectedFile() {
+            return selectedFile;
+        }
+    }
+
+    /**
+     * File filter for files without extension (as per original requirement)
+     */
+    static class NoExtensionFileFilter extends FileFilter {
+        @Override
+        public boolean accept(File file) {
+            if (file.isDirectory()) {
+                return true;
+            }
+            return hasNoExtension(file);
+        }
+
+        @Override
+        public String getDescription() {
+            return LocaleManager.get("dialog.script.filter_no_ext");
+        }
+
+        private boolean hasNoExtension(File file) {
+            String fileName = file.getName();
+            int lastDotIndex = fileName.lastIndexOf('.');
+            return lastDotIndex == -1 ||
+                    (lastDotIndex == 0 && fileName.substring(1).lastIndexOf('.') == -1);
+        }
     }
 }
