@@ -53,7 +53,9 @@ public class ButtonsHandler {
     }
 
     public void handleExecuteScript(){
-        File scriptFile = ExecuteScriptDialog.showScriptFileChooser(mainWindow.getFrame());
+        ExecuteScriptDialog executeScriptDialog = new ExecuteScriptDialog(mainWindow.getFrame());
+        executeScriptDialog.setVisible(true);
+        File scriptFile = executeScriptDialog.getSelectedFile();
         InputManager inputManager = new InputManager(null, new CommandParser());
         ScriptRunner scriptRunner = new ScriptRunner(inputManager,connection,new ResponseHandler(mainWindow.getContext()),null, new FileManager());
         Invoker invoker =  new Invoker(inputManager,mainWindow.getContext(), connection,new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort()),scriptRunner);
