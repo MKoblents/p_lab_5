@@ -167,4 +167,24 @@ public class ButtonsHandler {
 
 
     }
+    public void handleKill(){
+        List<String> availableClients = fetchAvailableClients();
+
+        if (availableClients.isEmpty()) {
+            JOptionPane.showMessageDialog(mainWindow.getFrame(),
+                    "No active clients found to terminate.",
+                    "Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        KillClientDialog dialog = new KillClientDialog(mainWindow.getFrame(), connection, availableClients);
+        dialog.setVisible(true);
+    }
+
+    // Временный метод для получения списка (замените на реальный запрос к серверу)
+    private List<String> fetchAvailableClients() {
+        // TODO: Отправьте запрос на сервер, например: "list_clients" или используйте существующую команду
+        // Пока возвращаем заглушку для демонстрации UI:
+        return List.of("client_01", "client_02", "child_client_01");
+    }
 }

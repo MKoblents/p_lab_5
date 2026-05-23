@@ -313,6 +313,7 @@ public class MainWindow {
                 throw new RuntimeException(ex);
             }
         });
+        btnKillClient.addActionListener(e-> buttonsHandler.handleKill());
 
         return panel;
     }
