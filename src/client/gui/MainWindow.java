@@ -1,10 +1,13 @@
 package client.gui;
 
+import client.config.ClientConfig;
+import client.context.ClientContext;
 import client.gui.buttons.ButtonsHandler;
 import client.gui.utils.GuiUtils;
 import client.gui.window.SpaceMarineCanvas;
 import client.gui.window.SpaceMarineTable;
 import client.network.ConnectionManager;
+import client.process.ClientProcessManager;
 import client.utils.LocaleManager;
 import shared.models.SpaceMarine;
 
@@ -13,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.IOException;
 import java.util.List;
 
 public class MainWindow {
@@ -44,8 +48,23 @@ public class MainWindow {
 
     private Dimension originalSize;
     private double scaleFactor = 1.0;
+    private ClientContext context;
+    private final ClientConfig config;
+    private ClientProcessManager processManager;
+    public void setDependencies(ConnectionManager connection,
+                                ClientContext context,
+                                ClientProcessManager processManager) {
+        this.connection = connection;
+        this.context = context;
+        this.processManager = processManager;
+    }
 
-    public MainWindow(ConnectionManager connection) {
+    public ClientConfig getConfig() {
+        return config;
+    }
+
+    public MainWindow(ConnectionManager connection, ClientConfig config) {
+        this.config  = config;
         this.connection = connection;
         initializeFrame();
         initializeComponents();
@@ -287,6 +306,13 @@ public class MainWindow {
         btnUpdate.addActionListener(e -> buttonsHandler.handleUpdate());
         btnHelp.addActionListener(e -> buttonsHandler.handleHelp());
         btnInfo.addActionListener(e -> buttonsHandler.handleInfo());
+        btnSpawnClient.addActionListener(e-> {
+            try {
+                buttonsHandler.handleSpawn();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         return panel;
     }
@@ -484,4 +510,12 @@ public class MainWindow {
     public void close() { frame.dispose(); }
     public JFrame getFrame() { return frame; }
     public SpaceMarineTable getTableModel() { return tableModel; }
+
+    public void setContext(ClientContext context) {
+        this.context = context;
+    }
+
+    public ClientContext getContext() {
+        return context;
+    }
 }

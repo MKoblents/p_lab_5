@@ -62,7 +62,7 @@ public class GuiClientApp {
         RequestsFactory.setClientId(config.getClientId());
         RequestsFactory.setUserInfo(user);
 
-        MainWindow mainWindow = new MainWindow(connection);
+        MainWindow mainWindow = new MainWindow(connection, config);
         mainWindow.setUserName(user.name());
         mainWindow.setStatus("Connected as " + user.name());
 //        MainWindow mainWindow = new MainWindow(connection);
@@ -93,6 +93,7 @@ public class GuiClientApp {
                     isRoot,
                     user
             );
+            mainWindow.setContext(context);
             RequestsFactory.setClientId(config.getClientId());
             ScheduledExecutorService heartbeatScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
                 Thread t = new Thread(r, "heartbeat-scheduler");

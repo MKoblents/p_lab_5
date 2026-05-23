@@ -95,6 +95,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
                 <executions>
+                    <!-- Server JAR -->
                     <execution>
                         <id>server-jar</id>
                         <phase>package</phase>
@@ -115,8 +116,9 @@
                         </configuration>
                     </execution>
 
+                    <!-- Console Client JAR -->
                     <execution>
-                        <id>client-jar</id>
+                        <id>client-console-jar</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -130,7 +132,28 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                            <finalName>${project.artifactId}-client</finalName>
+                            <finalName>${project.artifactId}-client-console</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+
+                    <!-- GUI Client JAR -->
+                    <execution>
+                        <id>client-gui-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>client.gui.GuiClientApp</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>${project.artifactId}-client-gui</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>

@@ -11,6 +11,8 @@ import shared.models.SpaceMarine;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ButtonsHandler {
     private ConnectionManager connection;
@@ -61,7 +63,7 @@ public class ButtonsHandler {
         handleRequest(request,"Space Marine cleared successfully!");
     }
 
-    private void handleRequest(CommandRequest request, String successMessage){
+    private CommandResponse handleRequest(CommandRequest request, String successMessage){
         try {
             connection.sendRequest(request);
             CommandResponse response = connection.readResponse();
@@ -79,12 +81,14 @@ public class ButtonsHandler {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
+            return response;
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(mainWindow.getFrame(),
                     "Network error: " + ex.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+        return null;
     }
     public void handleUpdate(){
         SpaceMarineUpdateDialog updateDialog = new SpaceMarineUpdateDialog(mainWindow.getFrame(),mainWindow.getTableModel());
@@ -119,5 +123,48 @@ public class ButtonsHandler {
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+    public void handleSpawn() throws IOException {
+        CommandRequest request = RequestsFactory.createSimple("spawn_client");
+        CommandResponse response = handleRequest(request, "New window opened!");
+        if (response != null && response.success() && response.clientId() != null) {
+            String childClientId = response.clientId();
+
+            String jarPath = System.getProperty("java.class.path");
+            if (jarPath == null || jarPath.isEmpty()) {
+                jarPath = "target/p_lab_5-client.jar";
+            }
+            System.out.println(jarPath);
+
+            List<String> command = new ArrayList<>();
+            command.add("java");
+            command.add("-jar");
+            command.add(jarPath);
+            command.add("--host");
+            command.add(mainWindow.getConfig().getHost());
+            command.add("--port");
+            command.add(String.valueOf(mainWindow.getConfig().getPort()));
+            command.add("--client-id");
+            command.add(childClientId);
+            command.add("--parent-id");
+            command.add(mainWindow.getContext().getClientId());
+
+            ProcessBuilder pb = new ProcessBuilder(command);
+            pb.inheritIO(); // Optional: inherit console output
+            pb.start();
+
+            // Add child to mainWindow.getContext()
+            mainWindow.getContext().addChild(childClientId);
+
+            mainWindow.setStatus("Spawned child: " + childClientId);
+            System.out.println("Spawned child client: " + childClientId);
+        } else {
+            String errorMsg = response != null ? response.message() : "Unknown error";
+            JOptionPane.showMessageDialog(mainWindow.getFrame(),
+                    "Failed to spawn client: " + errorMsg,
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }
 }
