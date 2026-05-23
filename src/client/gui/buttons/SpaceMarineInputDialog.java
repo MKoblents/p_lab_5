@@ -1,5 +1,7 @@
 package client.gui.buttons;
 
+import client.gui.utils.GuiUtils;
+import client.utils.LocaleManager;
 import shared.enums.AstartesCategory;
 import shared.enums.MeleeWeapon;
 import shared.enums.Weapon;
@@ -7,12 +9,11 @@ import shared.models.Coordinates;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.border.EmptyBorder;
 import javax.xml.bind.ValidationException;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class SpaceMarineInputDialog extends JDialog {
     private JTextField nameField;
@@ -22,30 +23,44 @@ public class SpaceMarineInputDialog extends JDialog {
     private JComboBox<Weapon> weaponCombo;
     private JComboBox<AstartesCategory> categoryCombo;
     private JButton okButton, cancelButton;
+    private JLabel titleLabel;
 
     private SpaceMarine result;
+    private final Dimension originalSize = new Dimension(500, 700);
 
     public SpaceMarineInputDialog(JFrame parent) {
-        super(parent, "Add Space Marine", true);
+        super(parent, true);
         initComponents();
         layoutComponents();
+        applyTheme();
         pack();
+        setSize(originalSize);
         setLocationRelativeTo(parent);
-        setResizable(false);
+        setMinimumSize(new Dimension(400, 600));
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                resizeComponents();
+            }
+        });
     }
 
     private void initComponents() {
-        nameField = createPlaceholderField("Enter name");
-        xField = createPlaceholderField("Enter X coordinate");
-        yField = createPlaceholderField("Enter Y coordinate");
-        healthField = createPlaceholderField("Enter health");
+        titleLabel = new JLabel(LocaleManager.get("dialog.add.title"), SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
 
-        meleeWeaponCombo = new JComboBox<>(MeleeWeapon.values());
-        weaponCombo = new JComboBox<>(Weapon.values());
-        categoryCombo = new JComboBox<>(AstartesCategory.values());
+        nameField = createStyledTextField(LocaleManager.get("dialog.field.name"));
+        xField = createStyledTextField(LocaleManager.get("dialog.field.x"));
+        yField = createStyledTextField(LocaleManager.get("dialog.field.y"));
+        healthField = createStyledTextField(LocaleManager.get("dialog.field.health"));
 
-        okButton = new JButton("OK");
-        cancelButton = new JButton("Cancel");
+        meleeWeaponCombo = createStyledComboBox(MeleeWeapon.values());
+        weaponCombo = createStyledComboBox(Weapon.values());
+        categoryCombo = createStyledComboBox(AstartesCategory.values());
+
+        okButton = createStyledButton(LocaleManager.get("button.ok"));
+        cancelButton = createStyledButton(LocaleManager.get("button.cancel"));
 
         okButton.addActionListener(e -> onOK());
         cancelButton.addActionListener(e -> onCancel());
@@ -53,95 +68,194 @@ public class SpaceMarineInputDialog extends JDialog {
         getRootPane().setDefaultButton(okButton);
     }
 
-    private JTextField createPlaceholderField(String placeholder) {
-        JTextField field = new JTextField(20);
-        field.setText(placeholder);
+    private JTextField createStyledTextField(String placeholder) {
+        JTextField field = new JTextField(placeholder);
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         field.setForeground(Color.GRAY);
+        field.setHorizontalAlignment(JTextField.CENTER);
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 2),
+                new EmptyBorder(10, 15, 10, 15)
+        ));
+        field.setBackground(Color.WHITE);
+        field.setPreferredSize(new Dimension(0, 45));
+        field.setMaximumSize(new Dimension(Short.MAX_VALUE, 45));
 
-        field.addFocusListener(new FocusAdapter() {
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
-            public void focusLost(FocusEvent e) {
-                if (field.getText().isEmpty()) {
-                    field.setText(placeholder);
-                    field.setForeground(Color.GRAY);
-                }
-            }
-
-            @Override
-            public void focusGained(FocusEvent e) {
+            public void focusGained(java.awt.event.FocusEvent e) {
                 if (field.getText().equals(placeholder)) {
                     field.setText("");
                     field.setForeground(Color.BLACK);
                 }
             }
-        });
-
-        field.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updatePlaceholder(field, placeholder);
-            }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                updatePlaceholder(field, placeholder);
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updatePlaceholder(field, placeholder);
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (field.getText().isEmpty()) {
+                    field.setText(placeholder);
+                    field.setForeground(Color.GRAY);
+                }
             }
         });
 
         return field;
     }
 
-    private void updatePlaceholder(JTextField field, String placeholder) {
-        String text = field.getText();
-        if (text.isEmpty()) {
-            field.setForeground(Color.GRAY);
-        } else if (!text.equals(placeholder)) {
-            field.setForeground(Color.BLACK);
-        }
+    private <T> JComboBox<T> createStyledComboBox(T[] items) {
+        JComboBox<T> combo = new JComboBox<>(items);
+        combo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        combo.setBackground(Color.WHITE);
+        combo.setForeground(Color.BLACK);
+        combo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 2),
+                new EmptyBorder(8, 10, 8, 10)
+        ));
+        combo.setPreferredSize(new Dimension(0, 45));
+        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, 45));
+        combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        combo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                if (isSelected) {
+                    setBackground(GuiUtils.PRIMARY_COLOR);
+                    setForeground(Color.WHITE);
+                } else {
+                    setBackground(Color.WHITE);
+                    setForeground(Color.BLACK);
+                }
+                setBorder(new EmptyBorder(5, 10, 5, 10));
+                return this;
+            }
+        });
+
+        return combo;
+    }
+
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setBackground(GuiUtils.PRIMARY_COLOR);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(150, 45));
+        button.setMaximumSize(new Dimension(150, 45));
+        button.setBorder(new EmptyBorder(10, 20, 10, 20));
+
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(GuiUtils.PRIMARY_DARK);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(GuiUtils.PRIMARY_COLOR);
+            }
+        });
+
+        return button;
     }
 
     private void layoutComponents() {
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        int row = 0;
+        setLayout(new BorderLayout(15, 15));
+        getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
+//        setBorder(new EmptyBorder(20, 30, 20, 30));
 
-        gbc.gridy = row++;
-        add(nameField, gbc);
+        // Title Panel
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setOpaque(false);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        add(titlePanel, BorderLayout.NORTH);
 
-        gbc.gridy = row++;
-        add(xField, gbc);
+        // Fields Panel
+        JPanel fieldsPanel = new JPanel();
+        fieldsPanel.setLayout(new BoxLayout(fieldsPanel, BoxLayout.Y_AXIS));
+        fieldsPanel.setOpaque(false);
+        fieldsPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        gbc.gridy = row++;
-        add(yField, gbc);
+        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.name"), nameField));
+        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.x"), xField));
+        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.y"), yField));
+        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.health"), healthField));
+        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.melee"), meleeWeaponCombo));
+        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.weapon"), weaponCombo));
+        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.category"), categoryCombo));
 
-        gbc.gridy = row++;
-        add(healthField, gbc);
+        JScrollPane scrollPane = new JScrollPane(fieldsPanel);
+        scrollPane.setBorder(null);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        add(scrollPane, BorderLayout.CENTER);
 
-        gbc.gridy = row++;
-        add(meleeWeaponCombo, gbc);
-
-        gbc.gridy = row++;
-        add(weaponCombo, gbc);
-
-        gbc.gridy = row++;
-        add(categoryCombo, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 7; gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.NONE;
-
-        JPanel buttonPanel = new JPanel();
+        // Buttons Panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel.setOpaque(false);
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
-        add(buttonPanel, gbc);
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private JPanel createLabeledField(String label, JTextField field) {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setOpaque(false);
+
+        JLabel labelComponent = new JLabel(label, SwingConstants.CENTER);
+        labelComponent.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        labelComponent.setForeground(GuiUtils.PRIMARY_DARK);
+
+        panel.add(labelComponent, BorderLayout.NORTH);
+        panel.add(field, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private JPanel createLabeledCombo(String label, JComboBox<?> combo) {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setOpaque(false);
+
+        JLabel labelComponent = new JLabel(label, SwingConstants.CENTER);
+        labelComponent.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        labelComponent.setForeground(GuiUtils.PRIMARY_DARK);
+
+        panel.add(labelComponent, BorderLayout.NORTH);
+        panel.add(combo, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private void applyTheme() {
+        getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
+    }
+
+    private void resizeComponents() {
+        double scaleFactor = (double) getWidth() / originalSize.width;
+
+        float titleSize = (float) (24 * scaleFactor);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) titleSize));
+
+        float fieldSize = (float) (14 * scaleFactor);
+        float labelSize = (float) (12 * scaleFactor);
+
+        nameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        xField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        yField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        healthField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+
+        meleeWeaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        weaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        categoryCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+
+        okButton.setFont(new Font("Segoe UI", Font.BOLD, (int) fieldSize));
+        cancelButton.setFont(new Font("Segoe UI", Font.BOLD, (int) fieldSize));
     }
 
     private void onOK() {
@@ -152,13 +266,13 @@ public class SpaceMarineInputDialog extends JDialog {
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this,
-                    "Please enter valid numbers for coordinates and health",
-                    "Input Error",
+                    LocaleManager.get("dialog.error.number"),
+                    LocaleManager.get("dialog.error.title"),
                     JOptionPane.ERROR_MESSAGE);
         } catch (ValidationException ex) {
             JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
-                    "Validation Error",
+                    LocaleManager.get("dialog.error.title"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -170,8 +284,9 @@ public class SpaceMarineInputDialog extends JDialog {
 
     private SpaceMarine createSpaceMarineFromInput() throws ValidationException {
         String name = nameField.getText().trim();
-        if (name.isEmpty() || name.equals("Enter name")) {
-            throw new ValidationException("Name cannot be empty");
+        String placeholder = LocaleManager.get("dialog.field.name");
+        if (name.isEmpty() || name.equals(placeholder)) {
+            throw new ValidationException(LocaleManager.get("validation.name.empty"));
         }
 
         SpaceMarine marine = new SpaceMarine();
@@ -180,27 +295,30 @@ public class SpaceMarineInputDialog extends JDialog {
         Coordinates coords = new Coordinates();
 
         String xText = xField.getText().trim();
-        if (xText.isEmpty() || xText.equals("Enter X coordinate")) {
-            throw new ValidationException("X coordinate is required");
+        String xPlaceholder = LocaleManager.get("dialog.field.x");
+        if (xText.isEmpty() || xText.equals(xPlaceholder)) {
+            throw new ValidationException(LocaleManager.get("validation.x.required"));
         }
         coords.setX(Long.parseLong(xText));
 
         String yText = yField.getText().trim();
-        if (yText.isEmpty() || yText.equals("Enter Y coordinate")) {
-            throw new ValidationException("Y coordinate is required");
+        String yPlaceholder = LocaleManager.get("dialog.field.y");
+        if (yText.isEmpty() || yText.equals(yPlaceholder)) {
+            throw new ValidationException(LocaleManager.get("validation.y.required"));
         }
         coords.setY(Long.parseLong(yText));
 
         marine.setCoordinates(coords);
 
         String healthText = healthField.getText().trim();
-        if (healthText.isEmpty() || healthText.equals("Enter health")) {
-            throw new ValidationException("Health is required");
+        String healthPlaceholder = LocaleManager.get("dialog.field.health");
+        if (healthText.isEmpty() || healthText.equals(healthPlaceholder)) {
+            throw new ValidationException(LocaleManager.get("validation.health.required"));
         }
 
         double health = Double.parseDouble(healthText);
         if (health <= 0) {
-            throw new ValidationException("Health must be greater than 0");
+            throw new ValidationException(LocaleManager.get("validation.health.positive"));
         }
         marine.setHealth(health);
 

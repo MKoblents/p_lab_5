@@ -2,7 +2,7 @@ package client.gui;
 
 import client.config.ClientConfig;
 import client.context.ClientContext;
-import client.gui.auth.LoginDialog;
+import client.gui.auth.AuthDialog;
 import client.network.ConnectionManager;
 import client.network.PollingService;
 import client.utils.RequestsFactory;
@@ -49,22 +49,27 @@ public class GuiClientApp {
         }catch (IOException e){
             //TODO
         }
-
         System.out.println("Handshake successful");
 
+        AuthDialog authDialog = new AuthDialog(null, connection);
+        authDialog.setVisible(true);
+        if (!authDialog.isSuccess() || authDialog.getLoggedInUser() == null) {
+            System.exit(0); // Exit if auth fails or is cancelled
+            return;
+        }
+
+        UserInfo user = authDialog.getLoggedInUser();
+        RequestsFactory.setClientId(config.getClientId());
+        RequestsFactory.setUserInfo(user);
+
         MainWindow mainWindow = new MainWindow(connection);
+        mainWindow.setUserName(user.name());
+        mainWindow.setStatus("Connected as " + user.name());
+//        MainWindow mainWindow = new MainWindow(connection);
+//
+//        LoginDialog loginDialog = new LoginDialog(mainWindow.getFrame(), connection);
+//        loginDialog.setVisible(true);
 
-        LoginDialog loginDialog = new LoginDialog(mainWindow.getFrame(), connection);
-        loginDialog.setVisible(true);
-
-        if (loginDialog.isSuccess() && loginDialog.getLoggedInUser() != null) {
-            UserInfo user = loginDialog.getLoggedInUser();
-
-            RequestsFactory.setClientId(config.getClientId());
-            RequestsFactory.setUserInfo(user);
-
-            mainWindow.setUserName(user.name());
-            mainWindow.setStatus("Connected as " + user.name());
 
 //            // 🔥 Запускаем polling (после успешной авторизации)
 //            PollingService polling = new PollingService(
@@ -109,11 +114,12 @@ public class GuiClientApp {
             heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask, 0, 5, TimeUnit.SECONDS);
             PollingService polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow);
             polling.start();
-        } else {
-            mainWindow.setStatus("Login cancelled or failed");
-            System.out.println("Login flow finished without success.");
-        }
+//        } else {
+//            mainWindow.setStatus("Login cancelled or failed");
+//            System.out.println("Login flow finished without success.");
+//        }
 
         System.out.println("GUI Client started on EDT: " + SwingUtilities.isEventDispatchThread());
     }
+
 }

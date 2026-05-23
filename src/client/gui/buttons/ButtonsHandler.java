@@ -58,7 +58,7 @@ public class ButtonsHandler {
         }
         CommandRequest request = RequestsFactory.createSimple("clear");
 
-       handleRequest(request,"Space Marine cleared successfully!");
+        handleRequest(request,"Space Marine cleared successfully!");
     }
 
     private void handleRequest(CommandRequest request, String successMessage){
@@ -110,7 +110,7 @@ public class ButtonsHandler {
             System.out.println(response);
 
             JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                   response.result(),
+                    response.result(),
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ex) {
