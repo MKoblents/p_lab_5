@@ -1,9 +1,11 @@
 package client.gui.window;
 
+import client.gui.utils.GuiUtils;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,36 +13,103 @@ import java.util.Map;
 
 public class SpaceMarineCanvas extends JPanel {
     private List<SpaceMarine> marines = new ArrayList<>();
-    private Map<String, Color> userColors = new HashMap<>();
-    private static final int DOT_SIZE = 15;
-    private static final int PADDING = 50;
+    private final Map<String, Color> userColors = new HashMap<>();
 
-    private static final Color[] USER_COLORS = {
-            Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE,
-            Color.MAGENTA, Color.CYAN, Color.PINK, Color.YELLOW
+    private double zoom = 1.0;
+    private double panX = 0.0;
+    private double panY = 0.0;
+    private boolean isPanning = false;
+    private Point lastMousePos;
+
+    private Rectangle zoomInRect = new Rectangle();
+    private Rectangle zoomOutRect = new Rectangle();
+    private static final int BTN_SIZE = 32;
+    private static final int BTN_GAP = 8;
+    private static final int BTN_MARGIN = 15;
+
+    private static final Color GRID_COLOR = new Color(255, 210, 220, 180);
+    private static final Color AXIS_COLOR = GuiUtils.PRIMARY_DARK;
+    private static final Color BTN_BG = Color.WHITE;
+    private static final Color BTN_HOVER = GuiUtils.PRIMARY_LIGHT;
+    private static final Color BTN_ACTIVE = GuiUtils.PRIMARY_COLOR;
+    private static final Color BTN_TEXT = GuiUtils.PRIMARY_DARK;
+
+    private static final Color[] USER_PALETTE = {
+            new Color(255, 105, 180), new Color(219, 112, 147),
+            new Color(255, 160, 180), new Color(199, 21, 133),
+            new Color(255, 130, 170), new Color(178, 34, 34)
     };
 
     public SpaceMarineCanvas() {
-        setBackground(Color.WHITE);
+        setBackground(GuiUtils.BACKGROUND_COLOR);
         setPreferredSize(new Dimension(800, 600));
+        setFocusable(true);
+        setupListeners();
     }
 
-    public void setMarines(List<SpaceMarine> marines) {
-        this.marines = marines != null ? new ArrayList<>(marines) : new ArrayList<>();
-        assignUserColors();
-        repaint();
-    }
+    private void setupListeners() {
+        addMouseWheelListener(e -> {
+            double factor = e.getWheelRotation() < 0 ? 1.15 : 0.85;
+            applyZoom(factor, e.getX(), e.getY());
+        });
 
-    private void assignUserColors() {
-        userColors.clear();
-        int colorIndex = 0;
-        for (SpaceMarine marine : marines) {
-            String owner = marine.getOwner() != null ? marine.getOwner() : "unknown";
-            if (!userColors.containsKey(owner)) {
-                userColors.put(owner, USER_COLORS[colorIndex % USER_COLORS.length]);
-                colorIndex++;
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isMiddleMouseButton(e) || SwingUtilities.isRightMouseButton(e)) {
+                    isPanning = true;
+                    lastMousePos = e.getPoint();
+                    setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                } else if (SwingUtilities.isLeftMouseButton(e)) {
+                    if (zoomInRect.contains(e.getPoint())) applyZoom(1.2, getWidth()/2, getHeight()/2);
+                    else if (zoomOutRect.contains(e.getPoint())) applyZoom(0.8, getWidth()/2, getHeight()/2);
+                }
             }
-        }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                isPanning = false;
+                setCursor(Cursor.getDefaultCursor());
+            }
+        });
+
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (isPanning) {
+                    panX += e.getX() - lastMousePos.x;
+                    panY += e.getY() - lastMousePos.y;
+                    lastMousePos = e.getPoint();
+                    repaint();
+                }
+            }
+        });
+
+        InputMap im = getInputMap(WHEN_FOCUSED);
+        ActionMap am = getActionMap();
+        im.put(KeyStroke.getKeyStroke('+'), "zoomIn");
+        im.put(KeyStroke.getKeyStroke('-'), "zoomOut");
+        im.put(KeyStroke.getKeyStroke('='), "zoomIn");
+        im.put(KeyStroke.getKeyStroke('_'), "zoomOut");
+
+        am.put("zoomIn", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { applyZoom(1.2, getWidth()/2, getHeight()/2); }
+        });
+        am.put("zoomOut", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { applyZoom(0.8, getWidth()/2, getHeight()/2); }
+        });
+    }
+
+    private void applyZoom(double factor, int centerX, int centerY) {
+        double oldZoom = zoom;
+        zoom *= factor;
+        zoom = Math.max(0.1, Math.min(10.0, zoom));
+
+        double worldX = (centerX - getWidth()/2.0 - panX) / oldZoom;
+        double worldY = -(centerY - getHeight()/2.0 - panY) / oldZoom;
+        panX = centerX - getWidth()/2.0 - worldX * zoom;
+        panY = centerY - getHeight()/2.0 + worldY * zoom;
+
+        repaint();
     }
 
     @Override
@@ -49,100 +118,114 @@ public class SpaceMarineCanvas extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int width = getWidth();
-        int height = getHeight();
+        g2d.translate(getWidth()/2.0 + panX, getHeight()/2.0 + panY);
+        g2d.scale(zoom, -zoom);
 
-        drawGrid(g2d, width, height);
+        drawGrid(g2d);
+        drawAxes(g2d);
+        for (SpaceMarine m : marines) drawMarine(g2d, m);
 
-        drawAxes(g2d, width, height);
-
-        for (SpaceMarine marine : marines) {
-            drawMarine(g2d, marine, width, height);
-        }
-
-        drawLegend(g2d);
+        g2d.setTransform(new java.awt.geom.AffineTransform());
+        drawControls(g2d);
     }
 
-    private void drawGrid(Graphics2D g2d, int width, int height) {
-        g2d.setColor(new Color(240, 240, 240));
-        int gridSize = 40;
+    private void drawGrid(Graphics2D g2d) {
+        double left   = (-getWidth()/2.0  - panX) / zoom;
+        double right  = ( getWidth()/2.0  - panX) / zoom;
+        double bottom = ( getHeight()/2.0 + panY) / zoom;
+        double top    = (-getHeight()/2.0 + panY) / zoom;
 
-        for (int x = PADDING; x < width - PADDING; x += gridSize) {
-            g2d.drawLine(x, PADDING, x, height - PADDING);
+        double gridSize = 50.0;
+        g2d.setColor(GRID_COLOR);
+        g2d.setStroke(new BasicStroke(1.0f / (float)zoom));
+
+        int startX = (int)Math.floor(left / gridSize) * (int)gridSize;
+        int startY = (int)Math.floor(top / gridSize) * (int)gridSize;
+
+        for (int x = startX; x <= right; x += gridSize) {
+            g2d.drawLine(x, (int)top, x, (int)bottom);
         }
-        for (int y = PADDING; y < height - PADDING; y += gridSize) {
-            g2d.drawLine(PADDING, y, width - PADDING, y);
+        for (int y = startY; y <= bottom; y += gridSize) {
+            g2d.drawLine((int)left, y, (int)right, y);
         }
     }
 
-    private void drawAxes(Graphics2D g2d, int width, int height) {
-        g2d.setColor(Color.BLACK);
-        g2d.setStroke(new BasicStroke(2));
+    private void drawAxes(Graphics2D g2d) {
+        g2d.setColor(AXIS_COLOR);
+        g2d.setStroke(new BasicStroke(2.0f / (float)zoom));
 
-        int centerX = width / 2;
-        g2d.drawLine(PADDING, height / 2, width - PADDING, height / 2);
+        g2d.drawLine(-100000, 0, 100000, 0);
+        g2d.drawLine(0, -100000, 0, 100000);
 
-        int centerY = height / 2;
-        g2d.drawLine(width / 2, PADDING, width / 2, height - PADDING);
-
-        g2d.setFont(new Font("Arial", Font.BOLD, 12));
-        g2d.drawString("X", width - PADDING + 5, height / 2);
-        g2d.drawString("Y", width / 2, PADDING - 10);
+        g2d.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        g2d.drawString("X", 9500, -15);
+        g2d.drawString("Y", 15, -9500);
     }
 
-    private void drawMarine(Graphics2D g2d, SpaceMarine marine, int canvasWidth, int canvasHeight) {
-        if (marine.getCoordinates() == null) return;
+    private void drawMarine(Graphics2D g2d, SpaceMarine m) {
+        if (m.getCoordinates() == null) return;
+        double x = m.getCoordinates().getX();
+        double y = m.getCoordinates().getY();
 
-        long x = marine.getCoordinates().getX();
-        long y = marine.getCoordinates().getY();
-
-        double scale = Math.min(
-                (canvasWidth - 2 * PADDING) / 2000.0,
-                (canvasHeight - 2 * PADDING) / 2000.0
-        );
-
-        int drawX = canvasWidth / 2 + (int) (x * scale);
-        int drawY = canvasHeight / 2 - (int) (y * scale);
-
-        String owner = marine.getOwner() != null ? marine.getOwner() : "unknown";
-        Color color = userColors.getOrDefault(owner, Color.GRAY);
+        String owner = m.getOwner() != null ? m.getOwner() : "unknown";
+        Color color = userColors.computeIfAbsent(owner, k -> {
+            int hash = Math.abs(k.hashCode());
+            return USER_PALETTE[hash % USER_PALETTE.length];
+        });
 
         g2d.setColor(color);
-        g2d.fillOval(drawX - DOT_SIZE / 2, drawY - DOT_SIZE / 2, DOT_SIZE, DOT_SIZE);
-        g2d.setColor(Color.BLACK);
-        g2d.setStroke(new BasicStroke(1));
-        g2d.drawOval(drawX - DOT_SIZE / 2, drawY - DOT_SIZE / 2, DOT_SIZE, DOT_SIZE);
+        g2d.fillOval((int)(x - 7.5), (int)(y - 7.5), 15, 15);
 
-        g2d.setFont(new Font("Arial", Font.PLAIN, 9));
-        String label = marine.getName() != null ? marine.getName() : String.valueOf(marine.getId());
+        g2d.setColor(Color.WHITE);
+        g2d.setStroke(new BasicStroke(1.5f / (float)zoom));
+        g2d.drawOval((int)(x - 7.5), (int)(y - 7.5), 15, 15);
+
+        g2d.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        String label = m.getName() != null ? m.getName() : "ID:" + m.getId();
         FontMetrics fm = g2d.getFontMetrics();
-        int labelWidth = fm.stringWidth(label);
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(label, (int)(x - fm.stringWidth(label)/2 + 1), (int)(y - 12 + 1));
         g2d.setColor(Color.BLACK);
-        g2d.drawString(label, drawX - labelWidth / 2, drawY - DOT_SIZE - 2);
+        g2d.drawString(label, (int)(x - fm.stringWidth(label)/2), (int)(y - 12));
     }
 
-    private void drawLegend(Graphics2D g2d) {
-        int legendX = 10;
-        int legendY = 20;
+    private void drawControls(Graphics2D g2d) {
+        int x = getWidth() - BTN_SIZE - BTN_MARGIN;
+        int y = getHeight() - 2 * BTN_SIZE - 2 * BTN_MARGIN - BTN_MARGIN;
 
-        g2d.setFont(new Font("Arial", Font.BOLD, 11));
-        g2d.setColor(Color.BLACK);
-        g2d.drawString("Legend:", legendX, legendY);
+        zoomInRect.setBounds(x, y, BTN_SIZE, BTN_SIZE);
+        drawRoundButton(g2d, zoomInRect, "+", false);
 
-        int y = legendY + 20;
-        for (Map.Entry<String, Color> entry : userColors.entrySet()) {
-            g2d.setColor(entry.getValue());
-            g2d.fillOval(legendX, y - 8, 12, 12);
-            g2d.setColor(Color.BLACK);
-            g2d.drawOval(legendX, y - 8, 12, 12);
-            g2d.drawString(entry.getKey(), legendX + 20, y);
-            y += 25;
-        }
+        zoomOutRect.setBounds(x, y + BTN_SIZE + BTN_MARGIN, BTN_SIZE, BTN_SIZE);
+        drawRoundButton(g2d, zoomOutRect, "−", false);
     }
 
-    public void clear() {
-        marines.clear();
+    private void drawRoundButton(Graphics2D g2d, Rectangle r, String text, boolean hovered) {
+        g2d.setColor(hovered ? BTN_HOVER : BTN_BG);
+        g2d.fillRoundRect(r.x, r.y, r.width, r.height, 10, 10);
+        g2d.setColor(GuiUtils.PRIMARY_COLOR);
+        g2d.drawRoundRect(r.x, r.y, r.width, r.height, 10, 10);
+
+        g2d.setColor(BTN_TEXT);
+        g2d.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        FontMetrics fm = g2d.getFontMetrics();
+        g2d.drawString(text, r.x + (r.width - fm.stringWidth(text))/2, r.y + (r.height + fm.getAscent())/2 - 2);
+    }
+
+    public void setMarines(List<SpaceMarine> marines) {
+        this.marines = marines != null ? new ArrayList<>(marines) : new ArrayList<>();
         userColors.clear();
+        for (SpaceMarine m : this.marines) {
+            String owner = m.getOwner() != null ? m.getOwner() : "unknown";
+            if (!userColors.containsKey(owner)) {
+                int hash = Math.abs(owner.hashCode());
+                userColors.put(owner, USER_PALETTE[hash % USER_PALETTE.length]);
+            }
+        }
         repaint();
     }
+
+    public double getZoom() { return zoom; }
+    public void setZoom(double zoom) { this.zoom = Math.max(0.1, Math.min(10.0, zoom)); repaint(); }
+    public void resetView() { panX = 0; panY = 0; zoom = 1.0; repaint(); }
 }
