@@ -1,6 +1,7 @@
 package client.gui.buttons;
 
 import client.gui.MainWindow;
+import client.gui.auth.AuthDialog;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.CommandParser;
 import client.inputWorkers.InputManager;
@@ -12,6 +13,7 @@ import client.scripts.ScriptRunner;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.dto.UserInfo;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
@@ -200,5 +202,22 @@ public class ButtonsHandler {
         // TODO: Отправьте запрос на сервер, например: "list_clients" или используйте существующую команду
         // Пока возвращаем заглушку для демонстрации UI:
         return List.of("client_01", "client_02", "child_client_01");
+    }
+    public void handleLogOut(){
+        AuthDialog authDialog = new AuthDialog(mainWindow.getFrame(), connection);
+        authDialog.setVisible(true);
+//        mainWindow.getFrame().setVisible(false);
+        if (!authDialog.isSuccess() || authDialog.getLoggedInUser() == null) {
+            System.exit(0); // Exit if auth fails or is cancelled
+            return;
+        }
+
+
+        UserInfo user = authDialog.getLoggedInUser();
+        RequestsFactory.setClientId(mainWindow.getConfig().getClientId());
+        RequestsFactory.setUserInfo(user);
+        mainWindow.setUserName(user.name());
+//        mainWindow.getFrame().setVisible(true);
+
     }
 }

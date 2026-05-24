@@ -113,7 +113,7 @@ public class GuiClientApp {
                 }
             };
             heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask, 0, 5, TimeUnit.SECONDS);
-            PollingService polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow);
+            PollingService polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow.getCanvasModel(), mainWindow);
             polling.start();
 //        } else {
 //            mainWindow.setStatus("Login cancelled or failed");

@@ -297,7 +297,7 @@ public class MainWindow {
         panel.add(createStyledButton("btn.help", buttonWidth, buttonHeight, () -> System.out.println("Help clicked")));
 
         panel.add(Box.createVerticalGlue());
-        panel.add(createStyledButton("btn.exit", buttonWidth, buttonHeight, () -> System.exit(0)));
+        panel.add(createStyledButton("btn.exit", buttonWidth, buttonHeight, () -> System.out.println("Log out clicked")));
 
         btnAdd.addActionListener(e -> buttonsHandler.handleAdd());
         btnRemove.addActionListener(e -> buttonsHandler.handleRemove());
@@ -314,7 +314,7 @@ public class MainWindow {
             }
         });
         btnKillClient.addActionListener(e-> buttonsHandler.handleKill());
-
+        btnExit.addActionListener(e->buttonsHandler.handleLogOut());
         return panel;
     }
 
@@ -518,5 +518,9 @@ public class MainWindow {
 
     public ClientContext getContext() {
         return context;
+    }
+
+    public SpaceMarineCanvas getCanvasModel() {
+        return canvas;
     }
 }

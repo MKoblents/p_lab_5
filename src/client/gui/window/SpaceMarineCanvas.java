@@ -1,11 +1,13 @@
 package client.gui.window;
 
 import client.gui.utils.GuiUtils;
+import client.gui.utils.ShipRenderer;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -164,29 +166,31 @@ public class SpaceMarineCanvas extends JPanel {
 
     private void drawMarine(Graphics2D g2d, SpaceMarine m) {
         if (m.getCoordinates() == null) return;
-        double x = m.getCoordinates().getX();
-        double y = m.getCoordinates().getY();
 
-        String owner = m.getOwner() != null ? m.getOwner() : "unknown";
-        Color color = userColors.computeIfAbsent(owner, k -> {
-            int hash = Math.abs(k.hashCode());
-            return USER_PALETTE[hash % USER_PALETTE.length];
-        });
+        // 1. Получаем мировые координаты
+        double wx = m.getCoordinates().getX();
+        double wy = m.getCoordinates().getY();
 
-        g2d.setColor(color);
-        g2d.fillOval((int)(x - 7.5), (int)(y - 7.5), 15, 15);
+        // 2. Преобразуем в экранные координаты (пиксели)
+        // Формула: screen = (world * zoom) + center + pan
+        // Y инвертирован: в мире +Y вверх, на экране +Y вниз
+        int sx = (int) ((wx * zoom) + getWidth() / 2.0 + panX);
+        int sy = (int) ((-wy * zoom) + getHeight() / 2.0 + panY);
 
-        g2d.setColor(Color.WHITE);
-        g2d.setStroke(new BasicStroke(1.5f / (float)zoom));
-        g2d.drawOval((int)(x - 7.5), (int)(y - 7.5), 15, 15);
+        // 3. Получаем цвет пользователя (детерминированный)
+        Color userColor = ShipRenderer.getUserColor(m.getOwner());
 
-        g2d.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        String label = m.getName() != null ? m.getName() : "ID:" + m.getId();
-        FontMetrics fm = g2d.getFontMetrics();
-        g2d.setColor(Color.WHITE);
-        g2d.drawString(label, (int)(x - fm.stringWidth(label)/2 + 1), (int)(y - 12 + 1));
-        g2d.setColor(Color.BLACK);
-        g2d.drawString(label, (int)(x - fm.stringWidth(label)/2), (int)(y - 12));
+        // 4. Сохраняем текущую трансформацию (мир + зум)
+        AffineTransform originalTransform = g2d.getTransform();
+
+        // 5. Сбрасываем трансформацию для отрисовки в экранных координатах
+        g2d.setTransform(new AffineTransform());
+
+        // 6. Рисуем кораблик фиксированного размера в пикселях экрана
+        ShipRenderer.drawShip(g2d, sx, sy, userColor);
+
+        // 7. Восстанавливаем мировую трансформацию для продолжения отрисовки сетки/осей
+        g2d.setTransform(originalTransform);
     }
 
     private void drawControls(Graphics2D g2d) {
