@@ -204,11 +204,13 @@ public class ButtonsHandler {
         return List.of("client_01", "client_02", "child_client_01");
     }
     public void handleLogOut(){
+        mainWindow.getFrame().setVisible(false);
+
         AuthDialog authDialog = new AuthDialog(mainWindow.getFrame(), connection);
         authDialog.setVisible(true);
-//        mainWindow.getFrame().setVisible(false);
+
         if (!authDialog.isSuccess() || authDialog.getLoggedInUser() == null) {
-            System.exit(0); // Exit if auth fails or is cancelled
+            System.exit(0);
             return;
         }
 
@@ -217,7 +219,6 @@ public class ButtonsHandler {
         RequestsFactory.setClientId(mainWindow.getConfig().getClientId());
         RequestsFactory.setUserInfo(user);
         mainWindow.setUserName(user.name());
-//        mainWindow.getFrame().setVisible(true);
-
+        mainWindow.getFrame().setVisible(true);
     }
 }
