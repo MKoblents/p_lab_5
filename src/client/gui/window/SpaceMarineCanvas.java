@@ -4,6 +4,7 @@ import client.gui.utils.GuiUtils;
 import client.gui.utils.ShipRenderer;
 import client.utils.LocaleManager;
 import shared.models.SpaceMarine;
+import shared.utils.ColorUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -215,7 +216,7 @@ public class SpaceMarineCanvas extends JPanel {
 
         double wx = m.getCoordinates().getX();
         double wy = m.getCoordinates().getY();
-        Color userColor = ShipRenderer.getUserColor(m.getOwner());
+        Color userColor = Color.decode(ColorUtils.getUserColorHex(m.getOwner()));
 
         double scaledX = wx * GRID_STEP;
         double scaledY = wy * GRID_STEP;

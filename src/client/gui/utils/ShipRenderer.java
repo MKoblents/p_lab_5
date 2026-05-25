@@ -32,7 +32,7 @@ public class ShipRenderer {
         int[] wingLY = {y + 4, y + 12, y + 10};
         int[] wingRX = {x + 10, x + 18, x + 4};
         int[] wingRY = {y + 4, y + 12, y + 10};
-        g.setColor(color.darker());
+        g.setColor(color);
         g.fillPolygon(wingLX, wingLY, 3);
         g.fillPolygon(wingRX, wingRY, 3);
 

@@ -36,7 +36,7 @@ public class SpaceMarineInputDialog extends JDialog {
         pack();
         setSize(originalSize);
         setLocationRelativeTo(parent);
-        setMinimumSize(new Dimension(400, 600));
+        setMinimumSize(new Dimension(600, 800));
 
         addComponentListener(new ComponentAdapter() {
             @Override
