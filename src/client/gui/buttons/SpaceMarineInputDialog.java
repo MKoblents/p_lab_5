@@ -5,6 +5,7 @@ import client.utils.LocaleManager;
 import shared.enums.AstartesCategory;
 import shared.enums.MeleeWeapon;
 import shared.enums.Weapon;
+import shared.models.Chapter;
 import shared.models.Coordinates;
 import shared.models.SpaceMarine;
 
@@ -25,6 +26,7 @@ public class SpaceMarineInputDialog extends JDialog {
     private JButton okButton, cancelButton;
     private JLabel titleLabel;
     private JFrame parent;
+    private JTextField chapterNameField, chapterParentLegionField, chapterWorldField;
 
     private SpaceMarine result;
     private final Dimension originalSize = new Dimension(500, 700);
@@ -60,6 +62,9 @@ public class SpaceMarineInputDialog extends JDialog {
         meleeWeaponCombo = createStyledComboBox(MeleeWeapon.values());
         weaponCombo = createStyledComboBox(Weapon.values());
         categoryCombo = createStyledComboBox(AstartesCategory.values());
+        chapterNameField = createStyledTextField(LocaleManager.get("dialog.field.chapter.name"));
+        chapterParentLegionField = createStyledTextField(LocaleManager.get("dialog.field.chapter.parentLegion"));
+        chapterWorldField = createStyledTextField(LocaleManager.get("dialog.field.chapter.world"));
 
         okButton = createStyledButton(LocaleManager.get("button.ok"));
         cancelButton = createStyledButton(LocaleManager.get("button.cancel"));
@@ -68,6 +73,28 @@ public class SpaceMarineInputDialog extends JDialog {
         cancelButton.addActionListener(e -> onCancel());
 
         getRootPane().setDefaultButton(okButton);
+    }
+
+    private JPanel createChapterSection() {
+        JPanel chapterPanel = new JPanel();
+        chapterPanel.setLayout(new BoxLayout(chapterPanel, BoxLayout.Y_AXIS));
+        chapterPanel.setOpaque(false);
+        chapterPanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 1),
+                LocaleManager.get("dialog.section.chapter"),
+                SwingConstants.LEFT,
+                SwingConstants.TOP,
+                new Font("Segoe UI", Font.BOLD, 12),
+                GuiUtils.PRIMARY_DARK
+        ));
+
+        chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.name"), chapterNameField));
+        chapterPanel.add(Box.createVerticalStrut(10));
+        chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.parentLegion"), chapterParentLegionField));
+        chapterPanel.add(Box.createVerticalStrut(10));
+        chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.world"), chapterWorldField));
+
+        return chapterPanel;
     }
 
     private JTextField createStyledTextField(String placeholder) {
@@ -191,6 +218,8 @@ public class SpaceMarineInputDialog extends JDialog {
         fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.weapon"), weaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
         fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.category"), categoryCombo));
+        fieldsPanel.add(Box.createVerticalStrut(20));
+        fieldsPanel.add(createChapterSection());
 
         JScrollPane scrollPane = new JScrollPane(fieldsPanel);
         scrollPane.setBorder(null);
@@ -255,6 +284,9 @@ public class SpaceMarineInputDialog extends JDialog {
         meleeWeaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
         weaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
         categoryCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        chapterNameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        chapterParentLegionField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        chapterWorldField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
 
         okButton.setFont(new Font("Segoe UI", Font.BOLD, (int) fieldSize));
         cancelButton.setFont(new Font("Segoe UI", Font.BOLD, (int) fieldSize));
@@ -286,6 +318,8 @@ public class SpaceMarineInputDialog extends JDialog {
 
     private SpaceMarine createSpaceMarineFromInput() throws ValidationException {
         String name = nameField.getText().trim();
+        String chapterName = chapterNameField.getText().trim();
+        String chapterNamePlaceholder = LocaleManager.get("dialog.field.chapter.name");
         String placeholder = LocaleManager.get("dialog.field.name");
         if (name.isEmpty() || name.equals(placeholder)) {
             throw new ValidationException(LocaleManager.get("validation.name.empty"));
@@ -327,7 +361,24 @@ public class SpaceMarineInputDialog extends JDialog {
         marine.setMeleeWeapon((MeleeWeapon) meleeWeaponCombo.getSelectedItem());
         marine.setWeaponType((Weapon) weaponCombo.getSelectedItem());
         marine.setCategory((AstartesCategory) categoryCombo.getSelectedItem());
+        if (!chapterName.isEmpty() && !chapterName.equals(chapterNamePlaceholder)) {
+            String chapterWorld = chapterWorldField.getText().trim();
+            String chapterWorldPlaceholder = LocaleManager.get("dialog.field.chapter.world");
 
+            if (chapterWorld.isEmpty() || chapterWorld.equals(chapterWorldPlaceholder)) {
+                throw new ValidationException(LocaleManager.get("validation.chapter.world.required"));
+            }
+
+            Chapter chapter = new Chapter();
+            chapter.setName(chapterName);
+
+            String parentLegion = chapterParentLegionField.getText().trim();
+            String parentLegionPlaceholder = LocaleManager.get("dialog.field.chapter.parentLegion");
+            chapter.setParentLegion(parentLegion.isEmpty() || parentLegion.equals(parentLegionPlaceholder) ? null : parentLegion);
+
+            chapter.setWorld(chapterWorld);
+            marine.setChapter(chapter);
+        }
         return marine;
     }
 

@@ -16,11 +16,13 @@ import shared.models.SpaceMarine;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MainWindow {
     private JFrame frame;
@@ -244,6 +246,24 @@ public class MainWindow {
             }
         });
 
+        TableRowSorter<SpaceMarineTable> rowSorter = new TableRowSorter<>(tableModel);
+        tableView.setRowSorter(rowSorter);
+        tableView.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    int column = tableView.columnAtPoint(e.getPoint());
+                    if (column >= 0) {
+                        showFilterMenu(tableView, rowSorter, column, e.getX(), e.getY());
+                    }
+                }
+            }
+        });
+        rowSorter.addRowSorterListener(e -> {
+            List<? extends RowSorter.SortKey> sortKeys = rowSorter.getSortKeys();
+            tableView.getTableHeader().repaint();
+        });
+
         JScrollPane tableScroll = new JScrollPane(tableView);
         tableScroll.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
         contentPanel.add(tableScroll, "TABLE");
@@ -275,6 +295,77 @@ public class MainWindow {
         switchButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         switchButton.setPreferredSize(new Dimension(140, 28));
         switchButton.addActionListener(e -> toggleView());
+    }
+    private void showFilterMenu(JTable table, TableRowSorter<SpaceMarineTable> sorter, int column, int x, int y) {
+        JPopupMenu filterMenu = new JPopupMenu();
+
+        JMenuItem clearFilter = new JMenuItem("Clear Filter");
+        clearFilter.addActionListener(e -> sorter.setRowFilter(null));
+        filterMenu.add(clearFilter);
+        filterMenu.addSeparator();
+
+        if (table.getModel().getColumnClass(column) == String.class) {
+            JPanel filterPanel = new JPanel(new BorderLayout(5, 0));
+            filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+            JTextField filterText = new JTextField(15);
+            filterText.setToolTipText("Type to filter...");
+
+            JButton applyBtn = new JButton("Apply");
+            applyBtn.addActionListener(ev -> {
+                String text = filterText.getText().trim();
+                if (text.isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(text), column));
+                }
+            });
+
+            filterPanel.add(filterText, BorderLayout.CENTER);
+            filterPanel.add(applyBtn, BorderLayout.EAST);
+            filterMenu.add(filterPanel);
+        }
+
+        else if (Number.class.isAssignableFrom(table.getModel().getColumnClass(column))) {
+            JPanel filterPanel = new JPanel(new GridLayout(2, 2, 5, 2));
+            filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+            JTextField minField = new JTextField(8);
+            JTextField maxField = new JTextField(8);
+            minField.setToolTipText("Min value");
+            maxField.setToolTipText("Max value");
+
+            JButton applyBtn = new JButton("Apply");
+            applyBtn.addActionListener(ev -> {
+                try {
+                    Number min = minField.getText().trim().isEmpty() ? null : Double.valueOf(minField.getText());
+                    Number max = maxField.getText().trim().isEmpty() ? null : Double.valueOf(maxField.getText());
+
+                    sorter.setRowFilter(new RowFilter<SpaceMarineTable, Integer>() {
+                        @Override
+                        public boolean include(Entry<? extends SpaceMarineTable, ? extends Integer> entry) {
+                            Object value = entry.getValue(column);
+                            if (value == null) return false;
+                            double numValue = ((Number) value).doubleValue();
+                            if (min != null && numValue < min.doubleValue()) return false;
+                            if (max != null && numValue > max.doubleValue()) return false;
+                            return true;
+                        }
+                    });
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(table, "Please enter valid numbers", "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+
+            filterPanel.add(new JLabel("Min:"));
+            filterPanel.add(minField);
+            filterPanel.add(new JLabel("Max:"));
+            filterPanel.add(maxField);
+            filterMenu.add(filterPanel);
+            filterMenu.add(applyBtn);
+        }
+
+        filterMenu.show(table.getTableHeader(), x, y);
     }
 
     private void setupLayout() {
