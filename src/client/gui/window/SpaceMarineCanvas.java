@@ -2,6 +2,7 @@ package client.gui.window;
 
 import client.gui.utils.GuiUtils;
 import client.gui.utils.ShipRenderer;
+import client.utils.LocaleManager;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
@@ -9,6 +10,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +70,12 @@ public class SpaceMarineCanvas extends JPanel {
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
                     if (zoomInRect.contains(e.getPoint())) applyZoom(1.2, getWidth()/2, getHeight()/2);
                     else if (zoomOutRect.contains(e.getPoint())) applyZoom(0.8, getWidth()/2, getHeight()/2);
+                    else {
+                        SpaceMarine clicked = findMarineAtPoint(e.getX(), e.getY());
+                        if (clicked != null) {
+                            showMarineInfo(clicked);
+                        }
+                    }
                 }
             }
             @Override
@@ -101,6 +110,42 @@ public class SpaceMarineCanvas extends JPanel {
         am.put("zoomOut", new AbstractAction() {
             public void actionPerformed(ActionEvent e) { applyZoom(0.8, getWidth()/2, getHeight()/2); }
         });
+    }
+
+    private SpaceMarine findMarineAtPoint(int screenX, int screenY) {
+        double hitRadius = 25.0 / zoom;
+
+        for (SpaceMarine m : marines) {
+            if (m.getCoordinates() == null) continue;
+
+            double wx = m.getCoordinates().getX();
+            double wy = m.getCoordinates().getY();
+
+
+            double scaledX = wx * GRID_STEP;
+            double scaledY = wy * GRID_STEP;
+            double centerX = getWidth() / 2.0 + panX;
+            double centerY = getHeight() / 2.0 + panY;
+
+            int sx = (int) Math.round(scaledX * zoom + centerX);
+            int sy = (int) Math.round(-scaledY * zoom + centerY);
+
+            double dx = screenX - sx;
+            double dy = screenY - sy;
+            if (dx * dx + dy * dy <= hitRadius * hitRadius) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    private void showMarineInfo(SpaceMarine marine) {
+        JOptionPane.showMessageDialog(
+                this,
+                marine,
+                "SpaceMarine Details",
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }
 
     private void applyZoom(double factor, int centerX, int centerY) {
