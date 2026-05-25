@@ -303,4 +303,138 @@ public class GuiUtils {
     public enum MessageType {
         INFO, WARNING, ERROR
     }
+    // === В конец класса GuiUtils ===
+
+    /**
+     * Creates a styled text field with placeholder behavior.
+     * @param placeholderKey locale key for placeholder text
+     * @param preferredHeight preferred height in pixels
+     * @return configured JTextField
+     */
+    public static JTextField createStyledPlaceholderField(String placeholderKey, int preferredHeight) {
+        JTextField field = new JTextField(LocaleManager.get(placeholderKey));
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        field.setForeground(Color.GRAY);
+        field.setHorizontalAlignment(JTextField.CENTER);
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
+                new EmptyBorder(10, 15, 10, 15)
+        ));
+        field.setBackground(Color.WHITE);
+        field.setPreferredSize(new Dimension(0, preferredHeight));
+        field.setMaximumSize(new Dimension(Short.MAX_VALUE, preferredHeight));
+
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (field.getText().equals(LocaleManager.get(placeholderKey))) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (field.getText().isEmpty()) {
+                    field.setText(LocaleManager.get(placeholderKey));
+                    field.setForeground(Color.GRAY);
+                }
+            }
+        });
+        return field;
+    }
+
+    /**
+     * Creates a styled JComboBox with generic items.
+     * @param items enum values or other items
+     * @param <T> type of items
+     * @return configured JComboBox
+     */
+    public static <T> JComboBox<T> createStyledComboBox(T[] items, int preferredHeight) {
+        JComboBox<T> combo = new JComboBox<>(items);
+        combo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        combo.setBackground(Color.WHITE);
+        combo.setForeground(Color.BLACK);
+        combo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
+                new EmptyBorder(8, 10, 8, 10)
+        ));
+        combo.setPreferredSize(new Dimension(0, preferredHeight));
+        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, preferredHeight));
+        combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        combo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                if (isSelected) {
+                    setBackground(PRIMARY_COLOR);
+                    setForeground(Color.WHITE);
+                } else {
+                    setBackground(Color.WHITE);
+                    setForeground(Color.BLACK);
+                }
+                setBorder(new EmptyBorder(5, 10, 5, 10));
+                return this;
+            }
+        });
+        return combo;
+    }
+
+    /**
+     * Creates a styled button with hover effect.
+     * @param textKey locale key for button text
+     * @param width preferred width (0 for default)
+     * @param height preferred height
+     * @param action optional action to execute on click
+     * @return configured JButton
+     */
+    public static JButton createStyledDialogButton(String textKey, int width, int height, Runnable action) {
+        JButton button = new JButton(LocaleManager.get(textKey));
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setBackground(PRIMARY_COLOR);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        if (width > 0) {
+            button.setPreferredSize(new Dimension(width, height));
+            button.setMaximumSize(new Dimension(width, height));
+        }
+        button.setBorder(new EmptyBorder(10, 20, 10, 20));
+
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(PRIMARY_DARK);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(PRIMARY_COLOR);
+            }
+        });
+
+        if (action != null) {
+            button.addActionListener(e -> action.run());
+        }
+        return button;
+    }
+
+    /**
+     * Creates a labeled field panel (label above field).
+     * @param labelKey locale key for label
+     * @param field the input component to label
+     * @return JPanel with BorderLayout containing label and field
+     */
+    public static JPanel createLabeledInputPanel(String labelKey, JComponent field) {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setOpaque(false);
+
+        JLabel label = new JLabel(LocaleManager.get(labelKey), SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        label.setForeground(PRIMARY_DARK);
+
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(field, BorderLayout.CENTER);
+        return panel;
+    }
 }

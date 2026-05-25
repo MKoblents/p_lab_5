@@ -59,20 +59,20 @@ public class SpaceMarineUpdateDialog extends JDialog {
 
         selector = new SpaceMarineSelector();
 
-        nameField = createStyledTextField(LocaleManager.get("dialog.field.name"));
-        xField = createStyledTextField(LocaleManager.get("dialog.field.x"));
-        yField = createStyledTextField(LocaleManager.get("dialog.field.y"));
-        healthField = createStyledTextField(LocaleManager.get("dialog.field.health"));
+        nameField = GuiUtils.createStyledPlaceholderField("dialog.field.name", 45);
+        xField = GuiUtils.createStyledPlaceholderField("dialog.field.x", 45);
+        yField = GuiUtils.createStyledPlaceholderField("dialog.field.y", 45);
+        healthField = GuiUtils.createStyledPlaceholderField("dialog.field.health", 45);
 
-        meleeWeaponCombo = createStyledComboBox(MeleeWeapon.values());
-        weaponCombo = createStyledComboBox(Weapon.values());
-        categoryCombo = createStyledComboBox(AstartesCategory.values());
-        chapterNameField = createStyledTextField(LocaleManager.get("dialog.field.chapter.name"));
-        chapterParentLegionField = createStyledTextField(LocaleManager.get("dialog.field.chapter.parentLegion"));
-        chapterWorldField = createStyledTextField(LocaleManager.get("dialog.field.chapter.world"));
+        meleeWeaponCombo = GuiUtils.createStyledComboBox(MeleeWeapon.values(), 45);
+        weaponCombo = GuiUtils.createStyledComboBox(Weapon.values(), 45);
+        categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 45);
+        chapterNameField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.name", 45);
+        chapterParentLegionField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.parentLegion", 45);
+        chapterWorldField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.world", 45);
 
-        okButton = createStyledButton(LocaleManager.get("button.update"));
-        cancelButton = createStyledButton(LocaleManager.get("button.cancel"));
+        okButton = GuiUtils.createStyledDialogButton("button.ok",150,45,null);
+        cancelButton = GuiUtils.createStyledDialogButton("button.cancel",150,45,null);
 
         okButton.addActionListener(e -> onOK());
         cancelButton.addActionListener(e -> onCancel());
@@ -87,7 +87,6 @@ public class SpaceMarineUpdateDialog extends JDialog {
         });
     }
 
-    // Add this method to create the Chapter section panel
     private JPanel createChapterSection() {
         JPanel chapterPanel = new JPanel();
         chapterPanel.setLayout(new BoxLayout(chapterPanel, BoxLayout.Y_AXIS));
@@ -108,97 +107,6 @@ public class SpaceMarineUpdateDialog extends JDialog {
         chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.world"), chapterWorldField));
 
         return chapterPanel;
-    }
-
-    private JTextField createStyledTextField(String placeholder) {
-        JTextField field = new JTextField(placeholder);
-        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setForeground(Color.GRAY);
-        field.setHorizontalAlignment(JTextField.CENTER);
-        field.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 2),
-                new EmptyBorder(10, 15, 10, 15)
-        ));
-        field.setBackground(Color.WHITE);
-        field.setPreferredSize(new Dimension(0, 45));
-        field.setMaximumSize(new Dimension(Short.MAX_VALUE, 45));
-
-        field.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (field.getText().equals(placeholder)) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                if (field.getText().isEmpty()) {
-                    field.setText(placeholder);
-                    field.setForeground(Color.GRAY);
-                }
-            }
-        });
-
-        return field;
-    }
-
-    private <T> JComboBox<T> createStyledComboBox(T[] items) {
-        JComboBox<T> combo = new JComboBox<>(items);
-        combo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        combo.setBackground(Color.WHITE);
-        combo.setForeground(Color.BLACK);
-        combo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 2),
-                new EmptyBorder(8, 10, 8, 10)
-        ));
-        combo.setPreferredSize(new Dimension(0, 45));
-        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, 45));
-        combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        combo.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setFont(new Font("Segoe UI", Font.PLAIN, 14));
-                if (isSelected) {
-                    setBackground(GuiUtils.PRIMARY_COLOR);
-                    setForeground(Color.WHITE);
-                } else {
-                    setBackground(Color.WHITE);
-                    setForeground(Color.BLACK);
-                }
-                setBorder(new EmptyBorder(5, 10, 5, 10));
-                return this;
-            }
-        });
-
-        return combo;
-    }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setBackground(GuiUtils.PRIMARY_COLOR);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setPreferredSize(new Dimension(150, 45));
-        button.setMaximumSize(new Dimension(150, 45));
-        button.setBorder(new EmptyBorder(10, 20, 10, 20));
-
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(GuiUtils.PRIMARY_DARK);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(GuiUtils.PRIMARY_COLOR);
-            }
-        });
-
-        return button;
     }
 
     private void layoutComponents() {
@@ -223,19 +131,20 @@ public class SpaceMarineUpdateDialog extends JDialog {
         fieldsPanel.setOpaque(false);
         fieldsPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.name"), nameField));
+
+        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.name", nameField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.x"), xField));
+        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.x", xField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.y"), yField));
+        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.y", yField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.health"), healthField));
+        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.health", healthField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.melee"), meleeWeaponCombo));
+        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.melee", meleeWeaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.weapon"), weaponCombo));
+        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.weapon", weaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.category"), categoryCombo));
+        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.category", categoryCombo));
         fieldsPanel.add(Box.createVerticalStrut(20));
         fieldsPanel.add(createChapterSection());
 
@@ -263,20 +172,6 @@ public class SpaceMarineUpdateDialog extends JDialog {
 
         panel.add(labelComponent, BorderLayout.NORTH);
         panel.add(field, BorderLayout.CENTER);
-
-        return panel;
-    }
-
-    private JPanel createLabeledCombo(String label, JComboBox<?> combo) {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setOpaque(false);
-
-        JLabel labelComponent = new JLabel(label, SwingConstants.CENTER);
-        labelComponent.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        labelComponent.setForeground(GuiUtils.PRIMARY_DARK);
-
-        panel.add(labelComponent, BorderLayout.NORTH);
-        panel.add(combo, BorderLayout.CENTER);
 
         return panel;
     }
