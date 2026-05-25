@@ -6,6 +6,7 @@ import client.utils.LocaleManager;
 import shared.enums.AstartesCategory;
 import shared.enums.MeleeWeapon;
 import shared.enums.Weapon;
+import shared.models.Chapter;
 import shared.models.Coordinates;
 import shared.models.SpaceMarine;
 
@@ -26,6 +27,7 @@ public class SpaceMarineUpdateDialog extends JDialog {
     private JLabel titleLabel;
     private final SpaceMarineTable tableModel;
     private  String currentUsername;
+    private JTextField chapterNameField, chapterParentLegionField, chapterWorldField;
 
     private SpaceMarine result;
     private final Dimension originalSize = new Dimension(550, 800);
@@ -65,6 +67,9 @@ public class SpaceMarineUpdateDialog extends JDialog {
         meleeWeaponCombo = createStyledComboBox(MeleeWeapon.values());
         weaponCombo = createStyledComboBox(Weapon.values());
         categoryCombo = createStyledComboBox(AstartesCategory.values());
+        chapterNameField = createStyledTextField(LocaleManager.get("dialog.field.chapter.name"));
+        chapterParentLegionField = createStyledTextField(LocaleManager.get("dialog.field.chapter.parentLegion"));
+        chapterWorldField = createStyledTextField(LocaleManager.get("dialog.field.chapter.world"));
 
         okButton = createStyledButton(LocaleManager.get("button.update"));
         cancelButton = createStyledButton(LocaleManager.get("button.cancel"));
@@ -80,6 +85,29 @@ public class SpaceMarineUpdateDialog extends JDialog {
                 populateFields(selected);
             }
         });
+    }
+
+    // Add this method to create the Chapter section panel
+    private JPanel createChapterSection() {
+        JPanel chapterPanel = new JPanel();
+        chapterPanel.setLayout(new BoxLayout(chapterPanel, BoxLayout.Y_AXIS));
+        chapterPanel.setOpaque(false);
+        chapterPanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 1),
+                LocaleManager.get("dialog.section.chapter"),
+                SwingConstants.LEFT,
+                SwingConstants.TOP,
+                new Font("Segoe UI", Font.BOLD, 12),
+                GuiUtils.PRIMARY_DARK
+        ));
+
+        chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.name"), chapterNameField));
+        chapterPanel.add(Box.createVerticalStrut(10));
+        chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.parentLegion"), chapterParentLegionField));
+        chapterPanel.add(Box.createVerticalStrut(10));
+        chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.world"), chapterWorldField));
+
+        return chapterPanel;
     }
 
     private JTextField createStyledTextField(String placeholder) {
@@ -208,6 +236,8 @@ public class SpaceMarineUpdateDialog extends JDialog {
         fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.weapon"), weaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
         fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.category"), categoryCombo));
+        fieldsPanel.add(Box.createVerticalStrut(20));
+        fieldsPanel.add(createChapterSection());
 
         JScrollPane scrollPane = new JScrollPane(fieldsPanel);
         scrollPane.setBorder(null);
@@ -271,6 +301,9 @@ public class SpaceMarineUpdateDialog extends JDialog {
         meleeWeaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
         weaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
         categoryCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        chapterNameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        chapterParentLegionField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
+        chapterWorldField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
 
         okButton.setFont(new Font("Segoe UI", Font.BOLD, (int) fieldSize));
         cancelButton.setFont(new Font("Segoe UI", Font.BOLD, (int) fieldSize));
@@ -290,6 +323,33 @@ public class SpaceMarineUpdateDialog extends JDialog {
         meleeWeaponCombo.setSelectedItem(marine.getMeleeWeapon());
         weaponCombo.setSelectedItem(marine.getWeaponType());
         categoryCombo.setSelectedItem(marine.getCategory());
+        shared.models.Chapter chapter = marine.getChapter();
+        if (chapter != null) {
+            setFieldText(chapterNameField, chapter.getName(), LocaleManager.get("dialog.field.chapter.name"));
+            setFieldText(chapterWorldField, chapter.getWorld(), LocaleManager.get("dialog.field.chapter.world"));
+
+            String parentLegion = chapter.getParentLegion();
+            String placeholder = LocaleManager.get("dialog.field.chapter.parentLegion");
+            if (parentLegion != null && !parentLegion.isEmpty()) {
+                chapterParentLegionField.setText(parentLegion);
+                chapterParentLegionField.setForeground(Color.BLACK);
+            } else {
+                chapterParentLegionField.setText(placeholder);
+                chapterParentLegionField.setForeground(Color.GRAY);
+            }
+        } else {
+            // Clear chapter fields if no chapter
+            String namePlaceholder = LocaleManager.get("dialog.field.chapter.name");
+            String worldPlaceholder = LocaleManager.get("dialog.field.chapter.world");
+            String legionPlaceholder = LocaleManager.get("dialog.field.chapter.parentLegion");
+
+            chapterNameField.setText(namePlaceholder);
+            chapterNameField.setForeground(Color.GRAY);
+            chapterWorldField.setText(worldPlaceholder);
+            chapterWorldField.setForeground(Color.GRAY);
+            chapterParentLegionField.setText(legionPlaceholder);
+            chapterParentLegionField.setForeground(Color.GRAY);
+        }
     }
 
     private void setFieldText(JTextField field, String value, String placeholder) {
@@ -368,7 +428,31 @@ public class SpaceMarineUpdateDialog extends JDialog {
         updated.setMeleeWeapon((MeleeWeapon) meleeWeaponCombo.getSelectedItem());
         updated.setWeaponType((Weapon) weaponCombo.getSelectedItem());
         updated.setCategory((AstartesCategory) categoryCombo.getSelectedItem());
+        String chapterName = chapterNameField.getText().trim();
+        String chapterNamePlaceholder = LocaleManager.get("dialog.field.chapter.name");
 
+        // Chapter is optional, but if name is provided, world is required
+        if (!chapterName.isEmpty() && !chapterName.equals(chapterNamePlaceholder)) {
+            String chapterWorld = chapterWorldField.getText().trim();
+            String chapterWorldPlaceholder = LocaleManager.get("dialog.field.chapter.world");
+
+            if (chapterWorld.isEmpty() || chapterWorld.equals(chapterWorldPlaceholder)) {
+                throw new ValidationException(LocaleManager.get("validation.chapter.world.required"));
+            }
+
+            Chapter chapter = new Chapter();
+            chapter.setName(chapterName);
+
+            String parentLegion = chapterParentLegionField.getText().trim();
+            String parentLegionPlaceholder = LocaleManager.get("dialog.field.chapter.parentLegion");
+            chapter.setParentLegion(parentLegion.isEmpty() || parentLegion.equals(parentLegionPlaceholder) ? null : parentLegion);
+
+            chapter.setWorld(chapterWorld);
+            updated.setChapter(chapter);
+        } else {
+            // If chapter name is empty, set chapter to null
+            updated.setChapter(null);
+        }
         return updated;
     }
     public void setSelectedMarine(SpaceMarine marine) {
