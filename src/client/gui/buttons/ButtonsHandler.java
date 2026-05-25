@@ -60,15 +60,30 @@ public class ButtonsHandler {
         }
     }
 
-    public void handleExecuteScript(){
+    public void handleExecuteScript() {
         ExecuteScriptDialog executeScriptDialog = new ExecuteScriptDialog(mainWindow.getFrame());
         executeScriptDialog.setVisible(true);
         File scriptFile = executeScriptDialog.getSelectedFile();
-        InputManager inputManager = new InputManager(null, new CommandParser());
-        ScriptRunner scriptRunner = new ScriptRunner(inputManager,connection,new ResponseHandler(mainWindow.getContext()),null, new FileManager());
-        Invoker invoker =  new Invoker(inputManager,mainWindow.getContext(), connection,new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort()),scriptRunner);
-        scriptRunner.setInvoker(invoker);
-        scriptRunner.executeScript(scriptFile.getPath());
+        SwingWorker<Void, String> worker = new SwingWorker<>() {
+            protected Void doInBackground() {
+                InputManager inputManager = new InputManager(null, new CommandParser());
+                ScriptRunner scriptRunner = new ScriptRunner(inputManager, connection, new ResponseHandler(mainWindow.getContext()), null, new FileManager());
+                Invoker invoker = new Invoker(inputManager, mainWindow.getContext(), connection, new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort()), scriptRunner);
+                scriptRunner.setInvoker(invoker);
+                boolean success = scriptRunner.executeScript(scriptFile.getPath());
+                String message = success ? "Script completed successfully\n"+ scriptRunner.getRes()  : "Script completed with errors";
+
+
+                SwingUtilities.invokeLater(() ->
+                        GuiUtils.showMessageDialog(mainWindow.getFrame(), "Script Result", message,
+                                success ? GuiUtils.MessageType.INFO : GuiUtils.MessageType.ERROR)
+                );
+               return null;
+            }
+
+        };
+        worker.execute();
+
 
         //TODO
     }
