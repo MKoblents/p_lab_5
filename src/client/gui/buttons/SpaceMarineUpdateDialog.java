@@ -25,13 +25,15 @@ public class SpaceMarineUpdateDialog extends JDialog {
     private JButton okButton, cancelButton;
     private JLabel titleLabel;
     private final SpaceMarineTable tableModel;
+    private  String currentUsername;
 
     private SpaceMarine result;
     private final Dimension originalSize = new Dimension(550, 800);
 
-    public SpaceMarineUpdateDialog(JFrame parent, SpaceMarineTable tableModel) {
+    public SpaceMarineUpdateDialog(JFrame parent, SpaceMarineTable tableModel, String currentUsername) {
         super(parent, true);
         this.tableModel = tableModel;
+        this.currentUsername = currentUsername;
         initComponents();
         layoutComponents();
         applyTheme();
@@ -275,6 +277,7 @@ public class SpaceMarineUpdateDialog extends JDialog {
     }
 
     public void refreshSelector(SpaceMarineTable tableModel) {
+        selector.setCurrentUsername(currentUsername);
         selector.refreshData(tableModel);
     }
 

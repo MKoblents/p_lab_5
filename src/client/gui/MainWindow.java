@@ -233,7 +233,7 @@ public class MainWindow {
                         return;
                     }
 
-                    SpaceMarineUpdateDialog dialog = new SpaceMarineUpdateDialog(frame, tableModel);
+                    SpaceMarineUpdateDialog dialog = new SpaceMarineUpdateDialog(frame, tableModel, context.getUserInfo().name());
                     dialog.setSelectedMarine(marine);
                     dialog.setVisible(true);
                     buttonsHandler.handleRequest(RequestsFactory.createTwoArgs("update", dialog.getUpdatedSpaceMarine().getId(), dialog.getUpdatedSpaceMarine()), "Updated successfully!");

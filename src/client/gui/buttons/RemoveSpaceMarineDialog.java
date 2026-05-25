@@ -16,10 +16,12 @@ public class RemoveSpaceMarineDialog extends JDialog {
     private JButton removeButton, cancelButton;
     private JLabel titleLabel, infoLabel;
     private boolean success = false;
+    private  String currentUsername;
     private final Dimension originalSize = new Dimension(500, 400);
 
-    public RemoveSpaceMarineDialog(Frame owner, SpaceMarineTable tableModel) {
+    public RemoveSpaceMarineDialog(Frame owner, SpaceMarineTable tableModel,  String currentUsername) {
         super(owner, true);
+        this.currentUsername =currentUsername;
         initComponents();
         layoutComponents();
         applyTheme();
@@ -129,6 +131,7 @@ public class RemoveSpaceMarineDialog extends JDialog {
     }
 
     public void refreshSelector(SpaceMarineTable tableModel) {
+        selector.setCurrentUsername(currentUsername);
         selector.refreshData(tableModel);
     }
 

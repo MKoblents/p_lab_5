@@ -42,7 +42,8 @@ public class ButtonsHandler {
         }
     }
     public void handleRemove(){
-        RemoveSpaceMarineDialog dialog = new RemoveSpaceMarineDialog(mainWindow.getFrame(), mainWindow.getTableModel());
+        String username = mainWindow.getContext().getUserInfo().name();  // ← Получаем текущего пользователя
+        RemoveSpaceMarineDialog dialog = new RemoveSpaceMarineDialog(mainWindow.getFrame(), mainWindow.getTableModel(), username);
         dialog.setVisible(true);
 
         if (dialog.isSuccess()) {
@@ -107,7 +108,8 @@ public class ButtonsHandler {
         return null;
     }
     public void handleUpdate(){
-        SpaceMarineUpdateDialog updateDialog = new SpaceMarineUpdateDialog(mainWindow.getFrame(),mainWindow.getTableModel());
+        String username = mainWindow.getContext().getUserInfo().name();  // ← Получаем текущего пользователя
+        SpaceMarineUpdateDialog updateDialog = new SpaceMarineUpdateDialog(mainWindow.getFrame(),mainWindow.getTableModel(), username);
         updateDialog.setVisible(true);
         SpaceMarine updateMarine = updateDialog.getUpdatedSpaceMarine();
         if (updateMarine != null){
