@@ -12,6 +12,8 @@ import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.utils.LocaleManager;
 import client.utils.RequestsFactory;
+import shared.dto.CommandRequest;
+import shared.dto.ForwardCommandObject;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
@@ -22,6 +24,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class MainWindow {
@@ -58,6 +61,8 @@ public class MainWindow {
     private ClientContext context;
     private final ClientConfig config;
     private ClientProcessManager processManager;
+    private JComboBox<String> forwardCommandCombo;
+    private JButton btnForwardCommand;
     public void setDependencies(ConnectionManager connection,
                                 ClientContext context,
                                 ClientProcessManager processManager) {
@@ -84,7 +89,7 @@ public class MainWindow {
         frame.setLocationRelativeTo(null);
 
         GuiUtils.addResizeListener(frame.getContentPane(), originalSize, this::onResize);
-
+        startForwardCommandListener();
         frame.setVisible(true);
     }
     public AsyncNetworkReader getNetworkReader() { return networkReader; }
@@ -436,10 +441,10 @@ public class MainWindow {
         panel.add(createStyledButton("btn.spawn_client", buttonWidth, buttonHeight, () -> System.out.println("Spawn clicked")));
         panel.add(createStyledButton("btn.kill_client", buttonWidth, buttonHeight, () -> System.out.println("Kill clicked")));
         panel.add(createStyledButton("btn.help", buttonWidth, buttonHeight, () -> System.out.println("Help clicked")));
+        panel.add(createForwardCommandPanel(buttonWidth, buttonHeight));
 
         panel.add(Box.createVerticalGlue());
         panel.add(createStyledButton("btn.exit", buttonWidth, buttonHeight, () -> System.out.println("Log out clicked")));
-
         btnAdd.addActionListener(e -> buttonsHandler.handleAdd());
         btnRemove.addActionListener(e -> buttonsHandler.handleRemove());
         btnExecuteScript.addActionListener(e -> buttonsHandler.handleExecuteScript());
@@ -457,6 +462,75 @@ public class MainWindow {
         btnKillClient.addActionListener(e-> buttonsHandler.handleKill());
         btnExit.addActionListener(e->buttonsHandler.handleLogOut());
         return panel;
+    }
+    private JPanel createForwardCommandPanel(int buttonWidth, int buttonHeight) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 8));
+        panel.setOpaque(false);
+        panel.setMaximumSize(new Dimension(buttonWidth, buttonHeight + 16));
+
+        String[] commands = {
+                "add", "remove", "update", "info",
+                "help", "execute_script", "clear"
+        };
+
+        forwardCommandCombo = new JComboBox<>(commands);
+        forwardCommandCombo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        forwardCommandCombo.setPreferredSize(new Dimension(buttonWidth - 60, 28));
+
+        btnForwardCommand = GuiUtils.createStyledButton("btn.forward", 55, 28, this::onForwardCommand);
+        btnForwardCommand.setFont(new Font("Segoe UI", Font.BOLD, 10));
+
+        panel.add(new JLabel("Forward: ", SwingConstants.RIGHT));
+        panel.add(forwardCommandCombo);
+        panel.add(btnForwardCommand);
+
+        return panel;
+    }
+
+    private void onForwardCommand() {
+        if (buttonsHandler != null) {
+            String command = (String) forwardCommandCombo.getSelectedItem();
+            buttonsHandler.handleForwardToChildren(command);
+        }
+    }
+    private void startForwardCommandListener() {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    CommandRequest fwd = networkReader.getForwardQueue().poll();
+                    if (fwd != null && "forward_command".equals(fwd.commandType()) && fwd.args() instanceof ForwardCommandObject fco) {
+                        // Execute the forwarded command locally
+                        SwingUtilities.invokeLater(() -> {
+                            executeForwardedCommand(fco.commandKey());
+                        });
+                    }
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }, "forward-command-listener").start();
+    }
+    public void executeForwardedCommand(String commandKey) {
+        if (buttonsHandler == null) return;
+
+        // Оборачиваем в invokeLater для потокобезопасности, если вызов идет из сетевого потока.
+        // Компоненты Swing должны быть доступны только из потока обработки событий (EDT).
+        SwingUtilities.invokeLater(() -> {
+            switch (commandKey.toLowerCase()) {
+                case "add" -> buttonsHandler.handleAdd();
+                case "remove" -> buttonsHandler.handleRemove();
+                case "update" -> buttonsHandler.handleUpdate();
+                case "clear" -> buttonsHandler.handleClear();
+                case "info" -> buttonsHandler.handleInfo();
+                case "help" -> buttonsHandler.handleHelp();
+                case "execute_script" -> buttonsHandler.handleExecuteScript();
+                default -> GuiUtils.showMessageDialog(frame, "Warning",
+                        "Получена неизвестная команда: " + commandKey,
+                        GuiUtils.MessageType.WARNING);
+            }
+        });
     }
 
     private JPanel createStyledButton(String localeKey, int width, int height, Runnable defaultAction) {

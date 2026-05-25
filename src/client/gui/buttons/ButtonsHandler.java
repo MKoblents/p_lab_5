@@ -17,6 +17,7 @@ import client.utils.RequestsFactory;
 import client.utils.SideFlag;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
+import shared.dto.ForwardCommandObject;
 import shared.dto.UserInfo;
 import shared.models.SpaceMarine;
 
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ButtonsHandler {
     private ConnectionManager connection;
@@ -271,5 +273,57 @@ public class ButtonsHandler {
         RequestsFactory.setUserInfo(user);
         mainWindow.setUserName(user.name());
         mainWindow.getFrame().setVisible(true);
+    }
+
+    // In ButtonsHandler.java
+
+    public void handleForwardToChildren(String commandKey) {
+        List<String> children = mainWindow.getContext().getChildClientIds();
+        if (children.isEmpty()) {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(),
+                    "Warning",
+                    "No child clients to forward command to.",
+                    GuiUtils.MessageType.WARNING);
+            return;
+        }
+
+        // Show dialog to select which child(ren) to forward to
+        ForwardTargetDialog dialog = new ForwardTargetDialog(
+                mainWindow.getFrame(),
+                children,
+                commandKey
+        );
+        dialog.setOnConfirm((targetClientId) -> {
+            // Create ForwardCommandObject
+            ForwardCommandObject fco = new ForwardCommandObject(
+                    mainWindow.getContext().getClientId(),  // parentId
+                    targetClientId,                          // childId
+                    commandKey                               // commandKey
+            );
+
+            // Create request with ForwardCommandObject as args
+            CommandRequest request = new CommandRequest(
+                    "forward_command",
+                    fco,
+                    UUID.randomUUID().toString().substring(0, 8),
+                    mainWindow.getContext().getClientId(),
+                    mainWindow.getContext().getUserInfo()
+            );
+
+            // Send request
+            try {
+                connection.sendRequest(request);
+                GuiUtils.showMessageDialog(mainWindow.getFrame(),
+                        "Sent",
+                        "Command '" + commandKey + "' forwarded to " + targetClientId,
+                        GuiUtils.MessageType.INFO);
+            } catch (IOException e) {
+                GuiUtils.showMessageDialog(mainWindow.getFrame(),
+                        "Error",
+                        "Failed to forward command: " + e.getMessage(),
+                        GuiUtils.MessageType.ERROR);
+            }
+        });
+        dialog.setVisible(true);
     }
 }
