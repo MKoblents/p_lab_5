@@ -7,6 +7,7 @@ import client.handlers.ResponseHandler;
 import client.inputWorkers.CommandParser;
 import client.inputWorkers.InputManager;
 import client.inputWorkers.Invoker;
+import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.FileManager;
@@ -28,9 +29,11 @@ public class ButtonsHandler {
     private ConnectionManager connection;
     private MainWindow mainWindow;
     private ScriptRunner scriptRunner;
+    private final AsyncNetworkReader networkReader;
     public ButtonsHandler(ConnectionManager connection, MainWindow mainWindow){
         this.connection = connection;
         this.mainWindow=mainWindow;
+        this.networkReader=mainWindow.getNetworkReader();
 //        scriptRunner = new ScriptRunner(inputManager,connection,null,new Invoker(null,RequestsFactory.))
     }
     public void handleAdd() {
@@ -85,7 +88,7 @@ public class ButtonsHandler {
     public CommandResponse handleRequest(CommandRequest request, String successMessage){
         try {
             connection.sendRequest(request);
-            CommandResponse response = connection.readResponse();
+            CommandResponse response = networkReader.getResponseQueue().poll();
 
             if (response.success()) {
                 GuiUtils.showMessageDialog(mainWindow.getFrame(),
