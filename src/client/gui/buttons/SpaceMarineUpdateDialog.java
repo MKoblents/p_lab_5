@@ -24,12 +24,16 @@ public class SpaceMarineUpdateDialog extends JDialog {
     private JComboBox<AstartesCategory> categoryCombo;
     private JButton okButton, cancelButton;
     private JLabel titleLabel;
+    private final SpaceMarineTable tableModel;
+    private  String currentUsername;
 
     private SpaceMarine result;
     private final Dimension originalSize = new Dimension(550, 800);
 
-    public SpaceMarineUpdateDialog(JFrame parent, SpaceMarineTable tableModel) {
+    public SpaceMarineUpdateDialog(JFrame parent, SpaceMarineTable tableModel, String currentUsername) {
         super(parent, true);
+        this.tableModel = tableModel;
+        this.currentUsername = currentUsername;
         initComponents();
         layoutComponents();
         applyTheme();
@@ -273,6 +277,7 @@ public class SpaceMarineUpdateDialog extends JDialog {
     }
 
     public void refreshSelector(SpaceMarineTable tableModel) {
+        selector.setCurrentUsername(currentUsername);
         selector.refreshData(tableModel);
     }
 
@@ -296,13 +301,6 @@ public class SpaceMarineUpdateDialog extends JDialog {
 
     private void onOK() {
         SpaceMarine selected = selector.getSelectedSpaceMarine();
-        if (selected == null) {
-            JOptionPane.showMessageDialog(this,
-                    LocaleManager.get("dialog.error.select"),
-                    LocaleManager.get("dialog.error.title"),
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         try {
             result = buildUpdatedSpaceMarine(selected.getId());
             if (result != null) {
@@ -372,6 +370,12 @@ public class SpaceMarineUpdateDialog extends JDialog {
         updated.setCategory((AstartesCategory) categoryCombo.getSelectedItem());
 
         return updated;
+    }
+    public void setSelectedMarine(SpaceMarine marine) {
+        if (marine == null) return;
+        selector.refreshData(tableModel);
+        selector.getComboBox().setSelectedItem(marine);
+        populateFields(marine);
     }
 
     public SpaceMarine getUpdatedSpaceMarine() {

@@ -9,12 +9,13 @@ import shared.dto.CommandResponse;
 import shared.dto.UserInfo;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.RoundRectangle2D;
 
 public class AuthDialog extends JDialog {
 
@@ -50,9 +51,10 @@ public class AuthDialog extends JDialog {
         setupUI();
         updateLocaleTexts();
 
-        originalSize = new Dimension(420, 480);
+        originalSize = new Dimension(550, 650);
         setSize(originalSize);
         setLocationRelativeTo(parent);
+        setMinimumSize(new Dimension(500, 600));
 
         GuiUtils.addResizeListener(getContentPane(), originalSize, this::onResize);
     }
@@ -76,7 +78,8 @@ public class AuthDialog extends JDialog {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
-                int stripeWidth = (int)(25 * scaleFactor);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                int stripeWidth = (int)(30 * scaleFactor);
                 Color c1 = new Color(255, 230, 235);
                 Color c2 = new Color(255, 245, 248);
                 for (int x = 0; x < getWidth(); x += stripeWidth * 2) {
@@ -86,20 +89,35 @@ public class AuthDialog extends JDialog {
             }
         };
 
-        JPanel formContainer = new JPanel(new GridBagLayout());
+       JPanel formContainer = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(new Color(255, 250, 252, 245));
+                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth()-1, getHeight()-1, 25, 25));
+
+                g2.setColor(new Color(255, 150, 170));
+                g2.setStroke(new BasicStroke(2));
+                g2.draw(new RoundRectangle2D.Double(0, 0, getWidth()-1, getHeight()-1, 25, 25));
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
         formContainer.setOpaque(false);
-        formContainer.setBorder(BorderFactory.createLineBorder(new Color(255, 150, 170), 1));
-        formContainer.setBackground(new Color(255, 250, 252, 230));
+        formContainer.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(8, 20, 8, 20);
+        gbc.insets = new Insets(12, 15, 12, 15);
         gbc.gridx = 0;
 
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
         headerPanel.setOpaque(false);
         titleLabel = new JLabel("SpaceMarine Client");
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
         titleLabel.setForeground(new Color(60, 40, 50));
 
         localeCombo = GuiUtils.createLocaleComboBox(selected -> {
@@ -115,49 +133,170 @@ public class AuthDialog extends JDialog {
         gbc.gridy = 0;
         formContainer.add(headerPanel, gbc);
 
-        usernameField = GuiUtils.createPlaceholderField("auth.username");
-        passwordField = GuiUtils.createPasswordField("auth.password");
-        confirmPasswordField = GuiUtils.createPasswordField("auth.confirm_password");
+        usernameField = createRoundedField("auth.username");
+        passwordField = createRoundedPasswordField("auth.password");
+        confirmPasswordField = createRoundedPasswordField("auth.confirm_password");
         confirmPasswordField.setVisible(false);
 
         gbc.gridy++; formContainer.add(usernameField, gbc);
         gbc.gridy++; formContainer.add(passwordField, gbc);
         gbc.gridy++; formContainer.add(confirmPasswordField, gbc);
 
-        JPanel btnPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+        JPanel btnPanel = new JPanel(new GridLayout(2, 1, 10, 10));
         btnPanel.setOpaque(false);
-        primaryButton = createStyledButton("auth.signup", new Color(255, 100, 130), Color.WHITE);
-        switchModeButton = createStyledButton("auth.switch_to_login", Color.WHITE, new Color(200, 80, 110));
+        btnPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+
+        primaryButton = createRoundedButton("auth.login", new Color(255, 105, 135), Color.WHITE);
+        switchModeButton = createRoundedButton("auth.switch_to_signup", new Color(255, 255, 255), new Color(200, 80, 110));
 
         primaryButton.addActionListener(e -> handleAuth());
         switchModeButton.addActionListener(e -> toggleMode());
 
         btnPanel.add(primaryButton);
         btnPanel.add(switchModeButton);
-        gbc.gridy++; gbc.insets = new Insets(15, 20, 5, 20);
+        gbc.gridy++; gbc.insets = new Insets(20, 15, 10, 15);
         formContainer.add(btnPanel, gbc);
 
         errorLabel = new JLabel(" ");
         errorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         errorLabel.setForeground(Color.RED);
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridy++; gbc.insets = new Insets(5, 20, 15, 20);
+        gbc.gridy++; gbc.insets = new Insets(10, 15, 15, 15);
         formContainer.add(errorLabel, gbc);
 
         GridBagConstraints bgGbc = new GridBagConstraints();
         bgGbc.weightx = 1.0; bgGbc.weighty = 1.0;
+        bgGbc.insets = new Insets(30, 40, 30, 40);
         bgPanel.add(formContainer, bgGbc);
 
         setContentPane(bgPanel);
     }
 
-    private JButton createStyledButton(String key, Color bg, Color fg) {
-        JButton btn = new JButton(LocaleManager.get(key));
+    private JTextField createRoundedField(String placeholderKey) {
+        JTextField field = new JTextField(LocaleManager.get(placeholderKey)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(255, 255, 255, 220));
+                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth()-1, getHeight()-1, 15, 15));
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        field.setForeground(Color.GRAY);
+        field.setHorizontalAlignment(JTextField.CENTER);
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(255, 150, 170), 1),
+                BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
+        field.setBackground(new Color(255, 255, 255, 220));
+        field.setOpaque(false);
+        field.setPreferredSize(new Dimension(0, 45));
+
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (field.getText().equals(LocaleManager.get(placeholderKey))) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (field.getText().isEmpty()) {
+                    field.setText(LocaleManager.get(placeholderKey));
+                    field.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        return field;
+    }
+
+    private JPasswordField createRoundedPasswordField(String placeholderKey) {
+        JPasswordField field = new JPasswordField(LocaleManager.get(placeholderKey)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(255, 255, 255, 220));
+                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth()-1, getHeight()-1, 15, 15));
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        field.setForeground(Color.GRAY);
+        field.setHorizontalAlignment(JPasswordField.CENTER);
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(255, 150, 170), 1),
+                BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
+        field.setBackground(new Color(255, 255, 255, 220));
+        field.setOpaque(false);
+        field.setPreferredSize(new Dimension(0, 45));
+        field.setEchoChar((char)0);
+
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (String.valueOf(field.getPassword()).equals(LocaleManager.get(placeholderKey))) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                    field.setEchoChar('\u2022');
+                }
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (field.getPassword().length == 0) {
+                    field.setText(LocaleManager.get(placeholderKey));
+                    field.setForeground(Color.GRAY);
+                    field.setEchoChar((char)0);
+                }
+            }
+        });
+
+        return field;
+    }
+
+    private JButton createRoundedButton(String key, Color bg, Color fg) {
+        JButton btn = new JButton(LocaleManager.get(key)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth()-1, getHeight()-1, 15, 15));
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
         btn.setName(key);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btn.setBackground(bg);
         btn.setForeground(fg);
         btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setPreferredSize(new Dimension(0, 42));
+        btn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(bg.darker());
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(bg);
+            }
+        });
+
         return btn;
     }
 
@@ -192,7 +331,6 @@ public class AuthDialog extends JDialog {
         }
 
         titleLabel.setText(LocaleManager.get("app.title"));
-
         errorLabel.setText(" ");
         revalidate();
         repaint();
@@ -278,12 +416,19 @@ public class AuthDialog extends JDialog {
         primaryButton.setFont(new Font("Segoe UI", Font.BOLD, (int)btnFont));
         switchModeButton.setFont(new Font("Segoe UI", Font.BOLD, (int)btnFont));
 
-        float titleFont = (float)(18 * scaleFactor);
+        float titleFont = (float)(22 * scaleFactor);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int)titleFont));
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets((int)(8 * scaleFactor), (int)(20 * scaleFactor),
-                (int)(8 * scaleFactor), (int)(20 * scaleFactor));
+        Dimension fieldSize = new Dimension(0, (int)(45 * scaleFactor));
+        usernameField.setPreferredSize(fieldSize);
+        passwordField.setPreferredSize(fieldSize);
+        confirmPasswordField.setPreferredSize(fieldSize);
+
+        Dimension btnSize = new Dimension(0, (int)(42 * scaleFactor));
+        primaryButton.setPreferredSize(btnSize);
+        switchModeButton.setPreferredSize(btnSize);
+
+        revalidate();
+        repaint();
     }
 }

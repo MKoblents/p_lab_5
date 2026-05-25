@@ -3,6 +3,7 @@ package client.gui;
 import client.config.ClientConfig;
 import client.context.ClientContext;
 import client.gui.auth.AuthDialog;
+import client.gui.utils.GuiUtils;
 import client.network.ConnectionManager;
 import client.network.PollingService;
 import client.utils.RequestsFactory;
@@ -29,9 +30,10 @@ public class GuiClientApp {
     private static void createAndShowGui(ClientConfig config) {
         ConnectionManager connection = new ConnectionManager();
         if (!connection.connect(config.getHost(), config.getPort())) {
-            JOptionPane.showMessageDialog(null,
+            GuiUtils.showMessageDialog(null,
+                    "Error",
                     "Не удалось подключиться к серверу " + config.getHost() + ":" + config.getPort(),
-                    "Ошибка подключения", JOptionPane.ERROR_MESSAGE);
+                    GuiUtils.MessageType.ERROR);
             return;
         }
         try {
@@ -113,7 +115,7 @@ public class GuiClientApp {
                 }
             };
             heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask, 0, 5, TimeUnit.SECONDS);
-            PollingService polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow);
+            PollingService polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow.getCanvasModel(), mainWindow);
             polling.start();
 //        } else {
 //            mainWindow.setStatus("Login cancelled or failed");

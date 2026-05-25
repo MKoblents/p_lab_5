@@ -3,6 +3,7 @@ package client.gui.utils;
 import client.utils.LocaleManager;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -188,5 +189,118 @@ public class GuiUtils {
         });
 
         return combo;
+    }
+    /**
+     * Shows a styled message dialog with the application's pink theme.
+     * Uses larger font and themed OK button.
+     *
+     * @param parent the parent frame for modal behavior
+     * @param title the dialog title
+     * @param message the message text to display
+     * @param messageType type of message (INFO, WARNING, ERROR) for icon selection
+     */
+    public static void showMessageDialog(Frame parent, String title, String message, MessageType messageType) {
+        JDialog dialog = new JDialog(parent, title, true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setLayout(new BorderLayout(15, 15));
+        dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+
+        // Header panel with icon and title
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        headerPanel.setOpaque(false);
+
+        // Optional icon based on message type
+        JLabel iconLabel = new JLabel();
+        iconLabel.setPreferredSize(new Dimension(32, 32));
+        switch (messageType) {
+            case INFO -> iconLabel.setIcon(UIManager.getIcon("OptionPane.informationIcon"));
+            case WARNING -> iconLabel.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
+            case ERROR -> iconLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
+        }
+        headerPanel.add(iconLabel);
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        titleLabel.setForeground(PRIMARY_DARK);
+        headerPanel.add(titleLabel);
+
+        // Message content panel
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setOpaque(false);
+        contentPanel.setBorder(new EmptyBorder(0, 50, 20, 20));
+
+        JTextArea messageArea = new JTextArea(message);
+        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, 16)); // Larger font
+        messageArea.setForeground(TEXT_COLOR);
+        messageArea.setBackground(BACKGROUND_COLOR);
+        messageArea.setEditable(false);
+        messageArea.setLineWrap(true);
+        messageArea.setWrapStyleWord(true);
+        messageArea.setBorder(null);
+
+        // Auto-size the dialog based on content
+        messageArea.setPreferredSize(new Dimension(400, Math.min(300, message.length() / 2 * 20)));
+
+        JScrollPane scrollPane = new JScrollPane(messageArea);
+        scrollPane.setBorder(null);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // OK button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setOpaque(false);
+
+        JButton okButton = new JButton("OK");
+        okButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        okButton.setBackground(PRIMARY_COLOR);
+        okButton.setForeground(Color.WHITE);
+        okButton.setFocusPainted(false);
+        okButton.setBorderPainted(false);
+        okButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        okButton.setPreferredSize(new Dimension(100, 40));
+        okButton.addActionListener(e -> dialog.dispose());
+
+        // Hover effect
+        okButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                okButton.setBackground(PRIMARY_DARK);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                okButton.setBackground(PRIMARY_COLOR);
+            }
+        });
+
+        buttonPanel.add(okButton);
+
+        // Assemble dialog
+        dialog.add(headerPanel, BorderLayout.NORTH);
+        dialog.add(contentPanel, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Size and position
+        dialog.pack();
+        dialog.setMinimumSize(new Dimension(450, 200));
+        dialog.setLocationRelativeTo(parent);
+
+        // Make OK button default (Enter key)
+        dialog.getRootPane().setDefaultButton(okButton);
+
+        dialog.setVisible(true);
+    }
+
+    /**
+     * Simplified overload for info messages.
+     */
+    public static void showMessageDialog(Frame parent, String title, String message) {
+        showMessageDialog(parent, title, message, MessageType.INFO);
+    }
+
+    /**
+     * Message type enum for icon selection.
+     */
+    public enum MessageType {
+        INFO, WARNING, ERROR
     }
 }

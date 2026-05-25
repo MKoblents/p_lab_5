@@ -24,19 +24,21 @@ public class SpaceMarineInputDialog extends JDialog {
     private JComboBox<AstartesCategory> categoryCombo;
     private JButton okButton, cancelButton;
     private JLabel titleLabel;
+    private JFrame parent;
 
     private SpaceMarine result;
     private final Dimension originalSize = new Dimension(500, 700);
 
     public SpaceMarineInputDialog(JFrame parent) {
         super(parent, true);
+        this.parent = parent;
         initComponents();
         layoutComponents();
         applyTheme();
         pack();
         setSize(originalSize);
         setLocationRelativeTo(parent);
-        setMinimumSize(new Dimension(400, 600));
+        setMinimumSize(new Dimension(600, 800));
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -265,15 +267,15 @@ public class SpaceMarineInputDialog extends JDialog {
                 setVisible(false);
             }
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this,
+            GuiUtils.showMessageDialog(parent,
+                    LocaleManager.get("dialog.error.title"),
                     LocaleManager.get("dialog.error.number"),
-                    LocaleManager.get("dialog.error.title"),
-                    JOptionPane.ERROR_MESSAGE);
+                    GuiUtils.MessageType.ERROR);
         } catch (ValidationException ex) {
-            JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
+            GuiUtils.showMessageDialog(parent,
                     LocaleManager.get("dialog.error.title"),
-                    JOptionPane.ERROR_MESSAGE);
+                    ex.getMessage(),
+                    GuiUtils.MessageType.ERROR);
         }
     }
 

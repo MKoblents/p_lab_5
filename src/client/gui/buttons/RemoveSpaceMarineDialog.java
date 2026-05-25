@@ -16,10 +16,12 @@ public class RemoveSpaceMarineDialog extends JDialog {
     private JButton removeButton, cancelButton;
     private JLabel titleLabel, infoLabel;
     private boolean success = false;
+    private  String currentUsername;
     private final Dimension originalSize = new Dimension(500, 400);
 
-    public RemoveSpaceMarineDialog(Frame owner, SpaceMarineTable tableModel) {
+    public RemoveSpaceMarineDialog(Frame owner, SpaceMarineTable tableModel,  String currentUsername) {
         super(owner, true);
+        this.currentUsername =currentUsername;
         initComponents();
         layoutComponents();
         applyTheme();
@@ -129,18 +131,12 @@ public class RemoveSpaceMarineDialog extends JDialog {
     }
 
     public void refreshSelector(SpaceMarineTable tableModel) {
+        selector.setCurrentUsername(currentUsername);
         selector.refreshData(tableModel);
     }
 
     private void onRemove() {
         SpaceMarine selected = selector.getSelectedSpaceMarine();
-        if (selected == null) {
-            JOptionPane.showMessageDialog(this,
-                    LocaleManager.get("dialog.error.select"),
-                    LocaleManager.get("dialog.error.title"),
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
 
         int confirm = JOptionPane.showConfirmDialog(this,
                 LocaleManager.get("dialog.remove.confirm").replace("{name}", selected.getName()),

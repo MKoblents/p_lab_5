@@ -1,5 +1,6 @@
 package client.gui.auth;
 
+import client.gui.utils.GuiUtils;
 import client.network.ConnectionManager;
 import client.utils.LocaleManager;
 import client.utils.RequestsFactory;
@@ -18,11 +19,13 @@ public class LoginDialog extends JDialog {
     private JButton registerButton;
     private JButton cancelButton;
     private UserInfo loggedInUser;
+    private JFrame parent;
     private boolean success = false;
 
     public LoginDialog(JFrame parent, ConnectionManager connection) {
         super(parent, LocaleManager.get("login.title"), true);
         this.connection = connection;
+        this.parent = parent;
         setSize(400, 250);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));
@@ -69,8 +72,10 @@ public class LoginDialog extends JDialog {
         String password = new String(passwordField.getPassword());
 
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, LocaleManager.get("login.error.empty_fields"),
-                    LocaleManager.get("login.title"), JOptionPane.ERROR_MESSAGE);
+            GuiUtils.showMessageDialog(parent,
+                    LocaleManager.get("login.title"),
+                    LocaleManager.get("login.error.empty_fields"),
+                    GuiUtils.MessageType.ERROR);
             return;
         }
 

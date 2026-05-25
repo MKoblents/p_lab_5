@@ -1,6 +1,7 @@
 package client.network;
 
 import client.gui.MainWindow;
+import client.gui.window.SpaceMarineCanvas;
 import client.gui.window.SpaceMarineTable;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
@@ -16,14 +17,16 @@ import java.util.concurrent.TimeUnit;
 public class PollingService {
     private final ConnectionManager connection;
     private final SpaceMarineTable tableModel;
+    private final SpaceMarineCanvas canvasModel;
     private final MainWindow mainWindow;
     private ScheduledExecutorService scheduler;
     private final long POLL_INTERVAL_MS = 2000;
 
-    public PollingService(ConnectionManager connection, SpaceMarineTable tableModel, MainWindow mainWindow) {
+    public PollingService(ConnectionManager connection, SpaceMarineTable tableModel, SpaceMarineCanvas canvasModel, MainWindow mainWindow) {
         this.connection = connection;
         this.tableModel = tableModel;
         this.mainWindow = mainWindow;
+        this.canvasModel = canvasModel;
     }
 
     public void start() {
@@ -45,6 +48,7 @@ public class PollingService {
                 List<SpaceMarine> marines = (List<SpaceMarine>) response.result();
                 SwingUtilities.invokeLater(() -> {
                     tableModel.setData(marines);
+                    canvasModel.setMarines(marines);
                     mainWindow.setStatus("Синхронизировано: " + marines.size() + " объектов");
                 });
             }
