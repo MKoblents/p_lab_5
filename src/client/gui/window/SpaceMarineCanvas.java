@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class SpaceMarineCanvas extends JPanel {
     private List<SpaceMarine> marines = new ArrayList<>();
@@ -34,6 +35,9 @@ public class SpaceMarineCanvas extends JPanel {
     private static final int BTN_GAP = 8;
     private static final int BTN_MARGIN = 15;
     private static final double GRID_STEP = 50.0;
+    private Consumer<SpaceMarine> onMarineDoubleClick;
+    private javax.swing.Timer clickTimer;
+    private SpaceMarine pendingMarine;
 
     private static final Color GRID_COLOR = new Color(255, 210, 220, 180);
     private static final Color AXIS_COLOR = GuiUtils.PRIMARY_DARK;
@@ -47,6 +51,9 @@ public class SpaceMarineCanvas extends JPanel {
             new Color(255, 160, 180), new Color(199, 21, 133),
             new Color(255, 130, 170), new Color(178, 34, 34)
     };
+    public void setOnMarineDoubleClick(Consumer<SpaceMarine> callback) {
+        this.onMarineDoubleClick = callback;
+    }
 
     public SpaceMarineCanvas() {
         setBackground(GuiUtils.BACKGROUND_COLOR);
@@ -71,18 +78,41 @@ public class SpaceMarineCanvas extends JPanel {
                 } else if (SwingUtilities.isLeftMouseButton(e)) {
                     if (zoomInRect.contains(e.getPoint())) applyZoom(1.2, getWidth()/2, getHeight()/2);
                     else if (zoomOutRect.contains(e.getPoint())) applyZoom(0.8, getWidth()/2, getHeight()/2);
-                    else {
-                        SpaceMarine clicked = findMarineAtPoint(e.getX(), e.getY());
-                        if (clicked != null) {
-                            showMarineInfo(clicked);
-                        }
-                    }
                 }
             }
+
             @Override
             public void mouseReleased(MouseEvent e) {
                 isPanning = false;
                 setCursor(Cursor.getDefaultCursor());
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (!SwingUtilities.isLeftMouseButton(e)) return;
+                if (zoomInRect.contains(e.getPoint()) || zoomOutRect.contains(e.getPoint())) return;
+
+                SpaceMarine clicked = findMarineAtPoint(e.getX(), e.getY());
+                if (clicked == null) return;
+
+                if (e.getClickCount() == 2) {
+                    // 🔹 Двойной клик: отменяем таймер и открываем апдейт
+                    if (clickTimer != null) clickTimer.stop();
+                    if (onMarineDoubleClick != null) {
+                        onMarineDoubleClick.accept(clicked);
+                    }
+                } else if (e.getClickCount() == 1) {
+                    // 🔹 Одинарный клик: запускаем задержку 250мс
+                    pendingMarine = clicked;
+                    if (clickTimer == null) {
+                        clickTimer = new javax.swing.Timer(250, evt -> {
+                            showMarineInfo(pendingMarine);
+                            pendingMarine = null;
+                        });
+                        clickTimer.setRepeats(false);
+                    }
+                    clickTimer.restart();
+                }
             }
         });
 
@@ -98,13 +128,13 @@ public class SpaceMarineCanvas extends JPanel {
             }
         });
 
+        // Клавиатурный зум (оставляем как был)
         InputMap im = getInputMap(WHEN_FOCUSED);
         ActionMap am = getActionMap();
         im.put(KeyStroke.getKeyStroke('+'), "zoomIn");
         im.put(KeyStroke.getKeyStroke('-'), "zoomOut");
         im.put(KeyStroke.getKeyStroke('='), "zoomIn");
         im.put(KeyStroke.getKeyStroke('_'), "zoomOut");
-
         am.put("zoomIn", new AbstractAction() {
             public void actionPerformed(ActionEvent e) { applyZoom(1.2, getWidth()/2, getHeight()/2); }
         });
@@ -112,7 +142,6 @@ public class SpaceMarineCanvas extends JPanel {
             public void actionPerformed(ActionEvent e) { applyZoom(0.8, getWidth()/2, getHeight()/2); }
         });
     }
-
     private SpaceMarine findMarineAtPoint(int screenX, int screenY) {
         double hitRadius = 25.0 / zoom;
 

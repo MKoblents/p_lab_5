@@ -246,6 +246,19 @@ public class MainWindow {
         contentPanel.add(tableScroll, "TABLE");
 
         canvas = new SpaceMarineCanvas();
+        canvas.setOnMarineDoubleClick(marine -> {
+            SpaceMarineUpdateDialog dialog = new SpaceMarineUpdateDialog(
+                    frame, tableModel, context.getUserInfo().name()
+            );
+            dialog.setSelectedMarine(marine);
+            dialog.setVisible(true);
+            if (dialog.getUpdatedSpaceMarine() != null) {
+                buttonsHandler.handleRequest(
+                        RequestsFactory.createTwoArgs("update", dialog.getUpdatedSpaceMarine().getId(), dialog.getUpdatedSpaceMarine()),
+                        "SpaceMarine updated successfully!"
+                );
+            }
+        });
         JScrollPane canvasScroll = new JScrollPane(canvas);
         canvasScroll.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
         contentPanel.add(canvasScroll, "CANVAS");
