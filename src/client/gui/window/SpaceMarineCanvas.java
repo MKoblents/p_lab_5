@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ public class SpaceMarineCanvas extends JPanel {
     private static final int BTN_SIZE = 32;
     private static final int BTN_GAP = 8;
     private static final int BTN_MARGIN = 15;
+    private static final double GRID_STEP = 50.0;
 
     private static final Color GRID_COLOR = new Color(255, 210, 220, 180);
     private static final Color AXIS_COLOR = GuiUtils.PRIMARY_DARK;
@@ -137,17 +139,16 @@ public class SpaceMarineCanvas extends JPanel {
         double bottom = ( getHeight()/2.0 + panY) / zoom;
         double top    = (-getHeight()/2.0 + panY) / zoom;
 
-        double gridSize = 50.0;
         g2d.setColor(GRID_COLOR);
         g2d.setStroke(new BasicStroke(1.0f / (float)zoom));
 
-        int startX = (int)Math.floor(left / gridSize) * (int)gridSize;
-        int startY = (int)Math.floor(top / gridSize) * (int)gridSize;
+        int startX = (int)Math.floor(left / GRID_STEP) * (int)GRID_STEP;
+        int startY = (int)Math.floor(top / GRID_STEP) * (int)GRID_STEP;
 
-        for (int x = startX; x <= right; x += gridSize) {
+        for (int x = startX; x <= right; x += GRID_STEP) {
             g2d.drawLine(x, (int)top, x, (int)bottom);
         }
-        for (int y = startY; y <= bottom; y += gridSize) {
+        for (int y = startY; y <= bottom; y += GRID_STEP) {
             g2d.drawLine((int)left, y, (int)right, y);
         }
     }
@@ -167,29 +168,25 @@ public class SpaceMarineCanvas extends JPanel {
     private void drawMarine(Graphics2D g2d, SpaceMarine m) {
         if (m.getCoordinates() == null) return;
 
-        // 1. Получаем мировые координаты
         double wx = m.getCoordinates().getX();
         double wy = m.getCoordinates().getY();
-
-        // 2. Преобразуем в экранные координаты (пиксели)
-        // Формула: screen = (world * zoom) + center + pan
-        // Y инвертирован: в мире +Y вверх, на экране +Y вниз
-        int sx = (int) ((wx * zoom) + getWidth() / 2.0 + panX);
-        int sy = (int) ((-wy * zoom) + getHeight() / 2.0 + panY);
-
-        // 3. Получаем цвет пользователя (детерминированный)
         Color userColor = ShipRenderer.getUserColor(m.getOwner());
 
-        // 4. Сохраняем текущую трансформацию (мир + зум)
-        AffineTransform originalTransform = g2d.getTransform();
+        double scaledX = wx * GRID_STEP;
+        double scaledY = wy * GRID_STEP;
 
-        // 5. Сбрасываем трансформацию для отрисовки в экранных координатах
+        double centerX = getWidth() / 2.0 + panX;
+        double centerY = getHeight() / 2.0 + panY;
+
+        int sx = (int) Math.round(scaledX * zoom + centerX);
+        int sy = (int) Math.round(-scaledY * zoom + centerY);
+
+
+        AffineTransform originalTransform = g2d.getTransform();
         g2d.setTransform(new AffineTransform());
 
-        // 6. Рисуем кораблик фиксированного размера в пикселях экрана
         ShipRenderer.drawShip(g2d, sx, sy, userColor);
 
-        // 7. Восстанавливаем мировую трансформацию для продолжения отрисовки сетки/осей
         g2d.setTransform(originalTransform);
     }
 
