@@ -301,13 +301,6 @@ public class SpaceMarineUpdateDialog extends JDialog {
 
     private void onOK() {
         SpaceMarine selected = selector.getSelectedSpaceMarine();
-        if (selected == null) {
-            JOptionPane.showMessageDialog(this,
-                    LocaleManager.get("dialog.error.select"),
-                    LocaleManager.get("dialog.error.title"),
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         try {
             result = buildUpdatedSpaceMarine(selected.getId());
             if (result != null) {

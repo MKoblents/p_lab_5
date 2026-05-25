@@ -137,13 +137,6 @@ public class RemoveSpaceMarineDialog extends JDialog {
 
     private void onRemove() {
         SpaceMarine selected = selector.getSelectedSpaceMarine();
-        if (selected == null) {
-            JOptionPane.showMessageDialog(this,
-                    LocaleManager.get("dialog.error.select"),
-                    LocaleManager.get("dialog.error.title"),
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
 
         int confirm = JOptionPane.showConfirmDialog(this,
                 LocaleManager.get("dialog.remove.confirm").replace("{name}", selected.getName()),

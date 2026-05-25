@@ -2,6 +2,7 @@ package client.gui.buttons;
 
 import client.gui.MainWindow;
 import client.gui.auth.AuthDialog;
+import client.gui.utils.GuiUtils;
 import client.handlers.ResponseHandler;
 import client.inputWorkers.CommandParser;
 import client.inputWorkers.InputManager;
@@ -17,6 +18,7 @@ import shared.dto.UserInfo;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,24 +88,23 @@ public class ButtonsHandler {
             CommandResponse response = connection.readResponse();
 
             if (response.success()) {
-                JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                        successMessage,
+                GuiUtils.showMessageDialog(mainWindow.getFrame(),
                         "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
+                        successMessage);
                 //todo
 //                    refreshTable(); // Обновить таблицу
             } else {
-                JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                        "Error: " + response.message(),
+                GuiUtils.showMessageDialog(mainWindow.getFrame(),
                         "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                        "Error: " + response.message(),
+                        GuiUtils.MessageType.ERROR);
             }
             return response;
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                    "Network error: " + ex.getMessage(),
+            GuiUtils.showMessageDialog(mainWindow.getFrame(),
                     "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    "Network error: " + ex.getMessage(),
+                    GuiUtils.MessageType.ERROR);
         }
         return null;
     }
@@ -130,16 +131,15 @@ public class ButtonsHandler {
             CommandResponse response = connection.readResponse();
             System.out.println(request);
             System.out.println(response);
-
-            JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                    response.result(),
+            GuiUtils.showMessageDialog(mainWindow.getFrame(),
                     "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    (String) response.result(),
+                    GuiUtils.MessageType.INFO);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                    "Network error: " + ex.getMessage(),
+            GuiUtils.showMessageDialog(mainWindow.getFrame(),
                     "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    "Network error: " + ex.getMessage(),
+                    GuiUtils.MessageType.ERROR);
         }
     }
     public void handleSpawn() throws IOException {
@@ -178,9 +178,10 @@ public class ButtonsHandler {
             System.out.println("Spawned child client: " + childClientId);
         } else {
             String errorMsg = response != null ? response.message() : "Unknown error";
-            JOptionPane.showMessageDialog(mainWindow.getFrame(),
-                    "Failed to spawn client: " + errorMsg,
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            GuiUtils.showMessageDialog(mainWindow.getFrame(),
+                    "Error",
+                    "Network error: " + errorMsg,
+                    GuiUtils.MessageType.ERROR);
         }
 
 
@@ -189,9 +190,10 @@ public class ButtonsHandler {
         List<String> availableClients = fetchAvailableClients();
 
         if (availableClients.isEmpty()) {
-            JOptionPane.showMessageDialog(mainWindow.getFrame(),
+            GuiUtils.showMessageDialog(mainWindow.getFrame(),
+                    "Success",
                     "No active clients found to terminate.",
-                    "Info", JOptionPane.INFORMATION_MESSAGE);
+                    GuiUtils.MessageType.INFO);
             return;
         }
 
