@@ -326,4 +326,63 @@ public class ButtonsHandler {
         });
         dialog.setVisible(true);
     }
+    public void handleForwardCommand() {
+        // Get list of child clients from context
+        List<String> childClients = mainWindow.getContext().getChildClientIds();
+
+        if (childClients.isEmpty()) {
+            GuiUtils.showMessageDialog(
+                    mainWindow.getFrame(),
+                    "No Clients",
+                    "No child clients available for forwarding.",
+                    GuiUtils.MessageType.WARNING
+            );
+            return;
+        }
+
+        // Show forwarding dialog
+        ForwardCommandDialog dialog = new ForwardCommandDialog(
+                mainWindow.getFrame(),
+                childClients
+        );
+        dialog.setVisible(true);
+
+        if (dialog.isConfirmed() && dialog.getResult() != null) {
+            ForwardCommandObject fco = dialog.getResult();
+
+            // Set parent ID from current context
+            String parentId = mainWindow.getContext().getClientId();
+            ForwardCommandObject finalFco = new ForwardCommandObject(
+                    parentId,
+                    fco.childId(),
+                    fco.commandKey()
+            );
+
+            // Create and send forward command request
+            CommandRequest request = new CommandRequest(
+                    "forward_command",
+                    finalFco,
+                    UUID.randomUUID().toString().substring(0, 8),
+                    parentId,
+                    mainWindow.getContext().getUserInfo()
+            );
+
+            try {
+                connection.sendRequest(request);
+                GuiUtils.showMessageDialog(
+                        mainWindow.getFrame(),
+                        "Success",
+                        "Command forwarded to " + finalFco.childId(),
+                        GuiUtils.MessageType.INFO
+                );
+            } catch (IOException ex) {
+                GuiUtils.showMessageDialog(
+                        mainWindow.getFrame(),
+                        "Error",
+                        "Failed to forward command: " + ex.getMessage(),
+                        GuiUtils.MessageType.ERROR
+                );
+            }
+        }
+    }
 }

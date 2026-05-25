@@ -441,7 +441,7 @@ public class MainWindow {
         panel.add(createStyledButton("btn.spawn_client", buttonWidth, buttonHeight, () -> System.out.println("Spawn clicked")));
         panel.add(createStyledButton("btn.kill_client", buttonWidth, buttonHeight, () -> System.out.println("Kill clicked")));
         panel.add(createStyledButton("btn.help", buttonWidth, buttonHeight, () -> System.out.println("Help clicked")));
-        panel.add(createForwardCommandPanel(buttonWidth, buttonHeight));
+        panel.add(createStyledButton("btn.forward", buttonWidth, buttonHeight, () -> buttonsHandler.handleForwardCommand())); // NEW
 
         panel.add(Box.createVerticalGlue());
         panel.add(createStyledButton("btn.exit", buttonWidth, buttonHeight, () -> System.out.println("Log out clicked")));
@@ -488,10 +488,7 @@ public class MainWindow {
     }
 
     private void onForwardCommand() {
-        if (buttonsHandler != null) {
-            String command = (String) forwardCommandCombo.getSelectedItem();
-            buttonsHandler.handleForwardToChildren(command);
-        }
+        buttonsHandler.handleForwardCommand();
     }
     private void startForwardCommandListener() {
         new Thread(() -> {
