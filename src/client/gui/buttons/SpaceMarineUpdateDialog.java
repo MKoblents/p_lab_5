@@ -22,9 +22,9 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
     private JComboBox<MeleeWeapon> meleeWeaponCombo;
     private JComboBox<Weapon> weaponCombo;
     private JComboBox<AstartesCategory> categoryCombo;
-    private JTextField chapterNameField, chapterParentLegionField, chapterWorldField;
 
     private final SpaceMarineTable tableModel;
+    private ChapterInputPanel chapterPanel;
     private final String currentUsername;
     private SpaceMarine result;
 
@@ -48,10 +48,7 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         weaponCombo = GuiUtils.createStyledComboBox(Weapon.values(), 45);
         categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 45);
 
-        chapterNameField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.name", 45);
-        chapterParentLegionField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.parentLegion", 45);
-        chapterWorldField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.world", 45);
-
+        chapterPanel = new ChapterInputPanel();
         selector.getComboBox().addActionListener(e -> {
             SpaceMarine selected = selector.getSelectedSpaceMarine();
             if (selected != null) {
@@ -86,7 +83,7 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         fieldsPanel.add(Box.createVerticalStrut(15));
         fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.category", categoryCombo));
         fieldsPanel.add(Box.createVerticalStrut(20));
-        fieldsPanel.add(createChapterSection());
+        fieldsPanel.add(chapterPanel);
 
         add(createScrollableContentPanel(fieldsPanel), BorderLayout.CENTER);
 
@@ -101,22 +98,12 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         xField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         yField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         healthField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-        chapterNameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-        chapterParentLegionField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-        chapterWorldField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-
+       chapterPanel.scaleFonts(scaleFontSize(14));
         meleeWeaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         weaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         categoryCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
     }
 
-    private JPanel createChapterSection() {
-        return createTitledSection("dialog.section.chapter",
-                GuiUtils.createLabeledInputPanel("dialog.field.chapter.name", chapterNameField),
-                GuiUtils.createLabeledInputPanel("dialog.field.chapter.parentLegion", chapterParentLegionField),
-                GuiUtils.createLabeledInputPanel("dialog.field.chapter.world", chapterWorldField)
-        );
-    }
 
     public void refreshSelector(SpaceMarineTable tableModel) {
         selector.setCurrentUsername(currentUsername);
@@ -133,36 +120,7 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         weaponCombo.setSelectedItem(marine.getWeaponType());
         categoryCombo.setSelectedItem(marine.getCategory());
 
-        Chapter chapter = marine.getChapter();
-        if (chapter != null) {
-            setFieldText(chapterNameField, chapter.getName(), LocaleManager.get("dialog.field.chapter.name"));
-            setFieldText(chapterWorldField, chapter.getWorld(), LocaleManager.get("dialog.field.chapter.world"));
-
-            String parentLegion = chapter.getParentLegion();
-            String placeholder = LocaleManager.get("dialog.field.chapter.parentLegion");
-            if (parentLegion != null && !parentLegion.isEmpty()) {
-                chapterParentLegionField.setText(parentLegion);
-                chapterParentLegionField.setForeground(Color.BLACK);
-            } else {
-                chapterParentLegionField.setText(placeholder);
-                chapterParentLegionField.setForeground(Color.GRAY);
-            }
-        } else {
-            clearChapterFields();
-        }
-    }
-
-    private void clearChapterFields() {
-        String namePlaceholder = LocaleManager.get("dialog.field.chapter.name");
-        String worldPlaceholder = LocaleManager.get("dialog.field.chapter.world");
-        String legionPlaceholder = LocaleManager.get("dialog.field.chapter.parentLegion");
-
-        chapterNameField.setText(namePlaceholder);
-        chapterNameField.setForeground(Color.GRAY);
-        chapterWorldField.setText(worldPlaceholder);
-        chapterWorldField.setForeground(Color.GRAY);
-        chapterParentLegionField.setText(legionPlaceholder);
-        chapterParentLegionField.setForeground(Color.GRAY);
+        chapterPanel.setChapter(marine.getChapter());
     }
 
     private void setFieldText(JTextField field, String value, String placeholder) {
@@ -252,28 +210,7 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         updated.setWeaponType((Weapon) weaponCombo.getSelectedItem());
         updated.setCategory((AstartesCategory) categoryCombo.getSelectedItem());
 
-        String chapterName = chapterNameField.getText().trim();
-        String chapterNamePlaceholder = LocaleManager.get("dialog.field.chapter.name");
-        if (!chapterName.isEmpty() && !chapterName.equals(chapterNamePlaceholder)) {
-            String chapterWorld = chapterWorldField.getText().trim();
-            String chapterWorldPlaceholder = LocaleManager.get("dialog.field.chapter.world");
-
-            if (chapterWorld.isEmpty() || chapterWorld.equals(chapterWorldPlaceholder)) {
-                throw new ValidationException(LocaleManager.get("validation.chapter.world.required"));
-            }
-
-            Chapter chapter = new Chapter();
-            chapter.setName(chapterName);
-
-            String parentLegion = chapterParentLegionField.getText().trim();
-            String parentLegionPlaceholder = LocaleManager.get("dialog.field.chapter.parentLegion");
-            chapter.setParentLegion(parentLegion.isEmpty() || parentLegion.equals(parentLegionPlaceholder) ? null : parentLegion);
-
-            chapter.setWorld(chapterWorld);
-            updated.setChapter(chapter);
-        } else {
-            updated.setChapter(null);
-        }
+       updated.setChapter(chapterPanel.getChapter());
 
         return updated;
     }
