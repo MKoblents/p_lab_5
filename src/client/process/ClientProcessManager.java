@@ -24,17 +24,35 @@ public class ClientProcessManager {
     public void spawnChild(String childClientId,
                            String parentClientId) throws IOException {
         logger.info("Spawning child client: {} (parent: {})", childClientId, parentClientId);
+//        String jarPath = System.getProperty("java.class.path");
+//        if (jarPath == null || jarPath.isEmpty()) {
+//            jarPath = "target/p_lab_5-client.jar";
+//        }
+
+//        List<String> command = new ArrayList<>();
+//        command.add("tmux");
+//        command.add("new-window");
+//        command.add("-n");
+//        command.add("child_" + childClientId);
+//        command.add("-P");
+//        command.add("java");
+//        command.add("-jar");
+//        command.add(jarPath);
+//        command.add("--host");
+//        command.add(host);
+//        command.add("--port");
+//        command.add(String.valueOf(serverPort));
+//        command.add("--client-id");
+//        command.add(childClientId);
+//        command.add("--parent-id");
+//        command.add(parentClientId);
         String jarPath = System.getProperty("java.class.path");
         if (jarPath == null || jarPath.isEmpty()) {
-            jarPath = "target/p_lab_5-client.jar";
+            jarPath = "target/p_lab_5-client-gui.jar";
         }
+        System.out.println(jarPath);
 
         List<String> command = new ArrayList<>();
-        command.add("tmux");
-        command.add("new-window");
-        command.add("-n");
-        command.add("child_" + childClientId);
-        command.add("-P");
         command.add("java");
         command.add("-jar");
         command.add(jarPath);
@@ -46,6 +64,7 @@ public class ClientProcessManager {
         command.add(childClientId);
         command.add("--parent-id");
         command.add(parentClientId);
+
 
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.redirectErrorStream(true);

@@ -30,10 +30,12 @@ public class ButtonsHandler {
     private MainWindow mainWindow;
     private ScriptRunner scriptRunner;
     private final AsyncNetworkReader networkReader;
+    private ClientProcessManager processManager;
     public ButtonsHandler(ConnectionManager connection, MainWindow mainWindow){
         this.connection = connection;
         this.mainWindow=mainWindow;
         this.networkReader=mainWindow.getNetworkReader();
+        this.processManager = new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort());
 //        scriptRunner = new ScriptRunner(inputManager,connection,null,new Invoker(null,RequestsFactory.))
     }
     public void handleAdd() {
@@ -165,31 +167,31 @@ public class ButtonsHandler {
         CommandResponse response = handleRequest(request, "New window opened!");
         if (response != null && response.success() && response.clientId() != null) {
             String childClientId = response.clientId();
+            processManager.spawnChild(childClientId, mainWindow.getContext().getClientId());
 
-            String jarPath = System.getProperty("java.class.path");
-            if (jarPath == null || jarPath.isEmpty()) {
-                jarPath = "target/p_lab_5-client.jar";
-            }
-            System.out.println(jarPath);
+//            String jarPath = System.getProperty("java.class.path");
+//            if (jarPath == null || jarPath.isEmpty()) {
+//                jarPath = "target/p_lab_5-client-gui.jar";
+//            }
+//            System.out.println(jarPath);
+//
+//            List<String> command = new ArrayList<>();
+//            command.add("java");
+//            command.add("-jar");
+//            command.add(jarPath);
+//            command.add("--host");
+//            command.add(mainWindow.getConfig().getHost());
+//            command.add("--port");
+//            command.add(String.valueOf(mainWindow.getConfig().getPort()));
+//            command.add("--client-id");
+//            command.add(childClientId);
+//            command.add("--parent-id");
+//            command.add(mainWindow.getContext().getClientId());
 
-            List<String> command = new ArrayList<>();
-            command.add("java");
-            command.add("-jar");
-            command.add(jarPath);
-            command.add("--host");
-            command.add(mainWindow.getConfig().getHost());
-            command.add("--port");
-            command.add(String.valueOf(mainWindow.getConfig().getPort()));
-            command.add("--client-id");
-            command.add(childClientId);
-            command.add("--parent-id");
-            command.add(mainWindow.getContext().getClientId());
+//            ProcessBuilder pb = new ProcessBuilder(command);
+//            pb.inheritIO(); // Optional: inherit console output
+//            pb.start();
 
-            ProcessBuilder pb = new ProcessBuilder(command);
-            pb.inheritIO(); // Optional: inherit console output
-            pb.start();
-
-            // Add child to mainWindow.getContext()
             mainWindow.getContext().addChild(childClientId);
 
             mainWindow.setStatus("Spawned child: " + childClientId);
