@@ -63,7 +63,7 @@ public class Client {
                     null
             );
             ResponseHandler responseHandler = new ResponseHandler(context);
-            ClientProcessManager processManager = new ClientProcessManager(host, port);
+            ClientProcessManager processManager = new ClientProcessManager(host, port, null);
             ScriptRunner scriptRunner = new ScriptRunner(
                     inputManager, connection, responseHandler, null, new FileManager()
             );

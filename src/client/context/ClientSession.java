@@ -235,6 +235,7 @@ public class ClientSession implements AutoCloseable {
         if ("spawn_client".equals(requestId) ||
                 (message != null && message.contains("Child client created"))) {
             spawnClientCommand.handleResponse(response, context);
+            System.out.println("bebebebebeb");
         } else {
             responseHandler.handle(response);
         }

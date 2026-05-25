@@ -12,6 +12,7 @@ public record CommandResponse(boolean success, Object result, String message, St
                 ", requestId='" + requestId + '\'' +
                 ", message='" + message + '\'' +
                 ", result=" + result +
+                ", clientId="+clientId+
                 '}';
     }
 }

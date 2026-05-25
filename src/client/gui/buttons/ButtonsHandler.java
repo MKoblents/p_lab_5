@@ -1,5 +1,6 @@
 package client.gui.buttons;
 
+import client.command.SpawnClient;
 import client.gui.MainWindow;
 import client.gui.auth.AuthDialog;
 import client.gui.utils.GuiUtils;
@@ -13,6 +14,7 @@ import client.process.ClientProcessManager;
 import client.scripts.FileManager;
 import client.scripts.ScriptRunner;
 import client.utils.RequestsFactory;
+import client.utils.SideFlag;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 import shared.dto.UserInfo;
@@ -31,11 +33,12 @@ public class ButtonsHandler {
     private ScriptRunner scriptRunner;
     private final AsyncNetworkReader networkReader;
     private ClientProcessManager processManager;
+    private  SpawnClient spawnClient;
     public ButtonsHandler(ConnectionManager connection, MainWindow mainWindow){
         this.connection = connection;
         this.mainWindow=mainWindow;
         this.networkReader=mainWindow.getNetworkReader();
-        this.processManager = new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort());
+        this.processManager = new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort(), null);
 //        scriptRunner = new ScriptRunner(inputManager,connection,null,new Invoker(null,RequestsFactory.))
     }
     public void handleAdd() {
@@ -70,7 +73,7 @@ public class ButtonsHandler {
             protected Void doInBackground() {
                 InputManager inputManager = new InputManager(null, new CommandParser());
                 ScriptRunner scriptRunner = new ScriptRunner(inputManager, connection, new ResponseHandler(mainWindow.getContext()), null, new FileManager());
-                Invoker invoker = new Invoker(inputManager, mainWindow.getContext(), connection, new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort()), scriptRunner);
+                Invoker invoker = new Invoker(inputManager, mainWindow.getContext(), connection, processManager, scriptRunner);
                 scriptRunner.setInvoker(invoker);
                 boolean success = scriptRunner.executeScript(scriptFile.getPath());
                 String message = success ? "Script completed successfully\n"+ scriptRunner.getRes()  : "Script completed with errors";
@@ -102,17 +105,39 @@ public class ButtonsHandler {
         handleRequest(request,"Space Marine cleared successfully!");
     }
 
-    public CommandResponse handleRequest(CommandRequest request, String successMessage){
+    public CommandResponse handleRequest(CommandRequest request, String successMessage) {
         try {
+            String expectedRequestId = request.requestId(); // Сохраняем requestId отправленного запроса
             connection.sendRequest(request);
-            CommandResponse response = networkReader.getResponseQueue().poll();
+
+            CommandResponse response = null;
+            long startTime = System.currentTimeMillis();
+            long timeout = 5000;
+            while (response == null && (System.currentTimeMillis() - startTime) < timeout) {
+                CommandResponse candidate = networkReader.getResponseQueue().poll();
+                if (candidate != null && expectedRequestId.equals(candidate.requestId())) {
+                    response = candidate;
+                    break;
+                } else if (candidate != null) {
+                   System.out.println("Received unexpected response for requestId: " + candidate.requestId());
+                    // Можно добавить логику обработки других ответов
+                } else {
+                    Thread.sleep(50); // Ждем немного перед следующей попыткой
+                }
+            }
+
+            if (response == null) {
+                GuiUtils.showMessageDialog(mainWindow.getFrame(),
+                        "Error",
+                        "Timeout waiting for response",
+                        GuiUtils.MessageType.ERROR);
+                return null;
+            }
 
             if (response.success()) {
                 GuiUtils.showMessageDialog(mainWindow.getFrame(),
                         "Success",
                         successMessage);
-                //todo
-//                    refreshTable(); // Обновить таблицу
             } else {
                 GuiUtils.showMessageDialog(mainWindow.getFrame(),
                         "Error",
@@ -124,6 +149,12 @@ public class ButtonsHandler {
             GuiUtils.showMessageDialog(mainWindow.getFrame(),
                     "Error",
                     "Network error: " + ex.getMessage(),
+                    GuiUtils.MessageType.ERROR);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            GuiUtils.showMessageDialog(mainWindow.getFrame(),
+                    "Error",
+                    "Request interrupted",
                     GuiUtils.MessageType.ERROR);
         }
         return null;
@@ -163,51 +194,36 @@ public class ButtonsHandler {
         }
     }
     public void handleSpawn() throws IOException {
-        CommandRequest request = RequestsFactory.createSimple("spawn_client");
+        if (spawnClient == null) spawnClient  = new SpawnClient(mainWindow.getContext(),processManager);
+       CommandRequest request = spawnClient.execute(SideFlag.SELF);
         CommandResponse response = handleRequest(request, "New window opened!");
-        if (response != null && response.success() && response.clientId() != null) {
-            String childClientId = response.clientId();
-            processManager.spawnChild(childClientId, mainWindow.getContext().getClientId());
-
-//            String jarPath = System.getProperty("java.class.path");
-//            if (jarPath == null || jarPath.isEmpty()) {
-//                jarPath = "target/p_lab_5-client-gui.jar";
-//            }
-//            System.out.println(jarPath);
+        String requestId = response.requestId();
+        String message = response.message();
+        if (spawnClient == null) spawnClient  = new SpawnClient(mainWindow.getContext(),processManager);
+        System.out.println(response);
+        spawnClient.handleResponse(response, mainWindow.getContext());
+//        if (response != null && response.success() && response.clientId() != null) {
+//            String childClientId = response.clientId();
+//            processManager.spawnChild(childClientId, mainWindow.getContext().getClientId());
 //
-//            List<String> command = new ArrayList<>();
-//            command.add("java");
-//            command.add("-jar");
-//            command.add(jarPath);
-//            command.add("--host");
-//            command.add(mainWindow.getConfig().getHost());
-//            command.add("--port");
-//            command.add(String.valueOf(mainWindow.getConfig().getPort()));
-//            command.add("--client-id");
-//            command.add(childClientId);
-//            command.add("--parent-id");
-//            command.add(mainWindow.getContext().getClientId());
-
-//            ProcessBuilder pb = new ProcessBuilder(command);
-//            pb.inheritIO(); // Optional: inherit console output
-//            pb.start();
-
-            mainWindow.getContext().addChild(childClientId);
-
-            mainWindow.setStatus("Spawned child: " + childClientId);
-            System.out.println("Spawned child client: " + childClientId);
-        } else {
-            String errorMsg = response != null ? response.message() : "Unknown error";
-            GuiUtils.showMessageDialog(mainWindow.getFrame(),
-                    "Error",
-                    "Network error: " + errorMsg,
-                    GuiUtils.MessageType.ERROR);
-        }
+//            mainWindow.getContext().addChild(childClientId);
+//            System.out.println(mainWindow.getContext());
+//            System.out.println(childClientId+" "+ mainWindow.getContext().getClientId());
+//
+//            mainWindow.setStatus("Spawned child: " + childClientId);
+//            System.out.println("Spawned child client: " + childClientId);
+//        } else {
+//            String errorMsg = response != null ? response.message() : "Unknown error";
+//            GuiUtils.showMessageDialog(mainWindow.getFrame(),
+//                    "Error",
+//                    "Network error: " + errorMsg,
+//                    GuiUtils.MessageType.ERROR);
+//        }
 
 
     }
     public void handleKill(){
-        List<String> availableClients = fetchAvailableClients();
+        List<String> availableClients = mainWindow.getContext().getChildClientIds();
 
         if (availableClients.isEmpty()) {
             GuiUtils.showMessageDialog(mainWindow.getFrame(),
@@ -217,16 +233,27 @@ public class ButtonsHandler {
             return;
         }
 
-        KillClientDialog dialog = new KillClientDialog(mainWindow.getFrame(), connection, availableClients);
+        KillClientDialog dialog = new KillClientDialog(mainWindow.getFrame(), availableClients);
+        dialog.setOnKillRequested(this::sendKillCommand);
         dialog.setVisible(true);
     }
+    private void sendKillCommand(String clientId) {
+        CommandRequest request = RequestsFactory.withStringArg("kill_client", clientId);
+        CommandResponse response =handleRequest(request, "Client killed");
+        if (response != null && response.success()) {
+            boolean processKilled = processManager.killChild(clientId);
+           mainWindow.getContext().removeChild(clientId);
+            GuiUtils.showMessageDialog(mainWindow.getFrame(),
+                    "Успех", "Клиент " + clientId + " успешно завершен.", GuiUtils.MessageType.INFO);
+        } else {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(),
+                    "Ошибка", "Не удалось завершить клиент: " + (response != null ? response.message() : "Неизвестная ошибка"),
+                    GuiUtils.MessageType.ERROR);
+        }
 
-    // Временный метод для получения списка (замените на реальный запрос к серверу)
-    private List<String> fetchAvailableClients() {
-        // TODO: Отправьте запрос на сервер, например: "list_clients" или используйте существующую команду
-        // Пока возвращаем заглушку для демонстрации UI:
-        return List.of("client_01", "client_02", "child_client_01");
     }
+
+
     public void handleLogOut(){
         mainWindow.getFrame().setVisible(false);
 
