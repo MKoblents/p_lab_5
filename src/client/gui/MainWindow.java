@@ -245,18 +245,9 @@ public class MainWindow {
                 }
             }
         });
-        // In initializeComponents() method, after creating tableView:
 
-// Enable row sorter for sorting and filtering
         TableRowSorter<SpaceMarineTable> rowSorter = new TableRowSorter<>(tableModel);
         tableView.setRowSorter(rowSorter);
-
-//// Optional: Make all columns sortable
-//        for (int i = 0; i < tableView.getColumnCount(); i++) {
-//            tableView.getTableHeader().getColumnModel().getColumn(i);
-//        }
-
-// Optional: Add mouse listener for right-click filter menu
         tableView.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -268,10 +259,9 @@ public class MainWindow {
                 }
             }
         });
-        // Add this to update header icons when sorting changes
         rowSorter.addRowSorterListener(e -> {
             List<? extends RowSorter.SortKey> sortKeys = rowSorter.getSortKeys();
-            tableView.getTableHeader().repaint(); // Triggers custom header renderer if you add one
+            tableView.getTableHeader().repaint();
         });
 
         JScrollPane tableScroll = new JScrollPane(tableView);
@@ -309,13 +299,11 @@ public class MainWindow {
     private void showFilterMenu(JTable table, TableRowSorter<SpaceMarineTable> sorter, int column, int x, int y) {
         JPopupMenu filterMenu = new JPopupMenu();
 
-        // Clear filter option
         JMenuItem clearFilter = new JMenuItem("Clear Filter");
         clearFilter.addActionListener(e -> sorter.setRowFilter(null));
         filterMenu.add(clearFilter);
         filterMenu.addSeparator();
 
-        // Text filter for String columns
         if (table.getModel().getColumnClass(column) == String.class) {
             JPanel filterPanel = new JPanel(new BorderLayout(5, 0));
             filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -338,7 +326,6 @@ public class MainWindow {
             filterMenu.add(filterPanel);
         }
 
-        // Numeric range filter for Number columns
         else if (Number.class.isAssignableFrom(table.getModel().getColumnClass(column))) {
             JPanel filterPanel = new JPanel(new GridLayout(2, 2, 5, 2));
             filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
