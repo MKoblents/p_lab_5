@@ -24,12 +24,14 @@ public class SpaceMarineUpdateDialog extends JDialog {
     private JComboBox<AstartesCategory> categoryCombo;
     private JButton okButton, cancelButton;
     private JLabel titleLabel;
+    private final SpaceMarineTable tableModel;
 
     private SpaceMarine result;
     private final Dimension originalSize = new Dimension(550, 800);
 
     public SpaceMarineUpdateDialog(JFrame parent, SpaceMarineTable tableModel) {
         super(parent, true);
+        this.tableModel = tableModel;
         initComponents();
         layoutComponents();
         applyTheme();
@@ -372,6 +374,12 @@ public class SpaceMarineUpdateDialog extends JDialog {
         updated.setCategory((AstartesCategory) categoryCombo.getSelectedItem());
 
         return updated;
+    }
+    public void setSelectedMarine(SpaceMarine marine) {
+        if (marine == null) return;
+        selector.refreshData(tableModel);
+        selector.getComboBox().setSelectedItem(marine);
+        populateFields(marine);
     }
 
     public SpaceMarine getUpdatedSpaceMarine() {

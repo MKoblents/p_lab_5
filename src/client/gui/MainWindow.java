@@ -3,12 +3,14 @@ package client.gui;
 import client.config.ClientConfig;
 import client.context.ClientContext;
 import client.gui.buttons.ButtonsHandler;
+import client.gui.buttons.SpaceMarineUpdateDialog;
 import client.gui.utils.GuiUtils;
 import client.gui.window.SpaceMarineCanvas;
 import client.gui.window.SpaceMarineTable;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.utils.LocaleManager;
+import client.utils.RequestsFactory;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
@@ -16,6 +18,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.List;
 
@@ -206,6 +210,37 @@ public class MainWindow {
         tableView.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_FONT_SIZE));
         tableView.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, (int) GuiUtils.BASE_FONT_SIZE));
         tableView.setSelectionBackground(GuiUtils.PRIMARY_LIGHT);
+
+        tableView.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int selectedRow = tableView.getSelectedRow();
+                    if (selectedRow == -1) return;
+
+                    int modelRow = tableView.convertRowIndexToModel(selectedRow);
+                    SpaceMarine marine = tableModel.getMarineAtRow(modelRow);
+                    if (marine == null) return;
+
+                    String currentOwner = (context != null && context.getUserInfo() != null)
+                            ? context.getUserInfo().name() : null;
+
+                    if (currentOwner == null || !currentOwner.equals(marine.getOwner())) {
+                        JOptionPane.showMessageDialog(frame,
+                                "Вы можете редактировать только свои объекты.\nYou can only edit your own objects.",
+                                LocaleManager.get("dialog.error.title"),
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    SpaceMarineUpdateDialog dialog = new SpaceMarineUpdateDialog(frame, tableModel);
+                    dialog.setSelectedMarine(marine);
+                    dialog.setVisible(true);
+                    buttonsHandler.handleRequest(RequestsFactory.createTwoArgs("update", dialog.getUpdatedSpaceMarine().getId(), dialog.getUpdatedSpaceMarine()), "Updated successfully!");
+                }
+            }
+        });
+
         JScrollPane tableScroll = new JScrollPane(tableView);
         tableScroll.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
         contentPanel.add(tableScroll, "TABLE");
@@ -263,7 +298,6 @@ public class MainWindow {
         panel.add(leftPanel, BorderLayout.WEST);
         panel.add(centerPanel, BorderLayout.CENTER);
         panel.add(rightPanel, BorderLayout.EAST);
-
         return panel;
     }
 

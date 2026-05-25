@@ -79,7 +79,7 @@ public class ButtonsHandler {
         handleRequest(request,"Space Marine cleared successfully!");
     }
 
-    private CommandResponse handleRequest(CommandRequest request, String successMessage){
+    public CommandResponse handleRequest(CommandRequest request, String successMessage){
         try {
             connection.sendRequest(request);
             CommandResponse response = connection.readResponse();
