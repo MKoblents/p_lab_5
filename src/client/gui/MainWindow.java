@@ -7,6 +7,7 @@ import client.gui.buttons.SpaceMarineUpdateDialog;
 import client.gui.utils.GuiUtils;
 import client.gui.window.SpaceMarineCanvas;
 import client.gui.window.SpaceMarineTable;
+import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.utils.LocaleManager;
@@ -16,8 +17,6 @@ import shared.models.SpaceMarine;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -50,6 +49,8 @@ public class MainWindow {
     private JButton btnHelp;
     private JButton btnExit;
 
+    private final AsyncNetworkReader networkReader;
+
     private Dimension originalSize;
     private double scaleFactor = 1.0;
     private ClientContext context;
@@ -67,9 +68,10 @@ public class MainWindow {
         return config;
     }
 
-    public MainWindow(ConnectionManager connection, ClientConfig config) {
+    public MainWindow(ConnectionManager connection, ClientConfig config, AsyncNetworkReader networkReader) {
         this.config  = config;
         this.connection = connection;
+        this.networkReader = networkReader;
         initializeFrame();
         initializeComponents();
         setupLayout();
@@ -83,6 +85,7 @@ public class MainWindow {
 
         frame.setVisible(true);
     }
+    public AsyncNetworkReader getNetworkReader() { return networkReader; }
 
     private void onResize(double newScaleFactor) {
         this.scaleFactor = newScaleFactor;

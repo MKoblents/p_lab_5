@@ -4,6 +4,7 @@ import client.config.ClientConfig;
 import client.context.ClientContext;
 import client.gui.auth.AuthDialog;
 import client.gui.utils.GuiUtils;
+import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.network.PollingService;
 import client.utils.RequestsFactory;
@@ -52,6 +53,14 @@ public class GuiClientApp {
             //TODO
         }
         System.out.println("Handshake successful");
+        AsyncNetworkReader networkReader = new AsyncNetworkReader(
+                connection.getSocketChannel(),
+                reason -> System.out.println("Network disconnected: " + reason)
+        );
+        Thread readerThread = new Thread(networkReader, "gui-net-reader");
+        readerThread.setDaemon(true);
+        readerThread.start();
+
 
         AuthDialog authDialog = new AuthDialog(null, connection);
         authDialog.setVisible(true);
@@ -64,7 +73,7 @@ public class GuiClientApp {
         RequestsFactory.setClientId(config.getClientId());
         RequestsFactory.setUserInfo(user);
 
-        MainWindow mainWindow = new MainWindow(connection, config);
+        MainWindow mainWindow = new MainWindow(connection, config, networkReader);
         mainWindow.setUserName(user.name());
         mainWindow.setStatus("Connected as " + user.name());
 //        MainWindow mainWindow = new MainWindow(connection);
@@ -115,7 +124,7 @@ public class GuiClientApp {
                 }
             };
             heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask, 0, 5, TimeUnit.SECONDS);
-            PollingService polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow.getCanvasModel(), mainWindow);
+            PollingService polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow.getCanvasModel(), mainWindow, networkReader);
             polling.start();
 //        } else {
 //            mainWindow.setStatus("Login cancelled or failed");

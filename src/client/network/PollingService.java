@@ -21,12 +21,14 @@ public class PollingService {
     private final MainWindow mainWindow;
     private ScheduledExecutorService scheduler;
     private final long POLL_INTERVAL_MS = 2000;
+    private final AsyncNetworkReader networkReader;
 
-    public PollingService(ConnectionManager connection, SpaceMarineTable tableModel, SpaceMarineCanvas canvasModel, MainWindow mainWindow) {
+    public PollingService(ConnectionManager connection, SpaceMarineTable tableModel, SpaceMarineCanvas canvasModel, MainWindow mainWindow, AsyncNetworkReader networkReader) {
         this.connection = connection;
         this.tableModel = tableModel;
         this.mainWindow = mainWindow;
         this.canvasModel = canvasModel;
+        this.networkReader = networkReader;
     }
 
     public void start() {
@@ -42,7 +44,7 @@ public class PollingService {
         try {
             CommandRequest request = RequestsFactory.createSimple("show");
             connection.sendRequest(request);
-            CommandResponse response = connection.readResponse();
+            CommandResponse response = networkReader.getResponseQueue().poll();
 
             if (response != null && response.success() && response.result() instanceof List<?>) {
                 List<SpaceMarine> marines = (List<SpaceMarine>) response.result();

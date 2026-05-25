@@ -26,6 +26,11 @@ public class ScriptRunner {
     private static final ThreadLocal<Deque<String>> executingScripts =
             ThreadLocal.withInitial(ArrayDeque::new);
     private static final int MAX_SCRIPT_DEPTH = 5;
+    private String res;
+
+    public String getRes() {
+        return res;
+    }
 
     public ScriptRunner(InputManager inputManager,
                         ConnectionManager connectionManager,
@@ -44,6 +49,7 @@ public class ScriptRunner {
      * @return true if script completed without errors
      */
     public boolean executeScript(String scriptPath) {
+        res = "";
         String normalizedPath = normalizePath(scriptPath);
         if (!fileManager.validate(normalizedPath, FileManager.Operation.READ)) {
             System.err.println("Error: Script file is not accessible. Please check the path and file permissions.");
@@ -69,7 +75,7 @@ public class ScriptRunner {
             inputManager.setReader(scriptReader);
             logger.debug("Reader switched to file: {}", scriptPath);
             ExecutionResult result = executeScriptInternal(scriptPath);
-            printExecutionSummary(result);
+            res += printExecutionSummary(result);
             return result.success();
         } catch (IOException e) {
             logger.error("IO error while reading script {}: {}", scriptPath, e.getMessage());
@@ -98,19 +104,22 @@ public class ScriptRunner {
     /**
      * Prints execution summary to console.
      */
-    private void printExecutionSummary(ExecutionResult result) {
-        System.out.println("Script completed: " +
+    private String printExecutionSummary(ExecutionResult result) {
+        String res = "";
+       res = res + ("Script completed: " +
                 result.successCount() + " succeeded, " +
                 result.errorCount() + " failed");
         if (!result.details().isEmpty() && result.details().size() <= 10) {
-            System.out.println("Details:");
+            res += ("Details:");
             for (String detail : result.details()) {
-                System.out.println("  " + detail);
+               res +=("  " + detail);
             }
         } else if (!result.details().isEmpty()) {
-            System.out.println("(details omitted - " + result.details().size() + " lines)");
+            res += ("(details omitted - " + result.details().size() + " lines)");
         }
+        System.out.println(res);
         logger.debug("Script execution summary: {} success, {} errors", result.successCount(), result.errorCount());
+        return res;
     }
     /**
      * Internal execution logic (after Reader is switched).
