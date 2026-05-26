@@ -215,6 +215,9 @@ public class AuthDialog extends JDialog {
 
         return field;
     }
+    public Rectangle getFinalBounds() {
+        return getBounds();
+    }
 
     private JPasswordField createRoundedPasswordField(String placeholderKey) {
         JPasswordField field = new JPasswordField(LocaleManager.get(placeholderKey)) {

@@ -14,6 +14,7 @@ import shared.dto.HandshakeRequest;
 import shared.dto.UserInfo;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -68,6 +69,8 @@ public class GuiClientApp {
             System.exit(0); // Exit if auth fails or is cancelled
             return;
         }
+        Rectangle authBounds = authDialog.getFinalBounds(); // Получаем размер, который накрутил пользователь
+
 
         UserInfo user = authDialog.getLoggedInUser();
         RequestsFactory.setClientId(config.getClientId());
@@ -76,6 +79,7 @@ public class GuiClientApp {
         MainWindow mainWindow = new MainWindow(connection, config, networkReader);
         mainWindow.setUserName(user.name());
         mainWindow.setStatus("Connected as " + user.name());
+        mainWindow.getFrame().setBounds(authBounds);
 //        MainWindow mainWindow = new MainWindow(connection);
 //
 //        LoginDialog loginDialog = new LoginDialog(mainWindow.getFrame(), connection);
@@ -133,5 +137,6 @@ public class GuiClientApp {
 
         System.out.println("GUI Client started on EDT: " + SwingUtilities.isEventDispatchThread());
     }
+
 
 }

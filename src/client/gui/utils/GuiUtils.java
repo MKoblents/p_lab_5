@@ -437,4 +437,34 @@ public class GuiUtils {
         panel.add(field, BorderLayout.CENTER);
         return panel;
     }
+    // Добавьте это в GuiUtils.java
+    public static JLabel createStyledLabel(String localeKey, float baseSize, Color color) {
+        JLabel label = new JLabel(LocaleManager.get(localeKey));
+        label.setFont(new Font("Segoe UI", Font.BOLD, (int) baseSize));
+        label.setForeground(color);
+        return label;
+    }
+
+    public static JTextArea createStyledTextArea(String text) {
+        JTextArea area = new JTextArea(text);
+        area.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        area.setForeground(TEXT_COLOR);
+        area.setBackground(Color.WHITE);
+        area.setEditable(false);
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PRIMARY_LIGHT, 1),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+        return area;
+    }
+
+    // Метод для создания красивого скролл-панели для текста
+    public static JScrollPane createStyledScrollPane(Component view) {
+        JScrollPane sp = new JScrollPane(view);
+        sp.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 2));
+        sp.getViewport().setBackground(Color.WHITE);
+        return sp;
+    }
 }
