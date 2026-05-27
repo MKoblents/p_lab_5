@@ -85,10 +85,10 @@ public class ButtonsHandler {
     }
 
     public void handleClear() {
-        int confirm = JOptionPane.showConfirmDialog(null,
+        boolean confirm = GuiUtils.showConfirmDialog(null,
                 "Are you sure you want to clear your collection?",
-                "Confirm Action", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.NO_OPTION) return;
+                "Confirm Action");
+        if (!confirm) return;
         handleRequest(RequestsFactory.createSimple("clear"), "Collection cleared successfully!");
     }
 

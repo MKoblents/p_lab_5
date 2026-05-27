@@ -61,13 +61,11 @@ public class RemoveSpaceMarineDialog extends AbstractStyledDialog {
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this,
+        boolean confirm = GuiUtils.showConfirmDialog(null,
                 LocaleManager.get("dialog.remove.confirm").replace("{name}", selected.getName()),
-                LocaleManager.get("dialog.remove.title"),
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
+                LocaleManager.get("dialog.remove.title"));
 
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (confirm) {
             success = true;
             dispose();
         }

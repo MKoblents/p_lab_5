@@ -1,5 +1,7 @@
 package client.gui.buttons;
 
+import client.gui.utils.GuiUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -66,13 +68,11 @@ public class KillClientDialog extends JDialog {
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this,
+        boolean confirm = GuiUtils.showConfirmDialog(null,
                 "Вы уверены, что хотите завершить клиент: " + selectedId + "?\n" +
                         "Это отключит его и всех его потомков.",
-                "Подтверждение завершения",
-                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-        if (confirm == JOptionPane.YES_OPTION) {
+                "Подтверждение завершения");
+        if (confirm) {
             if (onKillRequested != null) {
                 onKillRequested.accept(selectedId);
             }
