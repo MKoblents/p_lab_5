@@ -66,7 +66,7 @@ public class MainWindow {
         setupLayout();
         buttonsHandler = new ButtonsHandler(connection, this);
         originalSize = new Dimension(1200, 800);
-        frame.setSize(originalSize);
+        frame.setMinimumSize(originalSize);
         frame.setLocationRelativeTo(null);
         GuiUtils.addResizeListener(frame.getContentPane(), originalSize, this::onResize);
         startForwardCommandListener();
