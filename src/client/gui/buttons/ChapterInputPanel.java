@@ -17,6 +17,11 @@ public class ChapterInputPanel extends JPanel {
     private final JTextField parentLegionField;
     private final JTextField worldField;
 
+    // Label references for resizing with base font size 25
+    private JLabel nameLabel;
+    private JLabel parentLegionLabel;
+    private JLabel worldLabel;
+
     public ChapterInputPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setOpaque(false);
@@ -29,15 +34,49 @@ public class ChapterInputPanel extends JPanel {
                 GuiUtils.PRIMARY_DARK
         ));
 
+        // Create fields
         nameField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.name", 45);
         parentLegionField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.parentLegion", 45);
         worldField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.world", 45);
 
-        add(GuiUtils.createLabeledInputPanel("dialog.field.chapter.name", nameField));
+        // Create labels with base font size 25
+        nameLabel = createStyledLabel("dialog.field.chapter.name", 25);
+        parentLegionLabel = createStyledLabel("dialog.field.chapter.parentLegion", 25);
+        worldLabel = createStyledLabel("dialog.field.chapter.world", 25);
+
+        // Add labeled panels
+        add(createLabeledPanel(nameLabel, nameField));
         add(Box.createVerticalStrut(10));
-        add(GuiUtils.createLabeledInputPanel("dialog.field.chapter.parentLegion", parentLegionField));
+        add(createLabeledPanel(parentLegionLabel, parentLegionField));
         add(Box.createVerticalStrut(10));
-        add(GuiUtils.createLabeledInputPanel("dialog.field.chapter.world", worldField));
+        add(createLabeledPanel(worldLabel, worldField));
+    }
+
+    /**
+     * Creates a styled label with base font size.
+     * @param localeKey locale key for label text
+     * @param baseFontSize base font size before scaling
+     * @return configured JLabel
+     */
+    private JLabel createStyledLabel(String localeKey, float baseFontSize) {
+        JLabel label = new JLabel(LocaleManager.get(localeKey), SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.BOLD, (int) baseFontSize));
+        label.setForeground(GuiUtils.PRIMARY_DARK);
+        return label;
+    }
+
+    /**
+     * Creates a panel combining a label and a field.
+     * @param label the label to display above the field
+     * @param field the input component
+     * @return JPanel with BorderLayout
+     */
+    private JPanel createLabeledPanel(JLabel label, JComponent field) {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setOpaque(false);
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(field, BorderLayout.CENTER);
+        return panel;
     }
 
     /**
@@ -96,12 +135,21 @@ public class ChapterInputPanel extends JPanel {
 
     /**
      * Scales fonts for responsive design.
+     * Labels scale from base 25, fields from base 14.
+     * @param scaleFactor the current scale factor
      */
-    public void scaleFonts(float fontSize) {
-        Font scaledFont = new Font("Segoe UI", Font.PLAIN, (int)fontSize);
-        nameField.setFont(scaledFont);
-        parentLegionField.setFont(scaledFont);
-        worldField.setFont(scaledFont);
+    public void scaleFonts(double scaleFactor) {
+        // Scale labels (base 25)
+        Font labelFont = new Font("Segoe UI", Font.BOLD, (int)(25 * scaleFactor));
+        nameLabel.setFont(labelFont);
+        parentLegionLabel.setFont(labelFont);
+        worldLabel.setFont(labelFont);
+
+        // Scale fields (base 14)
+        Font fieldFont = new Font("Segoe UI", Font.PLAIN, (int)(14 * scaleFactor));
+        nameField.setFont(fieldFont);
+        parentLegionField.setFont(fieldFont);
+        worldField.setFont(fieldFont);
     }
 
     private void populateField(JTextField field, String value, String placeholderKey) {

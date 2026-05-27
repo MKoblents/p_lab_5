@@ -16,7 +16,6 @@ import javax.xml.bind.ValidationException;
 import java.awt.*;
 
 public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
-
     private SpaceMarineSelector selector;
     private JTextField nameField, xField, yField, healthField;
     private JComboBox<MeleeWeapon> meleeWeaponCombo;
@@ -28,8 +27,11 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
     private final String currentUsername;
     private SpaceMarine result;
 
+    // Label references for resizing
+    private JLabel nameLabel, xLabel, yLabel, healthLabel, meleeLabel, weaponLabel, categoryLabel;
+
     public SpaceMarineUpdateDialog(JFrame parent, SpaceMarineTable tableModel, String currentUsername) {
-        super(parent, "dialog.update.title", true, 550, 800);
+        super(parent, "dialog.update.title", true, 800, 800);
         this.tableModel = tableModel;
         this.currentUsername = currentUsername;
         refreshSelector(tableModel);
@@ -49,6 +51,16 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 45);
 
         chapterPanel = new ChapterInputPanel();
+
+        // Create labels with base font size 25
+        nameLabel = createStyledLabel("dialog.field.name", 25);
+        xLabel = createStyledLabel("dialog.field.x", 25);
+        yLabel = createStyledLabel("dialog.field.y", 25);
+        healthLabel = createStyledLabel("dialog.field.health", 25);
+        meleeLabel = createStyledLabel("dialog.field.melee", 25);
+        weaponLabel = createStyledLabel("dialog.field.weapon", 25);
+        categoryLabel = createStyledLabel("dialog.field.category", 25);
+
         selector.getComboBox().addActionListener(e -> {
             SpaceMarine selected = selector.getSelectedSpaceMarine();
             if (selected != null) {
@@ -69,19 +81,19 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         fieldsPanel.setOpaque(false);
         fieldsPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.name", nameField));
+        fieldsPanel.add(createLabeledPanel(nameLabel, nameField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.x", xField));
+        fieldsPanel.add(createLabeledPanel(xLabel, xField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.y", yField));
+        fieldsPanel.add(createLabeledPanel(yLabel, yField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.health", healthField));
+        fieldsPanel.add(createLabeledPanel(healthLabel, healthField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.melee", meleeWeaponCombo));
+        fieldsPanel.add(createLabeledPanel(meleeLabel, meleeWeaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.weapon", weaponCombo));
+        fieldsPanel.add(createLabeledPanel(weaponLabel, weaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.category", categoryCombo));
+        fieldsPanel.add(createLabeledPanel(categoryLabel, categoryCombo));
         fieldsPanel.add(Box.createVerticalStrut(20));
         fieldsPanel.add(chapterPanel);
 
@@ -93,17 +105,44 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
     @Override
     protected void resizeComponents() {
         float scaledSize = scaleFontSize(14);
+        float scaledLabelSize = scaleFontSize(25);
 
+        // Resize labels
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        xLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        yLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        healthLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        meleeLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        weaponLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        categoryLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+
+        // Resize fields
         nameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         xField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         yField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         healthField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-       chapterPanel.scaleFonts(scaleFontSize(14));
+
+        chapterPanel.scaleFonts(getWidth()/originalSize.width);
+
         meleeWeaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         weaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         categoryCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
     }
 
+    private JLabel createStyledLabel(String localeKey, int baseFontSize) {
+        JLabel label = new JLabel(LocaleManager.get(localeKey), SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.BOLD, baseFontSize));
+        label.setForeground(GuiUtils.PRIMARY_DARK);
+        return label;
+    }
+
+    private JPanel createLabeledPanel(JLabel label, JComponent field) {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setOpaque(false);
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(field, BorderLayout.CENTER);
+        return panel;
+    }
 
     public void refreshSelector(SpaceMarineTable tableModel) {
         selector.setCurrentUsername(currentUsername);
@@ -210,7 +249,7 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         updated.setWeaponType((Weapon) weaponCombo.getSelectedItem());
         updated.setCategory((AstartesCategory) categoryCombo.getSelectedItem());
 
-       updated.setChapter(chapterPanel.getChapter());
+        updated.setChapter(chapterPanel.getChapter());
 
         return updated;
     }

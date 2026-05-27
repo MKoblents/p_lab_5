@@ -15,21 +15,24 @@ import javax.xml.bind.ValidationException;
 import java.awt.*;
 
 public class SpaceMarineInputDialog extends AbstractStyledDialog {
-
     private JTextField nameField;
     private JTextField xField, yField;
     private JTextField healthField;
     private JComboBox<MeleeWeapon> meleeWeaponCombo;
     private JComboBox<Weapon> weaponCombo;
     private JComboBox<AstartesCategory> categoryCombo;
-   private ChapterInputPanel chapterPanel;
+    private ChapterInputPanel chapterPanel;
+
+    // Label references for resizing
+    private JLabel nameLabel, xLabel, yLabel, healthLabel, meleeLabel, weaponLabel, categoryLabel;
+
     private SpaceMarine result;
     private final JFrame parent;
 
     public SpaceMarineInputDialog(JFrame parent) {
-        super(parent, "dialog.add.title", true, 500, 700);
+        super(parent, "dialog.add.title", true, 800, 700);
         this.parent = parent;
-        }
+    }
 
     @Override
     protected void initComponents() {
@@ -43,6 +46,15 @@ public class SpaceMarineInputDialog extends AbstractStyledDialog {
         categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 45);
 
         chapterPanel = new ChapterInputPanel();
+
+        // Create labels with base font size 25
+        nameLabel = createStyledLabel("dialog.field.name", 25);
+        xLabel = createStyledLabel("dialog.field.x", 25);
+        yLabel = createStyledLabel("dialog.field.y", 25);
+        healthLabel = createStyledLabel("dialog.field.health", 25);
+        meleeLabel = createStyledLabel("dialog.field.melee", 25);
+        weaponLabel = createStyledLabel("dialog.field.weapon", 25);
+        categoryLabel = createStyledLabel("dialog.field.category", 25);
     }
 
     @Override
@@ -52,19 +64,19 @@ public class SpaceMarineInputDialog extends AbstractStyledDialog {
         fieldsPanel.setOpaque(false);
         fieldsPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.name", nameField));
+        fieldsPanel.add(createLabeledPanel(nameLabel, nameField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.x", xField));
+        fieldsPanel.add(createLabeledPanel(xLabel, xField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.y", yField));
+        fieldsPanel.add(createLabeledPanel(yLabel, yField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.health", healthField));
+        fieldsPanel.add(createLabeledPanel(healthLabel, healthField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.melee", meleeWeaponCombo));
+        fieldsPanel.add(createLabeledPanel(meleeLabel, meleeWeaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.weapon", weaponCombo));
+        fieldsPanel.add(createLabeledPanel(weaponLabel, weaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(GuiUtils.createLabeledInputPanel("dialog.field.category", categoryCombo));
+        fieldsPanel.add(createLabeledPanel(categoryLabel, categoryCombo));
         fieldsPanel.add(Box.createVerticalStrut(20));
         fieldsPanel.add(chapterPanel);
 
@@ -76,16 +88,43 @@ public class SpaceMarineInputDialog extends AbstractStyledDialog {
     @Override
     protected void resizeComponents() {
         float scaledSize = scaleFontSize(14);
-        float labelSize = scaleFontSize(12);
+        float scaledLabelSize = scaleFontSize(25);
 
+        // Resize labels
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        xLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        yLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        healthLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        meleeLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        weaponLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        categoryLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+
+        // Resize fields
         nameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         xField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         yField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         healthField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-        chapterPanel.scaleFonts(scaleFontSize(14));
+
+        chapterPanel.scaleFonts(scaleFontSize(getWidth()/originalSize.width));
+
         meleeWeaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         weaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
         categoryCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+    }
+
+    private JLabel createStyledLabel(String localeKey, int baseFontSize) {
+        JLabel label = new JLabel(LocaleManager.get(localeKey), SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.BOLD, baseFontSize));
+        label.setForeground(GuiUtils.PRIMARY_DARK);
+        return label;
+    }
+
+    private JPanel createLabeledPanel(JLabel label, JComponent field) {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setOpaque(false);
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(field, BorderLayout.CENTER);
+        return panel;
     }
 
     private void onOK() {
