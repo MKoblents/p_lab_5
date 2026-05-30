@@ -50,6 +50,7 @@ public class MainWindow {
     private ClientProcessManager processManager;
     private JComboBox<String> forwardCommandCombo;
     private JButton btnForwardCommand;
+    private JButton langButton;
 
     public void setDependencies(ConnectionManager connection, ClientContext context, ClientProcessManager processManager) {
         this.connection = connection;
@@ -92,20 +93,23 @@ public class MainWindow {
 
         statusLabel.setFont(regularFont);
         userLabel.setFont(regularFont);
-        localeCombo.setFont(regularFont);
         if (tableView != null) {
             tableView.setFont(regularFont);
             tableView.setRowHeight((int) (28 * scaleFactor));
             tableView.getTableHeader().setFont(boldFont);
         }
+        int scaledPanelWidth = (int) (220 * scaleFactor);
+        controlPanel.setPreferredSize(new Dimension(scaledPanelWidth, 0));
+        controlPanel.setMaximumSize(new Dimension(scaledPanelWidth, Integer.MAX_VALUE));
         updateButtonFonts(controlPanel, buttonFont);
+
         int scaledButtonWidth = (int) (190 * scaleFactor);
         int scaledButtonHeight = (int) (40 * scaleFactor);
-        int scaledPanelWidth = (int) (220 * scaleFactor);
-        int scaledTopPanelHeight = (int) (50 * scaleFactor);
         int scaledButtonGap = (int) (8 * scaleFactor);
+        int scaledTopPanelHeight = (int) (50 * scaleFactor);
         int scaledBorderInset = (int) (15 * scaleFactor);
 
+        updateButtonSizes(controlPanel, scaledButtonWidth, scaledButtonHeight, scaledButtonGap);
         controlPanel.setPreferredSize(new Dimension(scaledPanelWidth, 0));
         controlPanel.setMaximumSize(new Dimension(scaledPanelWidth, Integer.MAX_VALUE));
         Component[] components = frame.getContentPane().getComponents();
@@ -137,6 +141,8 @@ public class MainWindow {
                     if (panelComp instanceof JButton button) {
                         button.setPreferredSize(new Dimension(width, height));
                         button.setMaximumSize(new Dimension(width, height));
+                        button.setFont(new Font("Segoe UI", Font.BOLD,
+                                (int)(GuiUtils.BASE_BUTTON_FONT_SIZE * scaleFactor)));
                     }
                 }
                 buttonPanel.setMaximumSize(new Dimension(width, height + (int) (16 * scaleFactor)));
@@ -154,17 +160,18 @@ public class MainWindow {
     }
 
     private void initializeComponents() {
-        statusLabel = new JLabel(LocaleManager.get("main.status.connecting"));
-        statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_FONT_SIZE));
-        userLabel = new JLabel(LocaleManager.get("main.user.guest"));
-        userLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_FONT_SIZE));
-        localeCombo = GuiUtils.createLocaleComboBox(selected -> {
-            String[] parts = selected.code().split("_");
-            if (parts.length == 2) {
-                LocaleManager.setLocale(parts[0], parts[1]);
-                updateUITexts();
-            }
-        });
+        statusLabel = GuiUtils.createLabel(LocaleManager.get("main.status.connecting"),(int) GuiUtils.BASE_FONT_SIZE,false);
+        userLabel = GuiUtils.createLabel(LocaleManager.get("main.user.guest"),(int) GuiUtils.BASE_FONT_SIZE,false);
+        langButton =  GuiUtils.createLanguageSwitchButton(
+                new GuiUtils.LocaleOption("ru_RU", "Русский"),  // или получите из настроек
+                selected -> {
+                    String[] parts = selected.code().split("_");
+                    if (parts.length == 2) {
+                        LocaleManager.setLocale(parts[0], parts[1]);
+                        updateUITexts();
+                    }
+                }
+        );
 
         cardLayout = new CardLayout();
         contentPanel = GuiUtils.createPanel(cardLayout);
@@ -234,15 +241,8 @@ public class MainWindow {
         canvasScroll.setOpaque(false);
         contentPanel.add(canvasScroll, "CANVAS");
 
-        switchButton = new JButton(LocaleManager.get("view.switch.to_map"));
-        switchButton.setFont(new Font("Segoe UI", Font.BOLD, (int) GuiUtils.BASE_BUTTON_FONT_SIZE));
-        switchButton.setBackground(GuiUtils.PRIMARY_COLOR);
-        switchButton.setForeground(Color.WHITE);
-        switchButton.setFocusPainted(false);
-        switchButton.setBorderPainted(false);
-        switchButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        switchButton.setPreferredSize(new Dimension(140, 28));
-        switchButton.addActionListener(e -> toggleView());
+        switchButton =GuiUtils.createStyledButton(LocaleManager.get("view.switch.to_map"),140,28,()->toggleView());
+
     }
 
     private void showFilterMenu(JTable table, TableRowSorter<SpaceMarineTable> sorter, int column, int x, int y) {
@@ -314,17 +314,20 @@ public class MainWindow {
 
     private JPanel createTopPanel() {
         JPanel panel = GuiUtils.createRoundedPanel(new BorderLayout(10, 0),GuiUtils.PRIMARY_COLOR,0,50);
-        panel.setBorder(new EmptyBorder(10, 15, 10, 15));
-        panel.setPreferredSize(new Dimension(0, 50));
+        panel.setBorder(new EmptyBorder(10, 20, 10, 20));
+        panel.setPreferredSize(new Dimension(0, 60));
         JPanel leftPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-        leftPanel.setOpaque(false); leftPanel.add(statusLabel); statusLabel.setForeground(Color.WHITE);
-        JPanel centerPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        centerPanel.setOpaque(false); centerPanel.add(userLabel); userLabel.setForeground(Color.WHITE);
-        JPanel rightPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        rightPanel.setOpaque(false); rightPanel.add(localeCombo); rightPanel.add(switchButton);
         leftPanel.setOpaque(false);
+        leftPanel.add(statusLabel);
+        statusLabel.setForeground(Color.WHITE);
+        JPanel centerPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         centerPanel.setOpaque(false);
+        centerPanel.add(userLabel);
+        userLabel.setForeground(Color.WHITE);
+        JPanel rightPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         rightPanel.setOpaque(false);
+        rightPanel.add(langButton);
+        rightPanel.add(switchButton);
         panel.add(leftPanel, BorderLayout.WEST); panel.add(centerPanel, BorderLayout.CENTER); panel.add(rightPanel, BorderLayout.EAST);
         return panel;
     }

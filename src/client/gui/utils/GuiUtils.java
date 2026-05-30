@@ -116,6 +116,86 @@ public class GuiUtils {
         panel.setOpaque(false);
         return panel;
     }
+    /**
+     * Creates a language switch button with dropdown popup menu.
+     * Shows current language code in uppercase (e.g., "RU", "EN").
+     * When clicked, shows a popup menu with available languages.
+     * @param initialLocale the initially selected locale option
+     * @param onLocaleChanged callback when locale is changed
+     * @return styled language switch button
+     */
+    public static JButton createLanguageSwitchButton(LocaleOption initialLocale, Consumer<LocaleOption> onLocaleChanged) {
+        // Extract language code (e.g., "ru_RU" -> "RU")
+        String[] parts = initialLocale.code().split("_");
+        String langCode = parts.length > 1 ? parts[1].toUpperCase() : initialLocale.code().substring(0, 2).toUpperCase();
+
+        JButton langButton = new JButton(langCode) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // White background with rounded corners
+                g2.setColor(Color.WHITE);
+                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+
+                // Pink border
+                g2.setColor(PRIMARY_COLOR);
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        langButton.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        langButton.setForeground(new Color(50, 50, 50));
+        langButton.setFocusPainted(false);
+        langButton.setContentAreaFilled(false);
+        langButton.setOpaque(false);
+        langButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        langButton.setPreferredSize(new Dimension(80, 35));
+        langButton.setMaximumSize(new Dimension(80, 35));
+
+        // Create popup menu with language options
+        JPopupMenu popupMenu = new JPopupMenu();
+        popupMenu.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
+
+        for (LocaleOption option : createLocaleOptions()) {
+            JMenuItem item = new JMenuItem(option.displayName() + " (" + option.code() + ")");
+            item.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+            item.addActionListener(e -> {
+                // Update button text with new language code
+                String[] newParts = option.code().split("_");
+                String newCode = newParts.length > 1 ? newParts[1].toUpperCase() : option.code().substring(0, 2).toUpperCase();
+                langButton.setText(newCode);
+                // Notify callback
+                if (onLocaleChanged != null) {
+                    onLocaleChanged.accept(option);
+                }
+                popupMenu.setVisible(false);
+            });
+            popupMenu.add(item);
+        }
+
+        // Show popup on click
+        langButton.addActionListener(e -> {
+            popupMenu.show(langButton, 0, langButton.getHeight());
+        });
+
+        // Hover effect
+        langButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                langButton.setBackground(PRIMARY_LIGHT);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                langButton.setBackground(Color.WHITE);
+            }
+        });
+
+        return langButton;
+    }
 
     public static JButton createStyledButton(String text, int width, int height, Runnable action) {
         JButton button = new JButton(text){
