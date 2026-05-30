@@ -20,6 +20,7 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -312,8 +313,7 @@ public class MainWindow {
     }
 
     private JPanel createTopPanel() {
-        JPanel panel = GuiUtils.createPanel(new BorderLayout(10, 0));
-        panel.setBackground(GuiUtils.PRIMARY_COLOR);
+        JPanel panel = GuiUtils.createRoundedPanel(new BorderLayout(10, 0),GuiUtils.PRIMARY_COLOR,0,50);
         panel.setBorder(new EmptyBorder(10, 15, 10, 15));
         panel.setPreferredSize(new Dimension(0, 50));
         JPanel leftPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
@@ -330,9 +330,8 @@ public class MainWindow {
     }
 
     private JPanel createControlPanel() {
-        JPanel panel = new JPanel();
+        JPanel panel = GuiUtils.createRoundedPanel(null, GuiUtils.PANEL_COLOR, 25, 25);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//        panel.setBackground(GuiUtils.PANEL_COLOR);
         panel.setBorder(new EmptyBorder(20, 15, 20, 15));
         panel.setPreferredSize(new Dimension(220, 0));
         panel.setMaximumSize(new Dimension(220, Integer.MAX_VALUE));

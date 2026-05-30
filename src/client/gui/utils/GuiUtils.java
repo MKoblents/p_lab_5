@@ -23,6 +23,7 @@ public class GuiUtils {
     public static final Color PANEL_COLOR = new Color(255, 105, 180);
     public static final Color STRIP_1 = new Color(255, 230, 235);
     public static final Color STRIP_2 = new Color(255, 245, 248);
+    public static final Color SEMI_TRANSPARENT_PANEL_COLOR = new Color(255, 105, 180, 180);
 
     public static final float BASE_FONT_SIZE = 12.0f;
     public static final float BASE_TITLE_FONT_SIZE = 16.0f;
@@ -99,6 +100,21 @@ public class GuiUtils {
                 new LocaleOption("sv_SE", LocaleManager.get("locale.sv")),
                 new LocaleOption("es_ES", LocaleManager.get("locale.es"))
         };
+    }
+    public static JPanel createRoundedPanel(LayoutManager layout, Color backgroundColor, int arcWidth, int arcHeight) {
+        JPanel panel = new JPanel(layout) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(backgroundColor);
+                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arcWidth, arcHeight);
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+        panel.setOpaque(false);
+        return panel;
     }
 
     public static JButton createStyledButton(String text, int width, int height, Runnable action) {
