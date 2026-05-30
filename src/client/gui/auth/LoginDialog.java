@@ -35,7 +35,7 @@ public class LoginDialog extends JDialog {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         add(titleLabel, BorderLayout.NORTH);
 
-        JPanel fieldsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+        JPanel fieldsPanel = GuiUtils.createPanel(new GridLayout(2, 2, 5, 5));
         fieldsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         fieldsPanel.add(new JLabel(LocaleManager.get("login.username")));
@@ -48,7 +48,7 @@ public class LoginDialog extends JDialog {
 
         add(fieldsPanel, BorderLayout.CENTER);
 
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        JPanel buttonsPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
         loginButton = new JButton(LocaleManager.get("login.signin"));
         loginButton.addActionListener(e -> attemptLogin());

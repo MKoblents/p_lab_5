@@ -48,6 +48,25 @@ public class GuiUtils {
 
         return combo;
     }
+    public static JPanel createPanel(LayoutManager layout) {
+        JPanel panel = new JPanel(layout);
+        panel.setBackground(BACKGROUND_COLOR);
+        return panel;
+    }
+
+    public static JLabel createLabel(String text, int fontSize, boolean bold) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", bold ? Font.BOLD : Font.PLAIN, fontSize));
+        label.setForeground(TEXT_COLOR);
+        return label;
+    }
+
+    public static JDialog createDialog(JFrame parent, String title, boolean modal) {
+        JDialog dialog = new JDialog(parent, title, modal);
+        dialog.setLayout(new BorderLayout(15, 15));
+        dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+        return dialog;
+    }
 
     public static LocaleOption[] createLocaleOptions() {
         return new LocaleOption[]{

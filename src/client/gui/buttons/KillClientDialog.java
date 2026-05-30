@@ -64,18 +64,18 @@ public class KillClientDialog extends JDialog {
         getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
 
         // Title and Info Panel
-        JPanel titlePanel = new JPanel(new BorderLayout());
+        JPanel titlePanel = GuiUtils.createPanel(new BorderLayout());
         titlePanel.setOpaque(false);
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         add(titlePanel, BorderLayout.NORTH);
 
-        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel infoPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER));
         infoPanel.setOpaque(false);
         infoPanel.add(infoLabel);
         add(infoPanel, BorderLayout.NORTH);
 
         // Form Panel
-        JPanel formPanel = new JPanel(new GridBagLayout());
+        JPanel formPanel = GuiUtils.createPanel(new GridBagLayout());
         formPanel.setOpaque(false);
         formPanel.setBorder(new EmptyBorder(20, 40, 20, 40));
 
@@ -95,7 +95,7 @@ public class KillClientDialog extends JDialog {
         add(formPanel, BorderLayout.CENTER);
 
         // Button Panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(new EmptyBorder(0, 20, 20, 20));
         buttonPanel.add(killButton);

@@ -84,19 +84,19 @@ public class ExecuteScriptDialog extends JDialog {
         getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
 
         // Title Panel
-        JPanel titlePanel = new JPanel(new BorderLayout());
+        JPanel titlePanel = GuiUtils.createPanel(new BorderLayout());
         titlePanel.setOpaque(false);
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         add(titlePanel, BorderLayout.NORTH);
 
         // Info Label
-        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel infoPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER));
         infoPanel.setOpaque(false);
         infoPanel.add(infoLabel);
         add(infoPanel, BorderLayout.NORTH);
 
         // File Selection Panel
-        JPanel filePanel = new JPanel(new GridBagLayout());
+        JPanel filePanel = GuiUtils.createPanel(new GridBagLayout());
         filePanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -124,7 +124,7 @@ public class ExecuteScriptDialog extends JDialog {
         add(filePanel, BorderLayout.CENTER);
 
         // Buttons Panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
+        JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
         buttonPanel.setOpaque(false);
         buttonPanel.add(executeButton);
         buttonPanel.add(cancelButton);
@@ -189,7 +189,7 @@ public class ExecuteScriptDialog extends JDialog {
         private int result = JFileChooser.CANCEL_OPTION;
 
         public StyledFileChooser(Frame parent) {
-            dialog = new JDialog(parent, LocaleManager.get("dialog.script.chooser_title"), true);
+            dialog = GuiUtils.createDialog((JFrame) parent, LocaleManager.get("dialog.script.chooser_title"), true);
             initFileChooser();
             buildDialog();
         }
@@ -337,7 +337,7 @@ public class ExecuteScriptDialog extends JDialog {
             dialog.add(fileChooser, BorderLayout.CENTER);
 
             // Создаём панель с кнопками через GuiUtils
-            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
+            JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
             buttonPanel.setOpaque(false);
             buttonPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 

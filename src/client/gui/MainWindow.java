@@ -166,7 +166,7 @@ public class MainWindow {
         });
 
         cardLayout = new CardLayout();
-        contentPanel = new JPanel(cardLayout);
+        contentPanel = GuiUtils.createPanel(cardLayout);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         contentPanel.setBackground(GuiUtils.BACKGROUND_COLOR);
 
@@ -250,7 +250,7 @@ public class MainWindow {
         filterMenu.add(clearFilter);
         filterMenu.addSeparator();
         if (table.getModel().getColumnClass(column) == String.class) {
-            JPanel filterPanel = new JPanel(new BorderLayout(5, 0));
+            JPanel filterPanel = GuiUtils.createPanel(new BorderLayout(5, 0));
             filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             JTextField filterText = new JTextField(15);
             filterText.setToolTipText("Type to filter...");
@@ -264,7 +264,7 @@ public class MainWindow {
             filterPanel.add(applyBtn, BorderLayout.EAST);
             filterMenu.add(filterPanel);
         } else if (Number.class.isAssignableFrom(table.getModel().getColumnClass(column))) {
-            JPanel filterPanel = new JPanel(new GridLayout(2, 2, 5, 2));
+            JPanel filterPanel = GuiUtils.createPanel(new GridLayout(2, 2, 5, 2));
             filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             JTextField minField = new JTextField(8);
             JTextField maxField = new JTextField(8);
@@ -310,15 +310,15 @@ public class MainWindow {
     }
 
     private JPanel createTopPanel() {
-        JPanel panel = new JPanel(new BorderLayout(10, 0));
+        JPanel panel = GuiUtils.createPanel(new BorderLayout(10, 0));
         panel.setBackground(GuiUtils.PRIMARY_COLOR);
         panel.setBorder(new EmptyBorder(10, 15, 10, 15));
         panel.setPreferredSize(new Dimension(0, 50));
-        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        JPanel leftPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         leftPanel.setOpaque(false); leftPanel.add(statusLabel); statusLabel.setForeground(Color.WHITE);
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        JPanel centerPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         centerPanel.setOpaque(false); centerPanel.add(userLabel); userLabel.setForeground(Color.WHITE);
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        JPanel rightPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         rightPanel.setOpaque(false); rightPanel.add(localeCombo); rightPanel.add(switchButton);
         panel.add(leftPanel, BorderLayout.WEST); panel.add(centerPanel, BorderLayout.CENTER); panel.add(rightPanel, BorderLayout.EAST);
         return panel;
@@ -398,7 +398,7 @@ public class MainWindow {
         JButton button = GuiUtils.createStyledButton(LocaleManager.get(localeKey), width, height, defaultAction);
         button.setActionCommand(localeKey);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 8));
+        JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 0, 8));
         buttonPanel.setOpaque(false);
         buttonPanel.setMaximumSize(new Dimension(width, height + 16));
         buttonPanel.add(button);

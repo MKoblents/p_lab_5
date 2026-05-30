@@ -74,7 +74,7 @@ public abstract class AbstractStyledDialog extends JDialog {
      * Override okAction/cancelAction for custom behavior.
      */
     protected void createStandardButtons(Runnable okAction, Runnable cancelAction) {
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setOpaque(false);
 
         okButton = GuiUtils.createStyledDialogButton("button.ok", 150, 45, okAction);

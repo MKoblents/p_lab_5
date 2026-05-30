@@ -33,11 +33,11 @@ public class RemoveSpaceMarineDialog extends AbstractStyledDialog {
 
     @Override
     protected void layoutComponents() {
-        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel infoPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER));
         infoPanel.setOpaque(false);
         infoPanel.add(infoLabel);
         add(infoPanel, BorderLayout.NORTH);
-        JPanel selectorPanel = new JPanel(new BorderLayout());
+        JPanel selectorPanel = GuiUtils.createPanel(new BorderLayout());
         selectorPanel.setOpaque(false);
         selectorPanel.setBorder(new EmptyBorder(20, 30, 20, 30));
         selectorPanel.add(selector, BorderLayout.CENTER);

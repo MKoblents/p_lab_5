@@ -72,7 +72,7 @@ public class ChapterInputPanel extends JPanel {
      * @return JPanel with BorderLayout
      */
     private JPanel createLabeledPanel(JLabel label, JComponent field) {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        JPanel panel = GuiUtils.createPanel(new BorderLayout(5, 5));
         panel.setOpaque(false);
         panel.add(label, BorderLayout.NORTH);
         panel.add(field, BorderLayout.CENTER);

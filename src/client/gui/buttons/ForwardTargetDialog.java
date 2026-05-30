@@ -27,7 +27,7 @@ public class ForwardTargetDialog extends JDialog {
 
     private void setupUI(List<String> clients, String commandKey) {
         setLayout(new BorderLayout(10, 10));
-        JPanel mainPanel = new JPanel(new GridBagLayout());
+        JPanel mainPanel = GuiUtils.createPanel(new GridBagLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -46,7 +46,7 @@ public class ForwardTargetDialog extends JDialog {
         gbc.gridx = 1;
         mainPanel.add(clientCombo, gbc);
 
-        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        JPanel btnPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         confirmButton = new JButton("Forward");
         cancelButton = new JButton("Cancel");
         confirmButton.setFont(new Font("Segoe UI", Font.BOLD, 12));

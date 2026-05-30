@@ -79,7 +79,7 @@ public class ForwardCommandDialog extends JDialog {
         add(titleLabel, BorderLayout.NORTH);
 
         // Form Panel
-        JPanel formPanel = new JPanel(new GridBagLayout());
+        JPanel formPanel = GuiUtils.createPanel(new GridBagLayout());
         formPanel.setOpaque(false);
         formPanel.setBorder(new EmptyBorder(20, 40, 20, 40));
 
@@ -118,7 +118,7 @@ public class ForwardCommandDialog extends JDialog {
         add(formPanel, BorderLayout.CENTER);
 
         // Button Panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(new EmptyBorder(0, 20, 20, 20));
         buttonPanel.add(okButton);

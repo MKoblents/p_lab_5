@@ -1,5 +1,6 @@
 package client.gui.auth;
 
+import client.gui.utils.GuiUtils;
 import client.network.ConnectionManager;
 import client.utils.LocaleManager;
 import client.utils.RequestsFactory;
@@ -32,7 +33,7 @@ public class RegisterDialog extends JDialog {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         add(titleLabel, BorderLayout.NORTH);
 
-        JPanel fieldsPanel = new JPanel(new GridLayout(3, 2, 5, 5));
+        JPanel fieldsPanel = GuiUtils.createPanel(new GridLayout(3, 2, 5, 5));
         fieldsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         fieldsPanel.add(new JLabel(LocaleManager.get("register.username")));
@@ -49,7 +50,7 @@ public class RegisterDialog extends JDialog {
 
         add(fieldsPanel, BorderLayout.CENTER);
 
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        JPanel buttonsPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
 
         registerButton = new JButton(LocaleManager.get("register.button"));
         registerButton.addActionListener(e -> attemptRegister());
