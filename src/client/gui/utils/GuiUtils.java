@@ -9,6 +9,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
 import java.util.function.Consumer;
 
 public class GuiUtils {
@@ -20,6 +21,8 @@ public class GuiUtils {
     public static final Color BUTTON_COLOR = Color.WHITE;
     public static final Color TEXT_COLOR = new Color(33, 33, 33);
     public static final Color PANEL_COLOR = new Color(255, 105, 180);
+    public static final Color STRIP_1 = new Color(255, 230, 235);
+    public static final Color STRIP_2 = new Color(255, 245, 248);
 
     public static final float BASE_FONT_SIZE = 12.0f;
     public static final float BASE_TITLE_FONT_SIZE = 16.0f;
@@ -30,6 +33,26 @@ public class GuiUtils {
         public String toString() {
             return displayName + " (" + code + ")";
         }
+    }
+
+    public static JPanel createStrippedPanel(LayoutManager layoutManager,double baseWidth){
+        JPanel bgPanel = new JPanel(layoutManager) {
+
+            private static final int BASE_STRIPE_WIDTH = 30;
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                double scaleFactor = (double) getWidth() / baseWidth;
+                int stripeWidth = (int)(BASE_STRIPE_WIDTH * scaleFactor);
+                for (int x = 0; x < getWidth(); x += stripeWidth * 2) {
+                    g2.setColor(STRIP_1); g2.fillRect(x, 0, stripeWidth, getHeight());
+                    g2.setColor(STRIP_2); g2.fillRect(x + stripeWidth, 0, stripeWidth, getHeight());
+                }
+            }
+        };
+        return bgPanel;
     }
 
     public static JComboBox<LocaleOption> createLocaleComboBox(Consumer<LocaleOption> onChange) {
@@ -79,7 +102,17 @@ public class GuiUtils {
     }
 
     public static JButton createStyledButton(String text, int width, int height, Runnable action) {
-        JButton button = new JButton(text);
+        JButton button = new JButton(text){
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth()-1, getHeight()-1, 15, 15));
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
         button.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_BUTTON_FONT_SIZE));
         button.setBackground(BUTTON_COLOR);
         button.setForeground(TEXT_COLOR);
@@ -92,6 +125,8 @@ public class GuiUtils {
                 BorderFactory.createLineBorder(PRIMARY_DARK, 1),
                 BorderFactory.createEmptyBorder(5, 15, 5, 15)
         ));
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
 
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -105,6 +140,8 @@ public class GuiUtils {
         if (action != null) {
             button.addActionListener(e -> action.run());
         }
+
+
 
         return button;
     }

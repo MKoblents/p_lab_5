@@ -148,8 +148,8 @@ public class MainWindow {
         frame = new JFrame(LocaleManager.getAppTitle());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout(0, 0));
-        frame.setBackground(GuiUtils.BACKGROUND_COLOR);
-        frame.getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
+        JPanel rootPanel = GuiUtils.createStrippedPanel(new BorderLayout(),1200);
+        frame.setContentPane(rootPanel);
     }
 
     private void initializeComponents() {
@@ -168,8 +168,7 @@ public class MainWindow {
         cardLayout = new CardLayout();
         contentPanel = GuiUtils.createPanel(cardLayout);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        contentPanel.setBackground(GuiUtils.BACKGROUND_COLOR);
-
+        contentPanel.setOpaque(false);
         tableModel = new SpaceMarineTable();
         tableView = new JTable(tableModel);
         tableView.setFillsViewportHeight(true);
@@ -217,6 +216,7 @@ public class MainWindow {
 
         JScrollPane tableScroll = new JScrollPane(tableView);
         tableScroll.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
+        tableScroll.setOpaque(false);
         contentPanel.add(tableScroll, "TABLE");
 
         canvas = new SpaceMarineCanvas();
@@ -230,6 +230,7 @@ public class MainWindow {
         });
         JScrollPane canvasScroll = new JScrollPane(canvas);
         canvasScroll.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
+        canvasScroll.setOpaque(false);
         contentPanel.add(canvasScroll, "CANVAS");
 
         switchButton = new JButton(LocaleManager.get("view.switch.to_map"));
@@ -300,12 +301,13 @@ public class MainWindow {
     }
 
     private void setupLayout() {
+        JPanel rootPanel = (JPanel) frame.getContentPane();
         JPanel topPanel = createTopPanel();
         topPanel.setName("topPanel");
-        frame.add(topPanel, BorderLayout.NORTH);
+        rootPanel.add(topPanel, BorderLayout.NORTH);
         controlPanel = createControlPanel();
-        frame.add(controlPanel, BorderLayout.WEST);
-        frame.add(contentPanel, BorderLayout.CENTER);
+        rootPanel.add(controlPanel, BorderLayout.WEST);
+        rootPanel.add(contentPanel, BorderLayout.CENTER);
         cardLayout.show(contentPanel, "TABLE");
     }
 
@@ -320,6 +322,9 @@ public class MainWindow {
         centerPanel.setOpaque(false); centerPanel.add(userLabel); userLabel.setForeground(Color.WHITE);
         JPanel rightPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         rightPanel.setOpaque(false); rightPanel.add(localeCombo); rightPanel.add(switchButton);
+        leftPanel.setOpaque(false);
+        centerPanel.setOpaque(false);
+        rightPanel.setOpaque(false);
         panel.add(leftPanel, BorderLayout.WEST); panel.add(centerPanel, BorderLayout.CENTER); panel.add(rightPanel, BorderLayout.EAST);
         return panel;
     }
@@ -327,7 +332,7 @@ public class MainWindow {
     private JPanel createControlPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(GuiUtils.PANEL_COLOR);
+//        panel.setBackground(GuiUtils.PANEL_COLOR);
         panel.setBorder(new EmptyBorder(20, 15, 20, 15));
         panel.setPreferredSize(new Dimension(220, 0));
         panel.setMaximumSize(new Dimension(220, Integer.MAX_VALUE));

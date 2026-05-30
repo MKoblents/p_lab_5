@@ -73,21 +73,7 @@ public class AuthDialog extends JDialog {
     }
 
     private void setupUI() {
-        JPanel bgPanel = new JPanel(new GridBagLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                int stripeWidth = (int)(30 * scaleFactor);
-                Color c1 = new Color(255, 230, 235);
-                Color c2 = new Color(255, 245, 248);
-                for (int x = 0; x < getWidth(); x += stripeWidth * 2) {
-                    g2.setColor(c1); g2.fillRect(x, 0, stripeWidth, getHeight());
-                    g2.setColor(c2); g2.fillRect(x + stripeWidth, 0, stripeWidth, getHeight());
-                }
-            }
-        };
+        JPanel bgPanel = GuiUtils.createStrippedPanel(new GridBagLayout(),550);
 
        JPanel formContainer = new JPanel(new GridBagLayout()) {
             @Override
