@@ -3,6 +3,7 @@ import client.config.ClientConfig;
 import client.context.ClientContext;
 import client.gui.auth.AuthDialog;
 import client.gui.utils.GuiUtils;
+import client.gui.utils.ReconnectScheduler;
 import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.network.PollingService;
@@ -28,14 +29,27 @@ public class GuiClientApp {
 
     private static void createAndShowGui(ClientConfig config) {
         ConnectionManager connection = new ConnectionManager();
-        if (!connection.connect(config.getHost(), config.getPort())) {
-            GuiUtils.showMessageDialog(null,
-                    "Error",
-                    "Failed to connect to server " + config.getHost() + ":" + config.getPort(),
-                    GuiUtils.MessageType.ERROR);
-            return;
-        }
+//        if (!connection.connect(config.getHost(), config.getPort())) {
+//            GuiUtils.showMessageDialog(null,
+//                    "Error",
+//                    "Failed to connect to server " + config.getHost() + ":" + config.getPort(),
+//                    GuiUtils.MessageType.ERROR);
+//            return;
+//        }
+        AsyncNetworkReader networkReader = new AsyncNetworkReader(
+                connection.getSocketChannel(),
+                reason -> System.out.println("Network disconnected: " + reason)
+        );
+        Thread readerThread = new Thread(networkReader, "gui-net-reader");
+        readerThread.setDaemon(true);
+        readerThread.start();
+        ReconnectScheduler reconnectScheduler = new ReconnectScheduler(connection,config,networkReader);
+        reconnectScheduler.start();
         try {
+            while (!connection.isConnected()){
+                reconnectScheduler.attemptConnection();
+                Thread.sleep(1000);
+            }
             HandshakeRequest handshake = new HandshakeRequest(config.getClientId(), config.getParentClientId());
             connection.sendHandshake(handshake);
             CommandResponse handshakeResponse = connection.readResponse();
@@ -54,15 +68,10 @@ public class GuiClientApp {
                     GuiUtils.MessageType.ERROR);
             connection.disconnect();
             return;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
-        AsyncNetworkReader networkReader = new AsyncNetworkReader(
-                connection.getSocketChannel(),
-                reason -> System.out.println("Network disconnected: " + reason)
-        );
-        Thread readerThread = new Thread(networkReader, "gui-net-reader");
-        readerThread.setDaemon(true);
-        readerThread.start();
 
         AuthDialog authDialog = new AuthDialog(null, connection);
         authDialog.setVisible(true);

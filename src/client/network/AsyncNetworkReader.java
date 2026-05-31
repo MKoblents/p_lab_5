@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public class AsyncNetworkReader implements Runnable {
     private final Consumer<DisconnectReason> onDisconnect;
     private static final Logger logger = LoggerFactory.getLogger(AsyncNetworkReader.class);
-    private final SocketChannel channel;
+    private SocketChannel channel;
     private final ConcurrentLinkedQueue<CommandResponse> responseQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<CommandRequest> forwardQueue = new ConcurrentLinkedQueue<>();
     private volatile boolean running = true;
@@ -22,6 +22,10 @@ public class AsyncNetworkReader implements Runnable {
     private final ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
     private int expectedLength = -1;
     private ByteBuffer dataBuffer;
+
+    public void setChannel(SocketChannel channel) {
+        this.channel = channel;
+    }
 
     public AsyncNetworkReader(SocketChannel channel, Consumer<DisconnectReason> onDisconnect) {
         this.channel = channel;
