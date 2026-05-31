@@ -98,6 +98,15 @@ public class MainWindow {
             tableView.setRowHeight((int) (28 * scaleFactor));
             tableView.getTableHeader().setFont(boldFont);
         }
+        if (langButton != null) {
+            int scaledLangBtnWidth = (int) (100 * scaleFactor);
+            int scaledLangBtnHeight = (int) (28 * scaleFactor);
+
+            langButton.setPreferredSize(new Dimension(scaledLangBtnWidth, scaledLangBtnHeight));
+            langButton.setMaximumSize(new Dimension(scaledLangBtnWidth, scaledLangBtnHeight));
+            float scaledLangBtnFont = (float) (GuiUtils.BASE_BUTTON_FONT_SIZE * scaleFactor);
+            langButton.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLangBtnFont));
+        }
         int scaledPanelWidth = (int) (220 * scaleFactor);
         controlPanel.setPreferredSize(new Dimension(scaledPanelWidth, 0));
         controlPanel.setMaximumSize(new Dimension(scaledPanelWidth, Integer.MAX_VALUE));
@@ -305,6 +314,7 @@ public class MainWindow {
         JPanel rootPanel = (JPanel) frame.getContentPane();
         JPanel topPanel = createTopPanel();
         topPanel.setName("topPanel");
+        topPanel.setOpaque(false);
         rootPanel.add(topPanel, BorderLayout.NORTH);
         controlPanel = createControlPanel();
         rootPanel.add(controlPanel, BorderLayout.WEST);
@@ -313,22 +323,23 @@ public class MainWindow {
     }
 
     private JPanel createTopPanel() {
-        JPanel panel = GuiUtils.createRoundedPanel(new BorderLayout(10, 0),GuiUtils.PRIMARY_COLOR,0,50);
+        JPanel panel = GuiUtils.createRoundedPanel(new BorderLayout(10, 0),Color.WHITE,0,50);
         panel.setBorder(new EmptyBorder(10, 20, 10, 20));
         panel.setPreferredSize(new Dimension(0, 60));
         JPanel leftPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-        leftPanel.setOpaque(false);
+//        leftPanel.setOpaque(false);
         leftPanel.add(statusLabel);
-        statusLabel.setForeground(Color.WHITE);
+        statusLabel.setForeground(Color.BLACK);
         JPanel centerPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        centerPanel.setOpaque(false);
+//        centerPanel.setOpaque(false);
         centerPanel.add(userLabel);
-        userLabel.setForeground(Color.WHITE);
+        userLabel.setForeground(Color.BLACK);
         JPanel rightPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        rightPanel.setOpaque(false);
+//        rightPanel.setOpaque(false);
         rightPanel.add(langButton);
         rightPanel.add(switchButton);
         panel.add(leftPanel, BorderLayout.WEST); panel.add(centerPanel, BorderLayout.CENTER); panel.add(rightPanel, BorderLayout.EAST);
+        panel.setOpaque(false);
         return panel;
     }
 
