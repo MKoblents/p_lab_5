@@ -1,109 +1,164 @@
 package client.gui.buttons;
 
-import client.network.ConnectionManager;
-import client.utils.RequestsFactory;
-import shared.dto.CommandRequest;
-import shared.dto.CommandResponse;
+import client.gui.utils.GuiUtils;
+import client.utils.LocaleManager;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class KillClientDialog extends JDialog {
-    private final ConnectionManager connection;
-    private  JComboBox<String> clientCombo;
-    private JButton killButton;
-    private JButton cancelButton;
+    private JComboBox<String> clientCombo;
+    private JButton killButton, cancelButton;
+    private JLabel titleLabel, infoLabel, clientLabel;
+    private Consumer<String> onKillRequested;
 
-    public KillClientDialog(JFrame parent, ConnectionManager connection, List<String> availableClients) {
-        super(parent, "Kill Client", true);
-        this.connection = connection;
-        setupUI(availableClients);
-        pack();
+    private final Dimension originalSize = new Dimension(500, 300);
+
+    public KillClientDialog(JFrame parent, List<String> availableClients) {
+        super(parent, LocaleManager.get("dialog.kill.title"), true);
+        initComponents(availableClients);
+        layoutComponents();
+        applyTheme();
+        setSize(originalSize);
         setLocationRelativeTo(parent);
-        setResizable(false);
+        setMinimumSize(new Dimension(1000, 300));
+        setResizable(true);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                resizeComponents();
+            }
+        });
     }
 
-    private void setupUI(List<String> clients) {
-        setLayout(new BorderLayout(10, 10));
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    public void setOnKillRequested(Consumer<String> callback) {
+        this.onKillRequested = callback;
+    }
+
+    private void initComponents(List<String> clients) {
+        titleLabel = new JLabel(LocaleManager.get("dialog.kill.title"), SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+
+        infoLabel = new JLabel(LocaleManager.get("dialog.kill.info"), SwingConstants.CENTER);
+        infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        infoLabel.setForeground(GuiUtils.PRIMARY_DARK);
+
+        clientLabel = new JLabel(LocaleManager.get("dialog.kill.client_label"), SwingConstants.RIGHT);
+        clientLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        clientLabel.setForeground(GuiUtils.TEXT_COLOR);
+
+        clientCombo = GuiUtils.createStyledComboBox(clients.toArray(new String[0]), 40);
+
+        killButton = GuiUtils.createStyledDialogButton("button.kill", 120, 40, this::attemptKill);
+        cancelButton = GuiUtils.createStyledDialogButton("button.cancel", 120, 40, this::dispose);
+    }
+
+    private void layoutComponents() {
+        setLayout(new BorderLayout(15, 15));
+        getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
+
+        // Title and Info Panel
+        JPanel titlePanel = GuiUtils.createPanel(new BorderLayout());
+        titlePanel.setOpaque(false);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        add(titlePanel, BorderLayout.NORTH);
+
+        JPanel infoPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER));
+        infoPanel.setOpaque(false);
+        infoPanel.add(infoLabel);
+        add(infoPanel, BorderLayout.NORTH);
+
+        // Form Panel
+        JPanel formPanel = GuiUtils.createPanel(new GridBagLayout());
+        formPanel.setOpaque(false);
+        formPanel.setBorder(new EmptyBorder(20, 40, 20, 40));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(8, 5, 8, 5);
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Заголовок
-        JLabel titleLabel = new JLabel("Select client to terminate:", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
-        mainPanel.add(titleLabel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.3;
+        formPanel.add(clientLabel, gbc);
 
-        // Выпадающий список с ID клиентов
-        clientCombo = new JComboBox<>(clients.toArray(new String[0]));
-        clientCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        gbc.gridy = 1; gbc.gridwidth = 1;
-        mainPanel.add(new JLabel("Client ID:"), gbc);
         gbc.gridx = 1;
-        mainPanel.add(clientCombo, gbc);
+        gbc.weightx = 0.7;
+        formPanel.add(clientCombo, gbc);
 
-        // Кнопки
-        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        killButton = new JButton("Terminate");
-        cancelButton = new JButton("Cancel");
+        add(formPanel, BorderLayout.CENTER);
 
-        killButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        cancelButton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        // Button Panel
+        JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setBorder(new EmptyBorder(0, 20, 20, 20));
+        buttonPanel.add(killButton);
+        buttonPanel.add(cancelButton);
 
-        killButton.addActionListener(e -> attemptKill());
-        cancelButton.addActionListener(e -> dispose());
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
 
-        gbc.gridy = 2; gbc.gridwidth = 2; gbc.fill = GridBagConstraints.NONE;
-        btnPanel.add(killButton);
-        btnPanel.add(cancelButton);
-        mainPanel.add(btnPanel, gbc);
+    private void applyTheme() {
+        getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
+    }
 
-        add(mainPanel, BorderLayout.CENTER);
+    private void resizeComponents() {
+        double scaleFactor = (double) getWidth() / originalSize.width;
+
+        float scaledFontSize = (float) (13 * scaleFactor);
+        float scaledTitleSize = (float) (16 * scaleFactor);
+        float scaledInfoSize = (float) (14 * scaleFactor);
+
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledTitleSize));
+        infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledInfoSize));
+        clientLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledFontSize));
+
+        // Update combo box
+        int scaledComboHeight = (int) (40 * scaleFactor);
+        clientCombo.setPreferredSize(new Dimension(0, scaledComboHeight));
+        clientCombo.setMaximumSize(new Dimension(Short.MAX_VALUE, scaledComboHeight));
+        clientCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledFontSize));
+
+        // Update buttons
+        int scaledButtonWidth = (int) (120 * scaleFactor);
+        int scaledButtonHeight = (int) (40 * scaleFactor);
+        killButton.setPreferredSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+        killButton.setMaximumSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+        killButton.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledFontSize));
+
+        cancelButton.setPreferredSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+        cancelButton.setMaximumSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+        cancelButton.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledFontSize));
+
+        revalidate();
+        repaint();
     }
 
     private void attemptKill() {
         String selectedId = (String) clientCombo.getSelectedItem();
         if (selectedId == null || selectedId.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No client selected.", "Warning", JOptionPane.WARNING_MESSAGE);
+            GuiUtils.showMessageDialog(null,
+                    LocaleManager.get("dialog.kill.title"),
+                    LocaleManager.get("dialog.kill.no_client"),
+                    GuiUtils.MessageType.WARNING);
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to terminate client: " + selectedId + "?\nThis will disconnect it and all its children.",
-                "Confirm Termination",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+        boolean confirm = GuiUtils.showConfirmDialog(null,
+                LocaleManager.get("dialog.kill.confirm").replace("{client_id}", selectedId),
+                LocaleManager.get("dialog.kill.confirm_title"));
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            performKill(selectedId);
-        }
-    }
-
-    private void performKill(String clientId) {
-        try {
-            CommandRequest request = RequestsFactory.withStringArg("kill_client", clientId);
-            connection.sendRequest(request);
-            CommandResponse response = connection.readResponse();
-
-            if (response != null && response.success()) {
-                JOptionPane.showMessageDialog(this,
-                        "Client " + clientId + " terminated successfully.",
-                        "Success", JOptionPane.INFORMATION_MESSAGE);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Failed: " + (response != null ? response.message() : "Unknown error"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+        if (confirm) {
+            if (onKillRequested != null) {
+                onKillRequested.accept(selectedId);
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                    "Network error: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
         }
     }
 }

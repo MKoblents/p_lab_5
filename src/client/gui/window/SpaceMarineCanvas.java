@@ -170,12 +170,10 @@ public class SpaceMarineCanvas extends JPanel {
     }
 
     private void showMarineInfo(SpaceMarine marine) {
-        JOptionPane.showMessageDialog(
-                this,
-                marine,
+        GuiUtils.showMessageDialog(
+                null,
                 "SpaceMarine Details",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+                marine.toString());
     }
 
     private void applyZoom(double factor, int centerX, int centerY) {

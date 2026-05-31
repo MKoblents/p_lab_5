@@ -84,19 +84,19 @@ public class ExecuteScriptDialog extends JDialog {
         getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
 
         // Title Panel
-        JPanel titlePanel = new JPanel(new BorderLayout());
+        JPanel titlePanel = GuiUtils.createPanel(new BorderLayout());
         titlePanel.setOpaque(false);
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         add(titlePanel, BorderLayout.NORTH);
 
         // Info Label
-        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel infoPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER));
         infoPanel.setOpaque(false);
         infoPanel.add(infoLabel);
         add(infoPanel, BorderLayout.NORTH);
 
         // File Selection Panel
-        JPanel filePanel = new JPanel(new GridBagLayout());
+        JPanel filePanel = GuiUtils.createPanel(new GridBagLayout());
         filePanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -124,7 +124,7 @@ public class ExecuteScriptDialog extends JDialog {
         add(filePanel, BorderLayout.CENTER);
 
         // Buttons Panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
+        JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
         buttonPanel.setOpaque(false);
         buttonPanel.add(executeButton);
         buttonPanel.add(cancelButton);
@@ -189,7 +189,7 @@ public class ExecuteScriptDialog extends JDialog {
         private int result = JFileChooser.CANCEL_OPTION;
 
         public StyledFileChooser(Frame parent) {
-            dialog = new JDialog(parent, LocaleManager.get("dialog.script.chooser_title"), true);
+            dialog = GuiUtils.createDialog((JFrame) parent, LocaleManager.get("dialog.script.chooser_title"), true);
             initFileChooser();
             buildDialog();
         }
@@ -201,8 +201,93 @@ public class ExecuteScriptDialog extends JDialog {
             fileChooser.addChoosableFileFilter(new NoExtensionFileFilter());
             fileChooser.setFileFilter(new NoExtensionFileFilter());
 
-            // Apply custom UI to file chooser components
             applyFileChooserStyling(fileChooser);
+
+            // ⭐ Apply font to file list AFTER components are fully created
+            SwingUtilities.invokeLater(() -> {
+                styleFileNameList(fileChooser, 40);
+                // Fallback: also try styling via UIManager for this instance
+                if (fileChooser.isShowing()) {
+                    forceStyleFileList(fileChooser, 40);
+                }
+            });
+        }
+
+        /**
+         * First attempt: recursive search for JList
+         */
+        private void styleFileNameList(Component comp, int fontSize) {
+            if (comp instanceof JList<?> list) {
+                // Check if this JList is likely the file list by checking its parent hierarchy
+                Component parent = list.getParent();
+                if (parent instanceof JScrollPane) {
+                    Component scrollParent = parent.getParent();
+                    // File lists are usually inside a JScrollPane inside a JSplitPane or JPanel
+                    if (scrollParent instanceof JSplitPane ||
+                            scrollParent instanceof JPanel ||
+                            list.getName().contains("file")) {
+                        list.setFont(new Font("Segoe UI", Font.PLAIN, fontSize));
+                        list.setFixedCellHeight((int)(fontSize * 1.8));
+                        list.repaint();
+                    }
+                }
+            }
+            if (comp instanceof Container container) {
+                for (Component child : container.getComponents()) {
+                    styleFileNameList(child, fontSize);
+                }
+            }
+        }
+
+        /**
+         * Fallback: direct access via component hierarchy traversal
+         */
+        private void forceStyleFileList(JFileChooser fc, int fontSize) {
+            // Try to find the file list by traversing known JFileChooser structure
+            for (Component comp : fc.getComponents()) {
+                if (comp instanceof JSplitPane splitPane) {
+                    // Left side usually contains the file list
+                    Component left = splitPane.getLeftComponent();
+                    if (left instanceof JScrollPane scrollPane) {
+                        Component view = scrollPane.getViewport().getView();
+                        if (view instanceof JList<?> fileList) {
+                            fileList.setFont(new Font("Segoe UI", Font.PLAIN, fontSize));
+                            fileList.setFixedCellHeight((int)(fontSize * 1.8));
+                            fileList.repaint();
+                            return; // Found it, stop searching
+                        }
+                    }
+                } else if (comp instanceof JScrollPane scrollPane) {
+                    // Some L&F put the list directly in a JScrollPane
+                    Component view = scrollPane.getViewport().getView();
+                    if (view instanceof JList<?> fileList) {
+                        fileList.setFont(new Font("Segoe UI", Font.PLAIN, fontSize));
+                        fileList.setFixedCellHeight((int)(fontSize * 1.8));
+                        fileList.repaint();
+                        return;
+                    }
+                }
+                // Recurse into nested containers
+                if (comp instanceof Container) {
+                    forceStyleFileListRecursive(comp, fontSize);
+                }
+            }
+        }
+
+        private void forceStyleFileListRecursive(Component comp, int fontSize) {
+            if (comp instanceof JList<?> list &&
+                    list.getCellRenderer() != null &&
+                    list.getCellRenderer().getClass().getName().contains("File")) {
+                list.setFont(new Font("Segoe UI", Font.PLAIN, fontSize));
+                list.setFixedCellHeight((int)(fontSize * 1.8));
+                list.repaint();
+                return;
+            }
+            if (comp instanceof Container container) {
+                for (Component child : container.getComponents()) {
+                    forceStyleFileListRecursive(child, fontSize);
+                }
+            }
         }
 
         private void applyFileChooserStyling(JFileChooser fc) {
@@ -238,47 +323,66 @@ public class ExecuteScriptDialog extends JDialog {
                 }
             }
         }
-
         private void buildDialog() {
             dialog.setLayout(new BorderLayout(10, 10));
             dialog.getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
-            dialog.setMinimumSize(new Dimension(700, 500));
+            dialog.setMinimumSize(new Dimension(1000, 800));
             dialog.setSize(800, 600);
             dialog.setLocationRelativeTo(null);
 
-            // Add file chooser to center
+            // ⭐ ВАЖНО: Убираем стандартные кнопки JFileChooser
+            fileChooser.setControlButtonsAreShown(false);
+
+            // Добавляем file chooser в центр
             dialog.add(fileChooser, BorderLayout.CENTER);
 
-            // Add custom styled buttons panel at bottom
-            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
+            // Создаём панель с кнопками через GuiUtils
+            JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
             buttonPanel.setOpaque(false);
+            buttonPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-            JButton openButton = createDialogButton(LocaleManager.get("dialog.script.open"));
-            JButton cancelButton = createDialogButton(LocaleManager.get("dialog.script.cancel"));
+            // ⭐ Используем GuiUtils.createStyledButton
+            JButton openButton = GuiUtils.createStyledButton(
+                    LocaleManager.get("dialog.script.open"),
+                    100, 40,  // width, height
+                    () -> {
+                        selectedFile = fileChooser.getSelectedFile();
+                        result = JFileChooser.APPROVE_OPTION;
+                        dialog.dispose();
+                    }
+            );
 
-            openButton.addActionListener(e -> {
-                selectedFile = fileChooser.getSelectedFile();
-                result = JFileChooser.APPROVE_OPTION;
-                dialog.dispose();
-            });
-            cancelButton.addActionListener(e -> {
-                result = JFileChooser.CANCEL_OPTION;
-                dialog.dispose();
-            });
+            JButton cancelButton = GuiUtils.createStyledButton(
+                    LocaleManager.get("dialog.script.cancel"),
+                    100, 40,  // width, height
+                    () -> {
+                        result = JFileChooser.CANCEL_OPTION;
+                        dialog.dispose();
+                    }
+            );
 
             buttonPanel.add(openButton);
             buttonPanel.add(cancelButton);
             dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-            // Add resize listener
+            // Добавляем listener для ресайза
             dialog.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
                     resizeFileChooser();
+                    // ⭐ Также ресайзим кнопки
+                    double scaleFactor = (double) dialog.getWidth() / 800.0;
+                    int scaledButtonWidth = (int)(100 * scaleFactor);
+                    int scaledButtonHeight = (int)(40 * scaleFactor);
+                    openButton.setPreferredSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+                    openButton.setMaximumSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+                    cancelButton.setPreferredSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+                    cancelButton.setMaximumSize(new Dimension(scaledButtonWidth, scaledButtonHeight));
+                    dialog.revalidate();
+                    dialog.repaint();
                 }
             });
         }
-
         private JButton createDialogButton(String text) {
             JButton btn = new JButton(text);
             btn.setFont(new Font("Segoe UI", Font.BOLD, 13));

@@ -1,0 +1,178 @@
+package client.gui.buttons;
+
+import client.gui.utils.GuiUtils;
+import client.utils.LocaleManager;
+import shared.models.Chapter;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+
+/**
+ * Reusable panel for Chapter input with validation support.
+ */
+public class ChapterInputPanel extends JPanel {
+
+    private final JTextField nameField;
+    private final JTextField parentLegionField;
+    private final JTextField worldField;
+
+    // Label references for resizing with base font size 25
+    private JLabel nameLabel;
+    private JLabel parentLegionLabel;
+    private JLabel worldLabel;
+
+    public ChapterInputPanel() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setOpaque(false);
+        setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 1),
+                LocaleManager.get("dialog.section.chapter"),
+                SwingConstants.LEFT,
+                SwingConstants.TOP,
+                new Font("Segoe UI", Font.BOLD, 12),
+                GuiUtils.PRIMARY_DARK
+        ));
+
+        // Create fields
+        nameField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.name", 45);
+        parentLegionField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.parentLegion", 45);
+        worldField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.world", 45);
+
+        // Create labels with base font size 25
+        nameLabel = createStyledLabel("dialog.field.chapter.name", 25);
+        parentLegionLabel = createStyledLabel("dialog.field.chapter.parentLegion", 25);
+        worldLabel = createStyledLabel("dialog.field.chapter.world", 25);
+
+        // Add labeled panels
+        add(createLabeledPanel(nameLabel, nameField));
+        add(Box.createVerticalStrut(10));
+        add(createLabeledPanel(parentLegionLabel, parentLegionField));
+        add(Box.createVerticalStrut(10));
+        add(createLabeledPanel(worldLabel, worldField));
+    }
+
+    /**
+     * Creates a styled label with base font size.
+     * @param localeKey locale key for label text
+     * @param baseFontSize base font size before scaling
+     * @return configured JLabel
+     */
+    private JLabel createStyledLabel(String localeKey, float baseFontSize) {
+        JLabel label = new JLabel(LocaleManager.get(localeKey), SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.BOLD, (int) baseFontSize));
+        label.setForeground(GuiUtils.PRIMARY_DARK);
+        return label;
+    }
+
+    /**
+     * Creates a panel combining a label and a field.
+     * @param label the label to display above the field
+     * @param field the input component
+     * @return JPanel with BorderLayout
+     */
+    private JPanel createLabeledPanel(JLabel label, JComponent field) {
+        JPanel panel = GuiUtils.createPanel(new BorderLayout(5, 5));
+        panel.setOpaque(false);
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(field, BorderLayout.CENTER);
+        return panel;
+    }
+
+    /**
+     * Populates fields from Chapter object.
+     */
+    public void setChapter(Chapter chapter) {
+        if (chapter != null) {
+            populateField(nameField, chapter.getName(), "dialog.field.chapter.name");
+            populateField(worldField, chapter.getWorld(), "dialog.field.chapter.world");
+
+            String parentLegion = chapter.getParentLegion();
+            String placeholder = LocaleManager.get("dialog.field.chapter.parentLegion");
+            if (parentLegion != null && !parentLegion.isEmpty()) {
+                parentLegionField.setText(parentLegion);
+                parentLegionField.setForeground(Color.BLACK);
+            } else {
+                parentLegionField.setText(placeholder);
+                parentLegionField.setForeground(Color.GRAY);
+            }
+        } else {
+            clearFields();
+        }
+    }
+
+    /**
+     * Creates Chapter from input, or null if name is empty.
+     * @throws javax.xml.bind.ValidationException if name provided but world missing
+     */
+    public Chapter getChapter() throws javax.xml.bind.ValidationException {
+        String name = nameField.getText().trim();
+        String namePlaceholder = LocaleManager.get("dialog.field.chapter.name");
+
+        if (name.isEmpty() || name.equals(namePlaceholder)) {
+            return null; // Chapter is optional
+        }
+
+        String world = worldField.getText().trim();
+        String worldPlaceholder = LocaleManager.get("dialog.field.chapter.world");
+
+        if (world.isEmpty() || world.equals(worldPlaceholder)) {
+            throw new javax.xml.bind.ValidationException(
+                    LocaleManager.get("validation.chapter.world.required"));
+        }
+
+        Chapter chapter = new Chapter();
+        chapter.setName(name);
+
+        String parentLegion = parentLegionField.getText().trim();
+        String parentLegionPlaceholder = LocaleManager.get("dialog.field.chapter.parentLegion");
+        chapter.setParentLegion(
+                parentLegion.isEmpty() || parentLegion.equals(parentLegionPlaceholder) ? null : parentLegion);
+
+        chapter.setWorld(world);
+        return chapter;
+    }
+
+    /**
+     * Scales fonts for responsive design.
+     * Labels scale from base 25, fields from base 14.
+     * @param scaleFactor the current scale factor
+     */
+    public void scaleFonts(double scaleFactor) {
+        // Scale labels (base 25)
+        Font labelFont = new Font("Segoe UI", Font.BOLD, (int)(25 * scaleFactor));
+        nameLabel.setFont(labelFont);
+        parentLegionLabel.setFont(labelFont);
+        worldLabel.setFont(labelFont);
+
+        // Scale fields (base 14)
+        Font fieldFont = new Font("Segoe UI", Font.PLAIN, (int)(14 * scaleFactor));
+        nameField.setFont(fieldFont);
+        parentLegionField.setFont(fieldFont);
+        worldField.setFont(fieldFont);
+    }
+
+    private void populateField(JTextField field, String value, String placeholderKey) {
+        String placeholder = LocaleManager.get(placeholderKey);
+        if (value != null && !value.isEmpty() && !value.equals(placeholder)) {
+            field.setText(value);
+            field.setForeground(Color.BLACK);
+        } else {
+            field.setText(placeholder);
+            field.setForeground(Color.GRAY);
+        }
+    }
+
+    private void clearFields() {
+        nameField.setText(LocaleManager.get("dialog.field.chapter.name"));
+        nameField.setForeground(Color.GRAY);
+        parentLegionField.setText(LocaleManager.get("dialog.field.chapter.parentLegion"));
+        parentLegionField.setForeground(Color.GRAY);
+        worldField.setText(LocaleManager.get("dialog.field.chapter.world"));
+        worldField.setForeground(Color.GRAY);
+    }
+
+    public JTextField getNameField() { return nameField; }
+    public JTextField getWorldField() { return worldField; }
+    public JTextField getParentLegionField() { return parentLegionField; }
+}

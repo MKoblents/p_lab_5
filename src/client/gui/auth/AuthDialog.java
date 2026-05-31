@@ -73,21 +73,7 @@ public class AuthDialog extends JDialog {
     }
 
     private void setupUI() {
-        JPanel bgPanel = new JPanel(new GridBagLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                int stripeWidth = (int)(30 * scaleFactor);
-                Color c1 = new Color(255, 230, 235);
-                Color c2 = new Color(255, 245, 248);
-                for (int x = 0; x < getWidth(); x += stripeWidth * 2) {
-                    g2.setColor(c1); g2.fillRect(x, 0, stripeWidth, getHeight());
-                    g2.setColor(c2); g2.fillRect(x + stripeWidth, 0, stripeWidth, getHeight());
-                }
-            }
-        };
+        JPanel bgPanel = GuiUtils.createStrippedPanel(new GridBagLayout(),550);
 
        JPanel formContainer = new JPanel(new GridBagLayout()) {
             @Override
@@ -114,7 +100,7 @@ public class AuthDialog extends JDialog {
         gbc.insets = new Insets(12, 15, 12, 15);
         gbc.gridx = 0;
 
-        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        JPanel headerPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
         headerPanel.setOpaque(false);
         titleLabel = new JLabel("SpaceMarine Client");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
@@ -142,7 +128,7 @@ public class AuthDialog extends JDialog {
         gbc.gridy++; formContainer.add(passwordField, gbc);
         gbc.gridy++; formContainer.add(confirmPasswordField, gbc);
 
-        JPanel btnPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+        JPanel btnPanel = GuiUtils.createPanel(new GridLayout(2, 1, 10, 10));
         btnPanel.setOpaque(false);
         btnPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
 
@@ -214,6 +200,9 @@ public class AuthDialog extends JDialog {
         });
 
         return field;
+    }
+    public Rectangle getFinalBounds() {
+        return getBounds();
     }
 
     private JPasswordField createRoundedPasswordField(String placeholderKey) {

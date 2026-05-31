@@ -29,9 +29,7 @@ public class SpaceMarineSelector extends JPanel {
         comboBox.setRenderer(new SpaceMarineListCellRenderer());
 
         // Styled empty label
-        emptyLabel = new JLabel("Коллекция пуста");
-        emptyLabel.setFont(new Font("Segoe UI", Font.ITALIC, 14));
-        emptyLabel.setForeground(GuiUtils.PRIMARY_DARK);
+        emptyLabel = GuiUtils.createLabel("Коллекция пуста", 14,false);
         emptyLabel.setVisible(false);
         emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
 

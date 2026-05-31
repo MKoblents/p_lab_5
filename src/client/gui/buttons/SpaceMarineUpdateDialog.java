@@ -14,70 +14,52 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.xml.bind.ValidationException;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
-public class SpaceMarineUpdateDialog extends JDialog {
+public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
     private SpaceMarineSelector selector;
     private JTextField nameField, xField, yField, healthField;
     private JComboBox<MeleeWeapon> meleeWeaponCombo;
     private JComboBox<Weapon> weaponCombo;
     private JComboBox<AstartesCategory> categoryCombo;
-    private JButton okButton, cancelButton;
-    private JLabel titleLabel;
-    private final SpaceMarineTable tableModel;
-    private  String currentUsername;
-    private JTextField chapterNameField, chapterParentLegionField, chapterWorldField;
 
+    private final SpaceMarineTable tableModel;
+    private ChapterInputPanel chapterPanel;
+    private final String currentUsername;
     private SpaceMarine result;
-    private final Dimension originalSize = new Dimension(550, 800);
+
+    // Label references for resizing
+    private JLabel nameLabel, xLabel, yLabel, healthLabel, meleeLabel, weaponLabel, categoryLabel;
 
     public SpaceMarineUpdateDialog(JFrame parent, SpaceMarineTable tableModel, String currentUsername) {
-        super(parent, true);
+        super(parent, "dialog.update.title", true, 800, 800);
         this.tableModel = tableModel;
         this.currentUsername = currentUsername;
-        initComponents();
-        layoutComponents();
-        applyTheme();
         refreshSelector(tableModel);
-        pack();
-        setSize(originalSize);
-        setLocationRelativeTo(parent);
-        setMinimumSize(new Dimension(450, 700));
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                resizeComponents();
-            }
-        });
     }
 
-    private void initComponents() {
-        titleLabel = new JLabel(LocaleManager.get("dialog.update.title"), SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
-
+    @Override
+    protected void initComponents() {
         selector = new SpaceMarineSelector();
 
-        nameField = createStyledTextField(LocaleManager.get("dialog.field.name"));
-        xField = createStyledTextField(LocaleManager.get("dialog.field.x"));
-        yField = createStyledTextField(LocaleManager.get("dialog.field.y"));
-        healthField = createStyledTextField(LocaleManager.get("dialog.field.health"));
+        nameField = GuiUtils.createStyledPlaceholderField("dialog.field.name", 45);
+        xField = GuiUtils.createStyledPlaceholderField("dialog.field.x", 45);
+        yField = GuiUtils.createStyledPlaceholderField("dialog.field.y", 45);
+        healthField = GuiUtils.createStyledPlaceholderField("dialog.field.health", 45);
 
-        meleeWeaponCombo = createStyledComboBox(MeleeWeapon.values());
-        weaponCombo = createStyledComboBox(Weapon.values());
-        categoryCombo = createStyledComboBox(AstartesCategory.values());
-        chapterNameField = createStyledTextField(LocaleManager.get("dialog.field.chapter.name"));
-        chapterParentLegionField = createStyledTextField(LocaleManager.get("dialog.field.chapter.parentLegion"));
-        chapterWorldField = createStyledTextField(LocaleManager.get("dialog.field.chapter.world"));
+        meleeWeaponCombo = GuiUtils.createStyledComboBox(MeleeWeapon.values(), 45);
+        weaponCombo = GuiUtils.createStyledComboBox(Weapon.values(), 45);
+        categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 45);
 
-        okButton = createStyledButton(LocaleManager.get("button.update"));
-        cancelButton = createStyledButton(LocaleManager.get("button.cancel"));
+        chapterPanel = new ChapterInputPanel();
 
-        okButton.addActionListener(e -> onOK());
-        cancelButton.addActionListener(e -> onCancel());
-
-        getRootPane().setDefaultButton(okButton);
+        // Create labels with base font size 25
+        nameLabel = createStyledLabel("dialog.field.name", 25);
+        xLabel = createStyledLabel("dialog.field.x", 25);
+        yLabel = createStyledLabel("dialog.field.y", 25);
+        healthLabel = createStyledLabel("dialog.field.health", 25);
+        meleeLabel = createStyledLabel("dialog.field.melee", 25);
+        weaponLabel = createStyledLabel("dialog.field.weapon", 25);
+        categoryLabel = createStyledLabel("dialog.field.category", 25);
 
         selector.getComboBox().addActionListener(e -> {
             SpaceMarine selected = selector.getSelectedSpaceMarine();
@@ -87,226 +69,79 @@ public class SpaceMarineUpdateDialog extends JDialog {
         });
     }
 
-    // Add this method to create the Chapter section panel
-    private JPanel createChapterSection() {
-        JPanel chapterPanel = new JPanel();
-        chapterPanel.setLayout(new BoxLayout(chapterPanel, BoxLayout.Y_AXIS));
-        chapterPanel.setOpaque(false);
-        chapterPanel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 1),
-                LocaleManager.get("dialog.section.chapter"),
-                SwingConstants.LEFT,
-                SwingConstants.TOP,
-                new Font("Segoe UI", Font.BOLD, 12),
-                GuiUtils.PRIMARY_DARK
-        ));
-
-        chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.name"), chapterNameField));
-        chapterPanel.add(Box.createVerticalStrut(10));
-        chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.parentLegion"), chapterParentLegionField));
-        chapterPanel.add(Box.createVerticalStrut(10));
-        chapterPanel.add(createLabeledField(LocaleManager.get("dialog.field.chapter.world"), chapterWorldField));
-
-        return chapterPanel;
-    }
-
-    private JTextField createStyledTextField(String placeholder) {
-        JTextField field = new JTextField(placeholder);
-        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setForeground(Color.GRAY);
-        field.setHorizontalAlignment(JTextField.CENTER);
-        field.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 2),
-                new EmptyBorder(10, 15, 10, 15)
-        ));
-        field.setBackground(Color.WHITE);
-        field.setPreferredSize(new Dimension(0, 45));
-        field.setMaximumSize(new Dimension(Short.MAX_VALUE, 45));
-
-        field.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (field.getText().equals(placeholder)) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                if (field.getText().isEmpty()) {
-                    field.setText(placeholder);
-                    field.setForeground(Color.GRAY);
-                }
-            }
-        });
-
-        return field;
-    }
-
-    private <T> JComboBox<T> createStyledComboBox(T[] items) {
-        JComboBox<T> combo = new JComboBox<>(items);
-        combo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        combo.setBackground(Color.WHITE);
-        combo.setForeground(Color.BLACK);
-        combo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 2),
-                new EmptyBorder(8, 10, 8, 10)
-        ));
-        combo.setPreferredSize(new Dimension(0, 45));
-        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, 45));
-        combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        combo.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setFont(new Font("Segoe UI", Font.PLAIN, 14));
-                if (isSelected) {
-                    setBackground(GuiUtils.PRIMARY_COLOR);
-                    setForeground(Color.WHITE);
-                } else {
-                    setBackground(Color.WHITE);
-                    setForeground(Color.BLACK);
-                }
-                setBorder(new EmptyBorder(5, 10, 5, 10));
-                return this;
-            }
-        });
-
-        return combo;
-    }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setBackground(GuiUtils.PRIMARY_COLOR);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setPreferredSize(new Dimension(150, 45));
-        button.setMaximumSize(new Dimension(150, 45));
-        button.setBorder(new EmptyBorder(10, 20, 10, 20));
-
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(GuiUtils.PRIMARY_DARK);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(GuiUtils.PRIMARY_COLOR);
-            }
-        });
-
-        return button;
-    }
-
-    private void layoutComponents() {
-        setLayout(new BorderLayout(15, 15));
-        getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
-
-        // Title Panel
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        titlePanel.setOpaque(false);
-        titlePanel.add(titleLabel, BorderLayout.CENTER);
-        add(titlePanel, BorderLayout.NORTH);
-
-        // Selector Panel
-        JPanel selectorPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    @Override
+    protected void layoutComponents() {
+        JPanel selectorPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER));
         selectorPanel.setOpaque(false);
         selectorPanel.add(selector);
         add(selectorPanel, BorderLayout.NORTH);
 
-        // Fields Panel
         JPanel fieldsPanel = new JPanel();
         fieldsPanel.setLayout(new BoxLayout(fieldsPanel, BoxLayout.Y_AXIS));
         fieldsPanel.setOpaque(false);
         fieldsPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.name"), nameField));
+        fieldsPanel.add(createLabeledPanel(nameLabel, nameField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.x"), xField));
+        fieldsPanel.add(createLabeledPanel(xLabel, xField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.y"), yField));
+        fieldsPanel.add(createLabeledPanel(yLabel, yField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledField(LocaleManager.get("dialog.field.health"), healthField));
+        fieldsPanel.add(createLabeledPanel(healthLabel, healthField));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.melee"), meleeWeaponCombo));
+        fieldsPanel.add(createLabeledPanel(meleeLabel, meleeWeaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.weapon"), weaponCombo));
+        fieldsPanel.add(createLabeledPanel(weaponLabel, weaponCombo));
         fieldsPanel.add(Box.createVerticalStrut(15));
-        fieldsPanel.add(createLabeledCombo(LocaleManager.get("dialog.field.category"), categoryCombo));
+        fieldsPanel.add(createLabeledPanel(categoryLabel, categoryCombo));
         fieldsPanel.add(Box.createVerticalStrut(20));
-        fieldsPanel.add(createChapterSection());
+        fieldsPanel.add(chapterPanel);
 
-        JScrollPane scrollPane = new JScrollPane(fieldsPanel);
-        scrollPane.setBorder(null);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        add(scrollPane, BorderLayout.CENTER);
+        add(createScrollableContentPanel(fieldsPanel), BorderLayout.CENTER);
 
-        // Buttons Panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        buttonPanel.setOpaque(false);
-        buttonPanel.add(okButton);
-        buttonPanel.add(cancelButton);
-        add(buttonPanel, BorderLayout.SOUTH);
+        createStandardButtons(this::onOK, this::onCancel);
     }
 
-    private JPanel createLabeledField(String label, JTextField field) {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
+    @Override
+    protected void resizeComponents() {
+        float scaledSize = scaleFontSize(14);
+        float scaledLabelSize = scaleFontSize(25);
+
+        // Resize labels
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        xLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        yLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        healthLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        meleeLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        weaponLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        categoryLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+
+        // Resize fields
+        nameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+        xField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+        yField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+        healthField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+
+        chapterPanel.scaleFonts(getWidth()/originalSize.width);
+
+        meleeWeaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+        weaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+        categoryCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+    }
+
+    private JLabel createStyledLabel(String localeKey, int baseFontSize) {
+        JLabel label = new JLabel(LocaleManager.get(localeKey), SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.BOLD, baseFontSize));
+        label.setForeground(GuiUtils.PRIMARY_DARK);
+        return label;
+    }
+
+    private JPanel createLabeledPanel(JLabel label, JComponent field) {
+        JPanel panel = GuiUtils.createPanel(new BorderLayout(5, 5));
         panel.setOpaque(false);
-
-        JLabel labelComponent = new JLabel(label, SwingConstants.CENTER);
-        labelComponent.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        labelComponent.setForeground(GuiUtils.PRIMARY_DARK);
-
-        panel.add(labelComponent, BorderLayout.NORTH);
+        panel.add(label, BorderLayout.NORTH);
         panel.add(field, BorderLayout.CENTER);
-
         return panel;
-    }
-
-    private JPanel createLabeledCombo(String label, JComboBox<?> combo) {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setOpaque(false);
-
-        JLabel labelComponent = new JLabel(label, SwingConstants.CENTER);
-        labelComponent.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        labelComponent.setForeground(GuiUtils.PRIMARY_DARK);
-
-        panel.add(labelComponent, BorderLayout.NORTH);
-        panel.add(combo, BorderLayout.CENTER);
-
-        return panel;
-    }
-
-    private void applyTheme() {
-        getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
-    }
-
-    private void resizeComponents() {
-        double scaleFactor = (double) getWidth() / originalSize.width;
-
-        float titleSize = (float) (24 * scaleFactor);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) titleSize));
-
-        float fieldSize = (float) (14 * scaleFactor);
-
-        nameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-        xField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-        yField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-        healthField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-
-        meleeWeaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-        weaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-        categoryCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-        chapterNameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-        chapterParentLegionField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-        chapterWorldField.setFont(new Font("Segoe UI", Font.PLAIN, (int) fieldSize));
-
-        okButton.setFont(new Font("Segoe UI", Font.BOLD, (int) fieldSize));
-        cancelButton.setFont(new Font("Segoe UI", Font.BOLD, (int) fieldSize));
     }
 
     public void refreshSelector(SpaceMarineTable tableModel) {
@@ -323,44 +158,29 @@ public class SpaceMarineUpdateDialog extends JDialog {
         meleeWeaponCombo.setSelectedItem(marine.getMeleeWeapon());
         weaponCombo.setSelectedItem(marine.getWeaponType());
         categoryCombo.setSelectedItem(marine.getCategory());
-        shared.models.Chapter chapter = marine.getChapter();
-        if (chapter != null) {
-            setFieldText(chapterNameField, chapter.getName(), LocaleManager.get("dialog.field.chapter.name"));
-            setFieldText(chapterWorldField, chapter.getWorld(), LocaleManager.get("dialog.field.chapter.world"));
 
-            String parentLegion = chapter.getParentLegion();
-            String placeholder = LocaleManager.get("dialog.field.chapter.parentLegion");
-            if (parentLegion != null && !parentLegion.isEmpty()) {
-                chapterParentLegionField.setText(parentLegion);
-                chapterParentLegionField.setForeground(Color.BLACK);
-            } else {
-                chapterParentLegionField.setText(placeholder);
-                chapterParentLegionField.setForeground(Color.GRAY);
-            }
-        } else {
-            // Clear chapter fields if no chapter
-            String namePlaceholder = LocaleManager.get("dialog.field.chapter.name");
-            String worldPlaceholder = LocaleManager.get("dialog.field.chapter.world");
-            String legionPlaceholder = LocaleManager.get("dialog.field.chapter.parentLegion");
-
-            chapterNameField.setText(namePlaceholder);
-            chapterNameField.setForeground(Color.GRAY);
-            chapterWorldField.setText(worldPlaceholder);
-            chapterWorldField.setForeground(Color.GRAY);
-            chapterParentLegionField.setText(legionPlaceholder);
-            chapterParentLegionField.setForeground(Color.GRAY);
-        }
+        chapterPanel.setChapter(marine.getChapter());
     }
 
     private void setFieldText(JTextField field, String value, String placeholder) {
-        if (!value.equals(placeholder)) {
+        if (value != null && !value.isEmpty() && !value.equals(placeholder)) {
             field.setText(value);
             field.setForeground(Color.BLACK);
+        } else {
+            field.setText(placeholder);
+            field.setForeground(Color.GRAY);
         }
     }
 
     private void onOK() {
         SpaceMarine selected = selector.getSelectedSpaceMarine();
+        if (selected == null) {
+            JOptionPane.showMessageDialog(this,
+                    LocaleManager.get("dialog.error.select"),
+                    LocaleManager.get("dialog.error.title"),
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         try {
             result = buildUpdatedSpaceMarine(selected.getId());
             if (result != null) {
@@ -428,33 +248,12 @@ public class SpaceMarineUpdateDialog extends JDialog {
         updated.setMeleeWeapon((MeleeWeapon) meleeWeaponCombo.getSelectedItem());
         updated.setWeaponType((Weapon) weaponCombo.getSelectedItem());
         updated.setCategory((AstartesCategory) categoryCombo.getSelectedItem());
-        String chapterName = chapterNameField.getText().trim();
-        String chapterNamePlaceholder = LocaleManager.get("dialog.field.chapter.name");
 
-        // Chapter is optional, but if name is provided, world is required
-        if (!chapterName.isEmpty() && !chapterName.equals(chapterNamePlaceholder)) {
-            String chapterWorld = chapterWorldField.getText().trim();
-            String chapterWorldPlaceholder = LocaleManager.get("dialog.field.chapter.world");
+        updated.setChapter(chapterPanel.getChapter());
 
-            if (chapterWorld.isEmpty() || chapterWorld.equals(chapterWorldPlaceholder)) {
-                throw new ValidationException(LocaleManager.get("validation.chapter.world.required"));
-            }
-
-            Chapter chapter = new Chapter();
-            chapter.setName(chapterName);
-
-            String parentLegion = chapterParentLegionField.getText().trim();
-            String parentLegionPlaceholder = LocaleManager.get("dialog.field.chapter.parentLegion");
-            chapter.setParentLegion(parentLegion.isEmpty() || parentLegion.equals(parentLegionPlaceholder) ? null : parentLegion);
-
-            chapter.setWorld(chapterWorld);
-            updated.setChapter(chapter);
-        } else {
-            // If chapter name is empty, set chapter to null
-            updated.setChapter(null);
-        }
         return updated;
     }
+
     public void setSelectedMarine(SpaceMarine marine) {
         if (marine == null) return;
         selector.refreshData(tableModel);
