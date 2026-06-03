@@ -1,5 +1,6 @@
 package client.gui.buttons;
 import client.command.SpawnClient;
+import client.gui.GuiClientApp;
 import client.gui.MainWindow;
 import client.gui.auth.AuthDialog;
 import client.gui.utils.GuiUtils;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class ButtonsHandler {
     private final ConnectionManager connection;
@@ -180,43 +183,36 @@ public class ButtonsHandler {
             }
         }
     }
-
+    private AsyncNetworkReader getReader() {
+        return GuiClientApp.getNetworkReader();
+    }
     public CommandResponse handleRequest(CommandRequest request, String successMessage) {
         try {
             String expectedRequestId = request.requestId();
+            AsyncNetworkReader reader = getReader(); // Берем свежий reader
+
+            // 1. Регистрируем ожидание ДО отправки
+            java.util.concurrent.CompletableFuture<CommandResponse> future = reader.registerRequest(expectedRequestId, 5000);
+
+            // 2. Отправляем
             connection.sendRequest(request);
-            CommandResponse response = null;
-            long startTime = System.currentTimeMillis();
-            long timeout = 10000;
-            System.out.println(request.requestId());
-            List<CommandResponse> loss = new ArrayList<>();
-            while (response == null && (System.currentTimeMillis() - startTime) < timeout) {
-                CommandResponse candidate = networkReader.getResponseQueue().poll();
-                if (candidate != null && expectedRequestId.equals(candidate.requestId())) {
-                    response = candidate;
-                    break;
-                }
-                if (candidate != null) {
-                    loss.add(candidate);
-                }
-                Thread.sleep(50);
+
+            // 3. Ждем ответ (блокирует только этот поток, не воруя ответы у других)
+            CommandResponse response = future.get(5, TimeUnit.SECONDS);
+
+            if (response.success()) {
+                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", successMessage, GuiUtils.MessageType.INFO);
+            } else {
+                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Error: " + response.message(), GuiUtils.MessageType.ERROR);
             }
-            if (!loss.isEmpty()){
-                networkReader.getResponseQueue().addAll(loss);
-                Thread.sleep(10);
-            }
-            if (response == null) {
-                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Timeout waiting for response", GuiUtils.MessageType.ERROR);
-                return null;
-            }
-            if (response.success()) GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", successMessage, GuiUtils.MessageType.INFO);
-            else GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Error: " + response.message(), GuiUtils.MessageType.ERROR);
             return response;
+
+        } catch (TimeoutException e) {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Timeout waiting for response", GuiUtils.MessageType.ERROR);
         } catch (IOException ex) {
             GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Network error: " + ex.getMessage(), GuiUtils.MessageType.ERROR);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Request interrupted", GuiUtils.MessageType.ERROR);
+        } catch (Exception e) {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Request failed: " + e.getMessage(), GuiUtils.MessageType.ERROR);
         }
         return null;
     }

@@ -1,5 +1,6 @@
 package client.network;
 
+import client.gui.GuiClientApp; // <-- Импортируем GuiClientApp
 import client.gui.MainWindow;
 import client.gui.window.SpaceMarineCanvas;
 import client.gui.window.SpaceMarineTable;
@@ -10,9 +11,11 @@ import shared.models.SpaceMarine;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class PollingService {
     private final ConnectionManager connection;
@@ -20,15 +23,13 @@ public class PollingService {
     private final SpaceMarineCanvas canvasModel;
     private final MainWindow mainWindow;
     private ScheduledExecutorService scheduler;
-    private final long POLL_INTERVAL_MS = 5000;
-    private AsyncNetworkReader networkReader;
+    private final long POLL_INTERVAL_MS = 2000;
 
-    public PollingService(ConnectionManager connection, SpaceMarineTable tableModel, SpaceMarineCanvas canvasModel, MainWindow mainWindow, AsyncNetworkReader networkReader) {
+    public PollingService(ConnectionManager connection, SpaceMarineTable tableModel, SpaceMarineCanvas canvasModel, MainWindow mainWindow) {
         this.connection = connection;
         this.tableModel = tableModel;
         this.mainWindow = mainWindow;
         this.canvasModel = canvasModel;
-        this.networkReader = networkReader;
     }
 
     public void start() {
@@ -40,28 +41,25 @@ public class PollingService {
         scheduler.scheduleAtFixedRate(this::pollServer, 0, POLL_INTERVAL_MS, TimeUnit.MILLISECONDS);
     }
 
+    // ✅ ДОБАВЛЕНО: Всегда получаем АКТУАЛЬНЫЙ reader
+    private AsyncNetworkReader getReader() {
+        return GuiClientApp.getNetworkReader();
+    }
+
+    // ✅ ПОЛНОСТЬЮ ПЕРЕПИСАННЫЙ МЕТОД С CompletableFuture
     private void pollServer() {
         try {
             CommandRequest request = RequestsFactory.createSimple("show");
-            connection.sendRequest(request);
-            String expectedRequestId = request.requestId();
-            long startTime = System.currentTimeMillis();
-            long timeout = 5000; // Slightly less than POLL_INTERVAL_MS
+            AsyncNetworkReader reader = getReader(); // Берем свежий reader
 
-            CommandResponse response = null;
-            while (response == null && (System.currentTimeMillis() - startTime) < timeout) {
-                CommandResponse candidate = networkReader.getResponseQueue().poll();
-                if (candidate != null) {
-                    if (expectedRequestId.equals(candidate.requestId())) {
-                        response = candidate;
-                    } else {
-                        networkReader.getResponseQueue().add(candidate);
-                        Thread.sleep(10); // Give other thread a chance
-                    }
-                } else {
-                    Thread.sleep(50);
-                }
-            }
+            // 1. Регистрируем ожидание
+            CompletableFuture<CommandResponse> future = reader.registerRequest(request.requestId(), 1500);
+
+            // 2. Отправляем
+            connection.sendRequest(request);
+
+            // 3. Ждем с коротким таймаутом
+            CommandResponse response = future.get(1500, TimeUnit.MILLISECONDS);
 
             if (response != null && response.success() && response.result() instanceof List<?>) {
                 List<SpaceMarine> marines = (List<SpaceMarine>) response.result();
@@ -71,8 +69,8 @@ public class PollingService {
                     mainWindow.setStatus("Синхронизировано: " + marines.size() + " объектов");
                 });
             }
-
-
+        } catch (TimeoutException e) {
+            // Ожидаемо: сервер может тормозить или отвечать на другие запросы. Просто пропускаем цикл.
         } catch (Exception e) {
             System.err.println("Ошибка polling: " + e.getMessage());
         }
@@ -82,9 +80,5 @@ public class PollingService {
         if (scheduler != null && !scheduler.isShutdown()) {
             scheduler.shutdownNow();
         }
-    }
-
-    public void setNetworkReader(AsyncNetworkReader networkReader) {
-        this.networkReader = networkReader;
     }
 }

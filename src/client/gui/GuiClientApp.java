@@ -102,7 +102,7 @@ public class GuiClientApp {
 //        };
 //        heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask, 0, 5, TimeUnit.SECONDS);
 
-        polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow.getCanvasModel(), mainWindow, networkReader);
+        polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow.getCanvasModel(), mainWindow);
         System.out.println("polling started");
         polling.start();
     }
@@ -165,7 +165,7 @@ public class GuiClientApp {
                 restartNetworkReader();
 
                 if (polling != null) {
-                    polling.setNetworkReader(networkReader);
+//                    polling.setNetworkReader(networkReader);
                     polling.start();
                 }
                 return true;
@@ -180,5 +180,9 @@ public class GuiClientApp {
             connection.disconnect();
             return false;
         }
+    }
+
+    public static AsyncNetworkReader getNetworkReader() {
+        return  networkReader;
     }
 }
