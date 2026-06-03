@@ -15,7 +15,7 @@ public class AsyncNetworkReader implements Runnable {
     private final Consumer<DisconnectReason> onDisconnect;
     private static final Logger logger = LoggerFactory.getLogger(AsyncNetworkReader.class);
     private SocketChannel channel;
-    private final ConcurrentLinkedQueue<CommandResponse> responseQueue = new ConcurrentLinkedQueue<>();
+    private volatile ConcurrentLinkedQueue<CommandResponse> responseQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<CommandRequest> forwardQueue = new ConcurrentLinkedQueue<>();
     private volatile boolean running = true;
 

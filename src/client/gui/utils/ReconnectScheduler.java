@@ -1,6 +1,7 @@
 package client.gui.utils;
 
 import client.config.ClientConfig;
+import client.gui.GuiClientApp;
 import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.gui.MainWindow;
@@ -13,7 +14,7 @@ public class ReconnectScheduler {
     private final ScheduledExecutorService scheduler;
     private final ConnectionManager connection;
     private final ClientConfig config;
-    private final AsyncNetworkReader reader;
+    private AsyncNetworkReader reader;
 
     public ReconnectScheduler(ConnectionManager connection, ClientConfig config, AsyncNetworkReader reader) {
         this.connection = connection;
@@ -28,7 +29,7 @@ public class ReconnectScheduler {
     }
 
     public void start() {
-        scheduler.scheduleAtFixedRate(this::attemptConnection, 0, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::attemptConnection, 0, 2, TimeUnit.SECONDS);
     }
 
     public void stop() {
@@ -37,15 +38,13 @@ public class ReconnectScheduler {
 
     public void attemptConnection() {
         if (connection.isConnected()) {
+            System.out.println("connected");
             return;
         }
 
         try {
-            boolean success = connection.connect(config.getHost(), config.getPort());
-            if (success) {
-                reader.setChannel(connection.getSocketChannel());
+            GuiClientApp.attemptReconnect();
 
-            }
         } catch (Exception e) {
         }
     }

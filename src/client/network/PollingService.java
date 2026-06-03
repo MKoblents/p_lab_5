@@ -20,8 +20,8 @@ public class PollingService {
     private final SpaceMarineCanvas canvasModel;
     private final MainWindow mainWindow;
     private ScheduledExecutorService scheduler;
-    private final long POLL_INTERVAL_MS = 2000;
-    private final AsyncNetworkReader networkReader;
+    private final long POLL_INTERVAL_MS = 5000;
+    private AsyncNetworkReader networkReader;
 
     public PollingService(ConnectionManager connection, SpaceMarineTable tableModel, SpaceMarineCanvas canvasModel, MainWindow mainWindow, AsyncNetworkReader networkReader) {
         this.connection = connection;
@@ -44,7 +44,24 @@ public class PollingService {
         try {
             CommandRequest request = RequestsFactory.createSimple("show");
             connection.sendRequest(request);
-            CommandResponse response = networkReader.getResponseQueue().poll();
+            String expectedRequestId = request.requestId();
+            long startTime = System.currentTimeMillis();
+            long timeout = 5000; // Slightly less than POLL_INTERVAL_MS
+
+            CommandResponse response = null;
+            while (response == null && (System.currentTimeMillis() - startTime) < timeout) {
+                CommandResponse candidate = networkReader.getResponseQueue().poll();
+                if (candidate != null) {
+                    if (expectedRequestId.equals(candidate.requestId())) {
+                        response = candidate;
+                    } else {
+                        networkReader.getResponseQueue().add(candidate);
+                        Thread.sleep(10); // Give other thread a chance
+                    }
+                } else {
+                    Thread.sleep(50);
+                }
+            }
 
             if (response != null && response.success() && response.result() instanceof List<?>) {
                 List<SpaceMarine> marines = (List<SpaceMarine>) response.result();
@@ -54,6 +71,8 @@ public class PollingService {
                     mainWindow.setStatus("Синхронизировано: " + marines.size() + " объектов");
                 });
             }
+
+
         } catch (Exception e) {
             System.err.println("Ошибка polling: " + e.getMessage());
         }
@@ -63,5 +82,9 @@ public class PollingService {
         if (scheduler != null && !scheduler.isShutdown()) {
             scheduler.shutdownNow();
         }
+    }
+
+    public void setNetworkReader(AsyncNetworkReader networkReader) {
+        this.networkReader = networkReader;
     }
 }

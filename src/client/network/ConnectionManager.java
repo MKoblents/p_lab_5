@@ -178,7 +178,7 @@ public class ConnectionManager {
         }
     }
     public boolean isConnected() {
-        return connected;
+        return connected && socketChannel != null && socketChannel.isOpen();
     }
 
     public void setConnected(boolean connected) {

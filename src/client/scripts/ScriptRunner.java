@@ -165,6 +165,7 @@ public class ScriptRunner {
                     logger.debug("Request build failed: {}", commandName);
                     continue;
                 }
+                System.out.println(request);
                 connectionManager.sendRequest(request);
                 CommandResponse response = connectionManager.readResponse();
                 if (response != null && response.success()) {

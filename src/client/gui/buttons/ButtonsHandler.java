@@ -105,16 +105,11 @@ public class ButtonsHandler {
 
     private void showSimple(String commandKey) {
         CommandRequest request = RequestsFactory.createSimple(commandKey);
-        try {
-            connection.sendRequest(request);
-            CommandResponse response = connection.readResponse();
-            if (response != null && response.result() instanceof String result) {
-                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", result, GuiUtils.MessageType.INFO);
-            } else {
-                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Info", "Command executed successfully.", GuiUtils.MessageType.INFO);
-            }
-        } catch (IOException ex) {
-            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Network error: " + ex.getMessage(), GuiUtils.MessageType.ERROR);
+        CommandResponse response = handleRequest(request, "horrreeeeyyy");
+        if (response != null && response.result() instanceof String result) {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", result, GuiUtils.MessageType.INFO);
+        } else {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Info", "Command executed successfully.", GuiUtils.MessageType.INFO);
         }
     }
 
@@ -177,6 +172,7 @@ public class ButtonsHandler {
             ForwardCommandObject finalFco = new ForwardCommandObject(parentId, fco.childId(), fco.commandKey());
             CommandRequest request = new CommandRequest("forward_command", finalFco, UUID.randomUUID().toString().substring(0, 8), parentId, mainWindow.getContext().getUserInfo());
             try {
+                System.out.println(request);
                 connection.sendRequest(request);
                 GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", "Command forwarded to " + finalFco.childId(), GuiUtils.MessageType.INFO);
             } catch (IOException ex) {
@@ -191,14 +187,23 @@ public class ButtonsHandler {
             connection.sendRequest(request);
             CommandResponse response = null;
             long startTime = System.currentTimeMillis();
-            long timeout = 5000;
+            long timeout = 10000;
+            System.out.println(request.requestId());
+            List<CommandResponse> loss = new ArrayList<>();
             while (response == null && (System.currentTimeMillis() - startTime) < timeout) {
                 CommandResponse candidate = networkReader.getResponseQueue().poll();
                 if (candidate != null && expectedRequestId.equals(candidate.requestId())) {
                     response = candidate;
                     break;
                 }
+                if (candidate != null) {
+                    loss.add(candidate);
+                }
                 Thread.sleep(50);
+            }
+            if (!loss.isEmpty()){
+                networkReader.getResponseQueue().addAll(loss);
+                Thread.sleep(10);
             }
             if (response == null) {
                 GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Timeout waiting for response", GuiUtils.MessageType.ERROR);
