@@ -61,7 +61,6 @@ public class Server {
 
     private static class ClientConnection {
         final SocketChannel channel;
-        public Object writeLock;
         ConnectionState state = ConnectionState.READ_LENGTH;
         final ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
         ByteBuffer payloadBuffer;
@@ -446,12 +445,19 @@ public class Server {
                     buf.putInt(data.length);
                     buf.put(data);
                     buf.flip();
+
+                    // Канал неблокирующий, поэтому добавляем sleep, чтобы не крутить процессор впустую
                     while (buf.hasRemaining()) {
-                        targetConn.channel.write(buf);
+                        int written = targetConn.channel.write(buf);
+                        if (written == 0) {
+                            Thread.sleep(10);
+                        }
                     }
                 }
             } catch (IOException e) {
                 logger.debug("Failed to send termination to {}: {}", targetId, e.getMessage());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
             if (targetKey != null && targetKey.isValid()) {
                 try { if (targetConn != null && targetConn.channel.isOpen()) targetConn.channel.close(); }
@@ -478,42 +484,22 @@ public class Server {
             String parentId = parentOpt.get();
             logger.info("Attempting to notify parent {} about child {} disconnect", parentId, childId);
 
-            // Find parent's ClientConnection
-            for (SelectionKey key : selector.keys()) {
-                if (!key.isValid()) continue;
+            // Create notification command
+            CommandRequest notification = new CommandRequest(
+                    "child_disconnected",
+                    childId,
+                    UUID.randomUUID().toString(),
+                    "SERVER",
+                    null
+            );
 
-                if (key.attachment() instanceof ClientConnection c && parentId.equals(c.clientId)) {
-                    // Create notification command
-                    CommandRequest notification = new CommandRequest(
-                            "child_disconnected",
-                            childId,
-                            UUID.randomUUID().toString(),
-                            "SERVER",
-                            null
-                    );
+            // ✅ Добавляем в очередь родителя вместо ручной блокирующей записи
+            clientRegistry.getPendingCommandQueue().addPendingCommand(parentId, notification);
 
-                    try {
-                        byte[] data = SerializationUtil.serialize(notification);
-                        ByteBuffer buf = ByteBuffer.allocate(4 + data.length);
-                        buf.putInt(data.length);
-                        buf.put(data);
-                        buf.flip();
+            schedulePendingWrite(parentId);
 
-                        // Synchronized write to avoid conflicts with other writes
-                        synchronized (c.writeLock) {
-                            while (buf.hasRemaining()) {
-                                c.channel.write(buf);
-                            }
-                        }
+            logger.info("Successfully queued notification for parent {} about child {}", parentId, childId);
 
-                        logger.info("Successfully notified parent {} about child {} disconnect", parentId, childId);
-                    } catch (IOException e) {
-                        logger.error("Failed to notify parent {} about child {} disconnect: {}",
-                                parentId, childId, e.getMessage());
-                    }
-                    break;
-                }
-            }
         } catch (Exception e) {
             logger.error("Error in notifyParentOfChildDisconnect for child {}: {}", childId, e.getMessage(), e);
         }
