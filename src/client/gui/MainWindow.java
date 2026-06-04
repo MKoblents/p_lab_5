@@ -388,24 +388,34 @@ public class MainWindow {
             while (true) {
                 try {
                     CommandRequest fwd = networkReader.getForwardQueue().poll();
-                    System.out.println("command from parent: "+fwd);
-                    if (fwd != null && "forward_command".equals(fwd.commandType()) && fwd.args() instanceof ForwardCommandObject fco) {
-                        SwingUtilities.invokeLater(() -> executeForwardedCommand(fco.commandKey()));
-                    }
-                    else if ("child_disconnected".equals(fwd.commandType())) {
-                        System.out.println(fwd);
-                        String disconnectedChildId = (String) fwd.args();
-                        SwingUtilities.invokeLater(() -> {
-                            if (context != null) {
-                                boolean removed = context.removeChild(disconnectedChildId);
-                                if (removed) {
-                                    setStatus("Дочерний клиент " + disconnectedChildId + " отключился");
-                                    System.out.println("Removed child " + disconnectedChildId + " from context");
+                    if (fwd != null) {
+                        System.out.println("[FORWARD LISTENER] Received: type=" + fwd.commandType() + ", args=" + fwd.args());
+
+                        if ("forward_command".equals(fwd.commandType()) && fwd.args() instanceof ForwardCommandObject fco) {
+                            System.out.println("[FORWARD LISTENER] Executing forwarded command: " + fco.commandKey());
+                            SwingUtilities.invokeLater(() -> executeForwardedCommand(fco.commandKey()));
+                        }
+                        else if ("child_disconnected".equals(fwd.commandType())) {
+                            String disconnectedChildId = (String) fwd.args();
+                            System.out.println("[FORWARD LISTENER] Child disconnected: " + disconnectedChildId);
+
+                            SwingUtilities.invokeLater(() -> {
+                                if (context != null) {
+                                    boolean removed = context.removeChild(disconnectedChildId);
+                                    if (removed) {
+                                        setStatus("Дочерний клиент " + disconnectedChildId + " отключился");
+                                        System.out.println("Removed child " + disconnectedChildId + " from context");
+
+                                        // ✅ Kill the local OS process as well
+                                        if (processManager != null) {
+                                            processManager.killChild(disconnectedChildId);
+                                        }
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
-                    Thread.sleep(500);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
             }
         }, "forward-command-listener").start();
