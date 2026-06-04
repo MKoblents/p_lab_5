@@ -40,6 +40,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -218,10 +219,12 @@ public class Server {
             }catch (java.io.EOFException e) {
                 String cid = key.attachment() instanceof ClientConnection c ? c.clientId : "UNKNOWN";
                 logger.info("Client {} disconnected gracefully (EOF/Ctrl+C)", cid);
+                notifyParentOfChildDisconnect(cid);
                 cascadeDisconnect(cid, DisconnectReason.USER_REQUEST.name());
             } catch (Exception e) {
                     String cid = key.attachment() instanceof ClientConnection c ? c.clientId : "UNKNOWN";
                     logger.error("Key processing error for {}: {}", cid, e.getMessage(), e);
+                    notifyParentOfChildDisconnect(cid);
                     cascadeDisconnect(cid, "NETWORK_ERROR");
             }
         }
@@ -324,7 +327,7 @@ public class Server {
             if (!conn.handshakeComplete) { logger.warn("Data before handshake, ignoring."); return; }
 
             if (obj instanceof CommandRequest req) {
-                System.out.println(req);
+                System.out.println(req.commandType());
                 CommandResponse resp = invoker.runCommand(req);
                 writePool.submit(() -> {
                     try {
@@ -416,6 +419,7 @@ public class Server {
 
     private static void cascadeDisconnect(String targetId, String reason) {
         try {
+            notifyParentOfChildDisconnect(targetId);
             Set<String> children = clientRegistry.getChildren(targetId);
             if (children != null) {
                 for (String childId : new ArrayList<>(children)) {
@@ -441,12 +445,19 @@ public class Server {
                     buf.putInt(data.length);
                     buf.put(data);
                     buf.flip();
+
+                    // Канал неблокирующий, поэтому добавляем sleep, чтобы не крутить процессор впустую
                     while (buf.hasRemaining()) {
-                        targetConn.channel.write(buf);
+                        int written = targetConn.channel.write(buf);
+                        if (written == 0) {
+                            Thread.sleep(10);
+                        }
                     }
                 }
             } catch (IOException e) {
                 logger.debug("Failed to send termination to {}: {}", targetId, e.getMessage());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
             if (targetKey != null && targetKey.isValid()) {
                 try { if (targetConn != null && targetConn.channel.isOpen()) targetConn.channel.close(); }
@@ -455,10 +466,42 @@ public class Server {
             }
             try { clientRegistry.unregister(targetId); }
             catch (Exception e) { logger.debug("Registry cleanup warning for {}: {}", targetId, e.getMessage()); }
-
+            notifyParentOfChildDisconnect(targetId);
+            logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             logger.info("Client {} disconnected. Reason: {}", targetId, reason);
         } catch (Exception e) {
             logger.error("Cascade disconnect failed for {}: {}", targetId, e.getMessage(), e);
+        }
+    }
+    private static void notifyParentOfChildDisconnect(String childId) {
+        try {
+            var parentOpt = clientRegistry.findParentByChild(childId);
+            if (parentOpt.isEmpty()) {
+                logger.debug("Client {} has no parent, skipping notification", childId);
+                return;
+            }
+
+            String parentId = parentOpt.get();
+            logger.info("Attempting to notify parent {} about child {} disconnect", parentId, childId);
+
+            // Create notification command
+            CommandRequest notification = new CommandRequest(
+                    "child_disconnected",
+                    childId,
+                    UUID.randomUUID().toString(),
+                    "SERVER",
+                    null
+            );
+
+            // ✅ Добавляем в очередь родителя вместо ручной блокирующей записи
+            clientRegistry.getPendingCommandQueue().addPendingCommand(parentId, notification);
+
+            schedulePendingWrite(parentId);
+
+            logger.info("Successfully queued notification for parent {} about child {}", parentId, childId);
+
+        } catch (Exception e) {
+            logger.error("Error in notifyParentOfChildDisconnect for child {}: {}", childId, e.getMessage(), e);
         }
     }
 }

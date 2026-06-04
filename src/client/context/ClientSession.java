@@ -186,7 +186,8 @@ public class ClientSession implements AutoCloseable {
 
     private void processResponsesLoop() {
         while (running) {
-            CommandResponse response = networkReader.getResponseQueue().poll();
+            //TODO!!!
+            CommandResponse response = null;//networkReader.getResponseQueue().poll();
             if (response != null) {
                 String message = response.message();
                 if (message != null) {

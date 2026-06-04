@@ -29,6 +29,7 @@ public class ClientProcessManager {
      */
     public boolean spawnChild(String childClientId, String parentClientId) {
         logger.info("Spawning child client: {} (parent: {})", childClientId, parentClientId);
+        System.out.println("in process manager: "+parentClientId);
 
         try {
             List<String> command = new ArrayList<>();
@@ -43,6 +44,7 @@ public class ClientProcessManager {
             command.add(childClientId);
             command.add("--parent-id");
             command.add(parentClientId);
+            System.out.println(command);
 
             ProcessBuilder pb = new ProcessBuilder(command);
             pb.redirectErrorStream(true);

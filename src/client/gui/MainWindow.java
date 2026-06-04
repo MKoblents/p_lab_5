@@ -40,7 +40,7 @@ public class MainWindow {
     private CardLayout cardLayout;
     private JButton switchButton;
     private ConnectionManager connection;
-    private JButton btnAdd, btnRemove, btnExecuteScript, btnRemoveAll, btnShowMine;
+    private JButton btnAdd, btnRemove, btnExecuteScript, btnRemoveAll, btnShowMine, btnShuffle;
     private JButton btnUpdate, btnInfo, btnSpawnClient, btnKillClient, btnHelp, btnExit;
     private final AsyncNetworkReader networkReader;
     private Dimension originalSize;
@@ -361,6 +361,7 @@ public class MainWindow {
         panel.add(createStyledButton("btn.execute_script", buttonWidth, buttonHeight, () -> System.out.println("Script clicked")));
         panel.add(createStyledButton("btn.remove_all", buttonWidth, buttonHeight, () -> System.out.println("Clear clicked")));
         panel.add(createStyledButton("btn.show_mine", buttonWidth, buttonHeight, () -> System.out.println("Show mine clicked")));
+        panel.add(createStyledButton("btn.shuffle", buttonWidth, buttonHeight, () -> System.out.println("Shuffle clicked")));
         panel.add(createStyledButton("btn.update", buttonWidth, buttonHeight, () -> System.out.println("Update clicked")));
         panel.add(createStyledButton("btn.info", buttonWidth, buttonHeight, () -> System.out.println("Info clicked")));
         panel.add(createStyledButton("btn.spawn_client", buttonWidth, buttonHeight, () -> System.out.println("Spawn clicked")));
@@ -382,15 +383,39 @@ public class MainWindow {
         return panel;
     }
 
-    private void startForwardCommandListener() {
+    public void startForwardCommandListener() {
         new Thread(() -> {
             while (true) {
                 try {
                     CommandRequest fwd = networkReader.getForwardQueue().poll();
-                    if (fwd != null && "forward_command".equals(fwd.commandType()) && fwd.args() instanceof ForwardCommandObject fco) {
-                        SwingUtilities.invokeLater(() -> executeForwardedCommand(fco.commandKey()));
+                    if (fwd != null) {
+                        System.out.println("[FORWARD LISTENER] Received: type=" + fwd.commandType() + ", args=" + fwd.args());
+
+                        if ("forward_command".equals(fwd.commandType()) && fwd.args() instanceof ForwardCommandObject fco) {
+                            System.out.println("[FORWARD LISTENER] Executing forwarded command: " + fco.commandKey());
+                            SwingUtilities.invokeLater(() -> executeForwardedCommand(fco.commandKey()));
+                        }
+                        else if ("child_disconnected".equals(fwd.commandType())) {
+                            String disconnectedChildId = (String) fwd.args();
+                            System.out.println("[FORWARD LISTENER] Child disconnected: " + disconnectedChildId);
+
+                            SwingUtilities.invokeLater(() -> {
+                                if (context != null) {
+                                    boolean removed = context.removeChild(disconnectedChildId);
+                                    if (removed) {
+                                        setStatus("Дочерний клиент " + disconnectedChildId + " отключился");
+                                        System.out.println("Removed child " + disconnectedChildId + " from context");
+
+                                        // ✅ Kill the local OS process as well
+                                        if (processManager != null) {
+                                            processManager.killChild(disconnectedChildId);
+                                        }
+                                    }
+                                }
+                            });
+                        }
                     }
-                    Thread.sleep(50);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
             }
         }, "forward-command-listener").start();
@@ -432,6 +457,7 @@ public class MainWindow {
             case "btn.kill_client" -> btnKillClient = button;
             case "btn.help" -> btnHelp = button;
             case "btn.exit" -> btnExit = button;
+            case "btn.shuffle" -> btnShuffle = button;
         }
         return buttonPanel;
     }

@@ -1,5 +1,6 @@
 package client.gui.buttons;
 import client.command.SpawnClient;
+import client.gui.GuiClientApp;
 import client.gui.MainWindow;
 import client.gui.auth.AuthDialog;
 import client.gui.utils.GuiUtils;
@@ -24,8 +25,11 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class ButtonsHandler {
     private final ConnectionManager connection;
@@ -40,6 +44,39 @@ public class ButtonsHandler {
         this.networkReader = mainWindow.getNetworkReader();
         this.processManager = new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort(), null);
     }
+    public void handleShowMine() {
+        String currentOwner = mainWindow.getContext().getUserInfo().name();
+
+        // Берем текущий полный список из модели таблицы
+        List<SpaceMarine> allMarines = mainWindow.getTableModel().getAllMarines();
+
+        // Фильтруем на клиенте
+        List<SpaceMarine> myMarines = allMarines.stream()
+                .filter(marine -> currentOwner.equals(marine.getOwner()))
+                .toList();
+
+        // Обновляем таблицу и канвас отфильтрованными данными
+        mainWindow.updateAllViews(myMarines);
+        mainWindow.setStatus("Показаны только ваши объекты: " + myMarines.size());
+    }
+
+    /**
+     * Перемешивает текущий список объектов на клиенте.
+     */
+    public void handleShuffle() {
+        // Берем текущий список и создаем его изменяемую копию
+        // (чтобы не ломать внутренние списки модели, если они unmodifiable)
+        List<SpaceMarine> marines = new ArrayList<>(mainWindow.getTableModel().getAllMarines());
+
+        // Перемешиваем список с помощью стандартной утилиты Java
+        Collections.shuffle(marines);
+
+        // Обновляем таблицу и канвас перемешанными данными
+        mainWindow.updateAllViews(marines);
+        mainWindow.setStatus("Коллекция перемешана (локально)");
+    }
+
+
 
     public void handleAdd() {
         SpaceMarineInputDialog dialog = new SpaceMarineInputDialog(mainWindow.getFrame());
@@ -105,16 +142,11 @@ public class ButtonsHandler {
 
     private void showSimple(String commandKey) {
         CommandRequest request = RequestsFactory.createSimple(commandKey);
-        try {
-            connection.sendRequest(request);
-            CommandResponse response = connection.readResponse();
-            if (response != null && response.result() instanceof String result) {
-                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", result, GuiUtils.MessageType.INFO);
-            } else {
-                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Info", "Command executed successfully.", GuiUtils.MessageType.INFO);
-            }
-        } catch (IOException ex) {
-            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Network error: " + ex.getMessage(), GuiUtils.MessageType.ERROR);
+        CommandResponse response = handleRequest(request, "horrreeeeyyy");
+        if (response != null && response.result() instanceof String result) {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", result, GuiUtils.MessageType.INFO);
+        } else {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Info", "Command executed successfully.", GuiUtils.MessageType.INFO);
         }
     }
 
@@ -122,6 +154,7 @@ public class ButtonsHandler {
         if (spawnClient == null) spawnClient = new SpawnClient(mainWindow.getContext(), processManager);
         CommandRequest request = spawnClient.execute(SideFlag.SELF);
         CommandResponse response = handleRequest(request, "New window opened!");
+        System.out.println("in handleSpawn: "+ response);
         if (response != null) spawnClient.handleResponse(response, mainWindow.getContext());
     }
 
@@ -177,6 +210,7 @@ public class ButtonsHandler {
             ForwardCommandObject finalFco = new ForwardCommandObject(parentId, fco.childId(), fco.commandKey());
             CommandRequest request = new CommandRequest("forward_command", finalFco, UUID.randomUUID().toString().substring(0, 8), parentId, mainWindow.getContext().getUserInfo());
             try {
+                System.out.println(request);
                 connection.sendRequest(request);
                 GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", "Command forwarded to " + finalFco.childId(), GuiUtils.MessageType.INFO);
             } catch (IOException ex) {
@@ -184,34 +218,36 @@ public class ButtonsHandler {
             }
         }
     }
-
+    private AsyncNetworkReader getReader() {
+        return GuiClientApp.getNetworkReader();
+    }
     public CommandResponse handleRequest(CommandRequest request, String successMessage) {
         try {
             String expectedRequestId = request.requestId();
+            AsyncNetworkReader reader = getReader(); // Берем свежий reader
+
+            // 1. Регистрируем ожидание ДО отправки
+            java.util.concurrent.CompletableFuture<CommandResponse> future = reader.registerRequest(expectedRequestId, 5000);
+
+            // 2. Отправляем
             connection.sendRequest(request);
-            CommandResponse response = null;
-            long startTime = System.currentTimeMillis();
-            long timeout = 5000;
-            while (response == null && (System.currentTimeMillis() - startTime) < timeout) {
-                CommandResponse candidate = networkReader.getResponseQueue().poll();
-                if (candidate != null && expectedRequestId.equals(candidate.requestId())) {
-                    response = candidate;
-                    break;
-                }
-                Thread.sleep(50);
+
+            // 3. Ждем ответ (блокирует только этот поток, не воруя ответы у других)
+            CommandResponse response = future.get(5, TimeUnit.SECONDS);
+
+            if (response.success()) {
+                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", successMessage, GuiUtils.MessageType.INFO);
+            } else {
+                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Error: " + response.message(), GuiUtils.MessageType.ERROR);
             }
-            if (response == null) {
-                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Timeout waiting for response", GuiUtils.MessageType.ERROR);
-                return null;
-            }
-            if (response.success()) GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", successMessage, GuiUtils.MessageType.INFO);
-            else GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Error: " + response.message(), GuiUtils.MessageType.ERROR);
             return response;
+
+        } catch (TimeoutException e) {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Timeout waiting for response", GuiUtils.MessageType.ERROR);
         } catch (IOException ex) {
             GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Network error: " + ex.getMessage(), GuiUtils.MessageType.ERROR);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Request interrupted", GuiUtils.MessageType.ERROR);
+        } catch (Exception e) {
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Request failed: " + e.getMessage(), GuiUtils.MessageType.ERROR);
         }
         return null;
     }
