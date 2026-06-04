@@ -120,6 +120,7 @@ public class ButtonsHandler {
         if (spawnClient == null) spawnClient = new SpawnClient(mainWindow.getContext(), processManager);
         CommandRequest request = spawnClient.execute(SideFlag.SELF);
         CommandResponse response = handleRequest(request, "New window opened!");
+        System.out.println("in handleSpawn: "+ response);
         if (response != null) spawnClient.handleResponse(response, mainWindow.getContext());
     }
 

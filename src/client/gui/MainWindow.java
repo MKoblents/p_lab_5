@@ -382,15 +382,16 @@ public class MainWindow {
         return panel;
     }
 
-    private void startForwardCommandListener() {
+    public void startForwardCommandListener() {
         new Thread(() -> {
             while (true) {
                 try {
                     CommandRequest fwd = networkReader.getForwardQueue().poll();
+                    System.out.println("command from parent: "+fwd);
                     if (fwd != null && "forward_command".equals(fwd.commandType()) && fwd.args() instanceof ForwardCommandObject fco) {
                         SwingUtilities.invokeLater(() -> executeForwardedCommand(fco.commandKey()));
                     }
-                    Thread.sleep(50);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
             }
         }, "forward-command-listener").start();

@@ -91,6 +91,7 @@ public class AsyncNetworkReader implements Runnable {
                 expectedLength = -1;
 
                 Object obj = SerializationUtil.deserialize(payload);
+                System.out.println("re in reader: " + obj);
 
                 if (obj instanceof CommandResponse resp) {
                     routeResponse(resp); // ✅ Маршрутизируем ответ нужному потоку
