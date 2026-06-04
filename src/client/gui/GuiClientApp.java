@@ -149,7 +149,8 @@ public class GuiClientApp {
         try {
             // 4. Отправить хендшейк
             String clientId = (context != null) ? context.getClientId() : config.getClientId();
-            String parentClientId = (context != null) ? context.getParentClientId() : null;
+
+            String parentClientId = (context != null) ? context.getParentClientId() : config.getParentClientId();
             HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
             connection.sendHandshake(handshake);
 
