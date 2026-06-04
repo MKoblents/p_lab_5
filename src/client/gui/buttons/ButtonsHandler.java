@@ -25,6 +25,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +44,39 @@ public class ButtonsHandler {
         this.networkReader = mainWindow.getNetworkReader();
         this.processManager = new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort(), null);
     }
+    public void handleShowMine() {
+        String currentOwner = mainWindow.getContext().getUserInfo().name();
+
+        // Берем текущий полный список из модели таблицы
+        List<SpaceMarine> allMarines = mainWindow.getTableModel().getAllMarines();
+
+        // Фильтруем на клиенте
+        List<SpaceMarine> myMarines = allMarines.stream()
+                .filter(marine -> currentOwner.equals(marine.getOwner()))
+                .toList();
+
+        // Обновляем таблицу и канвас отфильтрованными данными
+        mainWindow.updateAllViews(myMarines);
+        mainWindow.setStatus("Показаны только ваши объекты: " + myMarines.size());
+    }
+
+    /**
+     * Перемешивает текущий список объектов на клиенте.
+     */
+    public void handleShuffle() {
+        // Берем текущий список и создаем его изменяемую копию
+        // (чтобы не ломать внутренние списки модели, если они unmodifiable)
+        List<SpaceMarine> marines = new ArrayList<>(mainWindow.getTableModel().getAllMarines());
+
+        // Перемешиваем список с помощью стандартной утилиты Java
+        Collections.shuffle(marines);
+
+        // Обновляем таблицу и канвас перемешанными данными
+        mainWindow.updateAllViews(marines);
+        mainWindow.setStatus("Коллекция перемешана (локально)");
+    }
+
+
 
     public void handleAdd() {
         SpaceMarineInputDialog dialog = new SpaceMarineInputDialog(mainWindow.getFrame());

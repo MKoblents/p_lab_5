@@ -38,7 +38,7 @@ public class ReconnectScheduler {
 
     public void attemptConnection() {
         if (connection.isConnected()) {
-            System.out.println("connected");
+//            System.out.println("connected");
             return;
         }
 

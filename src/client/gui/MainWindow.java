@@ -40,7 +40,7 @@ public class MainWindow {
     private CardLayout cardLayout;
     private JButton switchButton;
     private ConnectionManager connection;
-    private JButton btnAdd, btnRemove, btnExecuteScript, btnRemoveAll, btnShowMine;
+    private JButton btnAdd, btnRemove, btnExecuteScript, btnRemoveAll, btnShowMine, btnShuffle;
     private JButton btnUpdate, btnInfo, btnSpawnClient, btnKillClient, btnHelp, btnExit;
     private final AsyncNetworkReader networkReader;
     private Dimension originalSize;
@@ -361,6 +361,7 @@ public class MainWindow {
         panel.add(createStyledButton("btn.execute_script", buttonWidth, buttonHeight, () -> System.out.println("Script clicked")));
         panel.add(createStyledButton("btn.remove_all", buttonWidth, buttonHeight, () -> System.out.println("Clear clicked")));
         panel.add(createStyledButton("btn.show_mine", buttonWidth, buttonHeight, () -> System.out.println("Show mine clicked")));
+        panel.add(createStyledButton("btn.shuffle", buttonWidth, buttonHeight, () -> System.out.println("Shuffle clicked")));
         panel.add(createStyledButton("btn.update", buttonWidth, buttonHeight, () -> System.out.println("Update clicked")));
         panel.add(createStyledButton("btn.info", buttonWidth, buttonHeight, () -> System.out.println("Info clicked")));
         panel.add(createStyledButton("btn.spawn_client", buttonWidth, buttonHeight, () -> System.out.println("Spawn clicked")));
@@ -390,6 +391,19 @@ public class MainWindow {
                     System.out.println("command from parent: "+fwd);
                     if (fwd != null && "forward_command".equals(fwd.commandType()) && fwd.args() instanceof ForwardCommandObject fco) {
                         SwingUtilities.invokeLater(() -> executeForwardedCommand(fco.commandKey()));
+                    }
+                    else if ("child_disconnected".equals(fwd.commandType())) {
+                        System.out.println(fwd);
+                        String disconnectedChildId = (String) fwd.args();
+                        SwingUtilities.invokeLater(() -> {
+                            if (context != null) {
+                                boolean removed = context.removeChild(disconnectedChildId);
+                                if (removed) {
+                                    setStatus("Дочерний клиент " + disconnectedChildId + " отключился");
+                                    System.out.println("Removed child " + disconnectedChildId + " from context");
+                                }
+                            }
+                        });
                     }
                     Thread.sleep(500);
                 } catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
@@ -433,6 +447,7 @@ public class MainWindow {
             case "btn.kill_client" -> btnKillClient = button;
             case "btn.help" -> btnHelp = button;
             case "btn.exit" -> btnExit = button;
+            case "btn.shuffle" -> btnShuffle = button;
         }
         return buttonPanel;
     }

@@ -40,6 +40,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -60,6 +61,7 @@ public class Server {
 
     private static class ClientConnection {
         final SocketChannel channel;
+        public Object writeLock;
         ConnectionState state = ConnectionState.READ_LENGTH;
         final ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
         ByteBuffer payloadBuffer;
@@ -218,10 +220,12 @@ public class Server {
             }catch (java.io.EOFException e) {
                 String cid = key.attachment() instanceof ClientConnection c ? c.clientId : "UNKNOWN";
                 logger.info("Client {} disconnected gracefully (EOF/Ctrl+C)", cid);
+                notifyParentOfChildDisconnect(cid);
                 cascadeDisconnect(cid, DisconnectReason.USER_REQUEST.name());
             } catch (Exception e) {
                     String cid = key.attachment() instanceof ClientConnection c ? c.clientId : "UNKNOWN";
                     logger.error("Key processing error for {}: {}", cid, e.getMessage(), e);
+                    notifyParentOfChildDisconnect(cid);
                     cascadeDisconnect(cid, "NETWORK_ERROR");
             }
         }
@@ -324,7 +328,7 @@ public class Server {
             if (!conn.handshakeComplete) { logger.warn("Data before handshake, ignoring."); return; }
 
             if (obj instanceof CommandRequest req) {
-                System.out.println(req);
+                System.out.println(req.commandType());
                 CommandResponse resp = invoker.runCommand(req);
                 writePool.submit(() -> {
                     try {
@@ -416,6 +420,7 @@ public class Server {
 
     private static void cascadeDisconnect(String targetId, String reason) {
         try {
+            notifyParentOfChildDisconnect(targetId);
             Set<String> children = clientRegistry.getChildren(targetId);
             if (children != null) {
                 for (String childId : new ArrayList<>(children)) {
@@ -455,10 +460,62 @@ public class Server {
             }
             try { clientRegistry.unregister(targetId); }
             catch (Exception e) { logger.debug("Registry cleanup warning for {}: {}", targetId, e.getMessage()); }
-
+            notifyParentOfChildDisconnect(targetId);
+            logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             logger.info("Client {} disconnected. Reason: {}", targetId, reason);
         } catch (Exception e) {
             logger.error("Cascade disconnect failed for {}: {}", targetId, e.getMessage(), e);
+        }
+    }
+    private static void notifyParentOfChildDisconnect(String childId) {
+        try {
+            var parentOpt = clientRegistry.findParentByChild(childId);
+            if (parentOpt.isEmpty()) {
+                logger.debug("Client {} has no parent, skipping notification", childId);
+                return;
+            }
+
+            String parentId = parentOpt.get();
+            logger.info("Attempting to notify parent {} about child {} disconnect", parentId, childId);
+
+            // Find parent's ClientConnection
+            for (SelectionKey key : selector.keys()) {
+                if (!key.isValid()) continue;
+
+                if (key.attachment() instanceof ClientConnection c && parentId.equals(c.clientId)) {
+                    // Create notification command
+                    CommandRequest notification = new CommandRequest(
+                            "child_disconnected",
+                            childId,
+                            UUID.randomUUID().toString(),
+                            "SERVER",
+                            null
+                    );
+
+                    try {
+                        byte[] data = SerializationUtil.serialize(notification);
+                        ByteBuffer buf = ByteBuffer.allocate(4 + data.length);
+                        buf.putInt(data.length);
+                        buf.put(data);
+                        buf.flip();
+
+                        // Synchronized write to avoid conflicts with other writes
+                        synchronized (c.writeLock) {
+                            while (buf.hasRemaining()) {
+                                c.channel.write(buf);
+                            }
+                        }
+
+                        logger.info("Successfully notified parent {} about child {} disconnect", parentId, childId);
+                    } catch (IOException e) {
+                        logger.error("Failed to notify parent {} about child {} disconnect: {}",
+                                parentId, childId, e.getMessage());
+                    }
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error in notifyParentOfChildDisconnect for child {}: {}", childId, e.getMessage(), e);
         }
     }
 }
