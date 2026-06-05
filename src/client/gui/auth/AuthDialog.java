@@ -25,13 +25,13 @@ public class AuthDialog extends JDialog {
     private UserInfo loggedInUser = null;
 
     private JLabel titleLabel;
-    private JComboBox<GuiUtils.LocaleOption> localeCombo;
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
     private JButton primaryButton;
     private JButton switchModeButton;
     private JLabel errorLabel;
+    private JButton langButton;
 
     private Dimension originalSize;
     private double scaleFactor = 1.0;
@@ -55,11 +55,8 @@ public class AuthDialog extends JDialog {
         Rectangle endBounds = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getMaximumWindowBounds();
 
-        // 🌟 2. INSTANTLY set the window to the final full-screen size
-        setBounds(endBounds);
+       setBounds(endBounds);
 
-        // 🌟 3. INSTANTLY scale the internal components
-        // (This mimics the exact state at the end of the animation)
         double initialScaleFactor = (double) endBounds.width / originalSize.width;
         onResize(initialScaleFactor);
 
@@ -113,16 +110,22 @@ public class AuthDialog extends JDialog {
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
         titleLabel.setForeground(new Color(60, 40, 50));
 
-        localeCombo = GuiUtils.createLocaleComboBox(selected -> {
-            String[] parts = selected.code().split("_");
-            if (parts.length == 2) {
-                LocaleManager.setLocale(parts[0], parts[1]);
-                updateLocaleTexts();
-            }
-        });
+        langButton =  GuiUtils.createLanguageSwitchButton(
+                new GuiUtils.LocaleOption("ru_RU", "Русский"),  // или получите из настроек
+                selected -> {
+                    String[] parts = selected.code().split("_");
+                    if (parts.length == 2) {
+                        LocaleManager.setLocale(parts[0], parts[1]);
+                        updateLocaleTexts();
+                    }
+                }
+        );
+        langButton.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        langButton.setPreferredSize(new Dimension(140, 70));
+
 
         headerPanel.add(titleLabel);
-        headerPanel.add(localeCombo);
+        headerPanel.add(langButton);
         gbc.gridy = 0;
         formContainer.add(headerPanel, gbc);
 
@@ -297,14 +300,6 @@ public class AuthDialog extends JDialog {
     }
 
     private void updateLocaleTexts() {
-        GuiUtils.LocaleOption selected = (GuiUtils.LocaleOption) localeCombo.getSelectedItem();
-        localeCombo.removeAllItems();
-        for (GuiUtils.LocaleOption option : GuiUtils.createLocaleOptions()) {
-            localeCombo.addItem(option);
-            if (selected != null && selected.code().equals(option.code())) {
-                localeCombo.setSelectedItem(option);
-            }
-        }
 
         if (usernameField.getForeground() == Color.GRAY) {
             usernameField.setText(LocaleManager.get("auth.username"));

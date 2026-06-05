@@ -125,7 +125,7 @@ public class GuiUtils {
      * @return styled language switch button
      */
     public static JButton createLanguageSwitchButton(LocaleOption initialLocale, Consumer<LocaleOption> onLocaleChanged) {
-        // Extract language code (e.g., "ru_RU" -> "RU")
+
         String[] parts = initialLocale.code().split("_");
         String langCode = parts.length > 1 ? parts[1].toUpperCase() : initialLocale.code().substring(0, 2).toUpperCase();
 
@@ -135,11 +135,9 @@ public class GuiUtils {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // White background with rounded corners
                 g2.setColor(Color.WHITE);
                 g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
 
-                // Pink border
                 g2.setColor(PRIMARY_COLOR);
                 g2.setStroke(new BasicStroke(1.5f));
                 g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
@@ -149,7 +147,7 @@ public class GuiUtils {
             }
         };
 
-        langButton.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        langButton.setFont(new Font("Segoe UI", Font.BOLD, 30));
         langButton.setForeground(new Color(50, 50, 50));
         langButton.setFocusPainted(false);
         langButton.setContentAreaFilled(false);
@@ -158,15 +156,14 @@ public class GuiUtils {
         langButton.setPreferredSize(new Dimension(80, 35));
         langButton.setMaximumSize(new Dimension(80, 35));
 
-        // Create popup menu with language options
+
         JPopupMenu popupMenu = new JPopupMenu();
         popupMenu.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
 
         for (LocaleOption option : createLocaleOptions()) {
             JMenuItem item = new JMenuItem(option.displayName() + " (" + option.code() + ")");
-            item.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+            item.setFont(new Font("Segoe UI", Font.PLAIN, 25));
             item.addActionListener(e -> {
-                // Update button text with new language code
                 String[] newParts = option.code().split("_");
                 String newCode = newParts.length > 1 ? newParts[1].toUpperCase() : option.code().substring(0, 2).toUpperCase();
                 langButton.setText(newCode);
@@ -179,7 +176,6 @@ public class GuiUtils {
             popupMenu.add(item);
         }
 
-        // Show popup on click
         langButton.addActionListener(e -> {
             popupMenu.show(langButton, 0, langButton.getHeight());
         });
