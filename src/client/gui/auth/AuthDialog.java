@@ -102,7 +102,7 @@ public class AuthDialog extends JDialog {
 
         JPanel headerPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
         headerPanel.setOpaque(false);
-        titleLabel = new JLabel("SpaceMarine Client");
+        titleLabel = new JLabel(LocaleManager.get("auth.title"));
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
         titleLabel.setForeground(new Color(60, 40, 50));
 

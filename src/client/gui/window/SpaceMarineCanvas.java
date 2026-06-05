@@ -172,7 +172,7 @@ public class SpaceMarineCanvas extends JPanel {
     private void showMarineInfo(SpaceMarine marine) {
         GuiUtils.showMessageDialog(
                 null,
-                "SpaceMarine Details",
+                LocaleManager.get("canvas.marine.details"),
                 marine.toString());
     }
 

@@ -2,6 +2,7 @@ package client.gui.buttons;
 
 import client.gui.utils.GuiUtils;
 import client.gui.window.SpaceMarineTable;
+import client.utils.LocaleManager;
 import shared.models.SpaceMarine;
 
 import javax.swing.*;
@@ -24,12 +25,10 @@ public class SpaceMarineSelector extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setPreferredSize(originalSize);
 
-        // Styled ComboBox using GuiUtils colors
         comboBox = GuiUtils.createStyledComboBox();
         comboBox.setRenderer(new SpaceMarineListCellRenderer());
 
-        // Styled empty label
-        emptyLabel = GuiUtils.createLabel("Коллекция пуста", 14,false);
+        emptyLabel = GuiUtils.createLabel(LocaleManager.get("selector.collection.empty"), 14,false);
         emptyLabel.setVisible(false);
         emptyLabel.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -56,7 +55,6 @@ public class SpaceMarineSelector extends JPanel {
         comboBox.removeAllItems();
         List<SpaceMarine> marines = tableModel.getAllMarines();
 
-        // Filter by current user if username is set
         List<SpaceMarine> filteredMarines = (currentUsername != null && !currentUsername.isEmpty())
                 ? marines.stream()
                   .filter(m -> currentUsername.equals(m.getOwner()))
@@ -67,8 +65,8 @@ public class SpaceMarineSelector extends JPanel {
             comboBox.setVisible(false);
             emptyLabel.setVisible(true);
             emptyLabel.setText(currentUsername != null
-                    ? "Нет ваших объектов в коллекции"
-                    : "Коллекция пуста");
+                    ? LocaleManager.get("selector.no_user_objects")
+                    : LocaleManager.get("selector.collection.empty"));
         } else {
             for (SpaceMarine m : filteredMarines) {
                 comboBox.addItem(m);
@@ -95,12 +93,10 @@ public class SpaceMarineSelector extends JPanel {
                 double scaleFactor = (double) getWidth() / originalSize.width;
                 onResize.accept(scaleFactor);
 
-                // Scale font sizes
                 float scaledFontSize = (float) (14 * scaleFactor);
                 comboBox.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledFontSize));
                 emptyLabel.setFont(new Font("Segoe UI", Font.ITALIC, (int) scaledFontSize));
 
-                // Adjust component heights
                 int scaledHeight = (int) (30 * scaleFactor);
                 comboBox.setPreferredSize(new Dimension(Short.MAX_VALUE, scaledHeight));
                 comboBox.setMaximumSize(new Dimension(Short.MAX_VALUE, scaledHeight));
@@ -120,7 +116,6 @@ public class SpaceMarineSelector extends JPanel {
                 setText(marine.getName() + " (ID: " + marine.getId() + ")");
             }
 
-            // Selection styling using GuiUtils colors
             if (isSelected) {
                 setBackground(GuiUtils.PRIMARY_COLOR);
                 setForeground(Color.WHITE);

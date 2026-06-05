@@ -469,11 +469,11 @@ public class MainWindow {
             if (currentText.equals(mapText) || currentText.contains("Table")) {
                 cardLayout.show(contentPanel, "TABLE");
                 switchButton.setText(LocaleManager.get("view.switch.to_map"));
-                setStatus("Table view");
+                setStatus(LocaleManager.get( "main.status.table_view"));
             } else {
                 cardLayout.show(contentPanel, "CANVAS");
                 switchButton.setText(LocaleManager.get("view.switch.to_table"));
-                setStatus("Map view");
+                setStatus(LocaleManager.get("main.status.map_view"));
             }
             contentPanel.revalidate(); contentPanel.repaint();
         }
