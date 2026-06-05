@@ -342,16 +342,140 @@ public class GuiUtils {
 
         return combo;
     }
+
+    public static void showMessageDialog(Frame parent, String title, String message, MessageType messageType) {
+        JDialog dialog = new JDialog(parent);
+        dialog.setModal(true);
+        dialog.setUndecorated(true);
+        dialog.setLayout(new BorderLayout(0, 0));
+        dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        JPanel titleBarPanel = new JPanel(new BorderLayout());
+        titleBarPanel.setBackground(PRIMARY_DARK);
+        titleBarPanel.setPreferredSize(new Dimension(0, 45));
+        titleBarPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+
+        JLabel titleLabel = new JLabel("  " + title);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_TITLE_SIZE));
+        titleLabel.setForeground(Color.WHITE);
+        titleBarPanel.add(titleLabel, BorderLayout.CENTER);
+
+        JButton closeButton = new JButton("✕");
+        closeButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setBackground(PRIMARY_DARK);
+        closeButton.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
+        closeButton.setFocusPainted(false);
+        closeButton.setContentAreaFilled(false);
+        closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        closeButton.addActionListener(e -> dialog.dispose());
+        closeButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) { closeButton.setBackground(PRIMARY_COLOR.darker()); }
+            public void mouseExited(MouseEvent e) { closeButton.setBackground(PRIMARY_DARK); }
+        });
+        titleBarPanel.add(closeButton, BorderLayout.EAST);
+
+        final Point[] dragOffset = new Point[1];
+        titleBarPanel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) { dragOffset[0] = e.getPoint(); }
+        });
+        titleBarPanel.addMouseMotionListener(new MouseAdapter() {
+            public void mouseDragged(MouseEvent e) {
+                Point curr = e.getLocationOnScreen();
+                dialog.setLocation(curr.x - dragOffset[0].x, curr.y - dragOffset[0].y);
+            }
+        });
+        dialog.add(titleBarPanel, BorderLayout.NORTH);
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setOpaque(false);
+        contentPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
+
+        JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        messagePanel.setOpaque(false);
+
+        JTextArea messageArea = new JTextArea(message);
+        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
+        messageArea.setForeground(TEXT_COLOR);
+        messageArea.setBackground(BACKGROUND_COLOR);
+        messageArea.setEditable(false);
+        messageArea.setLineWrap(true);
+        messageArea.setWrapStyleWord(true);
+        messageArea.setBorder(null);
+        messageArea.setOpaque(false);
+        messageArea.setColumns(1);
+        messageArea.setRows(1);
+
+       FontMetrics fm = messageArea.getFontMetrics(messageArea.getFont());
+        String[] lines = message.split("\n");
+        int maxLineWidth = 0;
+        for (String line : lines) {
+            int lineWidth = fm.stringWidth(line);
+            if (lineWidth > maxLineWidth) {
+                maxLineWidth = lineWidth;
+            }
+        }
+
+        int targetWidth = maxLineWidth+40;
+        int maxAllowedWidth = 1400;
+        targetWidth = Math.min(targetWidth, maxAllowedWidth);
+        System.out.println(targetWidth);
+
+        messageArea.setSize(targetWidth, Short.MAX_VALUE);
+        int textHeight = messageArea.getPreferredSize().height;
+
+        int targetHeight = textHeight + 20;
+
+        JScrollPane scrollPane = new JScrollPane(messageArea);
+        scrollPane.setBorder(null);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        scrollPane.setPreferredSize(new Dimension(targetWidth, targetHeight));
+
+        messagePanel.add(scrollPane);
+        contentPanel.add(messagePanel, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
+
+        JButton okButton = new JButton("OK");
+        okButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        okButton.setBackground(PRIMARY_COLOR);
+        okButton.setForeground(Color.WHITE);
+        okButton.setFocusPainted(false);
+        okButton.setBorderPainted(false);
+        okButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        okButton.setPreferredSize(new Dimension(120, 40));
+        okButton.addActionListener(e -> dialog.dispose());
+        okButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) { okButton.setBackground(PRIMARY_DARK); }
+            public void mouseExited(MouseEvent evt) { okButton.setBackground(PRIMARY_COLOR); }
+        });
+
+        buttonPanel.add(okButton);
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+        dialog.add(contentPanel, BorderLayout.CENTER);
+
+        dialog.pack();
+        dialog.setMaximumSize(new Dimension(600, 500));
+        dialog.setLocationRelativeTo(parent);
+        dialog.getRootPane().setDefaultButton(okButton);
+        dialog.setVisible(true);
+    }
     /**
-     * Shows a styled message dialog with the application's pink theme.
-     * Uses larger font and themed OK button.
+     * Shows a styled confirmation dialog with Yes/No buttons.
      *
      * @param parent the parent frame for modal behavior
      * @param title the dialog title
      * @param message the message text to display
-     * @param messageType type of message (INFO, WARNING, ERROR) for icon selection
+     * @return true if user clicked Yes, false otherwise
      */
-    public static void showMessageDialog(Frame parent, String title, String message, MessageType messageType) {
+    public static boolean showConfirmDialog(Frame parent, String title, String message) {
         JDialog dialog = new JDialog(parent);
         dialog.setModal(true);
         dialog.setUndecorated(true);
@@ -407,170 +531,28 @@ public class GuiUtils {
         contentPanel.setOpaque(false);
         contentPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
 
-        JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        messagePanel.setOpaque(false);
 
+        if (message!=null) {
+            JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+            messagePanel.setOpaque(false);
+            JTextArea messageArea = new JTextArea(message);
+            messageArea.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
+            messageArea.setForeground(TEXT_COLOR);
+            messageArea.setBackground(BACKGROUND_COLOR);
+            messageArea.setEditable(false);
+            messageArea.setLineWrap(true);
+            messageArea.setWrapStyleWord(true);
+            messageArea.setBorder(null);
+            messageArea.setOpaque(false);
 
-        JTextArea messageArea = new JTextArea(message);
-        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
-        messageArea.setForeground(TEXT_COLOR);
-        messageArea.setBackground(BACKGROUND_COLOR);
-        messageArea.setEditable(false);
-        messageArea.setLineWrap(true);
-        messageArea.setWrapStyleWord(true);
-        messageArea.setBorder(null);
-        messageArea.setOpaque(false);
+            int rows = Math.max(1, (message.length() / 50) + 1);
+            messageArea.setRows(Math.min(rows, 10));
+            messageArea.setColumns(40);
 
-        // Remove fixed columns/rows - let it calculate naturally
-        messageArea.setColumns(1);  // Minimal columns
-        messageArea.setRows(1);     // Minimal rows
+            messagePanel.add(messageArea);
+            contentPanel.add(messagePanel, BorderLayout.CENTER);
+        }
 
-        // Wrap in scroll pane with reasonable max size
-        JScrollPane scrollPane = new JScrollPane(messageArea);
-        scrollPane.setBorder(null);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-       int preferredWidth = Math.min(500, Math.max(300, message.length() / 2));
-        int preferredHeight = Math.min(300, Math.max(100, message.length() / 3));
-        scrollPane.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
-
-        messagePanel.add(scrollPane);
-        contentPanel.add(messagePanel, BorderLayout.CENTER);
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setOpaque(false);
-        buttonPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
-
-        JButton okButton = new JButton("OK");
-        okButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        okButton.setBackground(PRIMARY_COLOR);
-        okButton.setForeground(Color.WHITE);
-        okButton.setFocusPainted(false);
-        okButton.setBorderPainted(false);
-        okButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        okButton.setPreferredSize(new Dimension(120, 40));
-        okButton.addActionListener(e -> dialog.dispose());
-
-        okButton.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent evt) {
-                okButton.setBackground(PRIMARY_DARK);
-            }
-            public void mouseExited(MouseEvent evt) {
-                okButton.setBackground(PRIMARY_COLOR);
-            }
-        });
-
-        buttonPanel.add(okButton);
-        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        dialog.add(contentPanel, BorderLayout.CENTER);
-
-        dialog.pack();
-
-        dialog.setMaximumSize(new Dimension(600, 500));
-
-        dialog.setLocationRelativeTo(parent);
-        dialog.getRootPane().setDefaultButton(okButton);
-        dialog.setVisible(true);
-    }
-    /**
-     * Shows a styled confirmation dialog with Yes/No buttons.
-     *
-     * @param parent the parent frame for modal behavior
-     * @param title the dialog title
-     * @param message the message text to display
-     * @return true if user clicked Yes, false otherwise
-     */
-    public static boolean showConfirmDialog(Frame parent, String title, String message) {
-        JDialog dialog = new JDialog(parent);
-        dialog.setModal(true);
-        dialog.setUndecorated(true); // Remove system title bar
-        dialog.setLayout(new BorderLayout(0, 0));
-        dialog.getContentPane().setBackground(BACKGROUND_COLOR);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-        // === Custom Title Bar ===
-        JPanel titleBarPanel = new JPanel(new BorderLayout());
-        titleBarPanel.setBackground(PRIMARY_DARK);
-        titleBarPanel.setPreferredSize(new Dimension(0, 45));
-        titleBarPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-
-        JLabel titleLabel = new JLabel("  " + title);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        titleLabel.setForeground(Color.WHITE);
-        titleBarPanel.add(titleLabel, BorderLayout.CENTER);
-
-        // Close button
-        JButton closeButton = new JButton("✕");
-        closeButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        closeButton.setForeground(Color.WHITE);
-        closeButton.setBackground(PRIMARY_DARK);
-        closeButton.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
-        closeButton.setFocusPainted(false);
-        closeButton.setContentAreaFilled(false);
-        closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        closeButton.addActionListener(e -> dialog.dispose());
-        closeButton.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                closeButton.setBackground(PRIMARY_COLOR.darker());
-            }
-            public void mouseExited(MouseEvent e) {
-                closeButton.setBackground(PRIMARY_DARK);
-            }
-        });
-        titleBarPanel.add(closeButton, BorderLayout.EAST);
-
-        // Make title bar draggable
-        final Point[] dragOffset = new Point[1];
-        titleBarPanel.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                dragOffset[0] = e.getPoint();
-            }
-        });
-        titleBarPanel.addMouseMotionListener(new MouseAdapter() {
-            public void mouseDragged(MouseEvent e) {
-                Point curr = e.getLocationOnScreen();
-                dialog.setLocation(curr.x - dragOffset[0].x, curr.y - dragOffset[0].y);
-            }
-        });
-
-        dialog.add(titleBarPanel, BorderLayout.NORTH);
-
-        // === Content Panel ===
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setOpaque(false);
-        contentPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
-
-        // Icon and message
-        JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        messagePanel.setOpaque(false);
-
-        JLabel iconLabel = new JLabel(UIManager.getIcon("OptionPane.questionIcon"));
-        iconLabel.setPreferredSize(new Dimension(40, 40));
-        messagePanel.add(iconLabel);
-
-        JTextArea messageArea = new JTextArea(message);
-        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, 18)); // Larger font
-        messageArea.setForeground(TEXT_COLOR);
-        messageArea.setBackground(BACKGROUND_COLOR);
-        messageArea.setEditable(false);
-        messageArea.setLineWrap(true);
-        messageArea.setWrapStyleWord(true);
-        messageArea.setBorder(null);
-        messageArea.setOpaque(false);
-
-        // Calculate rows based on message length
-        int rows = Math.max(1, (message.length() / 50) + 1);
-        messageArea.setRows(Math.min(rows, 10));
-        messageArea.setColumns(40);
-
-        messagePanel.add(messageArea);
-        contentPanel.add(messagePanel, BorderLayout.CENTER);
-
-        // === Yes/No Button Panel ===
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
@@ -578,7 +560,7 @@ public class GuiUtils {
         final boolean[] result = {false};
 
         JButton yesButton = new JButton("Yes");
-        yesButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        yesButton.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_SIZE));
         yesButton.setBackground(PRIMARY_COLOR);
         yesButton.setForeground(Color.WHITE);
         yesButton.setFocusPainted(false);
@@ -599,7 +581,7 @@ public class GuiUtils {
         });
 
         JButton noButton = new JButton("No");
-        noButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        noButton.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_SIZE));
         noButton.setBackground(Color.LIGHT_GRAY);
         noButton.setForeground(Color.BLACK);
         noButton.setFocusPainted(false);
@@ -625,12 +607,11 @@ public class GuiUtils {
 
         dialog.add(contentPanel, BorderLayout.CENTER);
 
-        // === Size and Position ===
         dialog.pack();
 
-        // Ensure minimum size but allow growth
-        int minWidth = Math.max(450, messageArea.getPreferredSize().width + 80);
-        int maxWidth = 700;
+        int minWidth = Math.max(450, title.length()*20 );
+        System.out.println(minWidth);
+        int maxWidth = 1000;
         dialog.setSize(
                 Math.min(maxWidth, Math.max(minWidth, dialog.getWidth())),
                 dialog.getHeight()

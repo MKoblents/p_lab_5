@@ -92,7 +92,7 @@ public class ButtonsHandler {
     public void handleClear() {
         boolean confirm = GuiUtils.showConfirmDialog(null,
                 "Are you sure you want to clear your collection?",
-                "Confirm Action");
+                null);
         if (!confirm) return;
         handleRequest(RequestsFactory.createSimple("clear"), "Collection cleared successfully!");
     }
