@@ -52,9 +52,16 @@ public class AuthDialog extends JDialog {
         updateLocaleTexts();
 
         originalSize = new Dimension(550, 650);
-        setSize(originalSize);
-        setLocationRelativeTo(parent);
-        setMinimumSize(new Dimension(500, 600));
+        Rectangle endBounds = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getMaximumWindowBounds();
+
+        // 🌟 2. INSTANTLY set the window to the final full-screen size
+        setBounds(endBounds);
+
+        // 🌟 3. INSTANTLY scale the internal components
+        // (This mimics the exact state at the end of the animation)
+        double initialScaleFactor = (double) endBounds.width / originalSize.width;
+        onResize(initialScaleFactor);
 
         GuiUtils.addResizeListener(getContentPane(), originalSize, this::onResize);
     }

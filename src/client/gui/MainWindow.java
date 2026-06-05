@@ -533,13 +533,7 @@ public class MainWindow {
         }
         return null;
     }
-    public JButton getBtnAdd() { return btnAdd; } public JButton getBtnRemove() { return btnRemove; }
-    public JButton getBtnExecuteScript() { return btnExecuteScript; } public JButton getBtnRemoveAll() { return btnRemoveAll; }
-    public JButton getBtnShowMine() { return btnShowMine; } public JButton getBtnUpdate() { return btnUpdate; }
-    public JButton getBtnInfo() { return btnInfo; } public JButton getBtnSpawnClient() { return btnSpawnClient; }
-    public JButton getBtnKillClient() { return btnKillClient; } public JButton getBtnHelp() { return btnHelp; }
-    public JButton getBtnExit() { return btnExit; }
-    public void setStatus(String message) {
+   public void setStatus(String message) {
         if (SwingUtilities.isEventDispatchThread()) statusLabel.setText(LocaleManager.get("main.status") + ": " + message);
         else SwingUtilities.invokeLater(() -> statusLabel.setText(LocaleManager.get("main.status") + ": " + message));
     }
