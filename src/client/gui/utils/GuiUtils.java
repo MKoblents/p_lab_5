@@ -28,6 +28,8 @@ public class GuiUtils {
     public static final float BASE_FONT_SIZE = 12.0f;
     public static final float BASE_TITLE_FONT_SIZE = 16.0f;
     public static final float BASE_BUTTON_FONT_SIZE = 12.0f;
+    public static final float BASE_MESSAGE_SIZE = 30.0f;
+    public static final float BASE_MESSAGE_TITLE_SIZE = 35.0f;
 
     public record LocaleOption(String code, String displayName) {
         @Override
@@ -357,14 +359,13 @@ public class GuiUtils {
         dialog.getContentPane().setBackground(BACKGROUND_COLOR);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        // === Custom Title Bar ===
         JPanel titleBarPanel = new JPanel(new BorderLayout());
         titleBarPanel.setBackground(PRIMARY_DARK);
         titleBarPanel.setPreferredSize(new Dimension(0, 45));
         titleBarPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
 
         JLabel titleLabel = new JLabel("  " + title);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_TITLE_SIZE));
         titleLabel.setForeground(Color.WHITE);
         titleBarPanel.add(titleLabel, BorderLayout.CENTER);
 
@@ -402,7 +403,6 @@ public class GuiUtils {
 
         dialog.add(titleBarPanel, BorderLayout.NORTH);
 
-        // === Content Panel ===
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setOpaque(false);
         contentPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
@@ -410,17 +410,9 @@ public class GuiUtils {
         JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
         messagePanel.setOpaque(false);
 
-        JLabel iconLabel = new JLabel();
-        iconLabel.setPreferredSize(new Dimension(40, 40));
-        switch (messageType) {
-            case INFO -> iconLabel.setIcon(UIManager.getIcon("OptionPane.informationIcon"));
-            case WARNING -> iconLabel.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
-            case ERROR -> iconLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
-        }
-        messagePanel.add(iconLabel);
 
         JTextArea messageArea = new JTextArea(message);
-        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
         messageArea.setForeground(TEXT_COLOR);
         messageArea.setBackground(BACKGROUND_COLOR);
         messageArea.setEditable(false);
@@ -441,15 +433,13 @@ public class GuiUtils {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        // Set preferred size for scroll pane (not too wide)
-        int preferredWidth = Math.min(500, Math.max(300, message.length() / 2));
+       int preferredWidth = Math.min(500, Math.max(300, message.length() / 2));
         int preferredHeight = Math.min(300, Math.max(100, message.length() / 3));
         scrollPane.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
 
         messagePanel.add(scrollPane);
         contentPanel.add(messagePanel, BorderLayout.CENTER);
 
-        // === OK Button Panel ===
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
@@ -478,10 +468,8 @@ public class GuiUtils {
 
         dialog.add(contentPanel, BorderLayout.CENTER);
 
-        // === Size and Position ===
         dialog.pack();
 
-        // Set reasonable max size
         dialog.setMaximumSize(new Dimension(600, 500));
 
         dialog.setLocationRelativeTo(parent);
@@ -781,32 +769,6 @@ public class GuiUtils {
             button.addActionListener(e -> action.run());
         }
         return button;
-    }
-
-    /**
-     * Creates a labeled field panel (label above field).
-     * @param labelKey locale key for label
-     * @param field the input component to label
-     * @return JPanel with BorderLayout containing label and field
-     */
-    public static JPanel createLabeledInputPanel(String labelKey, JComponent field) {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setOpaque(false);
-
-        JLabel label = new JLabel(LocaleManager.get(labelKey), SwingConstants.CENTER);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        label.setForeground(PRIMARY_DARK);
-
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(field, BorderLayout.CENTER);
-        return panel;
-    }
-    // Добавьте это в GuiUtils.java
-    public static JLabel createStyledLabel(String localeKey, float baseSize, Color color) {
-        JLabel label = new JLabel(LocaleManager.get(localeKey));
-        label.setFont(new Font("Segoe UI", Font.BOLD, (int) baseSize));
-        label.setForeground(color);
-        return label;
     }
 
     public static JTextArea createStyledTextArea(String text) {
