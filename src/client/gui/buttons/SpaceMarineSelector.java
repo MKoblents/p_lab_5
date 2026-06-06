@@ -25,7 +25,7 @@ public class SpaceMarineSelector extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setPreferredSize(originalSize);
 
-        comboBox = GuiUtils.createStyledComboBox();
+        comboBox = GuiUtils.createStyledComboBox(80);
         comboBox.setRenderer(new SpaceMarineListCellRenderer());
 
         emptyLabel = GuiUtils.createLabel(LocaleManager.get("selector.collection.empty"), 14,false);
@@ -124,7 +124,7 @@ public class SpaceMarineSelector extends JPanel {
                 setForeground(GuiUtils.TEXT_COLOR);
             }
 
-            setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
             setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
             return this;
         }

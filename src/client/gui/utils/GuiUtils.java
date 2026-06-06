@@ -58,22 +58,6 @@ public class GuiUtils {
         return bgPanel;
     }
 
-    public static JComboBox<LocaleOption> createLocaleComboBox(Consumer<LocaleOption> onChange) {
-        JComboBox<LocaleOption> combo = new JComboBox<>(createLocaleOptions());
-        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_FONT_SIZE));
-        combo.setMaximumSize(new Dimension(150, 28));
-        combo.setPreferredSize(new Dimension(150, 28));
-        combo.setBackground(Color.WHITE);
-
-        combo.addActionListener(e -> {
-            LocaleOption selected = (LocaleOption) combo.getSelectedItem();
-            if (selected != null && onChange != null) {
-                onChange.accept(selected);
-            }
-        });
-
-        return combo;
-    }
     public static JPanel createPanel(LayoutManager layout) {
         JPanel panel = new JPanel(layout);
         panel.setBackground(BACKGROUND_COLOR);
@@ -250,85 +234,26 @@ public class GuiUtils {
         });
     }
 
-    public static Font scaleFont(Font baseFont, double scaleFactor) {
-        return baseFont.deriveFont((float) (baseFont.getSize() * scaleFactor));
-    }
-
-    public static JTextField createPlaceholderField(String placeholderKey) {
-        JTextField field = new JTextField(LocaleManager.get(placeholderKey));
-        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setForeground(Color.GRAY);
-        field.setHorizontalAlignment(JTextField.CENTER);
-        field.setBorder(BorderFactory.createLineBorder(new Color(255, 180, 200), 1));
-        field.setBackground(Color.WHITE);
-
-        field.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (field.getText().equals(LocaleManager.get(placeholderKey))) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                }
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                if (field.getText().isEmpty()) {
-                    field.setText(LocaleManager.get(placeholderKey));
-                    field.setForeground(Color.GRAY);
-                }
-            }
-        });
-        return field;
-    }
-
-    public static JPasswordField createPasswordField(String placeholderKey) {
-        JPasswordField field = new JPasswordField(LocaleManager.get(placeholderKey));
-        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setForeground(Color.GRAY);
-        field.setHorizontalAlignment(JPasswordField.CENTER);
-        field.setBorder(BorderFactory.createLineBorder(new Color(255, 180, 200), 1));
-        field.setBackground(Color.WHITE);
-        field.setEchoChar((char)0);
-
-        field.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (String.valueOf(field.getPassword()).equals(LocaleManager.get(placeholderKey))) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                    field.setEchoChar('\u2022');
-                }
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                if (field.getPassword().length == 0) {
-                    field.setText(LocaleManager.get(placeholderKey));
-                    field.setForeground(Color.GRAY);
-                    field.setEchoChar((char)0);
-                }
-            }
-        });
-        return field;
-    }
     /**
      * Creates a generically-styled JComboBox with pink theme.
      * @param <T> the type of items in the combo box
      * @return styled JComboBox instance
      */
-    public static <T> JComboBox<T> createStyledComboBox() {
+    public static <T> JComboBox<T> createStyledComboBox(int preferedSize) {
         JComboBox<T> combo = new JComboBox<>();
-        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_FONT_SIZE));
+        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
         combo.setBackground(Color.WHITE);
         combo.setForeground(TEXT_COLOR);
-        combo.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
-        combo.setPreferredSize(new Dimension(300, 30));
-        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
+        combo.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 2));
+        combo.setPreferredSize(new Dimension(0, preferedSize));
+        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, preferedSize));
 
         // Default renderer with selection styling
         combo.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
                 if (isSelected) {
                     setBackground(PRIMARY_COLOR);
                     setForeground(Color.WHITE);
@@ -683,34 +608,9 @@ public class GuiUtils {
      * @return configured JComboBox
      */
     public static <T> JComboBox<T> createStyledComboBox(T[] items, int preferredHeight) {
-        JComboBox<T> combo = new JComboBox<>(items);
-        combo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        combo.setBackground(Color.WHITE);
-        combo.setForeground(Color.BLACK);
-        combo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
-                new EmptyBorder(8, 10, 8, 10)
-        ));
-        combo.setPreferredSize(new Dimension(0, preferredHeight));
-        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, preferredHeight));
-        combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JComboBox<T> combo = createStyledComboBox(preferredHeight);
 
-        combo.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setFont(new Font("Segoe UI", Font.PLAIN, 14));
-                if (isSelected) {
-                    setBackground(PRIMARY_COLOR);
-                    setForeground(Color.WHITE);
-                } else {
-                    setBackground(Color.WHITE);
-                    setForeground(Color.BLACK);
-                }
-                setBorder(new EmptyBorder(5, 10, 5, 10));
-                return this;
-            }
-        });
+        combo.setModel(new DefaultComboBoxModel<>(items));
         return combo;
     }
 

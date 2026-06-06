@@ -186,4 +186,8 @@ public class GuiClientApp {
     public static AsyncNetworkReader getNetworkReader() {
         return  networkReader;
     }
+
+    public static void updateViews() {
+        polling.pollServer();
+    }
 }

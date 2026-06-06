@@ -1,5 +1,7 @@
 package client.gui.window;
 
+import client.gui.GuiClientApp;
+import client.gui.MainWindow;
 import client.gui.utils.GuiUtils;
 import client.gui.utils.ShipRenderer;
 import client.utils.LocaleManager;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 
 public class SpaceMarineCanvas extends JPanel {
@@ -96,13 +100,13 @@ public class SpaceMarineCanvas extends JPanel {
                 if (clicked == null) return;
 
                 if (e.getClickCount() == 2) {
-                    // 🔹 Двойной клик: отменяем таймер и открываем апдейт
+                    // Двойной клик: отменяем таймер и открываем апдейт
                     if (clickTimer != null) clickTimer.stop();
                     if (onMarineDoubleClick != null) {
                         onMarineDoubleClick.accept(clicked);
                     }
                 } else if (e.getClickCount() == 1) {
-                    // 🔹 Одинарный клик: запускаем задержку 250мс
+                    // Одинарный клик: запускаем задержку 250мс
                     pendingMarine = clicked;
                     if (clickTimer == null) {
                         clickTimer = new javax.swing.Timer(250, evt -> {

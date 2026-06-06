@@ -45,7 +45,7 @@ public class MainWindow {
     private final AsyncNetworkReader networkReader;
     private Dimension originalSize;
     private double scaleFactor = 1.0;
-    private ClientContext context;
+    public  ClientContext context;
     private final ClientConfig config;
     private ClientProcessManager processManager;
     private JComboBox<String> forwardCommandCombo;
@@ -238,11 +238,19 @@ public class MainWindow {
 
         canvas = new SpaceMarineCanvas();
         canvas.setOnMarineDoubleClick(marine -> {
-            SpaceMarineUpdateDialog dialog = new SpaceMarineUpdateDialog(frame, tableModel, context.getUserInfo().name());
-            dialog.setSelectedMarine(marine);
-            dialog.setVisible(true);
-            if (dialog.getUpdatedSpaceMarine() != null) {
-                buttonsHandler.handleRequest(RequestsFactory.createTwoArgs("update", dialog.getUpdatedSpaceMarine().getId(), dialog.getUpdatedSpaceMarine()), "SpaceMarine updated successfully!");
+            if (marine.getOwner().equals(context.getUserInfo().name())) {
+                SpaceMarineUpdateDialog dialog = new SpaceMarineUpdateDialog(frame, tableModel, context.getUserInfo().name());
+                dialog.setSelectedMarine(marine);
+                dialog.setVisible(true);
+                if (dialog.getUpdatedSpaceMarine() != null) {
+                    buttonsHandler.handleRequest(RequestsFactory.createTwoArgs("update", dialog.getUpdatedSpaceMarine().getId(), dialog.getUpdatedSpaceMarine()), "SpaceMarine updated successfully!");
+                }
+            }
+            else {
+                GuiUtils.showMessageDialog(frame,
+                        "Permission Denied",
+                        "You can only edit your own objects.",
+                        GuiUtils.MessageType.WARNING);
             }
         });
         JScrollPane canvasScroll = new JScrollPane(canvas);

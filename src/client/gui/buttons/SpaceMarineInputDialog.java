@@ -41,13 +41,12 @@ public class SpaceMarineInputDialog extends AbstractStyledDialog {
         yField = GuiUtils.createStyledPlaceholderField("dialog.field.y", 45);
         healthField = GuiUtils.createStyledPlaceholderField("dialog.field.health", 45);
 
-        meleeWeaponCombo = GuiUtils.createStyledComboBox(MeleeWeapon.values(), 45);
-        weaponCombo = GuiUtils.createStyledComboBox(Weapon.values(), 45);
-        categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 45);
+        meleeWeaponCombo = GuiUtils.createStyledComboBox(MeleeWeapon.values(), 60);
+        weaponCombo = GuiUtils.createStyledComboBox(Weapon.values(), 60);
+        categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 60);
 
         chapterPanel = new ChapterInputPanel();
 
-        // Create labels with base font size 25
         nameLabel = createStyledLabel("dialog.field.name", 25);
         xLabel = createStyledLabel("dialog.field.x", 25);
         yLabel = createStyledLabel("dialog.field.y", 25);

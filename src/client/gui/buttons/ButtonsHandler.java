@@ -51,6 +51,7 @@ public class ButtonsHandler {
         dialog.setVisible(true);
         SpaceMarine marine = dialog.getSpaceMarine();
         if (marine != null) handleRequest(RequestsFactory.withMarine("add", marine), "Space Marine added successfully!");
+        GuiClientApp.updateViews();
     }
 
     public void handleRemove() {
@@ -103,6 +104,7 @@ public class ButtonsHandler {
         updateDialog.setVisible(true);
         SpaceMarine updateMarine = updateDialog.getUpdatedSpaceMarine();
         if (updateMarine != null) handleRequest(RequestsFactory.createTwoArgs("update", updateMarine.getId(), updateMarine), "SpaceMarine updated successfully!");
+        GuiClientApp.updateViews();
     }
 
     public void handleInfo() { showSimple("info"); }

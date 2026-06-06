@@ -17,7 +17,7 @@ public class KillClientDialog extends JDialog {
     private JLabel titleLabel, infoLabel, clientLabel;
     private Consumer<String> onKillRequested;
 
-    private final Dimension originalSize = new Dimension(500, 300);
+    private final Dimension originalSize = new Dimension(500, 500);
 
     public KillClientDialog(JFrame parent, List<String> availableClients) {
         super(parent, LocaleManager.get("dialog.kill.title"), true);
@@ -26,7 +26,7 @@ public class KillClientDialog extends JDialog {
         applyTheme();
         setSize(originalSize);
         setLocationRelativeTo(parent);
-        setMinimumSize(new Dimension(1000, 300));
+        setMinimumSize(new Dimension(1000, 500));
         setResizable(true);
 
         addComponentListener(new ComponentAdapter() {
@@ -53,7 +53,7 @@ public class KillClientDialog extends JDialog {
         clientLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
         clientLabel.setForeground(GuiUtils.TEXT_COLOR);
 
-        clientCombo = GuiUtils.createStyledComboBox(clients.toArray(new String[0]), 40);
+        clientCombo = GuiUtils.createStyledComboBox(clients.toArray(new String[0]), 80);
 
         killButton = GuiUtils.createStyledDialogButton("button.kill", 120, 40, this::attemptKill);
         cancelButton = GuiUtils.createStyledDialogButton("button.cancel", 120, 40, this::dispose);

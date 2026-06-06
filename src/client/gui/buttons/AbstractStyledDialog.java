@@ -127,7 +127,6 @@ public abstract class AbstractStyledDialog extends JDialog {
      * Default implementation does nothing.
      */
     protected void resizeComponents() {
-        // Override in subclasses if responsive scaling is needed
     }
 
     /**
@@ -138,28 +137,4 @@ public abstract class AbstractStyledDialog extends JDialog {
         return (float) (baseSize * scaleFactor);
     }
 
-    /**
-     * Helper: creates a titled section panel.
-     */
-    protected JPanel createTitledSection(String titleKey, Component... components) {
-        JPanel section = new JPanel();
-        section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
-        section.setOpaque(false);
-        section.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(GuiUtils.PRIMARY_COLOR, 1),
-                LocaleManager.get(titleKey),
-                SwingConstants.LEFT,
-                SwingConstants.TOP,
-                new Font("Segoe UI", Font.BOLD, 12),
-                GuiUtils.PRIMARY_DARK
-        ));
-
-        for (int i = 0; i < components.length; i++) {
-            section.add(components[i]);
-            if (i < components.length - 1) {
-                section.add(Box.createVerticalStrut(10));
-            }
-        }
-        return section;
-    }
 }

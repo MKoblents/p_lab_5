@@ -27,7 +27,6 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
     private final String currentUsername;
     private SpaceMarine result;
 
-    // Label references for resizing
     private JLabel nameLabel, xLabel, yLabel, healthLabel, meleeLabel, weaponLabel, categoryLabel;
 
     public SpaceMarineUpdateDialog(JFrame parent, SpaceMarineTable tableModel, String currentUsername) {
@@ -46,9 +45,9 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         yField = GuiUtils.createStyledPlaceholderField("dialog.field.y", 45);
         healthField = GuiUtils.createStyledPlaceholderField("dialog.field.health", 45);
 
-        meleeWeaponCombo = GuiUtils.createStyledComboBox(MeleeWeapon.values(), 45);
-        weaponCombo = GuiUtils.createStyledComboBox(Weapon.values(), 45);
-        categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 45);
+        meleeWeaponCombo = GuiUtils.createStyledComboBox(MeleeWeapon.values(), 60);
+        weaponCombo = GuiUtils.createStyledComboBox(Weapon.values(), 60);
+        categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 60);
 
         chapterPanel = new ChapterInputPanel();
 
