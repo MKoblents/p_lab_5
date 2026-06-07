@@ -3,6 +3,8 @@ package client.gui.buttons;
 import client.gui.utils.GuiUtils;
 import client.gui.window.SpaceMarineTable;
 import client.utils.LocaleManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import shared.enums.AstartesCategory;
 import shared.enums.MeleeWeapon;
 import shared.enums.Weapon;
@@ -16,6 +18,16 @@ import javax.xml.bind.ValidationException;
 import java.awt.*;
 
 public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
+
+    private static final Logger logger = LoggerFactory.getLogger(SpaceMarineUpdateDialog.class);
+
+    private static final int FIELD_HEIGHT = 45;
+    private static final int COMBO_HEIGHT = 60;
+    private static final int BASE_LABEL_FONT_SIZE = 25;
+    private static final int BASE_FIELD_FONT_SIZE = 14;
+    private static final int STRUT_SIZE = 15;
+    private static final int CHAPTER_STRUT_SIZE = 20;
+
     private SpaceMarineSelector selector;
     private JTextField nameField, xField, yField, healthField;
     private JComboBox<MeleeWeapon> meleeWeaponCombo;
@@ -40,25 +52,24 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
     protected void initComponents() {
         selector = new SpaceMarineSelector();
 
-        nameField = GuiUtils.createStyledPlaceholderField("dialog.field.name", 45);
-        xField = GuiUtils.createStyledPlaceholderField("dialog.field.x", 45);
-        yField = GuiUtils.createStyledPlaceholderField("dialog.field.y", 45);
-        healthField = GuiUtils.createStyledPlaceholderField("dialog.field.health", 45);
+        nameField = GuiUtils.createStyledPlaceholderField("dialog.field.name", FIELD_HEIGHT);
+        xField = GuiUtils.createStyledPlaceholderField("dialog.field.x", FIELD_HEIGHT);
+        yField = GuiUtils.createStyledPlaceholderField("dialog.field.y", FIELD_HEIGHT);
+        healthField = GuiUtils.createStyledPlaceholderField("dialog.field.health", FIELD_HEIGHT);
 
-        meleeWeaponCombo = GuiUtils.createStyledComboBox(MeleeWeapon.values(), 60);
-        weaponCombo = GuiUtils.createStyledComboBox(Weapon.values(), 60);
-        categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), 60);
+        meleeWeaponCombo = GuiUtils.createStyledComboBox(MeleeWeapon.values(), COMBO_HEIGHT);
+        weaponCombo = GuiUtils.createStyledComboBox(Weapon.values(), COMBO_HEIGHT);
+        categoryCombo = GuiUtils.createStyledComboBox(AstartesCategory.values(), COMBO_HEIGHT);
 
         chapterPanel = new ChapterInputPanel();
 
-        // Create labels with base font size 25
-        nameLabel = createStyledLabel("dialog.field.name", 25);
-        xLabel = createStyledLabel("dialog.field.x", 25);
-        yLabel = createStyledLabel("dialog.field.y", 25);
-        healthLabel = createStyledLabel("dialog.field.health", 25);
-        meleeLabel = createStyledLabel("dialog.field.melee", 25);
-        weaponLabel = createStyledLabel("dialog.field.weapon", 25);
-        categoryLabel = createStyledLabel("dialog.field.category", 25);
+        nameLabel = createStyledLabel("dialog.field.name", BASE_LABEL_FONT_SIZE);
+        xLabel = createStyledLabel("dialog.field.x", BASE_LABEL_FONT_SIZE);
+        yLabel = createStyledLabel("dialog.field.y", BASE_LABEL_FONT_SIZE);
+        healthLabel = createStyledLabel("dialog.field.health", BASE_LABEL_FONT_SIZE);
+        meleeLabel = createStyledLabel("dialog.field.melee", BASE_LABEL_FONT_SIZE);
+        weaponLabel = createStyledLabel("dialog.field.weapon", BASE_LABEL_FONT_SIZE);
+        categoryLabel = createStyledLabel("dialog.field.category", BASE_LABEL_FONT_SIZE);
 
         selector.getComboBox().addActionListener(e -> {
             SpaceMarine selected = selector.getSelectedSpaceMarine();
@@ -81,19 +92,19 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
         fieldsPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
         fieldsPanel.add(createLabeledPanel(nameLabel, nameField));
-        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(Box.createVerticalStrut(STRUT_SIZE));
         fieldsPanel.add(createLabeledPanel(xLabel, xField));
-        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(Box.createVerticalStrut(STRUT_SIZE));
         fieldsPanel.add(createLabeledPanel(yLabel, yField));
-        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(Box.createVerticalStrut(STRUT_SIZE));
         fieldsPanel.add(createLabeledPanel(healthLabel, healthField));
-        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(Box.createVerticalStrut(STRUT_SIZE));
         fieldsPanel.add(createLabeledPanel(meleeLabel, meleeWeaponCombo));
-        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(Box.createVerticalStrut(STRUT_SIZE));
         fieldsPanel.add(createLabeledPanel(weaponLabel, weaponCombo));
-        fieldsPanel.add(Box.createVerticalStrut(15));
+        fieldsPanel.add(Box.createVerticalStrut(STRUT_SIZE));
         fieldsPanel.add(createLabeledPanel(categoryLabel, categoryCombo));
-        fieldsPanel.add(Box.createVerticalStrut(20));
+        fieldsPanel.add(Box.createVerticalStrut(CHAPTER_STRUT_SIZE));
         fieldsPanel.add(chapterPanel);
 
         add(createScrollableContentPanel(fieldsPanel), BorderLayout.CENTER);
@@ -103,29 +114,30 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
 
     @Override
     protected void resizeComponents() {
-        float scaledSize = scaleFontSize(14);
-        float scaledLabelSize = scaleFontSize(25);
+        float scaledSize = scaleFontSize(BASE_FIELD_FONT_SIZE);
+        float scaledLabelSize = scaleFontSize(BASE_LABEL_FONT_SIZE);
 
-        // Resize labels
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
-        xLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
-        yLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
-        healthLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
-        meleeLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
-        weaponLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
-        categoryLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize));
+        Font labelFont = new Font("Segoe UI", Font.BOLD, (int) scaledLabelSize);
+        nameLabel.setFont(labelFont);
+        xLabel.setFont(labelFont);
+        yLabel.setFont(labelFont);
+        healthLabel.setFont(labelFont);
+        meleeLabel.setFont(labelFont);
+        weaponLabel.setFont(labelFont);
+        categoryLabel.setFont(labelFont);
 
-        // Resize fields
-        nameField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-        xField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-        yField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-        healthField.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+        Font fieldFont = new Font("Segoe UI", Font.PLAIN, (int) scaledSize);
+        nameField.setFont(fieldFont);
+        xField.setFont(fieldFont);
+        yField.setFont(fieldFont);
+        healthField.setFont(fieldFont);
 
-        chapterPanel.scaleFonts(getWidth()/originalSize.width);
+        double currentScaleFactor = (double) getWidth() / originalSize.width;
+        chapterPanel.scaleFonts(currentScaleFactor);
 
-        meleeWeaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-        weaponCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
-        categoryCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledSize));
+        meleeWeaponCombo.setFont(fieldFont);
+        weaponCombo.setFont(fieldFont);
+        categoryCombo.setFont(fieldFont);
     }
 
     private JLabel createStyledLabel(String localeKey, int baseFontSize) {
@@ -174,83 +186,90 @@ public class SpaceMarineUpdateDialog extends AbstractStyledDialog {
     private void onOK() {
         SpaceMarine selected = selector.getSelectedSpaceMarine();
         if (selected == null) {
-            JOptionPane.showMessageDialog(this,
-                    LocaleManager.get("dialog.error.select"),
+            GuiUtils.showMessageDialog(null,
                     LocaleManager.get("dialog.error.title"),
-                    JOptionPane.WARNING_MESSAGE);
+                    LocaleManager.get("dialog.error.select"),
+                    GuiUtils.MessageType.WARNING);
             return;
         }
         try {
             result = buildUpdatedSpaceMarine(selected.getId());
             if (result != null) {
-                setVisible(false);
+                logger.info("Successfully prepared update for SpaceMarine ID: {}", selected.getId());
+                dispose();
             }
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this,
+            logger.warn("Number format error during SpaceMarine update", ex);
+            GuiUtils.showMessageDialog(null,
+                    LocaleManager.get("dialog.error.title"),
                     LocaleManager.get("dialog.error.number"),
-                    LocaleManager.get("dialog.error.title"),
-                    JOptionPane.ERROR_MESSAGE);
+                    GuiUtils.MessageType.ERROR);
         } catch (ValidationException ex) {
-            JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
+            logger.warn("Validation failed during SpaceMarine update: {}", ex.getMessage());
+            GuiUtils.showMessageDialog(null,
                     LocaleManager.get("dialog.error.title"),
-                    JOptionPane.ERROR_MESSAGE);
+                    ex.getMessage(),
+                    GuiUtils.MessageType.ERROR);
         }
     }
 
     private void onCancel() {
+        logger.debug("SpaceMarine update cancelled by user.");
         result = null;
-        setVisible(false);
+        dispose();
     }
 
     private SpaceMarine buildUpdatedSpaceMarine(long id) throws ValidationException {
-        String name = nameField.getText().trim();
-        String placeholder = LocaleManager.get("dialog.field.name");
-        if (name.isEmpty() || name.equals(placeholder)) {
-            throw new ValidationException(LocaleManager.get("validation.name.empty"));
-        }
-
-        String xText = xField.getText().trim();
-        String xPlaceholder = LocaleManager.get("dialog.field.x");
-        if (xText.isEmpty() || xText.equals(xPlaceholder)) {
-            throw new ValidationException(LocaleManager.get("validation.x.required"));
-        }
-        long x = Long.parseLong(xText);
-
-        String yText = yField.getText().trim();
-        String yPlaceholder = LocaleManager.get("dialog.field.y");
-        if (yText.isEmpty() || yText.equals(yPlaceholder)) {
-            throw new ValidationException(LocaleManager.get("validation.y.required"));
-        }
-        long y = Long.parseLong(yText);
-
-        String healthText = healthField.getText().trim();
-        String healthPlaceholder = LocaleManager.get("dialog.field.health");
-        if (healthText.isEmpty() || healthText.equals(healthPlaceholder)) {
-            throw new ValidationException(LocaleManager.get("validation.health.required"));
-        }
-        double health = Double.parseDouble(healthText);
-        if (health <= 0) {
-            throw new ValidationException(LocaleManager.get("validation.health.positive"));
-        }
-
         SpaceMarine updated = new SpaceMarine();
         updated.setId(id);
-        updated.setName(name);
+        updated.setName(parseStringField(nameField, "validation.name.empty"));
 
         Coordinates coords = new Coordinates();
-        coords.setX(x);
-        coords.setY(y);
+        coords.setX(parseLongField(xField, "validation.x.required"));
+        coords.setY(parseLongField(yField, "validation.y.required"));
         updated.setCoordinates(coords);
 
-        updated.setHealth(health);
+        updated.setHealth(parseDoubleField(healthField, "validation.health.required", true));
+
         updated.setMeleeWeapon((MeleeWeapon) meleeWeaponCombo.getSelectedItem());
         updated.setWeaponType((Weapon) weaponCombo.getSelectedItem());
         updated.setCategory((AstartesCategory) categoryCombo.getSelectedItem());
-
         updated.setChapter(chapterPanel.getChapter());
 
         return updated;
+    }
+
+    private String parseStringField(JTextField field, String emptyKey) throws ValidationException {
+        if (field.getForeground() == Color.GRAY || field.getText().trim().isEmpty()) {
+            throw new ValidationException(LocaleManager.get(emptyKey));
+        }
+        return field.getText().trim();
+    }
+
+    private long parseLongField(JTextField field, String emptyKey) throws ValidationException {
+        if (field.getForeground() == Color.GRAY || field.getText().trim().isEmpty()) {
+            throw new ValidationException(LocaleManager.get(emptyKey));
+        }
+        try {
+            return Long.parseLong(field.getText().trim());
+        } catch (NumberFormatException e) {
+            throw new ValidationException(LocaleManager.get("dialog.error.number"));
+        }
+    }
+
+    private double parseDoubleField(JTextField field, String emptyKey, boolean mustBePositive) throws ValidationException {
+        if (field.getForeground() == Color.GRAY || field.getText().trim().isEmpty()) {
+            throw new ValidationException(LocaleManager.get(emptyKey));
+        }
+        try {
+            double val = Double.parseDouble(field.getText().trim());
+            if (mustBePositive && val <= 0) {
+                throw new ValidationException(LocaleManager.get("validation.health.positive"));
+            }
+            return val;
+        } catch (NumberFormatException e) {
+            throw new ValidationException(LocaleManager.get("dialog.error.number"));
+        }
     }
 
     public void setSelectedMarine(SpaceMarine marine) {
