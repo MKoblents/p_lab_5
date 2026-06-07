@@ -21,15 +21,13 @@ public class ShipRenderer {
     }
 
     public static void drawShip(Graphics2D g, int x, int y, Color color) {
-        int scale = 3;
+        int scale = 4;
 
-        // Корпус (треугольник, нос вверх)
         int[] bodyX = {x, x - 10 * scale, x + 10 * scale};
         int[] bodyY = {y - 14 * scale, y + 10 * scale, y + 10 * scale};
         g.setColor(color);
         g.fillPolygon(bodyX, bodyY, 3);
 
-        // Крылья
         int[] wingLX = {x - 10 * scale, x - 18 * scale, x - 4 * scale};
         int[] wingLY = {y + 4 * scale, y + 12 * scale, y + 10 * scale};
         int[] wingRX = {x + 10 * scale, x + 18 * scale, x + 4 * scale};
@@ -38,15 +36,12 @@ public class ShipRenderer {
         g.fillPolygon(wingLX, wingLY, 3);
         g.fillPolygon(wingRX, wingRY, 3);
 
-        // Обводка
         g.setColor(Color.BLACK);
-        // 🌟 Масштабируем толщину обводки пропорционально, чтобы она выглядела сбалансированно
         g.setStroke(new BasicStroke(1.5f * scale));
         g.drawPolygon(bodyX, bodyY, 3);
         g.drawPolygon(wingLX, wingLY, 3);
         g.drawPolygon(wingRX, wingRY, 3);
 
-        // Кабина
         g.setColor(Color.WHITE);
         g.fillOval(x - 3 * scale, y - 8 * scale, 6 * scale, 8 * scale);
         g.setColor(Color.DARK_GRAY);

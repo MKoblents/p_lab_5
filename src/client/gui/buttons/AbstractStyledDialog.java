@@ -2,6 +2,8 @@ package client.gui.buttons;
 
 import client.gui.utils.GuiUtils;
 import client.utils.LocaleManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -9,18 +11,19 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-/**
- * Base class for styled dialogs with common behavior:
- * - Theme application
- * - Responsive resizing
- * - Standard layout structure
- */
 public abstract class AbstractStyledDialog extends JDialog {
 
-    protected final Dimension originalSize;
-    protected  JPanel contentPanel;
-    protected  JPanel buttonPanel;
+    private static final Logger logger = LoggerFactory.getLogger(AbstractStyledDialog.class);
 
+    private static final double MIN_SIZE_RATIO = 0.8;
+    private static final int SCROLL_UNIT_INCREMENT = 16;
+    private static final int PANEL_BORDER_SIZE = 10;
+    private static final int PANEL_INNER_BORDER_SIZE = 20;
+    private static final int COMPONENT_STRUT_SIZE = 15;
+
+    protected final Dimension originalSize;
+    protected JPanel contentPanel;
+    protected JPanel buttonPanel;
     protected JButton okButton;
     protected JButton cancelButton;
 
@@ -35,46 +38,32 @@ public abstract class AbstractStyledDialog extends JDialog {
         layoutComponents();
         applyTheme();
 
-        pack();
         setSize(originalSize);
         setLocationRelativeTo(owner);
 
         addResizeListener();
+        logger.debug("Initialized styled dialog: {}", titleKey);
     }
 
     private void setupDialog() {
-        setLayout(new BorderLayout(15, 15));
+        setLayout(new BorderLayout(COMPONENT_STRUT_SIZE, COMPONENT_STRUT_SIZE));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(
-                (int)(originalSize.width * 0.8),
-                (int)(originalSize.height * 0.8)
+                (int) (originalSize.width * MIN_SIZE_RATIO),
+                (int) (originalSize.height * MIN_SIZE_RATIO)
         ));
     }
 
-    /**
-     * Override to create dialog-specific components.
-     */
     protected abstract void initComponents();
 
-    /**
-     * Override to layout components using BorderLayout regions.
-     * Use contentPanel for scrollable content, buttonPanel for actions.
-     */
     protected abstract void layoutComponents();
 
-    /**
-     * Override to add custom theme elements (called after base theme).
-     */
     protected void applyTheme() {
         getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
     }
 
-    /**
-     * Creates standard button panel with OK/Cancel.
-     * Override okAction/cancelAction for custom behavior.
-     */
     protected void createStandardButtons(Runnable okAction, Runnable cancelAction) {
-        buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 20, COMPONENT_STRUT_SIZE));
         buttonPanel.setOpaque(false);
 
         okButton = GuiUtils.createStyledDialogButton("button.ok", 150, 45, okAction);
@@ -87,32 +76,24 @@ public abstract class AbstractStyledDialog extends JDialog {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    /**
-     * Creates titled content panel with scroll support.
-     * @param components components to add vertically
-     * @return JScrollPane ready to add to CENTER
-     */
     protected JScrollPane createScrollableContentPanel(Component... components) {
         contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setOpaque(false);
-        contentPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
+        contentPanel.setBorder(new EmptyBorder(PANEL_BORDER_SIZE, PANEL_INNER_BORDER_SIZE, PANEL_BORDER_SIZE, PANEL_INNER_BORDER_SIZE));
 
         for (Component c : components) {
             contentPanel.add(c);
-            contentPanel.add(Box.createVerticalStrut(15));
+            contentPanel.add(Box.createVerticalStrut(COMPONENT_STRUT_SIZE));
         }
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.setBorder(null);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_UNIT_INCREMENT);
         return scrollPane;
     }
 
-    /**
-     * Adds resize listener that calls resizeComponents() on scale change.
-     */
     private void addResizeListener() {
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -122,19 +103,12 @@ public abstract class AbstractStyledDialog extends JDialog {
         });
     }
 
-    /**
-     * Override to scale fonts and sizes proportionally.
-     * Default implementation does nothing.
-     */
     protected void resizeComponents() {
+        logger.trace("Dialog resized. New dimensions: {}x{}", getWidth(), getHeight());
     }
 
-    /**
-     * Helper: scales a font size proportionally.
-     */
     protected float scaleFontSize(float baseSize) {
         double scaleFactor = (double) getWidth() / originalSize.width;
         return (float) (baseSize * scaleFactor);
     }
-
 }
