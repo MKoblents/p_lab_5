@@ -102,14 +102,7 @@ public class GuiUtils {
         panel.setOpaque(false);
         return panel;
     }
-    /**
-     * Creates a language switch button with dropdown popup menu.
-     * Shows current language code in uppercase (e.g., "RU", "EN").
-     * When clicked, shows a popup menu with available languages.
-     * @param initialLocale the initially selected locale option
-     * @param onLocaleChanged callback when locale is changed
-     * @return styled language switch button
-     */
+
     public static JButton createLanguageSwitchButton(LocaleOption initialLocale, Consumer<LocaleOption> onLocaleChanged) {
 
         String[] parts = initialLocale.code().split("_");
@@ -153,7 +146,6 @@ public class GuiUtils {
                 String[] newParts = option.code().split("_");
                 String newCode = newParts.length > 1 ? newParts[1].toUpperCase() : option.code().substring(0, 2).toUpperCase();
                 langButton.setText(newCode);
-                // Notify callback
                 if (onLocaleChanged != null) {
                     onLocaleChanged.accept(option);
                 }
@@ -166,7 +158,6 @@ public class GuiUtils {
             popupMenu.show(langButton, 0, langButton.getHeight());
         });
 
-        // Hover effect
         langButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 langButton.setBackground(PRIMARY_LIGHT);
@@ -234,11 +225,6 @@ public class GuiUtils {
         });
     }
 
-    /**
-     * Creates a generically-styled JComboBox with pink theme.
-     * @param <T> the type of items in the combo box
-     * @return styled JComboBox instance
-     */
     public static <T> JComboBox<T> createStyledComboBox(int preferedSize) {
         JComboBox<T> combo = new JComboBox<>();
         combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
@@ -248,7 +234,6 @@ public class GuiUtils {
         combo.setPreferredSize(new Dimension(0, preferedSize));
         combo.setMaximumSize(new Dimension(Short.MAX_VALUE, preferedSize));
 
-        // Default renderer with selection styling
         combo.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -392,14 +377,7 @@ public class GuiUtils {
         dialog.getRootPane().setDefaultButton(okButton);
         dialog.setVisible(true);
     }
-    /**
-     * Shows a styled confirmation dialog with Yes/No buttons.
-     *
-     * @param parent the parent frame for modal behavior
-     * @param title the dialog title
-     * @param message the message text to display
-     * @return true if user clicked Yes, false otherwise
-     */
+
     public static boolean showConfirmDialog(Frame parent, String title, String message) {
         JDialog dialog = new JDialog(parent);
         dialog.setModal(true);
@@ -548,27 +526,13 @@ public class GuiUtils {
         return result[0];
     }
 
-    /**
-     * Simplified overload for info messages.
-     */
     public static void showMessageDialog(Frame parent, String title, String message) {
         showMessageDialog(parent, title, message, MessageType.INFO);
     }
 
-    /**
-     * Message type enum for icon selection.
-     */
     public enum MessageType {
         INFO, WARNING, ERROR
     }
-    // === В конец класса GuiUtils ===
-
-    /**
-     * Creates a styled text field with placeholder behavior.
-     * @param placeholderKey locale key for placeholder text
-     * @param preferredHeight preferred height in pixels
-     * @return configured JTextField
-     */
     public static JTextField createStyledPlaceholderField(String placeholderKey, int preferredHeight) {
         JTextField field = new JTextField(LocaleManager.get(placeholderKey));
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -601,12 +565,6 @@ public class GuiUtils {
         return field;
     }
 
-    /**
-     * Creates a styled JComboBox with generic items.
-     * @param items enum values or other items
-     * @param <T> type of items
-     * @return configured JComboBox
-     */
     public static <T> JComboBox<T> createStyledComboBox(T[] items, int preferredHeight) {
         JComboBox<T> combo = createStyledComboBox(preferredHeight);
 
@@ -614,14 +572,6 @@ public class GuiUtils {
         return combo;
     }
 
-    /**
-     * Creates a styled button with hover effect.
-     * @param textKey locale key for button text
-     * @param width preferred width (0 for default)
-     * @param height preferred height
-     * @param action optional action to execute on click
-     * @return configured JButton
-     */
     public static JButton createStyledDialogButton(String textKey, int width, int height, Runnable action) {
         JButton button = new JButton(LocaleManager.get(textKey));
         button.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -667,7 +617,6 @@ public class GuiUtils {
         return area;
     }
 
-    // Метод для создания красивого скролл-панели для текста
     public static JScrollPane createStyledScrollPane(Component view) {
         JScrollPane sp = new JScrollPane(view);
         sp.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 2));
