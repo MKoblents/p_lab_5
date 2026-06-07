@@ -7,6 +7,7 @@ import client.gui.utils.ReconnectScheduler;
 import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.network.PollingService;
+import client.utils.LocaleManager;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -65,7 +66,7 @@ public class GuiClientApp {
 
         MainWindow mainWindow = new MainWindow(connection, config, networkReader);
         mainWindow.setUserName(user.name());
-        mainWindow.setStatus("Connected as " + user.name());
+        mainWindow.setStatus(LocaleManager.get("status.connected_as") + user.name());
         mainWindow.getFrame().setBounds(authBounds);
 
         String clientId = config.getClientId();
@@ -82,28 +83,7 @@ public class GuiClientApp {
         ReconnectScheduler reconnectScheduler = new ReconnectScheduler(connection,config,networkReader);
         reconnectScheduler.start();
 
-//        ScheduledExecutorService heartbeatScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
-//            Thread t = new Thread(r, "heartbeat-scheduler");
-//            t.setDaemon(true);
-//            return t;
-//        });
-//        Runnable heartbeatTask = () -> {
-//            try {
-//                CommandRequest request = new CommandRequest(
-//                        CommandRequest.CMD_HEARTBEAT,
-//                        null,
-//                        UUID.randomUUID().toString().substring(0, 8),
-//                        context.getClientId(),
-//                        context.getUserInfo());
-//                connection.sendRequest(request);
-//            } catch (IOException | RuntimeException e) {
-//                // Ignore heartbeat errors to avoid UI spam
-//            }
-//        };
-//        heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask, 0, 5, TimeUnit.SECONDS);
-
         polling = new PollingService(connection, mainWindow.getTableModel(), mainWindow.getCanvasModel(), mainWindow);
-        System.out.println("polling started");
         polling.start();
     }
     public static void restartNetworkReader() {
@@ -120,15 +100,12 @@ public class GuiClientApp {
         readerThread.start();
         System.out.println("Network reader restarted successfully.");
     }
-    // В GuiClientApp.attemptReconnect()
     public static boolean attemptReconnect(){
-        // 1. Остановить старого читателя
         if (networkReader != null) networkReader.stop();
         if (readerThread != null && readerThread.isAlive()) {
             try { readerThread.join(1000); } catch (InterruptedException ignored) {}
         }
 
-        // 2. Переподключиться
         String host = config.getHost();
         int port = config.getPort();
         if (!connection.connect(host, port)) {
@@ -139,7 +116,6 @@ public class GuiClientApp {
             polling.stop();
         }
 
-        // 3. ⚡ ВАЖНО: Переключить канал в блокирующий режим для хендшейка
         try {
             connection.getSocketChannel().configureBlocking(true);
         } catch (IOException e) {
@@ -147,26 +123,19 @@ public class GuiClientApp {
         }
 
         try {
-            // 4. Отправить хендшейк
             String clientId = (context != null) ? context.getClientId() : config.getClientId();
 
             String parentClientId = (context != null) ? context.getParentClientId() : config.getParentClientId();
             HandshakeRequest handshake = new HandshakeRequest(clientId, parentClientId);
             connection.sendHandshake(handshake);
 
-            // 5. ⚡ Прочитать ответ БЛОКИРУЮЩЕ
-            // ВАЖНО: AsyncNetworkReader НЕ запущен, поэтому байты не будут перехвачены фоновым потоком!
             CommandResponse handshakeResponse = connection.readResponse();
 
             if (handshakeResponse != null && handshakeResponse.success()) {
-                // 6. ⚡ Вернуть канал в неблокирующий режим для асинхронного чтения
                 connection.getSocketChannel().configureBlocking(false);
-
-                // 7. Теперь безопасно запускаем асинхронный читатель
                 restartNetworkReader();
 
                 if (polling != null) {
-//                    polling.setNetworkReader(networkReader);
                     polling.start();
                 }
                 return true;

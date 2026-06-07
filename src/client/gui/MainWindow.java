@@ -205,8 +205,8 @@ public class MainWindow {
                     String currentOwner = (context != null && context.getUserInfo() != null) ? context.getUserInfo().name() : null;
                     if (currentOwner == null || !currentOwner.equals(marine.getOwner())) {
                         GuiUtils.showMessageDialog(frame,
-                                "Permission Denied",
-                                "You can only edit your own objects.",
+                                LocaleManager.get("status.permission_denied"),
+                                LocaleManager.get("status.only_edit_own"),
                                 GuiUtils.MessageType.WARNING);
                         return;
                     }
@@ -248,8 +248,8 @@ public class MainWindow {
             }
             else {
                 GuiUtils.showMessageDialog(frame,
-                        "Permission Denied",
-                        "You can only edit your own objects.",
+                        LocaleManager.get("status.permission_denied"),
+                        LocaleManager.get("status.only_edit_own"),
                         GuiUtils.MessageType.WARNING);
             }
         });
@@ -357,12 +357,6 @@ public class MainWindow {
         panel.setBorder(new EmptyBorder(20, 15, 20, 15));
         panel.setPreferredSize(new Dimension(220, 0));
         panel.setMaximumSize(new Dimension(220, Integer.MAX_VALUE));
-        JLabel titleLabel = new JLabel("Commands", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) GuiUtils.BASE_TITLE_FONT_SIZE));
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setBorder(new EmptyBorder(0, 0, 20, 0));
-        panel.add(titleLabel);
         int buttonWidth = 190, buttonHeight = 40;
         panel.add(createStyledButton("btn.add", buttonWidth, buttonHeight, () -> System.out.println("Add clicked")));
         panel.add(createStyledButton("btn.remove", buttonWidth, buttonHeight, () -> System.out.println("Remove clicked")));

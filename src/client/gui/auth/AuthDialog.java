@@ -37,7 +37,7 @@ public class AuthDialog extends JDialog {
     private double scaleFactor = 1.0;
 
     public AuthDialog(JFrame parent, ConnectionManager connection) {
-        super(parent, "Auth", true);
+        super(parent, LocaleManager.get("auth.title"), true);
         this.connection = connection;
 
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
