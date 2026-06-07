@@ -39,18 +39,11 @@ public class SpaceMarineSelector extends JPanel {
         add(Box.createVerticalStrut(5));
     }
 
-    /**
-     * Sets the current username for filtering SpaceMarines by owner.
-     * @param username the logged-in user's name
-     */
+
     public void setCurrentUsername(String username) {
         this.currentUsername = username;
     }
 
-    /**
-     * Refreshes the dropdown with SpaceMarines belonging to the current user.
-     * @param tableModel the table model containing all marines
-     */
     public void refreshData(SpaceMarineTable tableModel) {
         comboBox.removeAllItems();
         List<SpaceMarine> marines = tableModel.getAllMarines();
@@ -82,10 +75,6 @@ public class SpaceMarineSelector extends JPanel {
         return (SpaceMarine) comboBox.getSelectedItem();
     }
 
-    /**
-     * Adds a resize listener that scales fonts and sizes proportionally.
-     * @param onResize callback receiving the scale factor
-     */
     public void addResizeListener(Consumer<Double> onResize) {
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -104,9 +93,6 @@ public class SpaceMarineSelector extends JPanel {
         });
     }
 
-    /**
-     * Custom renderer for displaying SpaceMarine name + ID with styled selection.
-     */
     private static class SpaceMarineListCellRenderer extends DefaultListCellRenderer {
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

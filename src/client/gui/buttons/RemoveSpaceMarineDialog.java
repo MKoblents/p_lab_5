@@ -17,7 +17,7 @@ public class RemoveSpaceMarineDialog extends AbstractStyledDialog {
     private final String currentUsername;
 
     public RemoveSpaceMarineDialog(Frame owner, SpaceMarineTable tableModel, String currentUsername) {
-        super(owner, "dialog.remove.title", true, 500, 400);
+        super(owner, "dialog.remove.title", true, 1000, 400);
         this.currentUsername = currentUsername;
         refreshSelector(tableModel);
     }
@@ -25,7 +25,7 @@ public class RemoveSpaceMarineDialog extends AbstractStyledDialog {
     @Override
     protected void initComponents() {
         infoLabel = new JLabel(LocaleManager.get("dialog.remove.info"), SwingConstants.CENTER);
-        infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 25));
         infoLabel.setForeground(GuiUtils.PRIMARY_DARK);
 
         selector = new SpaceMarineSelector();
@@ -47,7 +47,7 @@ public class RemoveSpaceMarineDialog extends AbstractStyledDialog {
 
     @Override
     protected void resizeComponents() {
-        float scaledInfoSize = scaleFontSize(14);
+        float scaledInfoSize = scaleFontSize(25);
         infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledInfoSize));
     }
 
