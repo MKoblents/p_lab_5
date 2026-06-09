@@ -63,7 +63,6 @@ public class KillClientDialog extends JDialog {
         setLayout(new BorderLayout(15, 15));
         getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
 
-        // Title and Info Panel
         JPanel titlePanel = GuiUtils.createPanel(new BorderLayout());
         titlePanel.setOpaque(false);
         titlePanel.add(titleLabel, BorderLayout.CENTER);
@@ -74,7 +73,6 @@ public class KillClientDialog extends JDialog {
         infoPanel.add(infoLabel);
         add(infoPanel, BorderLayout.NORTH);
 
-        // Form Panel
         JPanel formPanel = GuiUtils.createPanel(new GridBagLayout());
         formPanel.setOpaque(false);
         formPanel.setBorder(new EmptyBorder(20, 40, 20, 40));
@@ -94,7 +92,6 @@ public class KillClientDialog extends JDialog {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // Button Panel
         JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(new EmptyBorder(0, 20, 20, 20));
@@ -119,13 +116,11 @@ public class KillClientDialog extends JDialog {
         infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledInfoSize));
         clientLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledFontSize));
 
-        // Update combo box
         int scaledComboHeight = (int) (40 * scaleFactor);
         clientCombo.setPreferredSize(new Dimension(0, scaledComboHeight));
         clientCombo.setMaximumSize(new Dimension(Short.MAX_VALUE, scaledComboHeight));
         clientCombo.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledFontSize));
 
-        // Update buttons
         int scaledButtonWidth = (int) (120 * scaleFactor);
         int scaledButtonHeight = (int) (40 * scaleFactor);
         killButton.setPreferredSize(new Dimension(scaledButtonWidth, scaledButtonHeight));

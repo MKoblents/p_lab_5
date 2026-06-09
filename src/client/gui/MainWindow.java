@@ -384,9 +384,6 @@ public class MainWindow {
         panel.add(createStyledButton("btn.remove", buttonWidth, buttonHeight, () -> buttonsHandler.handleRemove()));
         panel.add(createStyledButton("btn.execute_script", buttonWidth, buttonHeight, () -> buttonsHandler.handleExecuteScript()));
         panel.add(createStyledButton("btn.remove_all", buttonWidth, buttonHeight, () -> buttonsHandler.handleClear()));
-        //TODO
-//        panel.add(createStyledButton("btn.show_mine", buttonWidth, buttonHeight, () -> buttonsHandler.handleShowMine()));
-//        panel.add(createStyledButton("btn.shuffle", buttonWidth, buttonHeight, () -> buttonsHandler.handleShuffle()));
         panel.add(createStyledButton("btn.update", buttonWidth, buttonHeight, () -> buttonsHandler.handleUpdate()));
         panel.add(createStyledButton("btn.info", buttonWidth, buttonHeight, () -> buttonsHandler.handleInfo()));
         panel.add(createStyledButton("btn.spawn_client", buttonWidth, buttonHeight, () -> {
@@ -398,7 +395,7 @@ public class MainWindow {
         panel.add(createStyledButton("btn.kill_client", buttonWidth, buttonHeight, () -> buttonsHandler.handleKill()));
         panel.add(createStyledButton("btn.help", buttonWidth, buttonHeight, () -> buttonsHandler.handleHelp()));
         panel.add(createStyledButton("btn.forward", buttonWidth, buttonHeight, () -> buttonsHandler.handleForwardCommand()));
-        panel.add(Box.createVerticalGlue());
+//        panel.add(Box.createVerticalGlue());
         panel.add(createStyledButton("btn.exit", buttonWidth, buttonHeight, () -> buttonsHandler.handleLogOut()));
 
         return panel;

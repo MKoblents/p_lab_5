@@ -195,15 +195,9 @@ public class ButtonsHandler {
     public CommandResponse handleRequest(CommandRequest request, String successMessage) {
         try {
             String expectedRequestId = request.requestId();
-            AsyncNetworkReader reader = getReader(); // Берем свежий reader
-
-            // 1. Регистрируем ожидание ДО отправки
+            AsyncNetworkReader reader = getReader();
             java.util.concurrent.CompletableFuture<CommandResponse> future = reader.registerRequest(expectedRequestId, 5000);
-
-            // 2. Отправляем
             connection.sendRequest(request);
-
-            // 3. Ждем ответ (блокирует только этот поток, не воруя ответы у других)
             CommandResponse response = future.get(5, TimeUnit.SECONDS);
 
             if (response.success()) {

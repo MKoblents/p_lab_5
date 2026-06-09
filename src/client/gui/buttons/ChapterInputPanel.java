@@ -8,16 +8,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-/**
- * Reusable panel for Chapter input with validation support.
- */
 public class ChapterInputPanel extends JPanel {
 
     private final JTextField nameField;
     private final JTextField parentLegionField;
     private final JTextField worldField;
 
-    // Label references for resizing with base font size 25
     private JLabel nameLabel;
     private JLabel parentLegionLabel;
     private JLabel worldLabel;
@@ -34,17 +30,14 @@ public class ChapterInputPanel extends JPanel {
                 GuiUtils.PRIMARY_DARK
         ));
 
-        // Create fields
         nameField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.name", 45);
         parentLegionField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.parentLegion", 45);
         worldField = GuiUtils.createStyledPlaceholderField("dialog.field.chapter.world", 45);
 
-        // Create labels with base font size 25
         nameLabel = createStyledLabel("dialog.field.chapter.name", 25);
         parentLegionLabel = createStyledLabel("dialog.field.chapter.parentLegion", 25);
         worldLabel = createStyledLabel("dialog.field.chapter.world", 25);
 
-        // Add labeled panels
         add(createLabeledPanel(nameLabel, nameField));
         add(Box.createVerticalStrut(10));
         add(createLabeledPanel(parentLegionLabel, parentLegionField));
@@ -52,12 +45,7 @@ public class ChapterInputPanel extends JPanel {
         add(createLabeledPanel(worldLabel, worldField));
     }
 
-    /**
-     * Creates a styled label with base font size.
-     * @param localeKey locale key for label text
-     * @param baseFontSize base font size before scaling
-     * @return configured JLabel
-     */
+
     private JLabel createStyledLabel(String localeKey, float baseFontSize) {
         JLabel label = new JLabel(LocaleManager.get(localeKey), SwingConstants.CENTER);
         label.setFont(new Font("Segoe UI", Font.BOLD, (int) baseFontSize));
@@ -65,12 +53,6 @@ public class ChapterInputPanel extends JPanel {
         return label;
     }
 
-    /**
-     * Creates a panel combining a label and a field.
-     * @param label the label to display above the field
-     * @param field the input component
-     * @return JPanel with BorderLayout
-     */
     private JPanel createLabeledPanel(JLabel label, JComponent field) {
         JPanel panel = GuiUtils.createPanel(new BorderLayout(5, 5));
         panel.setOpaque(false);
@@ -79,9 +61,6 @@ public class ChapterInputPanel extends JPanel {
         return panel;
     }
 
-    /**
-     * Populates fields from Chapter object.
-     */
     public void setChapter(Chapter chapter) {
         if (chapter != null) {
             populateField(nameField, chapter.getName(), "dialog.field.chapter.name");
@@ -101,16 +80,12 @@ public class ChapterInputPanel extends JPanel {
         }
     }
 
-    /**
-     * Creates Chapter from input, or null if name is empty.
-     * @throws javax.xml.bind.ValidationException if name provided but world missing
-     */
     public Chapter getChapter() throws javax.xml.bind.ValidationException {
         String name = nameField.getText().trim();
         String namePlaceholder = LocaleManager.get("dialog.field.chapter.name");
 
         if (name.isEmpty() || name.equals(namePlaceholder)) {
-            return null; // Chapter is optional
+            return null;
         }
 
         String world = worldField.getText().trim();
@@ -133,19 +108,12 @@ public class ChapterInputPanel extends JPanel {
         return chapter;
     }
 
-    /**
-     * Scales fonts for responsive design.
-     * Labels scale from base 25, fields from base 14.
-     * @param scaleFactor the current scale factor
-     */
     public void scaleFonts(double scaleFactor) {
-        // Scale labels (base 25)
         Font labelFont = new Font("Segoe UI", Font.BOLD, (int)(25 * scaleFactor));
         nameLabel.setFont(labelFont);
         parentLegionLabel.setFont(labelFont);
         worldLabel.setFont(labelFont);
 
-        // Scale fields (base 14)
         Font fieldFont = new Font("Segoe UI", Font.PLAIN, (int)(14 * scaleFactor));
         nameField.setFont(fieldFont);
         parentLegionField.setFont(fieldFont);

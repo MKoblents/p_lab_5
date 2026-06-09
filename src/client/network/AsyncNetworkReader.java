@@ -101,7 +101,7 @@ public class AsyncNetworkReader implements Runnable {
                     logger.warn("Unknown object type received: {}", obj != null ? obj.getClass().getSimpleName() : "null");
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             logger.error("Reader thread terminated: {}", e.getMessage());
             triggerDisconnect(DisconnectReason.NETWORK_ERROR);
             close();

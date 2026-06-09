@@ -1,4 +1,3 @@
-// src/client/gui/buttons/ForwardTargetDialog.java
 package client.gui.buttons;
 
 import client.gui.utils.GuiUtils;

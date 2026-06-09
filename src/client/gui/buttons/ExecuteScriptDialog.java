@@ -174,10 +174,6 @@ public class ExecuteScriptDialog extends JDialog {
         return selectedFile;
     }
 
-    /**
-     * Custom styled file chooser dialog that matches the app theme
-     * and supports resizing.
-     */
     private static class StyledFileChooser {
         private final JDialog dialog;
         private JFileChooser fileChooser;
@@ -207,9 +203,6 @@ public class ExecuteScriptDialog extends JDialog {
             });
         }
 
-        /**
-         * First attempt: recursive search for JList
-         */
         private void styleFileNameList(Component comp, int fontSize) {
             if (comp instanceof JList<?> list) {
                 Component parent = list.getParent();
@@ -231,14 +224,9 @@ public class ExecuteScriptDialog extends JDialog {
             }
         }
 
-        /**
-         * Fallback: direct access via component hierarchy traversal
-         */
         private void forceStyleFileList(JFileChooser fc, int fontSize) {
-            // Try to find the file list by traversing known JFileChooser structure
             for (Component comp : fc.getComponents()) {
                 if (comp instanceof JSplitPane splitPane) {
-                    // Left side usually contains the file list
                     Component left = splitPane.getLeftComponent();
                     if (left instanceof JScrollPane scrollPane) {
                         Component view = scrollPane.getViewport().getView();
@@ -246,11 +234,10 @@ public class ExecuteScriptDialog extends JDialog {
                             fileList.setFont(new Font("Segoe UI", Font.PLAIN, fontSize));
                             fileList.setFixedCellHeight((int)(fontSize * 1.8));
                             fileList.repaint();
-                            return; // Found it, stop searching
+                            return;
                         }
                     }
                 } else if (comp instanceof JScrollPane scrollPane) {
-                    // Some L&F put the list directly in a JScrollPane
                     Component view = scrollPane.getViewport().getView();
                     if (view instanceof JList<?> fileList) {
                         fileList.setFont(new Font("Segoe UI", Font.PLAIN, fontSize));
@@ -259,7 +246,6 @@ public class ExecuteScriptDialog extends JDialog {
                         return;
                     }
                 }
-                // Recurse into nested containers
                 if (comp instanceof Container) {
                     forceStyleFileListRecursive(comp, fontSize);
                 }
@@ -287,7 +273,6 @@ public class ExecuteScriptDialog extends JDialog {
             fc.setBackground(GuiUtils.BACKGROUND_COLOR);
             fc.setForeground(GuiUtils.TEXT_COLOR);
 
-            // Style the approve/cancel buttons if accessible
             for (Component comp : fc.getComponents()) {
                 if (comp instanceof JPanel) {
                     stylePanel((JPanel) comp);
@@ -332,7 +317,7 @@ public class ExecuteScriptDialog extends JDialog {
 
             JButton openButton = GuiUtils.createStyledButton(
                     LocaleManager.get("dialog.script.open"),
-                    100, 40,  // width, height
+                    100, 40,
                     () -> {
                         selectedFile = fileChooser.getSelectedFile();
                         result = JFileChooser.APPROVE_OPTION;
@@ -342,7 +327,7 @@ public class ExecuteScriptDialog extends JDialog {
 
             JButton cancelButton = GuiUtils.createStyledButton(
                     LocaleManager.get("dialog.script.cancel"),
-                    100, 40,  // width, height
+                    100, 40,
                     () -> {
                         result = JFileChooser.CANCEL_OPTION;
                         dialog.dispose();
@@ -353,12 +338,10 @@ public class ExecuteScriptDialog extends JDialog {
             buttonPanel.add(cancelButton);
             dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-            // Добавляем listener для ресайза
             dialog.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
                     resizeFileChooser();
-                    // ⭐ Также ресайзим кнопки
                     double scaleFactor = (double) dialog.getWidth() / 800.0;
                     int scaledButtonWidth = (int)(100 * scaleFactor);
                     int scaledButtonHeight = (int)(40 * scaleFactor);
@@ -397,7 +380,6 @@ public class ExecuteScriptDialog extends JDialog {
 
             fileChooser.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledFont));
 
-            // Recursively resize components in file chooser
             resizeComponent(fileChooser, scaleFactor);
         }
 
@@ -430,9 +412,6 @@ public class ExecuteScriptDialog extends JDialog {
         }
     }
 
-    /**
-     * File filter for files without extension (as per original requirement)
-     */
     static class NoExtensionFileFilter extends FileFilter {
         @Override
         public boolean accept(File file) {

@@ -22,10 +22,8 @@ public class ForwardCommandDialog extends JDialog {
 
     private final Dimension originalSize = new Dimension(500, 300);
 
-    // List of forwardable commands
     private static final String[] FORWARDABLE_COMMANDS = {
-            "add", "remove_by_id", "update", "clear",
-            "show", "info", "help", "shuffle"
+            "add", "remove", "update", "clear", "info", "help", "execute_script"
     };
 
     public ForwardCommandDialog(Frame parent, List<String> availableClients) {
@@ -55,7 +53,7 @@ public class ForwardCommandDialog extends JDialog {
             String targetClient = (String) clientCombo.getSelectedItem();
             if (command != null && targetClient != null) {
                 result = new ForwardCommandObject(
-                        null, // parentId will be set by invoker
+                        null,
                         targetClient,
                         command
                 );

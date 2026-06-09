@@ -22,8 +22,8 @@ public class SpaceMarineInputDialog extends AbstractStyledDialog {
 
     private static final int FIELD_HEIGHT = 45;
     private static final int COMBO_HEIGHT = 60;
-    private static final int BASE_LABEL_FONT_SIZE = 25;
-    private static final int BASE_FIELD_FONT_SIZE = 14;
+    private static final int BASE_LABEL_FONT_SIZE = 50;
+    private static final int BASE_FIELD_FONT_SIZE = 20;
     private static final int STRUT_SIZE = 15;
     private static final int CHAPTER_STRUT_SIZE = 20;
 
