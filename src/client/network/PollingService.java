@@ -4,6 +4,7 @@ import client.gui.GuiClientApp; // <-- Импортируем GuiClientApp
 import client.gui.MainWindow;
 import client.gui.window.SpaceMarineCanvas;
 import client.gui.window.SpaceMarineTable;
+import client.utils.LocaleManager;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -58,7 +59,7 @@ public class PollingService {
                 SwingUtilities.invokeLater(() -> {
                     tableModel.setData(marines);
                     canvasModel.setMarines(marines);
-                    mainWindow.setStatus("Синхронизировано: " + marines.size() + " объектов");
+                    mainWindow.setStatus(LocaleManager.get("status.synchronized", marines.size()));
                 });
             }
         } catch (TimeoutException e) {

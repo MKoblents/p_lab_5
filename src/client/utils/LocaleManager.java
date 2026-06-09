@@ -31,6 +31,14 @@ public class LocaleManager {
             return "!" + key + "!";
         }
     }
+    public static String get(String key, Object... args) {
+        try {
+            String pattern = bundle.getString(key);
+            return java.text.MessageFormat.format(pattern, args);
+        } catch (Exception e) {
+            return "!" + key + "!";
+        }
+    }
 
     public static Locale getCurrentLocale() {
         return currentLocale;
