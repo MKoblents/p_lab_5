@@ -29,6 +29,7 @@ public class GuiClientApp {
     private static ConnectionManager connection;
     private static PollingService polling;
     private static ClientConfig config;
+    private static MainWindow mainWindow;
 
     public static void main(String[] args) {
         config = ClientConfig.parse(args);
@@ -38,21 +39,9 @@ public class GuiClientApp {
 
     private static void createAndShowGui(ClientConfig config) {
         new Thread(() -> {
-            connection = new ConnectionManager();
-            while (!connection.isConnected()) {
-                try {
-                    if (attemptReconnect()) {
-                        break;
-                    }
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    logger.warn("Connection thread interrupted. Exiting initialization.");
-                    return;
-                }
-            }
 
             SwingUtilities.invokeLater(() -> {
+                connection = new ConnectionManager();
                 AuthDialog authDialog = new AuthDialog(null, connection);
                 authDialog.setVisible(true);
 
@@ -66,7 +55,7 @@ public class GuiClientApp {
                 UserInfo user = authDialog.getLoggedInUser();
                 RequestsFactory.setUserInfo(user);
 
-                MainWindow mainWindow = new MainWindow(connection, config, networkReader);
+                mainWindow = new MainWindow(connection, config, networkReader);
                 mainWindow.setUserName(user.name());
                 mainWindow.setStatus(LocaleManager.get("status.connected_as") + " " + user.name());
                 mainWindow.getFrame().setBounds(authBounds);
@@ -112,6 +101,9 @@ public class GuiClientApp {
     }
 
     public static boolean attemptReconnect() {
+        if (mainWindow != null){
+            mainWindow.setStatus("Client disconnected from server");
+        }
         if (networkReader != null) {
             networkReader.stop();
         }

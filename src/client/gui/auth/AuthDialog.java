@@ -1,5 +1,6 @@
 package client.gui.auth;
 
+import client.gui.GuiClientApp;
 import client.gui.utils.GuiUtils;
 import client.network.ConnectionManager;
 import client.utils.LocaleManager;
@@ -383,6 +384,7 @@ public class AuthDialog extends JDialog {
                         success = true;
                         dispose();
                     } else {
+                        GuiClientApp.attemptReconnect();
                         showError(LocaleManager.get("auth.error.network"));
                     }
                 } catch (Exception e) {
