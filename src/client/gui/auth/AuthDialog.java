@@ -355,6 +355,12 @@ public class AuthDialog extends JDialog {
             @Override
             protected Boolean doInBackground() {
                 try {
+                    while (!connection.isConnected()) {
+                        try {
+                            if (GuiClientApp.attemptReconnect()) break;
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {}
+                    }
                     UserInfo ui = new UserInfo(user, pass);
                     String cmd = isRegisterMode ? "sign_in" : "log_in";
                     CommandRequest req = RequestsFactory.creatLogRequest(cmd, ui);
@@ -384,7 +390,6 @@ public class AuthDialog extends JDialog {
                         success = true;
                         dispose();
                     } else {
-                        GuiClientApp.attemptReconnect();
                         showError(LocaleManager.get("auth.error.network"));
                     }
                 } catch (Exception e) {

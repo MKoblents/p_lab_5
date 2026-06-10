@@ -39,7 +39,6 @@ public class GuiClientApp {
 
     private static void createAndShowGui(ClientConfig config) {
         new Thread(() -> {
-
             SwingUtilities.invokeLater(() -> {
                 connection = new ConnectionManager();
                 AuthDialog authDialog = new AuthDialog(null, connection);
