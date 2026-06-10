@@ -19,10 +19,8 @@ public class AsyncNetworkReader implements Runnable {
     private final SocketChannel channel;
     private final Consumer<DisconnectReason> onDisconnect;
 
-    // ✅ ГЛАВНОЕ ИЗМЕНЕНИЕ: Карта ожидающих запросов
     private final ConcurrentHashMap<String, CompletableFuture<CommandResponse>> pendingRequests = new ConcurrentHashMap<>();
 
-    // Очередь только для форвард-команд (у них нет requestId, который ждет конкретный обработчик)
     private final ConcurrentLinkedQueue<CommandRequest> forwardQueue = new ConcurrentLinkedQueue<>();
 
     private volatile boolean running = true;
@@ -35,14 +33,10 @@ public class AsyncNetworkReader implements Runnable {
         this.onDisconnect = onDisconnect;
     }
 
-    /**
-     * Регистрирует ожидание ответа ПЕРЕД отправкой запроса.
-     */
     public CompletableFuture<CommandResponse> registerRequest(String requestId, long timeoutMs) {
         CompletableFuture<CommandResponse> future = new CompletableFuture<>();
         pendingRequests.put(requestId, future);
 
-        // Авто-очистка при таймауте, чтобы не засорять память
         CompletableFuture.delayedExecutor(timeoutMs + 500, TimeUnit.MILLISECONDS)
                 .execute(() -> {
                     if (!future.isDone()) {
@@ -94,7 +88,7 @@ public class AsyncNetworkReader implements Runnable {
 //                System.out.println("re in reader: " + obj);
 
                 if (obj instanceof CommandResponse resp) {
-                    routeResponse(resp); // ✅ Маршрутизируем ответ нужному потоку
+                    routeResponse(resp);
                 } else if (obj instanceof CommandRequest fwd) {
                     forwardQueue.offer(fwd);
                 } else {
@@ -108,15 +102,12 @@ public class AsyncNetworkReader implements Runnable {
         }
     }
 
-    /**
-     * Распределяет ответ: если кто-то ждет этот requestId, отдаем ему. Иначе игнорируем.
-     */
     private void routeResponse(CommandResponse resp) {
         String reqId = resp.requestId();
         if (reqId != null) {
             CompletableFuture<CommandResponse> future = pendingRequests.remove(reqId);
             if (future != null) {
-                future.complete(resp); // ✅ Мгновенно доставляем ответ тому, кто его ждет
+                future.complete(resp);
                 logger.debug("Response {} routed to pending future", reqId);
                 return;
             }
@@ -130,7 +121,6 @@ public class AsyncNetworkReader implements Runnable {
 
     public void stop() {
         running = false;
-        // Отменяем все ожидающие запросы при остановке
         pendingRequests.forEach((id, future) -> future.completeExceptionally(new CancellationException("Reader stopped")));
         pendingRequests.clear();
     }

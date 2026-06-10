@@ -446,7 +446,6 @@ public class Server {
                     buf.put(data);
                     buf.flip();
 
-                    // Канал неблокирующий, поэтому добавляем sleep, чтобы не крутить процессор впустую
                     while (buf.hasRemaining()) {
                         int written = targetConn.channel.write(buf);
                         if (written == 0) {
@@ -484,7 +483,6 @@ public class Server {
             String parentId = parentOpt.get();
             logger.info("Attempting to notify parent {} about child {} disconnect", parentId, childId);
 
-            // Create notification command
             CommandRequest notification = new CommandRequest(
                     "child_disconnected",
                     childId,
@@ -493,7 +491,6 @@ public class Server {
                     null
             );
 
-            // ✅ Добавляем в очередь родителя вместо ручной блокирующей записи
             clientRegistry.getPendingCommandQueue().addPendingCommand(parentId, notification);
 
             schedulePendingWrite(parentId);
