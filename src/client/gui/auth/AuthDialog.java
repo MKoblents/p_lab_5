@@ -156,7 +156,7 @@ public class AuthDialog extends JDialog {
         formContainer.add(btnPanel, gbc);
 
         errorLabel = new JLabel(" ");
-        errorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        errorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 30));
         errorLabel.setForeground(Color.RED);
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridy++; gbc.insets = new Insets(10, 15, 15, 15);

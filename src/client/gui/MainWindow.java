@@ -273,6 +273,7 @@ public class MainWindow {
         JPopupMenu filterMenu = new JPopupMenu();
         JMenuItem clearFilter = new JMenuItem(LocaleManager.get("table.filter.clear"));
         clearFilter.addActionListener(e -> sorter.setRowFilter(null));
+        clearFilter.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
         filterMenu.add(clearFilter);
         filterMenu.addSeparator();
 
@@ -282,6 +283,7 @@ public class MainWindow {
 
             JTextField filterText = new JTextField(15);
             filterText.setToolTipText(LocaleManager.get("table.filter.tooltip"));
+            filterText.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
 
             JButton applyBtn = new JButton(LocaleManager.get("button.apply"));
             applyBtn.addActionListener(ev -> {
@@ -289,6 +291,7 @@ public class MainWindow {
                 if (text.isEmpty()) sorter.setRowFilter(null);
                 else sorter.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(text), column));
             });
+            applyBtn.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
 
             filterPanel.add(filterText, BorderLayout.CENTER);
             filterPanel.add(applyBtn, BorderLayout.EAST);
@@ -301,6 +304,8 @@ public class MainWindow {
             JTextField maxField = new JTextField(8);
             minField.setToolTipText(LocaleManager.get("table.filter.min"));
             maxField.setToolTipText(LocaleManager.get("table.filter.max"));
+            maxField.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+            minField.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
 
             JButton applyBtn = new JButton(LocaleManager.get("button.apply"));
             applyBtn.addActionListener(ev -> {
@@ -323,14 +328,21 @@ public class MainWindow {
                     GuiUtils.showMessageDialog(frame, LocaleManager.get("dialog.error.title"), LocaleManager.get("error.please_enter_valid_numbers"), GuiUtils.MessageType.ERROR);
                 }
             });
-
-            filterPanel.add(new JLabel(LocaleManager.get("table.filter.min_label")));
+            applyBtn.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+            JLabel l1= new JLabel(LocaleManager.get("table.filter.min_label"));
+            l1.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+            filterPanel.add(l1);
             filterPanel.add(minField);
-            filterPanel.add(new JLabel(LocaleManager.get("table.filter.max_label")));
+            JLabel l2 =new JLabel(LocaleManager.get("table.filter.max_label"));
+            l2.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+            filterPanel.add(l2);
             filterPanel.add(maxField);
+            filterMenu.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
             filterMenu.add(filterPanel);
             filterMenu.add(applyBtn);
         }
+        filterMenu.setPreferredSize(new Dimension(500,250));
+        filterMenu.setMinimumSize(new Dimension(1000,500));
         filterMenu.show(table.getTableHeader(), x, y);
     }
 
