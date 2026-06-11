@@ -1,5 +1,7 @@
 package shared.models;
 
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.types.ObjectId;
 import shared.enums.AstartesCategory;
 import shared.enums.MeleeWeapon;
 import shared.enums.Weapon;
@@ -39,7 +41,7 @@ import java.time.ZonedDateTime;
 public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
     private static final long serialVersionUID = 1L;
     @XmlElement
-    private long id =1; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private long id =0; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     @XmlElement
     private String name; //Поле не может быть null, Строка не может быть пустой
     @XmlElement
@@ -56,8 +58,12 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
     private MeleeWeapon meleeWeapon; //Поле не может быть null
     @XmlElement
     private Chapter chapter; //Поле может быть null
+    @XmlElement
+    private String owner;
+    @BsonId
+    private ObjectId mongoId;
     public SpaceMarine(){
-        this.id = generateId(this);
+//        this.id = generateId(this);
     }
     /**
      * Compares this Space Marine to another by health value.
@@ -88,7 +94,7 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
         this.name = name;
         this.coordinates = coordinates;
         this.meleeWeapon=meleeWeapon;
-        this.id = generateId(this);
+//        this.id = generateId(this);
     }
     /**
      * Generates unique ID for new elements.
@@ -110,7 +116,8 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
                 "\n   Health: "+this.health+
                 "\n   Coordinates: " + this.coordinates +
                 "\n   MeleeWeapon: "+this.meleeWeapon+
-                "\n   Chapter: "+ this.chapter                ;
+                "\n   Chapter: "+ this.chapter  +
+                "\n   Owner: "+ this.owner;
     }
 
     public long getId() {
@@ -212,4 +219,15 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
         return creationDate;
     }
 
+    public void setOwner(String  owner) {
+        this.owner = owner;
+    }
+
+    public ObjectId getMongoId() {
+        return mongoId;
+    }
+
+    public void setMongoId(ObjectId mongoId) {
+        this.mongoId = mongoId;
+    }
 }

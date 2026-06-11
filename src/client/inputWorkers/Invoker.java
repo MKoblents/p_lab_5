@@ -2,7 +2,6 @@ package client.inputWorkers;
 
 import client.command.*;
 import client.context.ClientContext;
-import client.context.ClientSession;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
@@ -66,6 +65,9 @@ public class Invoker {
         registerCommand("spawn_client", new SpawnClient(context, processManager));
         registerCommand("execute_script", new ExecuteScript(inputManager, runner));
         registerCommand("kill_client", new KillClient(inputManager));
+        registerCommand("log_in", new LogIn(inputManager, connection, context));
+        registerCommand("log_out", new LogOut(context));
+        registerCommand("sign_in", new SignIn(inputManager,connection, context));
     }
 
     public CommandRequest runCommand(String commandName) {
@@ -78,7 +80,7 @@ public class Invoker {
             }
             System.out.println("FORWARDING command '" + commandName + "' to client: " + targetClientId);
             ForwardCommandObject fco = new ForwardCommandObject(context.getClientId(), targetClientId, commandName);
-            CommandRequest cr = new CommandRequest("forward_command", fco, UUID.randomUUID().toString().substring(0, 8), context.getClientId());
+            CommandRequest cr = new CommandRequest("forward_command", fco, UUID.randomUUID().toString().substring(0, 8), context.getClientId(), context.getUserInfo());
             return cr;
         }
         System.out.println("No target, executing on server via current client");

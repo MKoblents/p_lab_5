@@ -123,8 +123,8 @@ public class CommandParser {
             return;
         }
         if (commandName.equals("filter_less_than_melee_weapon")){
-
             enumArg = parts[1];
+//            System.out.println(enumArg);
             return;
         }
         if (commandName.equals("kill_client")){
@@ -149,16 +149,20 @@ public class CommandParser {
      */
     public <T extends Enum<T>> T getEnumValue(Class<T> enumType) {
         if (enumArg == null) return null;
-        List<Function<String, T>> functions = Arrays.asList(
-                value -> getEnumByIndex(value, enumType),
-                value -> getEnumByName(value, enumType));
-        for (Function<String, T> function: functions){
-            T result = function.apply(enumArg);
-            if (result != null){
-                return  result;
+        System.out.println("1");
+        T[] constants = enumType.getEnumConstants();
+        try {
+            int index = Integer.parseInt(enumArg);
+            if (index >= 1 && index <= constants.length) {
+                return constants[index - 1];
             }
+        } catch (NumberFormatException e) {
         }
-        return null;
+        try {
+            return Enum.valueOf(enumType, enumArg.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
     private <T extends Enum<T>>  T getEnumByName(String value, Class<T> enumType){
         try {
@@ -192,7 +196,6 @@ public class CommandParser {
     public String getXmlArg() {
         String str = xmlArg;
         xmlArg = null;
-//        TODO везде сделать стирание
         return str; }
     /** @return script path argument or null */
     public String getPathArg() {

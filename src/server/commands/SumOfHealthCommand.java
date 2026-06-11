@@ -1,14 +1,14 @@
 package server.commands;
 
-import server.manager.CollectionManager;
+import server.manager.CollectionService;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
 
 public class SumOfHealthCommand implements Command{
-    private CollectionManager collectionManager;
+    private CollectionService collectionService;
     private String helpInformation = "sum_of_health : вывести сумму значений поля health для всех элементов коллекции";
-    public SumOfHealthCommand(CollectionManager collectionManager){
-        this.collectionManager = collectionManager;
+    public SumOfHealthCommand(CollectionService collectionService){
+        this.collectionService = collectionService;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class SumOfHealthCommand implements Command{
 
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
-        double sum = collectionManager.getSumOfHealth();
+        double sum = collectionService.getSumOfHealth();
         System.out.println(sum);
         return new CommandResponse(true,
                 sum,

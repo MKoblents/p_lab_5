@@ -49,7 +49,7 @@ public class Update implements ClientCommand {
             return null;
         }
         String requestId = UUID.randomUUID().toString().substring(0, 8);
-        CommandRequest checkRequest = new CommandRequest("could_be_updated", id, requestId, context.getClientId());
+        CommandRequest checkRequest = RequestsFactory.withLongArg("could_be_updated", id);
         logger.info("Sending could_be_updated check for ID: {}", id);
         try {
             connection.sendRequest(checkRequest);
@@ -88,7 +88,7 @@ public class Update implements ClientCommand {
             return RequestsFactory.createTwoArgs("update", id, marine);
         } else {
             logger.debug("Update check returned unexpected result: {}", result);
-            System.err.println("Error: Server returned an unexpected response during update check.");
+            System.err.println("Error: Server returned an unexpected response during update check. "+response.message());
             return null;
         }
     }

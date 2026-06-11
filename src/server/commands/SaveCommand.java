@@ -20,7 +20,8 @@ public class SaveCommand implements Command{
     @Override
     public CommandResponse execute(CommandRequest commandRequest) {
         try {
-            collectionSaver.save(collectionManager, System.getenv("PLAB5"));
+            collectionSaver.save(collectionManager.getSpaceMarines(), System.getenv("PLAB5"));
+            //TODO
             return new CommandResponse(
                     true,
                     null,

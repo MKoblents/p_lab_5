@@ -3,6 +3,7 @@ package client.handlers;
 import client.context.ClientContext;
 import client.scripts.ScriptRunner;
 import shared.dto.CommandResponse;
+import shared.dto.UserInfo;
 import shared.models.SpaceMarine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,7 @@ public class ResponseHandler {
         if (response.result() != null) {
             handleResult(response.result());
         }
+
     }
 
     /**
@@ -69,6 +71,9 @@ public class ResponseHandler {
             handleScriptResult(scriptResult);
         } else if (result instanceof String text) {
             System.out.println("  → " + text);
+        }else if (result instanceof UserInfo ui){
+                context.setUserInfo(ui);
+                System.out.println("User log in "+ ui);
         } else {
             System.out.println("  → Result: " + result);
         }

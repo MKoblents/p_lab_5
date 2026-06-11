@@ -9,14 +9,11 @@ import client.network.AsyncNetworkReader;
 import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.ScriptRunner;
+import shared.dto.*;
 import shared.enums.DisconnectReason;
 import client.utils.SideFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import shared.dto.CommandRequest;
-import shared.dto.CommandResponse;
-import shared.dto.ForwardCommandObject;
-import shared.dto.HandshakeRequest;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -39,6 +36,7 @@ public class ClientSession implements AutoCloseable {
     private AsyncNetworkReader networkReader;
     private Thread networkThread;
     private volatile Thread mainThread;
+    private volatile boolean awaitingLogin = true;
 
     public ClientSession(InputManager im, ConnectionManager conn, ResponseHandler rh,
                          ScriptRunner sr, Invoker invoker, ClientContext context,
@@ -88,7 +86,8 @@ public class ClientSession implements AutoCloseable {
                         CommandRequest.CMD_HEARTBEAT,
                         null,
                         UUID.randomUUID().toString().substring(0, 8),
-                        context.getClientId());
+                        context.getClientId(),
+                        context.getUserInfo());
                 connection.sendRequest(request);
                 logger.trace("Heartbeat sent for client: {}", context.getClientId());
             } catch (IOException | RuntimeException e) {
@@ -97,6 +96,8 @@ public class ClientSession implements AutoCloseable {
         };
         heartbeatScheduler.scheduleWithFixedDelay(heartbeatTask, 0, 5, TimeUnit.SECONDS);
         logger.debug("Heartbeat scheduler started for client: {}", context.getClientId());
+        System.out.println("You should log in to execute any command. In any time you can relogin to another user using command 'log_in'.");
+        invoker.runCommand("log_in");
 
         while (running) {
             if (context.isAwaitingForwardedInput()) {
@@ -111,6 +112,7 @@ public class ClientSession implements AutoCloseable {
             try {
                 String line = ((ConsoleBufferedScanner) inputManager.getReader()).pollNextLine(50);
                 if (line != null && !line.trim().isEmpty() && !line.trim().startsWith("#")) {
+//                    System.out.println(line);
                     inputManager.parseLine(line);
                     commandKey = inputManager.getCurrentCommandName();
                 }
@@ -123,17 +125,21 @@ public class ClientSession implements AutoCloseable {
                     if (!context.isAwaitingForwardedInput() && networkReader.getForwardQueue().isEmpty()) {
                         CommandRequest request = invoker.runCommand(commandKey);
                         if (request != null) {
-                            try {
-                                if (!connection.isConnected()) {
-                                    System.out.println("Not connected to server. Cannot send request.");
-                                    logger.debug("Command '{}' skipped: client not connected", commandKey);
-                                } else {
-                                    connection.sendRequest(request);
-                                    logger.debug("Request sent for command '{}'", commandKey);
+                            if (request.userInfo() != null || commandKey.equals("log_in")){
+                                try {
+                                    if (!connection.isConnected()) {
+                                        System.out.println("Not connected to server. Cannot send request.");
+                                        logger.debug("Command '{}' skipped: client not connected", commandKey);
+                                    } else {
+                                        connection.sendRequest(request);
+                                        logger.debug("Request sent for command '{}'", commandKey);
+                                    }
+                                } catch (IOException e) {
+                                    System.err.println("Network error while sending request: " + e.getMessage());
+                                    logger.error("Failed to send request for command '{}': {}", commandKey, e.getMessage());
                                 }
-                            } catch (IOException e) {
-                                System.err.println("Network error while sending request: " + e.getMessage());
-                                logger.error("Failed to send request for command '{}': {}", commandKey, e.getMessage());
+                            }else {
+                                System.out.println("You should log in before execute any command");
                             }
                         }
                     }
@@ -141,6 +147,40 @@ public class ClientSession implements AutoCloseable {
             } else {
                 try { Thread.sleep(50); } catch (InterruptedException e) { break; }
             }
+        }
+    }
+    private void handleLoginResponse(CommandResponse response) {
+        if (response == null) return;
+
+        if (response.message() != null && (response.message().contains("Log in success") || response.message().contains("Sign in success")) && response.success()) {
+            context.setUserInfo((UserInfo) response.result());
+            System.out.println("Login successful.");
+            awaitingLogin = false;
+        } else if (response.message() != null && response.message().contains("Log in")) {
+            System.out.println("Login failed: " + response.message());
+            System.out.print("Retry? (y/n): ");
+            try {
+                String retry = ((ConsoleBufferedScanner) inputManager.getReader()).getInputString();
+                if ("y".equalsIgnoreCase(retry)) {
+                    awaitingLogin = true;
+                    invoker.runCommand("log_in");
+                } else {
+                    System.out.print("Do you want to sign in? (y/n): ");
+                    try {
+                        String sign_in = ((ConsoleBufferedScanner) inputManager.getReader()).getInputString();
+                        if ("y".equalsIgnoreCase(sign_in)) {
+                            awaitingLogin = true;
+                            invoker.runCommand("sign_in");
+                        } else {
+                            awaitingLogin = false;
+                        }
+                    } catch (IOException e) {
+                        awaitingLogin = false;
+                    }
+                }
+            } catch (IOException e) { awaitingLogin = false; }
+        } else {
+            handleResponse(response);
         }
     }
 
@@ -169,7 +209,7 @@ public class ClientSession implements AutoCloseable {
                         continue;
                     }
                 }
-                handleResponse(response);
+                handleLoginResponse(response);
             }
             CommandRequest forwarded = networkReader.getForwardQueue().poll();
             if (forwarded != null) {
