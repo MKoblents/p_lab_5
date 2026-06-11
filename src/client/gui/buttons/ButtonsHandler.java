@@ -13,6 +13,7 @@ import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.scripts.FileManager;
 import client.scripts.ScriptRunner;
+import client.utils.LocaleManager;
 import client.utils.RequestsFactory;
 import client.utils.SideFlag;
 import shared.dto.CommandRequest;
@@ -44,45 +45,14 @@ public class ButtonsHandler {
         this.networkReader = mainWindow.getNetworkReader();
         this.processManager = new ClientProcessManager(mainWindow.getConfig().getHost(), mainWindow.getConfig().getPort(), null);
     }
-    public void handleShowMine() {
-        String currentOwner = mainWindow.getContext().getUserInfo().name();
-
-        // Берем текущий полный список из модели таблицы
-        List<SpaceMarine> allMarines = mainWindow.getTableModel().getAllMarines();
-
-        // Фильтруем на клиенте
-        List<SpaceMarine> myMarines = allMarines.stream()
-                .filter(marine -> currentOwner.equals(marine.getOwner()))
-                .toList();
-
-        // Обновляем таблицу и канвас отфильтрованными данными
-        mainWindow.updateAllViews(myMarines);
-        mainWindow.setStatus("Показаны только ваши объекты: " + myMarines.size());
-    }
-
-    /**
-     * Перемешивает текущий список объектов на клиенте.
-     */
-    public void handleShuffle() {
-        // Берем текущий список и создаем его изменяемую копию
-        // (чтобы не ломать внутренние списки модели, если они unmodifiable)
-        List<SpaceMarine> marines = new ArrayList<>(mainWindow.getTableModel().getAllMarines());
-
-        // Перемешиваем список с помощью стандартной утилиты Java
-        Collections.shuffle(marines);
-
-        // Обновляем таблицу и канвас перемешанными данными
-        mainWindow.updateAllViews(marines);
-        mainWindow.setStatus("Коллекция перемешана (локально)");
-    }
-
 
 
     public void handleAdd() {
         SpaceMarineInputDialog dialog = new SpaceMarineInputDialog(mainWindow.getFrame());
         dialog.setVisible(true);
         SpaceMarine marine = dialog.getSpaceMarine();
-        if (marine != null) handleRequest(RequestsFactory.withMarine("add", marine), "Space Marine added successfully!");
+        if (marine != null) handleRequest(RequestsFactory.withMarine("add", marine), LocaleManager.get("status.space_marine_added"));
+        GuiClientApp.updateViews();
     }
 
     public void handleRemove() {
@@ -91,7 +61,7 @@ public class ButtonsHandler {
         dialog.setVisible(true);
         if (dialog.isSuccess()) {
             SpaceMarine marineToRemove = dialog.getSelectedSpaceMarine();
-            handleRequest(RequestsFactory.withLongArg("remove_by_id", marineToRemove.getId()), "Space Marine deleted successfully!");
+            handleRequest(RequestsFactory.withLongArg("remove_by_id", marineToRemove.getId()), LocaleManager.get("status.space_marine_deleted"));
         }
     }
 
@@ -109,13 +79,13 @@ public class ButtonsHandler {
                 Invoker invoker = new Invoker(inputManager, mainWindow.getContext(), connection, processManager, scriptRunner);
                 scriptRunner.setInvoker(invoker);
                 boolean success = scriptRunner.executeScript(scriptFile.getPath());
-                publish(success ? "Script completed successfully\n" + scriptRunner.getRes() : "Script completed with errors");
+                publish(success ? LocaleManager.get("status.script_completed_success") + "\n" + scriptRunner.getRes() : LocaleManager.get("status.script_completed_errors"));
                 return null;
             }
             @Override
             protected void process(List<String> chunks) {
                 String message = chunks.get(chunks.size() - 1);
-                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Script Result", message, GuiUtils.MessageType.INFO);
+                GuiUtils.showMessageDialog(mainWindow.getFrame(), LocaleManager.get("dialog.script.title"), message, GuiUtils.MessageType.INFO);
             }
         };
         worker.execute();
@@ -124,9 +94,9 @@ public class ButtonsHandler {
     public void handleClear() {
         boolean confirm = GuiUtils.showConfirmDialog(null,
                 "Are you sure you want to clear your collection?",
-                "Confirm Action");
+                null);
         if (!confirm) return;
-        handleRequest(RequestsFactory.createSimple("clear"), "Collection cleared successfully!");
+        handleRequest(RequestsFactory.createSimple("clear"), LocaleManager.get("status.collection_cleared"));
     }
 
     public void handleUpdate() {
@@ -134,7 +104,8 @@ public class ButtonsHandler {
         SpaceMarineUpdateDialog updateDialog = new SpaceMarineUpdateDialog(mainWindow.getFrame(), mainWindow.getTableModel(), username);
         updateDialog.setVisible(true);
         SpaceMarine updateMarine = updateDialog.getUpdatedSpaceMarine();
-        if (updateMarine != null) handleRequest(RequestsFactory.createTwoArgs("update", updateMarine.getId(), updateMarine), "SpaceMarine updated successfully!");
+        if (updateMarine != null) handleRequest(RequestsFactory.createTwoArgs("update", updateMarine.getId(), updateMarine), LocaleManager.get("status.space_marine_updated"));
+        GuiClientApp.updateViews();
     }
 
     public void handleInfo() { showSimple("info"); }
@@ -142,7 +113,7 @@ public class ButtonsHandler {
 
     private void showSimple(String commandKey) {
         CommandRequest request = RequestsFactory.createSimple(commandKey);
-        CommandResponse response = handleRequest(request, "horrreeeeyyy");
+        CommandResponse response = handleRequest(request, LocaleManager.get("info.command_executed"));
         if (response != null && response.result() instanceof String result) {
             GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", result, GuiUtils.MessageType.INFO);
         } else {
@@ -153,7 +124,7 @@ public class ButtonsHandler {
     public void handleSpawn() throws IOException {
         if (spawnClient == null) spawnClient = new SpawnClient(mainWindow.getContext(), processManager);
         CommandRequest request = spawnClient.execute(SideFlag.SELF);
-        CommandResponse response = handleRequest(request, "New window opened!");
+        CommandResponse response = handleRequest(request, LocaleManager.get("status.new_window_opened"));
         System.out.println("in handleSpawn: "+ response);
         if (response != null) spawnClient.handleResponse(response, mainWindow.getContext());
     }
@@ -161,7 +132,7 @@ public class ButtonsHandler {
     public void handleKill() {
         List<String> availableClients = mainWindow.getContext().getChildClientIds();
         if (availableClients.isEmpty()) {
-            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Info", "No active child clients found.", GuiUtils.MessageType.INFO);
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Info", LocaleManager.get("info.no_active_child_clients"), GuiUtils.MessageType.INFO);
             return;
         }
         KillClientDialog dialog = new KillClientDialog(mainWindow.getFrame(), availableClients);
@@ -171,13 +142,13 @@ public class ButtonsHandler {
 
     private void sendKillCommand(String clientId) {
         CommandRequest request = RequestsFactory.withStringArg("kill_client", clientId);
-        CommandResponse response = handleRequest(request, "Client terminated");
+        CommandResponse response = handleRequest(request, LocaleManager.get("status.client_terminated"));
         if (response != null && response.success()) {
             processManager.killChild(clientId);
             mainWindow.getContext().removeChild(clientId);
-            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", "Client " + clientId + " terminated successfully.", GuiUtils.MessageType.INFO);
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", LocaleManager.get("status.client_terminated_success").replace("{client_id}", clientId), GuiUtils.MessageType.INFO);
         } else {
-            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Failed to terminate client: " + (response != null ? response.message() : "Unknown error"), GuiUtils.MessageType.ERROR);
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", LocaleManager.get("error.failed_terminate_client") + (response != null ? response.message() : "Unknown error"), GuiUtils.MessageType.ERROR);
         }
     }
 
@@ -199,7 +170,7 @@ public class ButtonsHandler {
     public void handleForwardCommand() {
         List<String> childClients = mainWindow.getContext().getChildClientIds();
         if (childClients.isEmpty()) {
-            GuiUtils.showMessageDialog(mainWindow.getFrame(), "No Clients", "No child clients available for forwarding.", GuiUtils.MessageType.WARNING);
+            GuiUtils.showMessageDialog(mainWindow.getFrame(), LocaleManager.get("info.no_active_child_clients"), LocaleManager.get("info.no_child_clients_available"), GuiUtils.MessageType.WARNING);
             return;
         }
         ForwardCommandDialog dialog = new ForwardCommandDialog(mainWindow.getFrame(), childClients);
@@ -212,9 +183,9 @@ public class ButtonsHandler {
             try {
                 System.out.println(request);
                 connection.sendRequest(request);
-                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", "Command forwarded to " + finalFco.childId(), GuiUtils.MessageType.INFO);
+                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Success", LocaleManager.get("status.command_forwarded").replace("{client_id}", finalFco.childId()) + finalFco.childId(), GuiUtils.MessageType.INFO);
             } catch (IOException ex) {
-                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", "Failed to forward command: " + ex.getMessage(), GuiUtils.MessageType.ERROR);
+                GuiUtils.showMessageDialog(mainWindow.getFrame(), "Error", LocaleManager.get("error.failed_forward_command") +  ex.getMessage(), GuiUtils.MessageType.ERROR);
             }
         }
     }
@@ -224,15 +195,9 @@ public class ButtonsHandler {
     public CommandResponse handleRequest(CommandRequest request, String successMessage) {
         try {
             String expectedRequestId = request.requestId();
-            AsyncNetworkReader reader = getReader(); // Берем свежий reader
-
-            // 1. Регистрируем ожидание ДО отправки
+            AsyncNetworkReader reader = getReader();
             java.util.concurrent.CompletableFuture<CommandResponse> future = reader.registerRequest(expectedRequestId, 5000);
-
-            // 2. Отправляем
             connection.sendRequest(request);
-
-            // 3. Ждем ответ (блокирует только этот поток, не воруя ответы у других)
             CommandResponse response = future.get(5, TimeUnit.SECONDS);
 
             if (response.success()) {

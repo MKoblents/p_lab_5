@@ -1,4 +1,5 @@
 package client.gui;
+
 import client.config.ClientConfig;
 import client.context.ClientContext;
 import client.gui.buttons.ButtonsHandler;
@@ -11,22 +12,24 @@ import client.network.ConnectionManager;
 import client.process.ClientProcessManager;
 import client.utils.LocaleManager;
 import client.utils.RequestsFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import shared.dto.CommandRequest;
 import shared.dto.ForwardCommandObject;
 import shared.models.SpaceMarine;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class MainWindow {
+    private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
     private JFrame frame;
     private JLabel statusLabel;
     private JLabel userLabel;
@@ -45,68 +48,70 @@ public class MainWindow {
     private final AsyncNetworkReader networkReader;
     private Dimension originalSize;
     private double scaleFactor = 1.0;
-    private ClientContext context;
+    public ClientContext context;
     private final ClientConfig config;
     private ClientProcessManager processManager;
-    private JComboBox<String> forwardCommandCombo;
-    private JButton btnForwardCommand;
     private JButton langButton;
 
-    public void setDependencies(ConnectionManager connection, ClientContext context, ClientProcessManager processManager) {
-        this.connection = connection;
-        this.context = context;
-        this.processManager = processManager;
-    }
     public ClientConfig getConfig() { return config; }
 
     public MainWindow(ConnectionManager connection, ClientConfig config, AsyncNetworkReader networkReader) {
         this.config = config;
         this.connection = connection;
         this.networkReader = networkReader;
+
         initializeFrame();
         initializeComponents();
         setupLayout();
+
         buttonsHandler = new ButtonsHandler(connection, this);
+
         originalSize = new Dimension(1200, 800);
         frame.setMinimumSize(originalSize);
         frame.setLocationRelativeTo(null);
+
         GuiUtils.addResizeListener(frame.getContentPane(), originalSize, this::onResize);
         startForwardCommandListener();
+
         frame.setVisible(true);
+        logger.info("MainWindow initialized and displayed successfully.");
     }
+
     public AsyncNetworkReader getNetworkReader() { return networkReader; }
 
     private void onResize(double newScaleFactor) {
         this.scaleFactor = newScaleFactor;
         resizeComponents();
     }
+
     public double getScaleFactor() { return scaleFactor; }
 
     private void resizeComponents() {
         float scaledFontSize = (float) (GuiUtils.BASE_FONT_SIZE * scaleFactor);
         float scaledTitleFontSize = (float) (GuiUtils.BASE_TITLE_FONT_SIZE * scaleFactor);
         float scaledButtonFontSize = (float) (GuiUtils.BASE_BUTTON_FONT_SIZE * scaleFactor);
+
         Font regularFont = new Font("Segoe UI", Font.PLAIN, (int) scaledFontSize);
         Font boldFont = new Font("Segoe UI", Font.BOLD, (int) scaledFontSize);
-        Font titleFont = new Font("Segoe UI", Font.BOLD, (int) scaledTitleFontSize);
         Font buttonFont = new Font("Segoe UI", Font.BOLD, (int) scaledButtonFontSize);
 
         statusLabel.setFont(regularFont);
         userLabel.setFont(regularFont);
+
         if (tableView != null) {
             tableView.setFont(regularFont);
             tableView.setRowHeight((int) (28 * scaleFactor));
             tableView.getTableHeader().setFont(boldFont);
         }
+
         if (langButton != null) {
             int scaledLangBtnWidth = (int) (100 * scaleFactor);
             int scaledLangBtnHeight = (int) (28 * scaleFactor);
-
             langButton.setPreferredSize(new Dimension(scaledLangBtnWidth, scaledLangBtnHeight));
             langButton.setMaximumSize(new Dimension(scaledLangBtnWidth, scaledLangBtnHeight));
-            float scaledLangBtnFont = (float) (GuiUtils.BASE_BUTTON_FONT_SIZE * scaleFactor);
-            langButton.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledLangBtnFont));
+            langButton.setFont(new Font("Segoe UI", Font.BOLD, (int) scaledButtonFontSize));
         }
+
         int scaledPanelWidth = (int) (220 * scaleFactor);
         controlPanel.setPreferredSize(new Dimension(scaledPanelWidth, 0));
         controlPanel.setMaximumSize(new Dimension(scaledPanelWidth, Integer.MAX_VALUE));
@@ -119,19 +124,19 @@ public class MainWindow {
         int scaledBorderInset = (int) (15 * scaleFactor);
 
         updateButtonSizes(controlPanel, scaledButtonWidth, scaledButtonHeight, scaledButtonGap);
-        controlPanel.setPreferredSize(new Dimension(scaledPanelWidth, 0));
-        controlPanel.setMaximumSize(new Dimension(scaledPanelWidth, Integer.MAX_VALUE));
+
         Component[] components = frame.getContentPane().getComponents();
         for (Component comp : components) {
-            if (comp instanceof JPanel && comp.getName() != null && comp.getName().equals("topPanel")) {
+            if (comp instanceof JPanel && "topPanel".equals(comp.getName())) {
                 comp.setPreferredSize(new Dimension(0, scaledTopPanelHeight));
             }
         }
-        updateButtonSizes(controlPanel, scaledButtonWidth, scaledButtonHeight, scaledButtonGap);
+
         if (switchButton != null) {
             switchButton.setPreferredSize(new Dimension((int) (140 * scaleFactor), (int) (28 * scaleFactor)));
             switchButton.setFont(buttonFont);
         }
+
         contentPanel.setBorder(BorderFactory.createEmptyBorder(scaledBorderInset, scaledBorderInset, scaledBorderInset, scaledBorderInset));
         frame.revalidate();
         frame.repaint();
@@ -143,6 +148,7 @@ public class MainWindow {
             else if (c instanceof Container subContainer) updateButtonFonts(subContainer, buttonFont);
         }
     }
+
     private void updateButtonSizes(Container container, int width, int height, int gap) {
         for (Component c : container.getComponents()) {
             if (c instanceof JPanel buttonPanel) {
@@ -150,13 +156,14 @@ public class MainWindow {
                     if (panelComp instanceof JButton button) {
                         button.setPreferredSize(new Dimension(width, height));
                         button.setMaximumSize(new Dimension(width, height));
-                        button.setFont(new Font("Segoe UI", Font.BOLD,
-                                (int)(GuiUtils.BASE_BUTTON_FONT_SIZE * scaleFactor)));
+                        button.setFont(new Font("Segoe UI", Font.BOLD, (int)(GuiUtils.BASE_BUTTON_FONT_SIZE * scaleFactor)));
                     }
                 }
                 buttonPanel.setMaximumSize(new Dimension(width, height + (int) (16 * scaleFactor)));
                 buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, gap));
-            } else if (c instanceof Container subContainer) updateButtonSizes(subContainer, width, height, gap);
+            } else if (c instanceof Container subContainer) {
+                updateButtonSizes(subContainer, width, height, gap);
+            }
         }
     }
 
@@ -164,15 +171,16 @@ public class MainWindow {
         frame = new JFrame(LocaleManager.getAppTitle());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout(0, 0));
-        JPanel rootPanel = GuiUtils.createStrippedPanel(new BorderLayout(),1200);
+        JPanel rootPanel = GuiUtils.createStrippedPanel(new BorderLayout(), 1200);
         frame.setContentPane(rootPanel);
     }
 
     private void initializeComponents() {
-        statusLabel = GuiUtils.createLabel(LocaleManager.get("main.status.connecting"),(int) GuiUtils.BASE_FONT_SIZE,false);
-        userLabel = GuiUtils.createLabel(LocaleManager.get("main.user.guest"),(int) GuiUtils.BASE_FONT_SIZE,false);
-        langButton =  GuiUtils.createLanguageSwitchButton(
-                new GuiUtils.LocaleOption("ru_RU", "Русский"),  // или получите из настроек
+        statusLabel = GuiUtils.createLabel(LocaleManager.get("main.status.connecting"), (int) GuiUtils.BASE_FONT_SIZE, false);
+        userLabel = GuiUtils.createLabel(LocaleManager.get("main.user.guest"), (int) GuiUtils.BASE_FONT_SIZE, false);
+
+        langButton = GuiUtils.createLanguageSwitchButton(
+                new GuiUtils.LocaleOption("ru_RU", "Русский"),
                 selected -> {
                     String[] parts = selected.code().split("_");
                     if (parts.length == 2) {
@@ -186,6 +194,7 @@ public class MainWindow {
         contentPanel = GuiUtils.createPanel(cardLayout);
         contentPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         contentPanel.setOpaque(false);
+
         tableModel = new SpaceMarineTable();
         tableView = new JTable(tableModel);
         tableView.setFillsViewportHeight(true);
@@ -193,6 +202,7 @@ public class MainWindow {
         tableView.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_FONT_SIZE));
         tableView.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, (int) GuiUtils.BASE_FONT_SIZE));
         tableView.setSelectionBackground(GuiUtils.PRIMARY_LIGHT);
+
         tableView.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -202,18 +212,19 @@ public class MainWindow {
                     int modelRow = tableView.convertRowIndexToModel(selectedRow);
                     SpaceMarine marine = tableModel.getMarineAtRow(modelRow);
                     if (marine == null) return;
+
                     String currentOwner = (context != null && context.getUserInfo() != null) ? context.getUserInfo().name() : null;
                     if (currentOwner == null || !currentOwner.equals(marine.getOwner())) {
-                        GuiUtils.showMessageDialog(frame,
-                                "Permission Denied",
-                                "You can only edit your own objects.",
-                                GuiUtils.MessageType.WARNING);
+                        GuiUtils.showMessageDialog(frame, LocaleManager.get("status.permission_denied"), LocaleManager.get("status.only_edit_own"), GuiUtils.MessageType.WARNING);
                         return;
                     }
+
                     SpaceMarineUpdateDialog dialog = new SpaceMarineUpdateDialog(frame, tableModel, context.getUserInfo().name());
                     dialog.setSelectedMarine(marine);
                     dialog.setVisible(true);
-                    buttonsHandler.handleRequest(RequestsFactory.createTwoArgs("update", dialog.getUpdatedSpaceMarine().getId(), dialog.getUpdatedSpaceMarine()), "Updated successfully!");
+                    if (dialog.getUpdatedSpaceMarine() != null) {
+                        buttonsHandler.handleRequest(RequestsFactory.createTwoArgs("update", dialog.getUpdatedSpaceMarine().getId(), dialog.getUpdatedSpaceMarine()), LocaleManager.get("status.space_marine_updated"));
+                    }
                 }
             }
         });
@@ -238,55 +249,71 @@ public class MainWindow {
 
         canvas = new SpaceMarineCanvas();
         canvas.setOnMarineDoubleClick(marine -> {
-            SpaceMarineUpdateDialog dialog = new SpaceMarineUpdateDialog(frame, tableModel, context.getUserInfo().name());
-            dialog.setSelectedMarine(marine);
-            dialog.setVisible(true);
-            if (dialog.getUpdatedSpaceMarine() != null) {
-                buttonsHandler.handleRequest(RequestsFactory.createTwoArgs("update", dialog.getUpdatedSpaceMarine().getId(), dialog.getUpdatedSpaceMarine()), "SpaceMarine updated successfully!");
+            if (marine.getOwner().equals(context.getUserInfo().name())) {
+                SpaceMarineUpdateDialog dialog = new SpaceMarineUpdateDialog(frame, tableModel, context.getUserInfo().name());
+                dialog.setSelectedMarine(marine);
+                dialog.setVisible(true);
+                if (dialog.getUpdatedSpaceMarine() != null) {
+                    buttonsHandler.handleRequest(RequestsFactory.createTwoArgs("update", dialog.getUpdatedSpaceMarine().getId(), dialog.getUpdatedSpaceMarine()), LocaleManager.get("status.space_marine_updated"));
+                }
+            } else {
+                GuiUtils.showMessageDialog(frame, LocaleManager.get("status.permission_denied"), LocaleManager.get("status.only_edit_own"), GuiUtils.MessageType.WARNING);
             }
         });
+
         JScrollPane canvasScroll = new JScrollPane(canvas);
         canvasScroll.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
         canvasScroll.setOpaque(false);
         contentPanel.add(canvasScroll, "CANVAS");
 
-        switchButton =GuiUtils.createStyledButton(LocaleManager.get("view.switch.to_map"),140,28,()->toggleView());
-
+        switchButton = GuiUtils.createStyledButton(LocaleManager.get("view.switch.to_map"), 140, 28, this::toggleView);
     }
 
     private void showFilterMenu(JTable table, TableRowSorter<SpaceMarineTable> sorter, int column, int x, int y) {
         JPopupMenu filterMenu = new JPopupMenu();
-        JMenuItem clearFilter = new JMenuItem("Clear Filter");
+        JMenuItem clearFilter = new JMenuItem(LocaleManager.get("table.filter.clear"));
         clearFilter.addActionListener(e -> sorter.setRowFilter(null));
+        clearFilter.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
         filterMenu.add(clearFilter);
         filterMenu.addSeparator();
+
         if (table.getModel().getColumnClass(column) == String.class) {
             JPanel filterPanel = GuiUtils.createPanel(new BorderLayout(5, 0));
             filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
             JTextField filterText = new JTextField(15);
-            filterText.setToolTipText("Type to filter...");
-            JButton applyBtn = new JButton("Apply");
+            filterText.setToolTipText(LocaleManager.get("table.filter.tooltip"));
+            filterText.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+
+            JButton applyBtn = new JButton(LocaleManager.get("button.apply"));
             applyBtn.addActionListener(ev -> {
                 String text = filterText.getText().trim();
                 if (text.isEmpty()) sorter.setRowFilter(null);
                 else sorter.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(text), column));
             });
+            applyBtn.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+
             filterPanel.add(filterText, BorderLayout.CENTER);
             filterPanel.add(applyBtn, BorderLayout.EAST);
             filterMenu.add(filterPanel);
         } else if (Number.class.isAssignableFrom(table.getModel().getColumnClass(column))) {
             JPanel filterPanel = GuiUtils.createPanel(new GridLayout(2, 2, 5, 2));
             filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
             JTextField minField = new JTextField(8);
             JTextField maxField = new JTextField(8);
-            minField.setToolTipText("Min value");
-            maxField.setToolTipText("Max value");
-            JButton applyBtn = new JButton("Apply");
+            minField.setToolTipText(LocaleManager.get("table.filter.min"));
+            maxField.setToolTipText(LocaleManager.get("table.filter.max"));
+            maxField.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+            minField.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+
+            JButton applyBtn = new JButton(LocaleManager.get("button.apply"));
             applyBtn.addActionListener(ev -> {
                 try {
                     Number min = minField.getText().trim().isEmpty() ? null : Double.valueOf(minField.getText());
                     Number max = maxField.getText().trim().isEmpty() ? null : Double.valueOf(maxField.getText());
-                    sorter.setRowFilter(new RowFilter<SpaceMarineTable, Integer>() {
+
+                    sorter.setRowFilter(new RowFilter<>() {
                         @Override
                         public boolean include(Entry<? extends SpaceMarineTable, ? extends Integer> entry) {
                             Object value = entry.getValue(column);
@@ -297,16 +324,25 @@ public class MainWindow {
                         }
                     });
                 } catch (NumberFormatException ex) {
-                    GuiUtils.showMessageDialog(frame, "Input Error", "Please enter valid numbers", GuiUtils.MessageType.ERROR);
+                    logger.warn("Invalid number format in table filter: {}", ex.getMessage());
+                    GuiUtils.showMessageDialog(frame, LocaleManager.get("dialog.error.title"), LocaleManager.get("error.please_enter_valid_numbers"), GuiUtils.MessageType.ERROR);
                 }
             });
-            filterPanel.add(new JLabel("Min:"));
+            applyBtn.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+            JLabel l1= new JLabel(LocaleManager.get("table.filter.min_label"));
+            l1.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+            filterPanel.add(l1);
             filterPanel.add(minField);
-            filterPanel.add(new JLabel("Max:"));
+            JLabel l2 =new JLabel(LocaleManager.get("table.filter.max_label"));
+            l2.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
+            filterPanel.add(l2);
             filterPanel.add(maxField);
+            filterMenu.setFont(new Font("Segoe UI", Font.PLAIN, (int) GuiUtils.BASE_MESSAGE_SIZE));
             filterMenu.add(filterPanel);
             filterMenu.add(applyBtn);
         }
+        filterMenu.setPreferredSize(new Dimension(500,250));
+        filterMenu.setMinimumSize(new Dimension(1000,500));
         filterMenu.show(table.getTableHeader(), x, y);
     }
 
@@ -316,6 +352,7 @@ public class MainWindow {
         topPanel.setName("topPanel");
         topPanel.setOpaque(false);
         rootPanel.add(topPanel, BorderLayout.NORTH);
+
         controlPanel = createControlPanel();
         rootPanel.add(controlPanel, BorderLayout.WEST);
         rootPanel.add(contentPanel, BorderLayout.CENTER);
@@ -323,22 +360,25 @@ public class MainWindow {
     }
 
     private JPanel createTopPanel() {
-        JPanel panel = GuiUtils.createRoundedPanel(new BorderLayout(10, 0),Color.WHITE,0,50);
+        JPanel panel = GuiUtils.createRoundedPanel(new BorderLayout(10, 0), Color.WHITE, 0, 50);
         panel.setBorder(new EmptyBorder(10, 20, 10, 20));
         panel.setPreferredSize(new Dimension(0, 60));
+
         JPanel leftPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-//        leftPanel.setOpaque(false);
         leftPanel.add(statusLabel);
         statusLabel.setForeground(Color.BLACK);
+
         JPanel centerPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-//        centerPanel.setOpaque(false);
         centerPanel.add(userLabel);
         userLabel.setForeground(Color.BLACK);
+
         JPanel rightPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-//        rightPanel.setOpaque(false);
         rightPanel.add(langButton);
         rightPanel.add(switchButton);
-        panel.add(leftPanel, BorderLayout.WEST); panel.add(centerPanel, BorderLayout.CENTER); panel.add(rightPanel, BorderLayout.EAST);
+
+        panel.add(leftPanel, BorderLayout.WEST);
+        panel.add(centerPanel, BorderLayout.CENTER);
+        panel.add(rightPanel, BorderLayout.EAST);
         panel.setOpaque(false);
         return panel;
     }
@@ -349,37 +389,27 @@ public class MainWindow {
         panel.setBorder(new EmptyBorder(20, 15, 20, 15));
         panel.setPreferredSize(new Dimension(220, 0));
         panel.setMaximumSize(new Dimension(220, Integer.MAX_VALUE));
-        JLabel titleLabel = new JLabel("Commands", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) GuiUtils.BASE_TITLE_FONT_SIZE));
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setBorder(new EmptyBorder(0, 0, 20, 0));
-        panel.add(titleLabel);
+
         int buttonWidth = 190, buttonHeight = 40;
-        panel.add(createStyledButton("btn.add", buttonWidth, buttonHeight, () -> System.out.println("Add clicked")));
-        panel.add(createStyledButton("btn.remove", buttonWidth, buttonHeight, () -> System.out.println("Remove clicked")));
-        panel.add(createStyledButton("btn.execute_script", buttonWidth, buttonHeight, () -> System.out.println("Script clicked")));
-        panel.add(createStyledButton("btn.remove_all", buttonWidth, buttonHeight, () -> System.out.println("Clear clicked")));
-        panel.add(createStyledButton("btn.show_mine", buttonWidth, buttonHeight, () -> System.out.println("Show mine clicked")));
-        panel.add(createStyledButton("btn.shuffle", buttonWidth, buttonHeight, () -> System.out.println("Shuffle clicked")));
-        panel.add(createStyledButton("btn.update", buttonWidth, buttonHeight, () -> System.out.println("Update clicked")));
-        panel.add(createStyledButton("btn.info", buttonWidth, buttonHeight, () -> System.out.println("Info clicked")));
-        panel.add(createStyledButton("btn.spawn_client", buttonWidth, buttonHeight, () -> System.out.println("Spawn clicked")));
-        panel.add(createStyledButton("btn.kill_client", buttonWidth, buttonHeight, () -> System.out.println("Kill clicked")));
-        panel.add(createStyledButton("btn.help", buttonWidth, buttonHeight, () -> System.out.println("Help clicked")));
+
+        panel.add(createStyledButton("btn.add", buttonWidth, buttonHeight, () -> buttonsHandler.handleAdd()));
+        panel.add(createStyledButton("btn.remove", buttonWidth, buttonHeight, () -> buttonsHandler.handleRemove()));
+        panel.add(createStyledButton("btn.execute_script", buttonWidth, buttonHeight, () -> buttonsHandler.handleExecuteScript()));
+        panel.add(createStyledButton("btn.remove_all", buttonWidth, buttonHeight, () -> buttonsHandler.handleClear()));
+        panel.add(createStyledButton("btn.update", buttonWidth, buttonHeight, () -> buttonsHandler.handleUpdate()));
+        panel.add(createStyledButton("btn.info", buttonWidth, buttonHeight, () -> buttonsHandler.handleInfo()));
+        panel.add(createStyledButton("btn.spawn_client", buttonWidth, buttonHeight, () -> {
+            try { buttonsHandler.handleSpawn(); } catch (IOException ex) {
+                logger.error("Failed to spawn client", ex);
+                throw new RuntimeException(ex);
+            }
+        }));
+        panel.add(createStyledButton("btn.kill_client", buttonWidth, buttonHeight, () -> buttonsHandler.handleKill()));
+        panel.add(createStyledButton("btn.help", buttonWidth, buttonHeight, () -> buttonsHandler.handleHelp()));
         panel.add(createStyledButton("btn.forward", buttonWidth, buttonHeight, () -> buttonsHandler.handleForwardCommand()));
-        panel.add(Box.createVerticalGlue());
-        panel.add(createStyledButton("btn.exit", buttonWidth, buttonHeight, () -> System.out.println("Log out clicked")));
-        btnAdd.addActionListener(e -> buttonsHandler.handleAdd());
-        btnRemove.addActionListener(e -> buttonsHandler.handleRemove());
-        btnExecuteScript.addActionListener(e -> buttonsHandler.handleExecuteScript());
-        btnRemoveAll.addActionListener(e -> buttonsHandler.handleClear());
-        btnUpdate.addActionListener(e -> buttonsHandler.handleUpdate());
-        btnHelp.addActionListener(e -> buttonsHandler.handleHelp());
-        btnInfo.addActionListener(e -> buttonsHandler.handleInfo());
-        btnSpawnClient.addActionListener(e -> { try { buttonsHandler.handleSpawn(); } catch (IOException ex) { throw new RuntimeException(ex); } });
-        btnKillClient.addActionListener(e -> buttonsHandler.handleKill());
-        btnExit.addActionListener(e -> buttonsHandler.handleLogOut());
+//        panel.add(Box.createVerticalGlue());
+        panel.add(createStyledButton("btn.exit", buttonWidth, buttonHeight, () -> buttonsHandler.handleLogOut()));
+
         return panel;
     }
 
@@ -389,24 +419,21 @@ public class MainWindow {
                 try {
                     CommandRequest fwd = networkReader.getForwardQueue().poll();
                     if (fwd != null) {
-                        System.out.println("[FORWARD LISTENER] Received: type=" + fwd.commandType() + ", args=" + fwd.args());
+                        logger.debug("Forward listener received: type={}, args={}", fwd.commandType(), fwd.args());
 
                         if ("forward_command".equals(fwd.commandType()) && fwd.args() instanceof ForwardCommandObject fco) {
-                            System.out.println("[FORWARD LISTENER] Executing forwarded command: " + fco.commandKey());
+                            logger.info("Executing forwarded command: {}", fco.commandKey());
                             SwingUtilities.invokeLater(() -> executeForwardedCommand(fco.commandKey()));
-                        }
-                        else if ("child_disconnected".equals(fwd.commandType())) {
+                        } else if ("child_disconnected".equals(fwd.commandType())) {
                             String disconnectedChildId = (String) fwd.args();
-                            System.out.println("[FORWARD LISTENER] Child disconnected: " + disconnectedChildId);
+                            logger.info("Child disconnected signal received: {}", disconnectedChildId);
 
                             SwingUtilities.invokeLater(() -> {
                                 if (context != null) {
                                     boolean removed = context.removeChild(disconnectedChildId);
                                     if (removed) {
-                                        setStatus("Дочерний клиент " + disconnectedChildId + " отключился");
-                                        System.out.println("Removed child " + disconnectedChildId + " from context");
-
-                                        // ✅ Kill the local OS process as well
+                                        setStatus(LocaleManager.get("status.child_disconnected").replace("{client_id}", disconnectedChildId));
+                                        logger.debug("Removed child {} from context", disconnectedChildId);
                                         if (processManager != null) {
                                             processManager.killChild(disconnectedChildId);
                                         }
@@ -416,35 +443,46 @@ public class MainWindow {
                         }
                     }
                     Thread.sleep(200);
-                } catch (InterruptedException e) { Thread.currentThread().interrupt(); break; }
+                } catch (InterruptedException e) {
+                    logger.warn("Forward command listener interrupted.");
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
         }, "forward-command-listener").start();
     }
 
     public void executeForwardedCommand(String commandKey) {
-        if (buttonsHandler == null) return;
-        SwingUtilities.invokeLater(() -> {
-            switch (commandKey.toLowerCase()) {
-                case "add" -> buttonsHandler.handleAdd();
-                case "remove" -> buttonsHandler.handleRemove();
-                case "update" -> buttonsHandler.handleUpdate();
-                case "clear" -> buttonsHandler.handleClear();
-                case "info" -> buttonsHandler.handleInfo();
-                case "help" -> buttonsHandler.handleHelp();
-                case "execute_script" -> buttonsHandler.handleExecuteScript();
-                default -> GuiUtils.showMessageDialog(frame, "Warning", "Received unknown command: " + commandKey, GuiUtils.MessageType.WARNING);
+        if (buttonsHandler == null) {
+            logger.warn("Attempted to execute forwarded command '{}' but ButtonsHandler is null.", commandKey);
+            return;
+        }
+
+        switch (commandKey.toLowerCase()) {
+            case "add" -> buttonsHandler.handleAdd();
+            case "remove" -> buttonsHandler.handleRemove();
+            case "update" -> buttonsHandler.handleUpdate();
+            case "clear" -> buttonsHandler.handleClear();
+            case "info" -> buttonsHandler.handleInfo();
+            case "help" -> buttonsHandler.handleHelp();
+            case "execute_script" -> buttonsHandler.handleExecuteScript();
+            default -> {
+                logger.warn("Received unknown forwarded command: {}", commandKey);
+                GuiUtils.showMessageDialog(frame, LocaleManager.get("dialog.warning.title"), LocaleManager.get("error.unknown_forwarded_command") + commandKey, GuiUtils.MessageType.WARNING);
             }
-        });
+        }
     }
 
-    private JPanel createStyledButton(String localeKey, int width, int height, Runnable defaultAction) {
-        JButton button = GuiUtils.createStyledButton(LocaleManager.get(localeKey), width, height, defaultAction);
+    private JPanel createStyledButton(String localeKey, int width, int height, Runnable action) {
+        JButton button = GuiUtils.createStyledButton(LocaleManager.get(localeKey), width, height, action);
         button.setActionCommand(localeKey);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 0, 8));
         buttonPanel.setOpaque(false);
         buttonPanel.setMaximumSize(new Dimension(width, height + 16));
         buttonPanel.add(button);
+
         switch (localeKey) {
             case "btn.add" -> btnAdd = button;
             case "btn.remove" -> btnRemove = button;
@@ -469,45 +507,35 @@ public class MainWindow {
             if (currentText.equals(mapText) || currentText.contains("Table")) {
                 cardLayout.show(contentPanel, "TABLE");
                 switchButton.setText(LocaleManager.get("view.switch.to_map"));
-                setStatus("Table view");
+                setStatus(LocaleManager.get("main.status.table_view"));
             } else {
                 cardLayout.show(contentPanel, "CANVAS");
                 switchButton.setText(LocaleManager.get("view.switch.to_table"));
-                setStatus("Map view");
+                setStatus(LocaleManager.get("main.status.map_view"));
             }
-            contentPanel.revalidate(); contentPanel.repaint();
+            contentPanel.revalidate();
+            contentPanel.repaint();
         }
     }
-    public void switchToTableView() {
-        if (cardLayout != null) {
-            cardLayout.show(contentPanel, "TABLE");
-            switchButton.setText(LocaleManager.get("view.switch.to_map"));
-            contentPanel.revalidate(); contentPanel.repaint();
-        }
-    }
-    public void switchToMapView() {
-        if (cardLayout != null) {
-            cardLayout.show(contentPanel, "CANVAS");
-            switchButton.setText(LocaleManager.get("view.switch.to_table"));
-            contentPanel.revalidate(); contentPanel.repaint();
-        }
-    }
-    public void updateMapView(List<SpaceMarine> marines) { if (canvas != null) SwingUtilities.invokeLater(() -> canvas.setMarines(marines)); }
-    public void updateAllViews(List<SpaceMarine> marines) {
-        if (tableModel != null) SwingUtilities.invokeLater(() -> { tableModel.setData(marines); if (canvas != null) canvas.setMarines(marines); });
-    }
+
+
+
     public void updateUITexts() {
         frame.setTitle(LocaleManager.getAppTitle());
         statusLabel.setText(LocaleManager.get("main.status.connecting"));
         userLabel.setText(LocaleManager.get("main.user.guest"));
+
         if (switchButton != null) {
             boolean isMapView = switchButton.getText().contains(LocaleManager.get("view.switch.to_table").substring(0, 3));
             switchButton.setText(isMapView ? LocaleManager.get("view.switch.to_table") : LocaleManager.get("view.switch.to_map"));
         }
+
         updateButtonTexts(controlPanel);
         if (tableModel != null) tableModel.fireTableStructureChanged();
-        frame.revalidate(); frame.repaint();
+        frame.revalidate();
+        frame.repaint();
     }
+
     private void updateButtonTexts(Container container) {
         for (Component c : container.getComponents()) {
             if (c instanceof JButton btn) {
@@ -516,40 +544,35 @@ public class MainWindow {
                     String text = LocaleManager.get(key);
                     if (!text.startsWith("!")) btn.setText(text);
                 }
-            } else if (c instanceof Container subContainer) updateButtonTexts(subContainer);
+            } else if (c instanceof Container subContainer) {
+                updateButtonTexts(subContainer);
+            }
         }
     }
-    private void setButtonAction(String localeKey, Runnable action) {
-        JButton btn = findButtonByKey(controlPanel, localeKey);
-        if (btn != null) {
-            for (var listener : btn.getActionListeners()) btn.removeActionListener(listener);
-            btn.addActionListener(e -> action.run());
-        }
-    }
-    private JButton findButtonByKey(Container container, String key) {
-        for (Component c : container.getComponents()) {
-            if (c instanceof JButton btn && key.equals(btn.getActionCommand())) return btn;
-            else if (c instanceof Container sub) { JButton found = findButtonByKey(sub, key); if (found != null) return found; }
-        }
-        return null;
-    }
-    public JButton getBtnAdd() { return btnAdd; } public JButton getBtnRemove() { return btnRemove; }
-    public JButton getBtnExecuteScript() { return btnExecuteScript; } public JButton getBtnRemoveAll() { return btnRemoveAll; }
-    public JButton getBtnShowMine() { return btnShowMine; } public JButton getBtnUpdate() { return btnUpdate; }
-    public JButton getBtnInfo() { return btnInfo; } public JButton getBtnSpawnClient() { return btnSpawnClient; }
-    public JButton getBtnKillClient() { return btnKillClient; } public JButton getBtnHelp() { return btnHelp; }
-    public JButton getBtnExit() { return btnExit; }
+
     public void setStatus(String message) {
-        if (SwingUtilities.isEventDispatchThread()) statusLabel.setText(LocaleManager.get("main.status") + ": " + message);
-        else SwingUtilities.invokeLater(() -> statusLabel.setText(LocaleManager.get("main.status") + ": " + message));
+        String statusText = LocaleManager.get("main.status") + ": " + message;
+        if (SwingUtilities.isEventDispatchThread()) {
+            statusLabel.setText(statusText);
+        } else {
+            SwingUtilities.invokeLater(() -> statusLabel.setText(statusText));
+        }
     }
+
     public void setUserName(String name) {
-        if (SwingUtilities.isEventDispatchThread()) userLabel.setText(LocaleManager.get("main.user") + ": " + (name != null ? name : LocaleManager.get("main.user.guest")));
-        else SwingUtilities.invokeLater(() -> userLabel.setText(LocaleManager.get("main.user") + ": " + (name != null ? name : LocaleManager.get("main.user.guest"))));
+        String userNameText = LocaleManager.get("main.user") + ": " + (name != null ? name : LocaleManager.get("main.user.guest"));
+        if (SwingUtilities.isEventDispatchThread()) {
+            userLabel.setText(userNameText);
+        } else {
+            SwingUtilities.invokeLater(() -> userLabel.setText(userNameText));
+        }
     }
-    public GuiUtils.LocaleOption getSelectedLocale() { return (GuiUtils.LocaleOption) localeCombo.getSelectedItem(); }
-    public void addLocaleChangeListener(java.util.function.Consumer<GuiUtils.LocaleOption> listener) { localeCombo.addActionListener(e -> { GuiUtils.LocaleOption selected = (GuiUtils.LocaleOption) localeCombo.getSelectedItem(); if (selected != null) listener.accept(selected); }); }
-    public void close() { frame.dispose(); }
+
+    public void close() {
+        logger.info("Closing MainWindow.");
+        frame.dispose();
+    }
+
     public JFrame getFrame() { return frame; }
     public SpaceMarineTable getTableModel() { return tableModel; }
     public void setContext(ClientContext context) { this.context = context; }

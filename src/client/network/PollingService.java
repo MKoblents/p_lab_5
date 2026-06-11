@@ -4,6 +4,7 @@ import client.gui.GuiClientApp; // <-- Импортируем GuiClientApp
 import client.gui.MainWindow;
 import client.gui.window.SpaceMarineCanvas;
 import client.gui.window.SpaceMarineTable;
+import client.utils.LocaleManager;
 import client.utils.RequestsFactory;
 import shared.dto.CommandRequest;
 import shared.dto.CommandResponse;
@@ -41,24 +42,16 @@ public class PollingService {
         scheduler.scheduleAtFixedRate(this::pollServer, 0, POLL_INTERVAL_MS, TimeUnit.MILLISECONDS);
     }
 
-    // ✅ ДОБАВЛЕНО: Всегда получаем АКТУАЛЬНЫЙ reader
     private AsyncNetworkReader getReader() {
         return GuiClientApp.getNetworkReader();
     }
 
-    // ✅ ПОЛНОСТЬЮ ПЕРЕПИСАННЫЙ МЕТОД С CompletableFuture
-    private void pollServer() {
+    public void pollServer() {
         try {
             CommandRequest request = RequestsFactory.createSimple("show");
-            AsyncNetworkReader reader = getReader(); // Берем свежий reader
-
-            // 1. Регистрируем ожидание
+            AsyncNetworkReader reader = getReader();
             CompletableFuture<CommandResponse> future = reader.registerRequest(request.requestId(), 1500);
-
-            // 2. Отправляем
             connection.sendRequest(request);
-
-            // 3. Ждем с коротким таймаутом
             CommandResponse response = future.get(1500, TimeUnit.MILLISECONDS);
 
             if (response != null && response.success() && response.result() instanceof List<?>) {
@@ -66,11 +59,10 @@ public class PollingService {
                 SwingUtilities.invokeLater(() -> {
                     tableModel.setData(marines);
                     canvasModel.setMarines(marines);
-                    mainWindow.setStatus("Синхронизировано: " + marines.size() + " объектов");
+                    mainWindow.setStatus(LocaleManager.get("status.synchronized", marines.size()));
                 });
             }
         } catch (TimeoutException e) {
-            // Ожидаемо: сервер может тормозить или отвечать на другие запросы. Просто пропускаем цикл.
         } catch (Exception e) {
             System.err.println("Ошибка polling: " + e.getMessage());
         }

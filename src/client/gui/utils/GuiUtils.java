@@ -28,6 +28,8 @@ public class GuiUtils {
     public static final float BASE_FONT_SIZE = 12.0f;
     public static final float BASE_TITLE_FONT_SIZE = 16.0f;
     public static final float BASE_BUTTON_FONT_SIZE = 12.0f;
+    public static final float BASE_MESSAGE_SIZE = 30.0f;
+    public static final float BASE_MESSAGE_TITLE_SIZE = 35.0f;
 
     public record LocaleOption(String code, String displayName) {
         @Override
@@ -56,22 +58,6 @@ public class GuiUtils {
         return bgPanel;
     }
 
-    public static JComboBox<LocaleOption> createLocaleComboBox(Consumer<LocaleOption> onChange) {
-        JComboBox<LocaleOption> combo = new JComboBox<>(createLocaleOptions());
-        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_FONT_SIZE));
-        combo.setMaximumSize(new Dimension(150, 28));
-        combo.setPreferredSize(new Dimension(150, 28));
-        combo.setBackground(Color.WHITE);
-
-        combo.addActionListener(e -> {
-            LocaleOption selected = (LocaleOption) combo.getSelectedItem();
-            if (selected != null && onChange != null) {
-                onChange.accept(selected);
-            }
-        });
-
-        return combo;
-    }
     public static JPanel createPanel(LayoutManager layout) {
         JPanel panel = new JPanel(layout);
         panel.setBackground(BACKGROUND_COLOR);
@@ -116,16 +102,9 @@ public class GuiUtils {
         panel.setOpaque(false);
         return panel;
     }
-    /**
-     * Creates a language switch button with dropdown popup menu.
-     * Shows current language code in uppercase (e.g., "RU", "EN").
-     * When clicked, shows a popup menu with available languages.
-     * @param initialLocale the initially selected locale option
-     * @param onLocaleChanged callback when locale is changed
-     * @return styled language switch button
-     */
+
     public static JButton createLanguageSwitchButton(LocaleOption initialLocale, Consumer<LocaleOption> onLocaleChanged) {
-        // Extract language code (e.g., "ru_RU" -> "RU")
+
         String[] parts = initialLocale.code().split("_");
         String langCode = parts.length > 1 ? parts[1].toUpperCase() : initialLocale.code().substring(0, 2).toUpperCase();
 
@@ -135,11 +114,9 @@ public class GuiUtils {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // White background with rounded corners
                 g2.setColor(Color.WHITE);
                 g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
 
-                // Pink border
                 g2.setColor(PRIMARY_COLOR);
                 g2.setStroke(new BasicStroke(1.5f));
                 g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
@@ -149,7 +126,7 @@ public class GuiUtils {
             }
         };
 
-        langButton.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        langButton.setFont(new Font("Segoe UI", Font.BOLD, 30));
         langButton.setForeground(new Color(50, 50, 50));
         langButton.setFocusPainted(false);
         langButton.setContentAreaFilled(false);
@@ -158,19 +135,17 @@ public class GuiUtils {
         langButton.setPreferredSize(new Dimension(80, 35));
         langButton.setMaximumSize(new Dimension(80, 35));
 
-        // Create popup menu with language options
+
         JPopupMenu popupMenu = new JPopupMenu();
         popupMenu.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
 
         for (LocaleOption option : createLocaleOptions()) {
             JMenuItem item = new JMenuItem(option.displayName() + " (" + option.code() + ")");
-            item.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+            item.setFont(new Font("Segoe UI", Font.PLAIN, 25));
             item.addActionListener(e -> {
-                // Update button text with new language code
                 String[] newParts = option.code().split("_");
                 String newCode = newParts.length > 1 ? newParts[1].toUpperCase() : option.code().substring(0, 2).toUpperCase();
                 langButton.setText(newCode);
-                // Notify callback
                 if (onLocaleChanged != null) {
                     onLocaleChanged.accept(option);
                 }
@@ -179,12 +154,10 @@ public class GuiUtils {
             popupMenu.add(item);
         }
 
-        // Show popup on click
         langButton.addActionListener(e -> {
             popupMenu.show(langButton, 0, langButton.getHeight());
         });
 
-        // Hover effect
         langButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 langButton.setBackground(PRIMARY_LIGHT);
@@ -252,85 +225,20 @@ public class GuiUtils {
         });
     }
 
-    public static Font scaleFont(Font baseFont, double scaleFactor) {
-        return baseFont.deriveFont((float) (baseFont.getSize() * scaleFactor));
-    }
-
-    public static JTextField createPlaceholderField(String placeholderKey) {
-        JTextField field = new JTextField(LocaleManager.get(placeholderKey));
-        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setForeground(Color.GRAY);
-        field.setHorizontalAlignment(JTextField.CENTER);
-        field.setBorder(BorderFactory.createLineBorder(new Color(255, 180, 200), 1));
-        field.setBackground(Color.WHITE);
-
-        field.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (field.getText().equals(LocaleManager.get(placeholderKey))) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                }
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                if (field.getText().isEmpty()) {
-                    field.setText(LocaleManager.get(placeholderKey));
-                    field.setForeground(Color.GRAY);
-                }
-            }
-        });
-        return field;
-    }
-
-    public static JPasswordField createPasswordField(String placeholderKey) {
-        JPasswordField field = new JPasswordField(LocaleManager.get(placeholderKey));
-        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setForeground(Color.GRAY);
-        field.setHorizontalAlignment(JPasswordField.CENTER);
-        field.setBorder(BorderFactory.createLineBorder(new Color(255, 180, 200), 1));
-        field.setBackground(Color.WHITE);
-        field.setEchoChar((char)0);
-
-        field.addFocusListener(new java.awt.event.FocusAdapter() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (String.valueOf(field.getPassword()).equals(LocaleManager.get(placeholderKey))) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                    field.setEchoChar('\u2022');
-                }
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                if (field.getPassword().length == 0) {
-                    field.setText(LocaleManager.get(placeholderKey));
-                    field.setForeground(Color.GRAY);
-                    field.setEchoChar((char)0);
-                }
-            }
-        });
-        return field;
-    }
-    /**
-     * Creates a generically-styled JComboBox with pink theme.
-     * @param <T> the type of items in the combo box
-     * @return styled JComboBox instance
-     */
-    public static <T> JComboBox<T> createStyledComboBox() {
+    public static <T> JComboBox<T> createStyledComboBox(int preferedSize) {
         JComboBox<T> combo = new JComboBox<>();
-        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_FONT_SIZE));
+        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
         combo.setBackground(Color.WHITE);
         combo.setForeground(TEXT_COLOR);
-        combo.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
-        combo.setPreferredSize(new Dimension(300, 30));
-        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, 30));
+        combo.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 2));
+        combo.setPreferredSize(new Dimension(0, preferedSize));
+        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, preferedSize));
 
-        // Default renderer with selection styling
         combo.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
                 if (isSelected) {
                     setBackground(PRIMARY_COLOR);
                     setForeground(Color.WHITE);
@@ -344,15 +252,7 @@ public class GuiUtils {
 
         return combo;
     }
-    /**
-     * Shows a styled message dialog with the application's pink theme.
-     * Uses larger font and themed OK button.
-     *
-     * @param parent the parent frame for modal behavior
-     * @param title the dialog title
-     * @param message the message text to display
-     * @param messageType type of message (INFO, WARNING, ERROR) for icon selection
-     */
+
     public static void showMessageDialog(Frame parent, String title, String message, MessageType messageType) {
         JDialog dialog = new JDialog(parent);
         dialog.setModal(true);
@@ -361,14 +261,13 @@ public class GuiUtils {
         dialog.getContentPane().setBackground(BACKGROUND_COLOR);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        // === Custom Title Bar ===
         JPanel titleBarPanel = new JPanel(new BorderLayout());
         titleBarPanel.setBackground(PRIMARY_DARK);
         titleBarPanel.setPreferredSize(new Dimension(0, 45));
         titleBarPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
 
         JLabel titleLabel = new JLabel("  " + title);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_TITLE_SIZE));
         titleLabel.setForeground(Color.WHITE);
         titleBarPanel.add(titleLabel, BorderLayout.CENTER);
 
@@ -382,20 +281,14 @@ public class GuiUtils {
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addActionListener(e -> dialog.dispose());
         closeButton.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                closeButton.setBackground(PRIMARY_COLOR.darker());
-            }
-            public void mouseExited(MouseEvent e) {
-                closeButton.setBackground(PRIMARY_DARK);
-            }
+            public void mouseEntered(MouseEvent e) { closeButton.setBackground(PRIMARY_COLOR.darker()); }
+            public void mouseExited(MouseEvent e) { closeButton.setBackground(PRIMARY_DARK); }
         });
         titleBarPanel.add(closeButton, BorderLayout.EAST);
 
         final Point[] dragOffset = new Point[1];
         titleBarPanel.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                dragOffset[0] = e.getPoint();
-            }
+            public void mousePressed(MouseEvent e) { dragOffset[0] = e.getPoint(); }
         });
         titleBarPanel.addMouseMotionListener(new MouseAdapter() {
             public void mouseDragged(MouseEvent e) {
@@ -403,10 +296,8 @@ public class GuiUtils {
                 dialog.setLocation(curr.x - dragOffset[0].x, curr.y - dragOffset[0].y);
             }
         });
-
         dialog.add(titleBarPanel, BorderLayout.NORTH);
 
-        // === Content Panel ===
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setOpaque(false);
         contentPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
@@ -414,17 +305,8 @@ public class GuiUtils {
         JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
         messagePanel.setOpaque(false);
 
-        JLabel iconLabel = new JLabel();
-        iconLabel.setPreferredSize(new Dimension(40, 40));
-        switch (messageType) {
-            case INFO -> iconLabel.setIcon(UIManager.getIcon("OptionPane.informationIcon"));
-            case WARNING -> iconLabel.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
-            case ERROR -> iconLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
-        }
-        messagePanel.add(iconLabel);
-
         JTextArea messageArea = new JTextArea(message);
-        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
         messageArea.setForeground(TEXT_COLOR);
         messageArea.setBackground(BACKGROUND_COLOR);
         messageArea.setEditable(false);
@@ -432,12 +314,29 @@ public class GuiUtils {
         messageArea.setWrapStyleWord(true);
         messageArea.setBorder(null);
         messageArea.setOpaque(false);
+        messageArea.setColumns(1);
+        messageArea.setRows(1);
 
-        // Remove fixed columns/rows - let it calculate naturally
-        messageArea.setColumns(1);  // Minimal columns
-        messageArea.setRows(1);     // Minimal rows
+       FontMetrics fm = messageArea.getFontMetrics(messageArea.getFont());
+        String[] lines = message.split("\n");
+        int maxLineWidth = 0;
+        for (String line : lines) {
+            int lineWidth = fm.stringWidth(line);
+            if (lineWidth > maxLineWidth) {
+                maxLineWidth = lineWidth;
+            }
+        }
 
-        // Wrap in scroll pane with reasonable max size
+        int targetWidth = maxLineWidth+40;
+        int maxAllowedWidth = 1400;
+        targetWidth = Math.min(targetWidth, maxAllowedWidth);
+        System.out.println(targetWidth);
+
+        messageArea.setSize(targetWidth, Short.MAX_VALUE);
+        int textHeight = messageArea.getPreferredSize().height;
+
+        int targetHeight = textHeight + 20;
+
         JScrollPane scrollPane = new JScrollPane(messageArea);
         scrollPane.setBorder(null);
         scrollPane.setOpaque(false);
@@ -445,15 +344,11 @@ public class GuiUtils {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        // Set preferred size for scroll pane (not too wide)
-        int preferredWidth = Math.min(500, Math.max(300, message.length() / 2));
-        int preferredHeight = Math.min(300, Math.max(100, message.length() / 3));
-        scrollPane.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
+        scrollPane.setPreferredSize(new Dimension(targetWidth, targetHeight));
 
         messagePanel.add(scrollPane);
         contentPanel.add(messagePanel, BorderLayout.CENTER);
 
-        // === OK Button Panel ===
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
@@ -467,59 +362,40 @@ public class GuiUtils {
         okButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         okButton.setPreferredSize(new Dimension(120, 40));
         okButton.addActionListener(e -> dialog.dispose());
-
         okButton.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent evt) {
-                okButton.setBackground(PRIMARY_DARK);
-            }
-            public void mouseExited(MouseEvent evt) {
-                okButton.setBackground(PRIMARY_COLOR);
-            }
+            public void mouseEntered(MouseEvent evt) { okButton.setBackground(PRIMARY_DARK); }
+            public void mouseExited(MouseEvent evt) { okButton.setBackground(PRIMARY_COLOR); }
         });
 
         buttonPanel.add(okButton);
         contentPanel.add(buttonPanel, BorderLayout.SOUTH);
-
         dialog.add(contentPanel, BorderLayout.CENTER);
 
-        // === Size and Position ===
         dialog.pack();
-
-        // Set reasonable max size
         dialog.setMaximumSize(new Dimension(600, 500));
-
         dialog.setLocationRelativeTo(parent);
         dialog.getRootPane().setDefaultButton(okButton);
         dialog.setVisible(true);
     }
-    /**
-     * Shows a styled confirmation dialog with Yes/No buttons.
-     *
-     * @param parent the parent frame for modal behavior
-     * @param title the dialog title
-     * @param message the message text to display
-     * @return true if user clicked Yes, false otherwise
-     */
+
     public static boolean showConfirmDialog(Frame parent, String title, String message) {
         JDialog dialog = new JDialog(parent);
         dialog.setModal(true);
-        dialog.setUndecorated(true); // Remove system title bar
+        dialog.setUndecorated(true);
         dialog.setLayout(new BorderLayout(0, 0));
         dialog.getContentPane().setBackground(BACKGROUND_COLOR);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        // === Custom Title Bar ===
         JPanel titleBarPanel = new JPanel(new BorderLayout());
         titleBarPanel.setBackground(PRIMARY_DARK);
         titleBarPanel.setPreferredSize(new Dimension(0, 45));
         titleBarPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
 
         JLabel titleLabel = new JLabel("  " + title);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_TITLE_SIZE));
         titleLabel.setForeground(Color.WHITE);
         titleBarPanel.add(titleLabel, BorderLayout.CENTER);
 
-        // Close button
         JButton closeButton = new JButton("✕");
         closeButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
         closeButton.setForeground(Color.WHITE);
@@ -539,7 +415,6 @@ public class GuiUtils {
         });
         titleBarPanel.add(closeButton, BorderLayout.EAST);
 
-        // Make title bar draggable
         final Point[] dragOffset = new Point[1];
         titleBarPanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
@@ -555,38 +430,32 @@ public class GuiUtils {
 
         dialog.add(titleBarPanel, BorderLayout.NORTH);
 
-        // === Content Panel ===
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setOpaque(false);
         contentPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
 
-        // Icon and message
-        JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        messagePanel.setOpaque(false);
 
-        JLabel iconLabel = new JLabel(UIManager.getIcon("OptionPane.questionIcon"));
-        iconLabel.setPreferredSize(new Dimension(40, 40));
-        messagePanel.add(iconLabel);
+        if (message!=null) {
+            JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+            messagePanel.setOpaque(false);
+            JTextArea messageArea = new JTextArea(message);
+            messageArea.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
+            messageArea.setForeground(TEXT_COLOR);
+            messageArea.setBackground(BACKGROUND_COLOR);
+            messageArea.setEditable(false);
+            messageArea.setLineWrap(true);
+            messageArea.setWrapStyleWord(true);
+            messageArea.setBorder(null);
+            messageArea.setOpaque(false);
 
-        JTextArea messageArea = new JTextArea(message);
-        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, 18)); // Larger font
-        messageArea.setForeground(TEXT_COLOR);
-        messageArea.setBackground(BACKGROUND_COLOR);
-        messageArea.setEditable(false);
-        messageArea.setLineWrap(true);
-        messageArea.setWrapStyleWord(true);
-        messageArea.setBorder(null);
-        messageArea.setOpaque(false);
+            int rows = Math.max(1, (message.length() / 50) + 1);
+            messageArea.setRows(Math.min(rows, 10));
+            messageArea.setColumns(40);
 
-        // Calculate rows based on message length
-        int rows = Math.max(1, (message.length() / 50) + 1);
-        messageArea.setRows(Math.min(rows, 10));
-        messageArea.setColumns(40);
+            messagePanel.add(messageArea);
+            contentPanel.add(messagePanel, BorderLayout.CENTER);
+        }
 
-        messagePanel.add(messageArea);
-        contentPanel.add(messagePanel, BorderLayout.CENTER);
-
-        // === Yes/No Button Panel ===
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
@@ -594,7 +463,7 @@ public class GuiUtils {
         final boolean[] result = {false};
 
         JButton yesButton = new JButton("Yes");
-        yesButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        yesButton.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_SIZE));
         yesButton.setBackground(PRIMARY_COLOR);
         yesButton.setForeground(Color.WHITE);
         yesButton.setFocusPainted(false);
@@ -615,7 +484,7 @@ public class GuiUtils {
         });
 
         JButton noButton = new JButton("No");
-        noButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        noButton.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_SIZE));
         noButton.setBackground(Color.LIGHT_GRAY);
         noButton.setForeground(Color.BLACK);
         noButton.setFocusPainted(false);
@@ -641,12 +510,11 @@ public class GuiUtils {
 
         dialog.add(contentPanel, BorderLayout.CENTER);
 
-        // === Size and Position ===
         dialog.pack();
 
-        // Ensure minimum size but allow growth
-        int minWidth = Math.max(450, messageArea.getPreferredSize().width + 80);
-        int maxWidth = 700;
+        int minWidth = Math.max(450, title.length()*20 );
+        System.out.println(minWidth);
+        int maxWidth = 1000;
         dialog.setSize(
                 Math.min(maxWidth, Math.max(minWidth, dialog.getWidth())),
                 dialog.getHeight()
@@ -658,27 +526,13 @@ public class GuiUtils {
         return result[0];
     }
 
-    /**
-     * Simplified overload for info messages.
-     */
     public static void showMessageDialog(Frame parent, String title, String message) {
         showMessageDialog(parent, title, message, MessageType.INFO);
     }
 
-    /**
-     * Message type enum for icon selection.
-     */
     public enum MessageType {
         INFO, WARNING, ERROR
     }
-    // === В конец класса GuiUtils ===
-
-    /**
-     * Creates a styled text field with placeholder behavior.
-     * @param placeholderKey locale key for placeholder text
-     * @param preferredHeight preferred height in pixels
-     * @return configured JTextField
-     */
     public static JTextField createStyledPlaceholderField(String placeholderKey, int preferredHeight) {
         JTextField field = new JTextField(LocaleManager.get(placeholderKey));
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -711,52 +565,13 @@ public class GuiUtils {
         return field;
     }
 
-    /**
-     * Creates a styled JComboBox with generic items.
-     * @param items enum values or other items
-     * @param <T> type of items
-     * @return configured JComboBox
-     */
     public static <T> JComboBox<T> createStyledComboBox(T[] items, int preferredHeight) {
-        JComboBox<T> combo = new JComboBox<>(items);
-        combo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        combo.setBackground(Color.WHITE);
-        combo.setForeground(Color.BLACK);
-        combo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
-                new EmptyBorder(8, 10, 8, 10)
-        ));
-        combo.setPreferredSize(new Dimension(0, preferredHeight));
-        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, preferredHeight));
-        combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JComboBox<T> combo = createStyledComboBox(preferredHeight);
 
-        combo.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setFont(new Font("Segoe UI", Font.PLAIN, 14));
-                if (isSelected) {
-                    setBackground(PRIMARY_COLOR);
-                    setForeground(Color.WHITE);
-                } else {
-                    setBackground(Color.WHITE);
-                    setForeground(Color.BLACK);
-                }
-                setBorder(new EmptyBorder(5, 10, 5, 10));
-                return this;
-            }
-        });
+        combo.setModel(new DefaultComboBoxModel<>(items));
         return combo;
     }
 
-    /**
-     * Creates a styled button with hover effect.
-     * @param textKey locale key for button text
-     * @param width preferred width (0 for default)
-     * @param height preferred height
-     * @param action optional action to execute on click
-     * @return configured JButton
-     */
     public static JButton createStyledDialogButton(String textKey, int width, int height, Runnable action) {
         JButton button = new JButton(LocaleManager.get(textKey));
         button.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -787,32 +602,6 @@ public class GuiUtils {
         return button;
     }
 
-    /**
-     * Creates a labeled field panel (label above field).
-     * @param labelKey locale key for label
-     * @param field the input component to label
-     * @return JPanel with BorderLayout containing label and field
-     */
-    public static JPanel createLabeledInputPanel(String labelKey, JComponent field) {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setOpaque(false);
-
-        JLabel label = new JLabel(LocaleManager.get(labelKey), SwingConstants.CENTER);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        label.setForeground(PRIMARY_DARK);
-
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(field, BorderLayout.CENTER);
-        return panel;
-    }
-    // Добавьте это в GuiUtils.java
-    public static JLabel createStyledLabel(String localeKey, float baseSize, Color color) {
-        JLabel label = new JLabel(LocaleManager.get(localeKey));
-        label.setFont(new Font("Segoe UI", Font.BOLD, (int) baseSize));
-        label.setForeground(color);
-        return label;
-    }
-
     public static JTextArea createStyledTextArea(String text) {
         JTextArea area = new JTextArea(text);
         area.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -828,7 +617,6 @@ public class GuiUtils {
         return area;
     }
 
-    // Метод для создания красивого скролл-панели для текста
     public static JScrollPane createStyledScrollPane(Component view) {
         JScrollPane sp = new JScrollPane(view);
         sp.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 2));

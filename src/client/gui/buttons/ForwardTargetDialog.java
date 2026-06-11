@@ -1,7 +1,8 @@
-// src/client/gui/buttons/ForwardTargetDialog.java
 package client.gui.buttons;
 
 import client.gui.utils.GuiUtils;
+import client.utils.LocaleManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -14,7 +15,7 @@ public class ForwardTargetDialog extends JDialog {
     private Consumer<String> onConfirm;
 
     public ForwardTargetDialog(JFrame parent, List<String> availableClients, String commandKey) {
-        super(parent, "Forward Command: " + commandKey, true);
+        super(parent, LocaleManager.get("dialog.forward.title") + ": " + commandKey, true);
         setupUI(availableClients, commandKey);
         pack();
         setLocationRelativeTo(parent);
@@ -42,13 +43,13 @@ public class ForwardTargetDialog extends JDialog {
         clientCombo = new JComboBox<>(clients.toArray(new String[0]));
         clientCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         gbc.gridy = 1; gbc.gridwidth = 1;
-        mainPanel.add(new JLabel("Target client ID:"), gbc);
+        mainPanel.add(new JLabel(LocaleManager.get("dialog.forward.client")), gbc);
         gbc.gridx = 1;
         mainPanel.add(clientCombo, gbc);
 
         JPanel btnPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        confirmButton = new JButton("Forward");
-        cancelButton = new JButton("Cancel");
+        confirmButton = new JButton(LocaleManager.get("button.forward"));
+        cancelButton = new JButton(LocaleManager.get("button.cancel"));
         confirmButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
         cancelButton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 

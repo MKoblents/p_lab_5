@@ -21,32 +21,30 @@ public class ShipRenderer {
     }
 
     public static void drawShip(Graphics2D g, int x, int y, Color color) {
-        // Корпус (треугольник, нос вверх)
-        int[] bodyX = {x, x - 10, x + 10};
-        int[] bodyY = {y - 14, y + 10, y + 10};
+        int scale = 4;
+
+        int[] bodyX = {x, x - 10 * scale, x + 10 * scale};
+        int[] bodyY = {y - 14 * scale, y + 10 * scale, y + 10 * scale};
         g.setColor(color);
         g.fillPolygon(bodyX, bodyY, 3);
 
-        // Крылья
-        int[] wingLX = {x - 10, x - 18, x - 4};
-        int[] wingLY = {y + 4, y + 12, y + 10};
-        int[] wingRX = {x + 10, x + 18, x + 4};
-        int[] wingRY = {y + 4, y + 12, y + 10};
+        int[] wingLX = {x - 10 * scale, x - 18 * scale, x - 4 * scale};
+        int[] wingLY = {y + 4 * scale, y + 12 * scale, y + 10 * scale};
+        int[] wingRX = {x + 10 * scale, x + 18 * scale, x + 4 * scale};
+        int[] wingRY = {y + 4 * scale, y + 12 * scale, y + 10 * scale};
         g.setColor(color);
         g.fillPolygon(wingLX, wingLY, 3);
         g.fillPolygon(wingRX, wingRY, 3);
 
-        // Обводка
         g.setColor(Color.BLACK);
-        g.setStroke(new BasicStroke(1.5f));
+        g.setStroke(new BasicStroke(1.5f * scale));
         g.drawPolygon(bodyX, bodyY, 3);
         g.drawPolygon(wingLX, wingLY, 3);
         g.drawPolygon(wingRX, wingRY, 3);
 
-        // Кабина
         g.setColor(Color.WHITE);
-        g.fillOval(x - 3, y - 8, 6, 8);
+        g.fillOval(x - 3 * scale, y - 8 * scale, 6 * scale, 8 * scale);
         g.setColor(Color.DARK_GRAY);
-        g.drawOval(x - 3, y - 8, 6, 8);
+        g.drawOval(x - 3 * scale, y - 8 * scale, 6 * scale, 8 * scale);
     }
 }

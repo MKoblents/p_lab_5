@@ -151,9 +151,6 @@ public class ConnectionManager {
             logger.error("IO error while reading response: {}", e.getMessage(), e);
             connected = false;
             return null;
-        } catch (ClassNotFoundException e) {
-            logger.error("Deserialization error: class not found - {}", e.getMessage(), e);
-            return null;
         } catch (Exception e) {
             logger.error("Unexpected error while reading response: {}", e.getMessage(), e);
             return null;

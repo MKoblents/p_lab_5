@@ -28,7 +28,7 @@ public class ExecuteScriptDialog extends JDialog {
         applyTheme();
         setSize(originalSize);
         setLocationRelativeTo(parent);
-        setMinimumSize(new Dimension(500, 280));
+        setMinimumSize(new Dimension(1000, 500));
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -40,18 +40,18 @@ public class ExecuteScriptDialog extends JDialog {
 
     private void initComponents() {
         titleLabel = new JLabel(LocaleManager.get("dialog.script.title"), SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) GuiUtils.BASE_MESSAGE_SIZE));
 
         infoLabel = new JLabel(LocaleManager.get("dialog.script.info"), SwingConstants.CENTER);
-        infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        infoLabel.setFont(new Font("Segoe UI", Font.PLAIN,  (int) GuiUtils.BASE_MESSAGE_SIZE));
         infoLabel.setForeground(GuiUtils.PRIMARY_DARK);
 
         fileLabel = new JLabel(LocaleManager.get("dialog.script.file_path"), SwingConstants.RIGHT);
-        fileLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        fileLabel.setFont(new Font("Segoe UI", Font.BOLD,  (int) GuiUtils.BASE_MESSAGE_SIZE));
         fileLabel.setForeground(GuiUtils.TEXT_COLOR);
 
         filePathField = new JTextField();
-        filePathField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        filePathField.setFont(new Font("Segoe UI", Font.PLAIN,  (int) GuiUtils.BASE_MESSAGE_SIZE));
         filePathField.setEditable(false);
         filePathField.setBackground(Color.WHITE);
         filePathField.setBorder(BorderFactory.createLineBorder(GuiUtils.PRIMARY_LIGHT, 1));
@@ -83,19 +83,16 @@ public class ExecuteScriptDialog extends JDialog {
         setLayout(new BorderLayout(15, 15));
         getContentPane().setBackground(GuiUtils.BACKGROUND_COLOR);
 
-        // Title Panel
         JPanel titlePanel = GuiUtils.createPanel(new BorderLayout());
         titlePanel.setOpaque(false);
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         add(titlePanel, BorderLayout.NORTH);
 
-        // Info Label
         JPanel infoPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER));
         infoPanel.setOpaque(false);
         infoPanel.add(infoLabel);
         add(infoPanel, BorderLayout.NORTH);
 
-        // File Selection Panel
         JPanel filePanel = GuiUtils.createPanel(new GridBagLayout());
         filePanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -123,7 +120,6 @@ public class ExecuteScriptDialog extends JDialog {
 
         add(filePanel, BorderLayout.CENTER);
 
-        // Buttons Panel
         JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.CENTER, 25, 20));
         buttonPanel.setOpaque(false);
         buttonPanel.add(executeButton);
@@ -137,10 +133,10 @@ public class ExecuteScriptDialog extends JDialog {
 
     private void resizeComponents() {
         double scaleFactor = (double) getWidth() / originalSize.width;
-        float titleSize = (float) (24 * scaleFactor);
-        float infoSize = (float) (14 * scaleFactor);
-        float fieldSize = (float) (14 * scaleFactor);
-        float labelSize = (float) (12 * scaleFactor);
+        float titleSize = (float) ( (int) GuiUtils.BASE_MESSAGE_SIZE * scaleFactor);
+        float infoSize = (float) ( (int) GuiUtils.BASE_MESSAGE_SIZE * scaleFactor);
+        float fieldSize = (float) ( (int) GuiUtils.BASE_MESSAGE_SIZE * scaleFactor);
+        float labelSize = (float) ( (int) GuiUtils.BASE_MESSAGE_SIZE * scaleFactor);
 
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) titleSize));
         infoLabel.setFont(new Font("Segoe UI", Font.PLAIN, (int) infoSize));
@@ -178,10 +174,6 @@ public class ExecuteScriptDialog extends JDialog {
         return selectedFile;
     }
 
-    /**
-     * Custom styled file chooser dialog that matches the app theme
-     * and supports resizing.
-     */
     private static class StyledFileChooser {
         private final JDialog dialog;
         private JFileChooser fileChooser;
@@ -198,31 +190,24 @@ public class ExecuteScriptDialog extends JDialog {
             fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             fileChooser.setAcceptAllFileFilterUsed(false);
-            fileChooser.addChoosableFileFilter(new NoExtensionFileFilter());
+//            fileChooser.addChoosableFileFilter(new NoExtensionFileFilter());
             fileChooser.setFileFilter(new NoExtensionFileFilter());
 
             applyFileChooserStyling(fileChooser);
 
-            // ⭐ Apply font to file list AFTER components are fully created
             SwingUtilities.invokeLater(() -> {
                 styleFileNameList(fileChooser, 40);
-                // Fallback: also try styling via UIManager for this instance
                 if (fileChooser.isShowing()) {
                     forceStyleFileList(fileChooser, 40);
                 }
             });
         }
 
-        /**
-         * First attempt: recursive search for JList
-         */
         private void styleFileNameList(Component comp, int fontSize) {
             if (comp instanceof JList<?> list) {
-                // Check if this JList is likely the file list by checking its parent hierarchy
                 Component parent = list.getParent();
                 if (parent instanceof JScrollPane) {
                     Component scrollParent = parent.getParent();
-                    // File lists are usually inside a JScrollPane inside a JSplitPane or JPanel
                     if (scrollParent instanceof JSplitPane ||
                             scrollParent instanceof JPanel ||
                             list.getName().contains("file")) {
@@ -239,14 +224,9 @@ public class ExecuteScriptDialog extends JDialog {
             }
         }
 
-        /**
-         * Fallback: direct access via component hierarchy traversal
-         */
         private void forceStyleFileList(JFileChooser fc, int fontSize) {
-            // Try to find the file list by traversing known JFileChooser structure
             for (Component comp : fc.getComponents()) {
                 if (comp instanceof JSplitPane splitPane) {
-                    // Left side usually contains the file list
                     Component left = splitPane.getLeftComponent();
                     if (left instanceof JScrollPane scrollPane) {
                         Component view = scrollPane.getViewport().getView();
@@ -254,11 +234,10 @@ public class ExecuteScriptDialog extends JDialog {
                             fileList.setFont(new Font("Segoe UI", Font.PLAIN, fontSize));
                             fileList.setFixedCellHeight((int)(fontSize * 1.8));
                             fileList.repaint();
-                            return; // Found it, stop searching
+                            return;
                         }
                     }
                 } else if (comp instanceof JScrollPane scrollPane) {
-                    // Some L&F put the list directly in a JScrollPane
                     Component view = scrollPane.getViewport().getView();
                     if (view instanceof JList<?> fileList) {
                         fileList.setFont(new Font("Segoe UI", Font.PLAIN, fontSize));
@@ -267,7 +246,6 @@ public class ExecuteScriptDialog extends JDialog {
                         return;
                     }
                 }
-                // Recurse into nested containers
                 if (comp instanceof Container) {
                     forceStyleFileListRecursive(comp, fontSize);
                 }
@@ -291,11 +269,10 @@ public class ExecuteScriptDialog extends JDialog {
         }
 
         private void applyFileChooserStyling(JFileChooser fc) {
-            fc.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            fc.setFont(new Font("Segoe UI", Font.PLAIN,  (int) GuiUtils.BASE_MESSAGE_SIZE));
             fc.setBackground(GuiUtils.BACKGROUND_COLOR);
             fc.setForeground(GuiUtils.TEXT_COLOR);
 
-            // Style the approve/cancel buttons if accessible
             for (Component comp : fc.getComponents()) {
                 if (comp instanceof JPanel) {
                     stylePanel((JPanel) comp);
@@ -307,16 +284,16 @@ public class ExecuteScriptDialog extends JDialog {
             panel.setBackground(GuiUtils.BACKGROUND_COLOR);
             for (Component comp : panel.getComponents()) {
                 if (comp instanceof JButton btn) {
-                    btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+                    btn.setFont(new Font("Segoe UI", Font.BOLD,  (int) GuiUtils.BASE_MESSAGE_SIZE));
                     btn.setBackground(GuiUtils.PRIMARY_COLOR);
                     btn.setForeground(Color.WHITE);
                     btn.setFocusPainted(false);
                     btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 } else if (comp instanceof JComboBox<?> combo) {
-                    combo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+                    combo.setFont(new Font("Segoe UI", Font.PLAIN,  (int) GuiUtils.BASE_MESSAGE_SIZE));
                     combo.setBackground(Color.WHITE);
                 } else if (comp instanceof JTextField field) {
-                    field.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+                    field.setFont(new Font("Segoe UI", Font.PLAIN,  (int) GuiUtils.BASE_MESSAGE_SIZE));
                     field.setBackground(Color.WHITE);
                 } else if (comp instanceof JPanel subPanel) {
                     stylePanel(subPanel);
@@ -330,21 +307,17 @@ public class ExecuteScriptDialog extends JDialog {
             dialog.setSize(800, 600);
             dialog.setLocationRelativeTo(null);
 
-            // ⭐ ВАЖНО: Убираем стандартные кнопки JFileChooser
             fileChooser.setControlButtonsAreShown(false);
 
-            // Добавляем file chooser в центр
             dialog.add(fileChooser, BorderLayout.CENTER);
 
-            // Создаём панель с кнопками через GuiUtils
             JPanel buttonPanel = GuiUtils.createPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
             buttonPanel.setOpaque(false);
             buttonPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-            // ⭐ Используем GuiUtils.createStyledButton
             JButton openButton = GuiUtils.createStyledButton(
                     LocaleManager.get("dialog.script.open"),
-                    100, 40,  // width, height
+                    100, 40,
                     () -> {
                         selectedFile = fileChooser.getSelectedFile();
                         result = JFileChooser.APPROVE_OPTION;
@@ -354,7 +327,7 @@ public class ExecuteScriptDialog extends JDialog {
 
             JButton cancelButton = GuiUtils.createStyledButton(
                     LocaleManager.get("dialog.script.cancel"),
-                    100, 40,  // width, height
+                    100, 40,
                     () -> {
                         result = JFileChooser.CANCEL_OPTION;
                         dialog.dispose();
@@ -365,12 +338,10 @@ public class ExecuteScriptDialog extends JDialog {
             buttonPanel.add(cancelButton);
             dialog.add(buttonPanel, BorderLayout.SOUTH);
 
-            // Добавляем listener для ресайза
             dialog.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
                     resizeFileChooser();
-                    // ⭐ Также ресайзим кнопки
                     double scaleFactor = (double) dialog.getWidth() / 800.0;
                     int scaledButtonWidth = (int)(100 * scaleFactor);
                     int scaledButtonHeight = (int)(40 * scaleFactor);
@@ -409,7 +380,6 @@ public class ExecuteScriptDialog extends JDialog {
 
             fileChooser.setFont(new Font("Segoe UI", Font.PLAIN, (int) scaledFont));
 
-            // Recursively resize components in file chooser
             resizeComponent(fileChooser, scaleFactor);
         }
 
@@ -417,13 +387,13 @@ public class ExecuteScriptDialog extends JDialog {
             if (comp instanceof Container container) {
                 for (Component child : container.getComponents()) {
                     if (child instanceof JButton btn) {
-                        btn.setFont(new Font("Segoe UI", Font.BOLD, (int) (12 * scaleFactor)));
+                        btn.setFont(new Font("Segoe UI", Font.BOLD, (int) (30 * scaleFactor)));
                     } else if (child instanceof JTextField field) {
-                        field.setFont(new Font("Segoe UI", Font.PLAIN, (int) (12 * scaleFactor)));
+                        field.setFont(new Font("Segoe UI", Font.PLAIN, (int) (30 * scaleFactor)));
                     } else if (child instanceof JComboBox<?> combo) {
-                        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) (12 * scaleFactor)));
+                        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) (30 * scaleFactor)));
                     } else if (child instanceof JLabel label) {
-                        label.setFont(new Font("Segoe UI", Font.PLAIN, (int) (12 * scaleFactor)));
+                        label.setFont(new Font("Segoe UI", Font.PLAIN, (int) (30 * scaleFactor)));
                     }
                     if (child instanceof Container) {
                         resizeComponent(child, scaleFactor);
@@ -442,9 +412,6 @@ public class ExecuteScriptDialog extends JDialog {
         }
     }
 
-    /**
-     * File filter for files without extension (as per original requirement)
-     */
     static class NoExtensionFileFilter extends FileFilter {
         @Override
         public boolean accept(File file) {
