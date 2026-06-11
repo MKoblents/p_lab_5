@@ -230,4 +230,8 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable {
     public void setMongoId(ObjectId mongoId) {
         this.mongoId = mongoId;
     }
+
+    public String getOwner() {
+        return owner;
+    }
 }

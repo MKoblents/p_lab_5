@@ -1,0 +1,626 @@
+package client.gui.utils;
+
+import client.utils.LocaleManager;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
+import java.util.function.Consumer;
+
+public class GuiUtils {
+
+    public static final Color PRIMARY_COLOR = new Color(255, 105, 180);
+    public static final Color PRIMARY_DARK = new Color(255, 20, 147);
+    public static final Color PRIMARY_LIGHT = new Color(255, 182, 193);
+    public static final Color BACKGROUND_COLOR = new Color(255, 240, 248);
+    public static final Color BUTTON_COLOR = Color.WHITE;
+    public static final Color TEXT_COLOR = new Color(33, 33, 33);
+    public static final Color PANEL_COLOR = new Color(255, 105, 180);
+    public static final Color STRIP_1 = new Color(255, 230, 235);
+    public static final Color STRIP_2 = new Color(255, 245, 248);
+    public static final Color SEMI_TRANSPARENT_PANEL_COLOR = new Color(255, 105, 180, 180);
+
+    public static final float BASE_FONT_SIZE = 12.0f;
+    public static final float BASE_TITLE_FONT_SIZE = 16.0f;
+    public static final float BASE_BUTTON_FONT_SIZE = 12.0f;
+    public static final float BASE_MESSAGE_SIZE = 30.0f;
+    public static final float BASE_MESSAGE_TITLE_SIZE = 35.0f;
+
+    public record LocaleOption(String code, String displayName) {
+        @Override
+        public String toString() {
+            return displayName + " (" + code + ")";
+        }
+    }
+
+    public static JPanel createStrippedPanel(LayoutManager layoutManager,double baseWidth){
+        JPanel bgPanel = new JPanel(layoutManager) {
+
+            private static final int BASE_STRIPE_WIDTH = 30;
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                double scaleFactor = (double) getWidth() / baseWidth;
+                int stripeWidth = (int)(BASE_STRIPE_WIDTH * scaleFactor);
+                for (int x = 0; x < getWidth(); x += stripeWidth * 2) {
+                    g2.setColor(STRIP_1); g2.fillRect(x, 0, stripeWidth, getHeight());
+                    g2.setColor(STRIP_2); g2.fillRect(x + stripeWidth, 0, stripeWidth, getHeight());
+                }
+            }
+        };
+        return bgPanel;
+    }
+
+    public static JPanel createPanel(LayoutManager layout) {
+        JPanel panel = new JPanel(layout);
+        panel.setBackground(BACKGROUND_COLOR);
+        return panel;
+    }
+
+    public static JLabel createLabel(String text, int fontSize, boolean bold) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", bold ? Font.BOLD : Font.PLAIN, fontSize));
+        label.setForeground(TEXT_COLOR);
+        return label;
+    }
+
+    public static JDialog createDialog(JFrame parent, String title, boolean modal) {
+        JDialog dialog = new JDialog(parent, title, modal);
+        dialog.setLayout(new BorderLayout(15, 15));
+        dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+        return dialog;
+    }
+
+    public static LocaleOption[] createLocaleOptions() {
+        return new LocaleOption[]{
+                new LocaleOption("ru_RU", LocaleManager.get("locale.ru")),
+                new LocaleOption("en_US", LocaleManager.get("locale.en")),
+                new LocaleOption("de_DE", LocaleManager.get("locale.de")),
+                new LocaleOption("sv_SE", LocaleManager.get("locale.sv")),
+                new LocaleOption("es_ES", LocaleManager.get("locale.es"))
+        };
+    }
+    public static JPanel createRoundedPanel(LayoutManager layout, Color backgroundColor, int arcWidth, int arcHeight) {
+        JPanel panel = new JPanel(layout) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(backgroundColor);
+                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arcWidth, arcHeight);
+                super.paintComponent(g);
+                g2.dispose();
+            }
+        };
+        panel.setOpaque(false);
+        return panel;
+    }
+
+    public static JButton createLanguageSwitchButton(LocaleOption initialLocale, Consumer<LocaleOption> onLocaleChanged) {
+
+        String[] parts = initialLocale.code().split("_");
+        String langCode = parts.length > 1 ? parts[1].toUpperCase() : initialLocale.code().substring(0, 2).toUpperCase();
+
+        JButton langButton = new JButton(langCode) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(Color.WHITE);
+                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+
+                g2.setColor(PRIMARY_COLOR);
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        langButton.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        langButton.setForeground(new Color(50, 50, 50));
+        langButton.setFocusPainted(false);
+        langButton.setContentAreaFilled(false);
+        langButton.setOpaque(false);
+        langButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        langButton.setPreferredSize(new Dimension(80, 35));
+        langButton.setMaximumSize(new Dimension(80, 35));
+
+
+        JPopupMenu popupMenu = new JPopupMenu();
+        popupMenu.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 1));
+
+        for (LocaleOption option : createLocaleOptions()) {
+            JMenuItem item = new JMenuItem(option.displayName() + " (" + option.code() + ")");
+            item.setFont(new Font("Segoe UI", Font.PLAIN, 25));
+            item.addActionListener(e -> {
+                String[] newParts = option.code().split("_");
+                String newCode = newParts.length > 1 ? newParts[1].toUpperCase() : option.code().substring(0, 2).toUpperCase();
+                langButton.setText(newCode);
+                if (onLocaleChanged != null) {
+                    onLocaleChanged.accept(option);
+                }
+                popupMenu.setVisible(false);
+            });
+            popupMenu.add(item);
+        }
+
+        langButton.addActionListener(e -> {
+            popupMenu.show(langButton, 0, langButton.getHeight());
+        });
+
+        langButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                langButton.setBackground(PRIMARY_LIGHT);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                langButton.setBackground(Color.WHITE);
+            }
+        });
+
+        return langButton;
+    }
+
+    public static JButton createStyledButton(String text, int width, int height, Runnable action) {
+        JButton button = new JButton(text){
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth()-1, getHeight()-1, 15, 15));
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        button.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_BUTTON_FONT_SIZE));
+        button.setBackground(BUTTON_COLOR);
+        button.setForeground(TEXT_COLOR);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(width, height));
+        button.setMaximumSize(new Dimension(width, height));
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PRIMARY_DARK, 1),
+                BorderFactory.createEmptyBorder(5, 15, 5, 15)
+        ));
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(PRIMARY_LIGHT);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(BUTTON_COLOR);
+            }
+        });
+
+        if (action != null) {
+            button.addActionListener(e -> action.run());
+        }
+
+
+
+        return button;
+    }
+
+    public static void addResizeListener(Component component, Dimension originalSize, Consumer<Double> onResize) {
+        component.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                double scaleFactor = (double) component.getWidth() / originalSize.width;
+                onResize.accept(scaleFactor);
+            }
+        });
+    }
+
+    public static <T> JComboBox<T> createStyledComboBox(int preferedSize) {
+        JComboBox<T> combo = new JComboBox<>();
+        combo.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
+        combo.setBackground(Color.WHITE);
+        combo.setForeground(TEXT_COLOR);
+        combo.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 2));
+        combo.setPreferredSize(new Dimension(0, preferedSize));
+        combo.setMaximumSize(new Dimension(Short.MAX_VALUE, preferedSize));
+
+        combo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
+                if (isSelected) {
+                    setBackground(PRIMARY_COLOR);
+                    setForeground(Color.WHITE);
+                } else {
+                    setBackground(Color.WHITE);
+                    setForeground(TEXT_COLOR);
+                }
+                return this;
+            }
+        });
+
+        return combo;
+    }
+
+    public static void showMessageDialog(Frame parent, String title, String message, MessageType messageType) {
+        JDialog dialog = new JDialog(parent);
+        dialog.setModal(true);
+        dialog.setUndecorated(true);
+        dialog.setLayout(new BorderLayout(0, 0));
+        dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        JPanel titleBarPanel = new JPanel(new BorderLayout());
+        titleBarPanel.setBackground(PRIMARY_DARK);
+        titleBarPanel.setPreferredSize(new Dimension(0, 45));
+        titleBarPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+
+        JLabel titleLabel = new JLabel("  " + title);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_TITLE_SIZE));
+        titleLabel.setForeground(Color.WHITE);
+        titleBarPanel.add(titleLabel, BorderLayout.CENTER);
+
+        JButton closeButton = new JButton("✕");
+        closeButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setBackground(PRIMARY_DARK);
+        closeButton.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
+        closeButton.setFocusPainted(false);
+        closeButton.setContentAreaFilled(false);
+        closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        closeButton.addActionListener(e -> dialog.dispose());
+        closeButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) { closeButton.setBackground(PRIMARY_COLOR.darker()); }
+            public void mouseExited(MouseEvent e) { closeButton.setBackground(PRIMARY_DARK); }
+        });
+        titleBarPanel.add(closeButton, BorderLayout.EAST);
+
+        final Point[] dragOffset = new Point[1];
+        titleBarPanel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) { dragOffset[0] = e.getPoint(); }
+        });
+        titleBarPanel.addMouseMotionListener(new MouseAdapter() {
+            public void mouseDragged(MouseEvent e) {
+                Point curr = e.getLocationOnScreen();
+                dialog.setLocation(curr.x - dragOffset[0].x, curr.y - dragOffset[0].y);
+            }
+        });
+        dialog.add(titleBarPanel, BorderLayout.NORTH);
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setOpaque(false);
+        contentPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
+
+        JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        messagePanel.setOpaque(false);
+
+        JTextArea messageArea = new JTextArea(message);
+        messageArea.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
+        messageArea.setForeground(TEXT_COLOR);
+        messageArea.setBackground(BACKGROUND_COLOR);
+        messageArea.setEditable(false);
+        messageArea.setLineWrap(true);
+        messageArea.setWrapStyleWord(true);
+        messageArea.setBorder(null);
+        messageArea.setOpaque(false);
+        messageArea.setColumns(1);
+        messageArea.setRows(1);
+
+       FontMetrics fm = messageArea.getFontMetrics(messageArea.getFont());
+        String[] lines = message.split("\n");
+        int maxLineWidth = 0;
+        for (String line : lines) {
+            int lineWidth = fm.stringWidth(line);
+            if (lineWidth > maxLineWidth) {
+                maxLineWidth = lineWidth;
+            }
+        }
+
+        int targetWidth = maxLineWidth+40;
+        int maxAllowedWidth = 1400;
+        targetWidth = Math.min(targetWidth, maxAllowedWidth);
+        System.out.println(targetWidth);
+
+        messageArea.setSize(targetWidth, Short.MAX_VALUE);
+        int textHeight = messageArea.getPreferredSize().height;
+
+        int targetHeight = textHeight + 20;
+
+        JScrollPane scrollPane = new JScrollPane(messageArea);
+        scrollPane.setBorder(null);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        scrollPane.setPreferredSize(new Dimension(targetWidth, targetHeight));
+
+        messagePanel.add(scrollPane);
+        contentPanel.add(messagePanel, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
+
+        JButton okButton = new JButton("OK");
+        okButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        okButton.setBackground(PRIMARY_COLOR);
+        okButton.setForeground(Color.WHITE);
+        okButton.setFocusPainted(false);
+        okButton.setBorderPainted(false);
+        okButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        okButton.setPreferredSize(new Dimension(120, 40));
+        okButton.addActionListener(e -> dialog.dispose());
+        okButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) { okButton.setBackground(PRIMARY_DARK); }
+            public void mouseExited(MouseEvent evt) { okButton.setBackground(PRIMARY_COLOR); }
+        });
+
+        buttonPanel.add(okButton);
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+        dialog.add(contentPanel, BorderLayout.CENTER);
+
+        dialog.pack();
+        dialog.setMaximumSize(new Dimension(600, 500));
+        dialog.setLocationRelativeTo(parent);
+        dialog.getRootPane().setDefaultButton(okButton);
+        dialog.setVisible(true);
+    }
+
+    public static boolean showConfirmDialog(Frame parent, String title, String message) {
+        JDialog dialog = new JDialog(parent);
+        dialog.setModal(true);
+        dialog.setUndecorated(true);
+        dialog.setLayout(new BorderLayout(0, 0));
+        dialog.getContentPane().setBackground(BACKGROUND_COLOR);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        JPanel titleBarPanel = new JPanel(new BorderLayout());
+        titleBarPanel.setBackground(PRIMARY_DARK);
+        titleBarPanel.setPreferredSize(new Dimension(0, 45));
+        titleBarPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+
+        JLabel titleLabel = new JLabel("  " + title);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_TITLE_SIZE));
+        titleLabel.setForeground(Color.WHITE);
+        titleBarPanel.add(titleLabel, BorderLayout.CENTER);
+
+        JButton closeButton = new JButton("✕");
+        closeButton.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setBackground(PRIMARY_DARK);
+        closeButton.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
+        closeButton.setFocusPainted(false);
+        closeButton.setContentAreaFilled(false);
+        closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        closeButton.addActionListener(e -> dialog.dispose());
+        closeButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                closeButton.setBackground(PRIMARY_COLOR.darker());
+            }
+            public void mouseExited(MouseEvent e) {
+                closeButton.setBackground(PRIMARY_DARK);
+            }
+        });
+        titleBarPanel.add(closeButton, BorderLayout.EAST);
+
+        final Point[] dragOffset = new Point[1];
+        titleBarPanel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                dragOffset[0] = e.getPoint();
+            }
+        });
+        titleBarPanel.addMouseMotionListener(new MouseAdapter() {
+            public void mouseDragged(MouseEvent e) {
+                Point curr = e.getLocationOnScreen();
+                dialog.setLocation(curr.x - dragOffset[0].x, curr.y - dragOffset[0].y);
+            }
+        });
+
+        dialog.add(titleBarPanel, BorderLayout.NORTH);
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setOpaque(false);
+        contentPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
+
+
+        if (message!=null) {
+            JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+            messagePanel.setOpaque(false);
+            JTextArea messageArea = new JTextArea(message);
+            messageArea.setFont(new Font("Segoe UI", Font.PLAIN, (int) BASE_MESSAGE_SIZE));
+            messageArea.setForeground(TEXT_COLOR);
+            messageArea.setBackground(BACKGROUND_COLOR);
+            messageArea.setEditable(false);
+            messageArea.setLineWrap(true);
+            messageArea.setWrapStyleWord(true);
+            messageArea.setBorder(null);
+            messageArea.setOpaque(false);
+
+            int rows = Math.max(1, (message.length() / 50) + 1);
+            messageArea.setRows(Math.min(rows, 10));
+            messageArea.setColumns(40);
+
+            messagePanel.add(messageArea);
+            contentPanel.add(messagePanel, BorderLayout.CENTER);
+        }
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setBorder(new EmptyBorder(0, 0, 20, 0));
+
+        final boolean[] result = {false};
+
+        JButton yesButton = new JButton("Yes");
+        yesButton.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_SIZE));
+        yesButton.setBackground(PRIMARY_COLOR);
+        yesButton.setForeground(Color.WHITE);
+        yesButton.setFocusPainted(false);
+        yesButton.setBorderPainted(false);
+        yesButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        yesButton.setPreferredSize(new Dimension(100, 40));
+        yesButton.addActionListener(e -> {
+            result[0] = true;
+            dialog.dispose();
+        });
+        yesButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                yesButton.setBackground(PRIMARY_DARK);
+            }
+            public void mouseExited(MouseEvent evt) {
+                yesButton.setBackground(PRIMARY_COLOR);
+            }
+        });
+
+        JButton noButton = new JButton("No");
+        noButton.setFont(new Font("Segoe UI", Font.BOLD, (int) BASE_MESSAGE_SIZE));
+        noButton.setBackground(Color.LIGHT_GRAY);
+        noButton.setForeground(Color.BLACK);
+        noButton.setFocusPainted(false);
+        noButton.setBorderPainted(false);
+        noButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        noButton.setPreferredSize(new Dimension(100, 40));
+        noButton.addActionListener(e -> {
+            result[0] = false;
+            dialog.dispose();
+        });
+        noButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                noButton.setBackground(Color.GRAY);
+            }
+            public void mouseExited(MouseEvent evt) {
+                noButton.setBackground(Color.LIGHT_GRAY);
+            }
+        });
+
+        buttonPanel.add(yesButton);
+        buttonPanel.add(noButton);
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.add(contentPanel, BorderLayout.CENTER);
+
+        dialog.pack();
+
+        int minWidth = Math.max(450, title.length()*20 );
+        System.out.println(minWidth);
+        int maxWidth = 1000;
+        dialog.setSize(
+                Math.min(maxWidth, Math.max(minWidth, dialog.getWidth())),
+                dialog.getHeight()
+        );
+
+        dialog.setLocationRelativeTo(parent);
+        dialog.setVisible(true);
+
+        return result[0];
+    }
+
+    public static void showMessageDialog(Frame parent, String title, String message) {
+        showMessageDialog(parent, title, message, MessageType.INFO);
+    }
+
+    public enum MessageType {
+        INFO, WARNING, ERROR
+    }
+    public static JTextField createStyledPlaceholderField(String placeholderKey, int preferredHeight) {
+        JTextField field = new JTextField(LocaleManager.get(placeholderKey));
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        field.setForeground(Color.GRAY);
+        field.setHorizontalAlignment(JTextField.CENTER);
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
+                new EmptyBorder(10, 15, 10, 15)
+        ));
+        field.setBackground(Color.WHITE);
+        field.setPreferredSize(new Dimension(0, preferredHeight));
+        field.setMaximumSize(new Dimension(Short.MAX_VALUE, preferredHeight));
+
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (field.getText().equals(LocaleManager.get(placeholderKey))) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (field.getText().isEmpty()) {
+                    field.setText(LocaleManager.get(placeholderKey));
+                    field.setForeground(Color.GRAY);
+                }
+            }
+        });
+        return field;
+    }
+
+    public static <T> JComboBox<T> createStyledComboBox(T[] items, int preferredHeight) {
+        JComboBox<T> combo = createStyledComboBox(preferredHeight);
+
+        combo.setModel(new DefaultComboBoxModel<>(items));
+        return combo;
+    }
+
+    public static JButton createStyledDialogButton(String textKey, int width, int height, Runnable action) {
+        JButton button = new JButton(LocaleManager.get(textKey));
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setBackground(PRIMARY_COLOR);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        if (width > 0) {
+            button.setPreferredSize(new Dimension(width, height));
+            button.setMaximumSize(new Dimension(width, height));
+        }
+        button.setBorder(new EmptyBorder(10, 20, 10, 20));
+
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(PRIMARY_DARK);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(PRIMARY_COLOR);
+            }
+        });
+
+        if (action != null) {
+            button.addActionListener(e -> action.run());
+        }
+        return button;
+    }
+
+    public static JTextArea createStyledTextArea(String text) {
+        JTextArea area = new JTextArea(text);
+        area.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        area.setForeground(TEXT_COLOR);
+        area.setBackground(Color.WHITE);
+        area.setEditable(false);
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PRIMARY_LIGHT, 1),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+        return area;
+    }
+
+    public static JScrollPane createStyledScrollPane(Component view) {
+        JScrollPane sp = new JScrollPane(view);
+        sp.setBorder(BorderFactory.createLineBorder(PRIMARY_COLOR, 2));
+        sp.getViewport().setBackground(Color.WHITE);
+        return sp;
+    }
+}

@@ -41,6 +41,7 @@ public class SpawnClient implements ClientCommand {
                         childClientId,
                         parentContext.getClientId()
                 );
+                System.out.println("child: "+ childClientId+" parent: "+parentContext.getClientId());
                 parentContext.addChild(childClientId);
                 logger.info("Child {} added to context", childClientId);
                 System.out.println("Spawned child client: " + childClientId);

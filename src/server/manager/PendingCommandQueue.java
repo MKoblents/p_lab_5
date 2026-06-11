@@ -15,7 +15,7 @@ public class PendingCommandQueue {
     private Map<String, ConcurrentLinkedQueue<CommandRequest>> pendingMap = new ConcurrentHashMap<>();
 
     public boolean addPendingCommand(String clientId, CommandRequest commandRequest){
-        logger.info(clientId + " added new comandRequest"+ commandRequest);
+        logger.info(clientId + " added new comandRequest"+ commandRequest.requestId());
         return pendingMap.computeIfAbsent(clientId, k -> new ConcurrentLinkedQueue<CommandRequest>()).add(commandRequest);
     }
     public CommandRequest poll(String clientId){
